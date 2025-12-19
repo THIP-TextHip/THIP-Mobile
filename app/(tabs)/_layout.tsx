@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { CustomTabBar } from "@shared/ui";
 import { colors } from "@theme/token";
-import CustomTabBar from "@ui/custom-tab-bar";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {

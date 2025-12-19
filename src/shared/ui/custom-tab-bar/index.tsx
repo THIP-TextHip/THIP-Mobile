@@ -1,16 +1,16 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
-import { AppText } from "@ui/app-text";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { styles } from "./custom-tab-bar.styles";
 
-export default function CustomTabBar({
+export const CustomTabBar = ({
   state,
   descriptors,
   navigation,
-}: BottomTabBarProps) {
+}: BottomTabBarProps) => {
   return (
     <SafeAreaView style={styles.outer} edges={["bottom"]}>
       <View style={styles.tabBarContainer}>
@@ -47,4 +47,4 @@ export default function CustomTabBar({
       </View>
     </SafeAreaView>
   );
-}
+};

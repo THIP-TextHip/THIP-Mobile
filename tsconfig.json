@@ -8,7 +8,6 @@
       "@app/*": ["./app/*"],
       "@assets/*": ["./assets/*"],
       "@shared/*": ["./src/shared/*"],
-      "@ui/*": ["./src/shared/ui/*"],
       "@theme/*": ["./src/theme/*"]
     }
   },

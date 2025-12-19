@@ -1,5 +1,5 @@
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
-import { AppText } from "@ui/app-text";
 import React from "react";
 import { View } from "react-native";
 

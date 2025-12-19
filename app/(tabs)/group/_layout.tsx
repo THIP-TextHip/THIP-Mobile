@@ -1,4 +1,4 @@
-import { colors } from "@/src/theme/token";
+import { colors } from "@theme/token";
 import { Stack } from "expo-router";
 
 export default function GroupLayout() {
