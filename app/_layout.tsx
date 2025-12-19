@@ -3,7 +3,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,10 +26,10 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <View style={{ flex: 1, backgroundColor: colors.black.main }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.black.main }}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
-    </View>
+    </SafeAreaView>
   );
 }

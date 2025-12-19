@@ -2,7 +2,7 @@ import { colors } from "@/src/theme/token";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  outer: {
+  tabBarOuter: {
     backgroundColor: colors.black.main,
   },
 

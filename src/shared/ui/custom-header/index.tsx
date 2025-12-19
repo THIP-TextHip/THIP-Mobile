@@ -24,7 +24,6 @@ export default function CustomHeader({
 
 const styles = StyleSheet.create({
   headerContainer: {
-    flex: 1,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
