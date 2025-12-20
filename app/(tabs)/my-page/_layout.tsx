@@ -1,6 +1,8 @@
 import { colors } from "@theme/token";
 import { Stack } from "expo-router";
 
+import MyPageHeader from "./_components/my-page-header";
+
 export default function MyPageLayout() {
   return (
     <Stack
@@ -11,7 +13,8 @@ export default function MyPageLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => <MyPageHeader />,
         }}
       />
     </Stack>

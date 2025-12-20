@@ -3,7 +3,7 @@ import { AppText, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 import { StyleSheet, View } from "react-native";
 
-export default function FeedHeader() {
+export default function GroupHeader() {
   return (
     <CustomHeader
       left={
@@ -15,10 +15,9 @@ export default function FeedHeader() {
           Thip
         </AppText>
       }
-      // TODO : icon 수정
       right={
         <View style={styles.iconWrapper}>
-          <Ionicons name="person-add-outline" size={24} color={colors.white} />
+          <Ionicons name="checkbox-outline" size={24} color={colors.white} />
           <Ionicons name="alarm-outline" size={24} color={colors.white} />
         </View>
       }

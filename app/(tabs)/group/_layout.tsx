@@ -1,6 +1,8 @@
 import { colors } from "@theme/token";
 import { Stack } from "expo-router";
 
+import GroupHeader from "./_components/group-header";
+
 export default function GroupLayout() {
   return (
     <Stack
@@ -11,7 +13,8 @@ export default function GroupLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: false,
+          headerShown: true,
+          header: () => <GroupHeader />,
         }}
       />
     </Stack>
