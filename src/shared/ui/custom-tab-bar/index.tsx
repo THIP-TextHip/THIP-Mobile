@@ -10,11 +10,14 @@ export default function CustomTabBar({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
+  const focusedKey = state.routes[state.index]?.key;
+  const routes = state.routes.filter((route) => route.name !== "alarm");
+
   return (
     <View style={styles.tabBarOuter}>
       <View style={styles.tabBarContainer}>
-        {state.routes.map((route, index) => {
-          const focused = state.index === index;
+        {routes.map((route) => {
+          const focused = focusedKey === route.key;
           const { options } = descriptors[route.key];
 
           const color = focused ? colors.purple.main : colors.grey[300];

@@ -1,9 +1,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
+import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 export default function GroupHeader() {
+  const handleToAlarm = () => {
+    router.push("/alarm");
+  };
+
   return (
     <CustomHeader
       left={
@@ -18,7 +23,12 @@ export default function GroupHeader() {
       right={
         <View style={styles.iconWrapper}>
           <Ionicons name="checkbox-outline" size={24} color={colors.white} />
-          <Ionicons name="alarm-outline" size={24} color={colors.white} />
+          <Ionicons
+            name="alarm-outline"
+            size={24}
+            color={colors.white}
+            onPress={handleToAlarm}
+          />
         </View>
       }
     />

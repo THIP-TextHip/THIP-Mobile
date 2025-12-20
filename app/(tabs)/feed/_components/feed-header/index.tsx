@@ -1,9 +1,14 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { AppText, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
+import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 export default function FeedHeader() {
+  const handleToAlarm = () => {
+    router.push("/alarm");
+  };
+
   return (
     <CustomHeader
       left={
@@ -19,7 +24,12 @@ export default function FeedHeader() {
       right={
         <View style={styles.iconWrapper}>
           <Ionicons name="person-add-outline" size={24} color={colors.white} />
-          <Ionicons name="alarm-outline" size={24} color={colors.white} />
+          <Ionicons
+            name="alarm-outline"
+            size={24}
+            color={colors.white}
+            onPress={handleToAlarm}
+          />
         </View>
       }
     />
