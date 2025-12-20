@@ -1,8 +1,8 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import AppText from "@shared/ui/app-text";
 import { colors } from "@theme/token";
 import { Pressable, View } from "react-native";
 
+import AppText from "../app-text";
 import { styles } from "./custom-tab-bar.styles";
 
 export default function CustomTabBar({
