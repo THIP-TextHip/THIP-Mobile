@@ -13,7 +13,6 @@ export default function MyPageLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: true,
           header: () => <MyPageHeader />,
         }}
       />

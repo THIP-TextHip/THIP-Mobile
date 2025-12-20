@@ -11,7 +11,7 @@ export default function CustomTabBar({
   navigation,
 }: BottomTabBarProps) {
   const focusedKey = state.routes[state.index]?.key;
-  const routes = state.routes.filter((route) => route.name !== "alarm");
+  const routes = state.routes.filter((route) => route.name !== "search-user");
 
   return (
     <View style={styles.tabBarOuter}>

@@ -1,9 +1,10 @@
-import { colors } from "@/src/theme/token";
 import { Stack } from "expo-router";
 
-import SearchHeader from "./_components/search-header";
+import { colors } from "@theme/token";
 
-export default function SearchLayout() {
+import SearchUserHeader from "./_components/search-user-header";
+
+export default function SearchUserLayout() {
   return (
     <Stack
       screenOptions={{
@@ -13,7 +14,7 @@ export default function SearchLayout() {
       <Stack.Screen
         name="index"
         options={{
-          header: () => <SearchHeader />,
+          header: () => <SearchUserHeader />,
         }}
       />
     </Stack>

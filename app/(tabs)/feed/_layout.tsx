@@ -14,7 +14,6 @@ export default function FeedLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: true,
           header: () => <FeedHeader />,
         }}
       />

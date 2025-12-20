@@ -14,7 +14,6 @@ export default function AlarmLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: true,
           header: () => <AlarmHeader />,
         }}
       />

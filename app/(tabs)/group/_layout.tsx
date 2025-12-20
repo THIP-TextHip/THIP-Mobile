@@ -13,7 +13,6 @@ export default function GroupLayout() {
       <Stack.Screen
         name="index"
         options={{
-          headerShown: true,
           header: () => <GroupHeader />,
         }}
       />

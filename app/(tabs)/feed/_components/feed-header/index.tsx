@@ -5,6 +5,9 @@ import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 export default function FeedHeader() {
+  const handleToSearchUser = () => {
+    router.push("/search-user");
+  };
   const handleToAlarm = () => {
     router.push("/alarm");
   };
@@ -23,7 +26,12 @@ export default function FeedHeader() {
       // TODO : icon 수정
       right={
         <View style={styles.iconWrapper}>
-          <Ionicons name="person-add-outline" size={24} color={colors.white} />
+          <Ionicons
+            name="person-add-outline"
+            size={24}
+            color={colors.white}
+            onPress={handleToSearchUser}
+          />
           <Ionicons
             name="alarm-outline"
             size={24}

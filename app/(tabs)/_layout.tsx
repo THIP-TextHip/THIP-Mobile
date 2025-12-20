@@ -49,6 +49,14 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="search-user"
+        options={{
+          title: "사용자 검색",
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
     </Tabs>
   );
 }
