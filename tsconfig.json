@@ -8,8 +8,15 @@
       "@app/*": ["./app/*"],
       "@assets/*": ["./assets/*"],
       "@shared/*": ["./src/shared/*"],
-      "@theme/*": ["./src/theme/*"]
+      "@theme/*": ["./src/theme/*"],
+      "@images/*": ["./assets/images/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    ".svg"
+  ]
 }
