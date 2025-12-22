@@ -1,8 +1,9 @@
+import { router } from "expo-router";
+import { Image, StyleSheet, View } from "react-native";
+
 import { IcAlarm, IcDone } from "@images/icons";
 import { ThipLogo } from "@images/thip";
 import { CustomHeader } from "@shared/ui";
-import { router } from "expo-router";
-import { Image, StyleSheet, View } from "react-native";
 
 export default function GroupHeader() {
   const handleToAlarm = () => {
