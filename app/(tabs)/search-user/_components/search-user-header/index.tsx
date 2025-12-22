@@ -1,5 +1,4 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-
+import { IcArrowLeft } from "@images/icons";
 import { AppText, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 import { router } from "expo-router";
@@ -11,14 +10,7 @@ export default function SearchUserHeader() {
 
   return (
     <CustomHeader
-      left={
-        <Ionicons
-          name="arrow-back"
-          size={24}
-          color={colors.white}
-          onPress={handleGoBack}
-        />
-      }
+      left={<IcArrowLeft onPress={handleGoBack} />}
       center={
         <AppText weight="bold" size="2xl" color={colors.white}>
           사용자 찾기

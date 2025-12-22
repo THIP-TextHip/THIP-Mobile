@@ -1,8 +1,8 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { AppText, CustomHeader } from "@shared/ui";
-import { colors } from "@theme/token";
+import { IcAlarm, IcDone } from "@images/icons";
+import { ThipLogo } from "@images/thip";
+import { CustomHeader } from "@shared/ui";
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
 export default function GroupHeader() {
   const handleToAlarm = () => {
@@ -11,24 +11,11 @@ export default function GroupHeader() {
 
   return (
     <CustomHeader
-      left={
-        <AppText
-          weight="extrabold"
-          size="2xl"
-          style={{ color: colors.purple.main }}
-        >
-          Thip
-        </AppText>
-      }
+      left={<Image source={ThipLogo} style={{ width: 92, height: 23 }} />}
       right={
         <View style={styles.iconWrapper}>
-          <Ionicons name="checkbox-outline" size={24} color={colors.white} />
-          <Ionicons
-            name="alarm-outline"
-            size={24}
-            color={colors.white}
-            onPress={handleToAlarm}
-          />
+          <IcDone />
+          <IcAlarm onPress={handleToAlarm} />
         </View>
       }
     />

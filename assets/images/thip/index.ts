@@ -1,1 +1,1 @@
-export const ThipIcon = require("./thip-icon.png");
+export const ThipLogo = require("./thip-logo.png");
