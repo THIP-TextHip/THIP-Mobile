@@ -1,8 +1,9 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { AppText, CustomHeader } from "@shared/ui";
-import { colors } from "@theme/token";
 import { router } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
+
+import { IcAlarm, IcPlusfriend } from "@images/icons";
+import { ThipLogo } from "@images/thip";
+import { CustomHeader } from "@shared/ui";
 
 export default function FeedHeader() {
   const handleToSearchUser = () => {
@@ -14,30 +15,12 @@ export default function FeedHeader() {
 
   return (
     <CustomHeader
-      left={
-        <AppText
-          weight="extrabold"
-          size="2xl"
-          style={{ color: colors.purple.main }}
-        >
-          Thip
-        </AppText>
-      }
-      // TODO : icon 수정
+      left={<Image source={ThipLogo} style={{ width: 92, height: 23 }} />}
       right={
         <View style={styles.iconWrapper}>
-          <Ionicons
-            name="person-add-outline"
-            size={24}
-            color={colors.white}
-            onPress={handleToSearchUser}
-          />
-          <Ionicons
-            name="alarm-outline"
-            size={24}
-            color={colors.white}
-            onPress={handleToAlarm}
-          />
+          <IcPlusfriend onPress={handleToSearchUser} />
+          {/* TODO : 알림 없을 때는 => <IcNoAlarm /> */}
+          <IcAlarm onPress={handleToAlarm} />
         </View>
       }
     />

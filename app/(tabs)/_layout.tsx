@@ -1,4 +1,13 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
+import {
+  IcBooksearch,
+  IcBooksearchFilled,
+  IcFeed,
+  IcFeedFilled,
+  IcGroup,
+  IcGroupFilled,
+  IcMypage,
+  IcMypageFilled,
+} from "@images/icons";
 import { CustomTabBar } from "@shared/ui";
 import { colors } from "@theme/token";
 import { Tabs } from "expo-router";
@@ -17,36 +26,32 @@ export default function TabLayout() {
         name="feed"
         options={{
           title: "피드",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={24} color={color} />
-          ),
+          tabBarIcon: ({ focused }) =>
+            focused ? <IcFeedFilled /> : <IcFeed />,
         }}
       />
       <Tabs.Screen
         name="group"
         options={{
           title: "모임",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="people" size={24} color={color} />
-          ),
+          tabBarIcon: ({ focused }) =>
+            focused ? <IcGroupFilled /> : <IcGroup />,
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
           title: "검색",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="search" size={24} color={color} />
-          ),
+          tabBarIcon: ({ focused }) =>
+            focused ? <IcBooksearchFilled /> : <IcBooksearch />,
         }}
       />
       <Tabs.Screen
         name="my-page"
         options={{
           title: "내 정보",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={24} color={color} />
-          ),
+          tabBarIcon: ({ focused }) =>
+            focused ? <IcMypageFilled /> : <IcMypage />,
         }}
       />
       <Tabs.Screen
