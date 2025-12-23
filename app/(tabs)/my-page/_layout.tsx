@@ -1,7 +1,7 @@
 import { colors } from "@theme/token";
 import { Stack } from "expo-router";
 
-import MyPageHeader from "./_components/my-page-header";
+import { MyPageHeader } from "./_components";
 
 export default function MyPageLayout() {
   return (

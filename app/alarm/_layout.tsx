@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 
 import { colors } from "@theme/token";
 
-import AlarmHeader from "./_components/alarm-header";
+import { AlarmHeader } from "./_components";
 
 export default function AlarmLayout() {
   return (

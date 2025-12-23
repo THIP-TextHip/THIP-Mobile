@@ -1,7 +1,7 @@
 import { colors } from "@theme/token";
 import { Stack } from "expo-router";
 
-import GroupHeader from "./_components/group-header";
+import { GroupHeader } from "./_components";
 
 export default function GroupLayout() {
   return (

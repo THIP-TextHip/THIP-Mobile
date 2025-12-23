@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 
 import { colors } from "@theme/token";
 
-import SearchUserHeader from "./_components/search-user-header";
+import { SearchUserHeader } from "./_components";
 
 export default function SearchUserLayout() {
   return (
