@@ -1,23 +1,33 @@
-import { ReactNode } from "react";
+import { router } from "expo-router";
 
-import { ButtonHeader, CustomHeader } from "@shared/ui";
+import { IcArrowLeft } from "@images/icons";
+import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
+import { colors } from "@theme/token";
 
 interface SignUpHeaderProps {
-  center?: ReactNode;
+  step: 1 | 2;
   disabled: boolean;
-  handleClickButton: () => void;
+  handleClickNext: () => void;
 }
 
 export default function SignUpHeader({
-  center,
+  step,
   disabled,
-  handleClickButton,
+  handleClickNext,
 }: SignUpHeaderProps) {
+  const handleClickBack = () => {
+    router.back();
+  };
   return (
     <CustomHeader
-      center={center}
+      left={step === 2 && <IcArrowLeft onPress={handleClickBack} />}
+      center={
+        <AppText weight="bold" size="2xl" color={colors.white}>
+          설정 {step}/2
+        </AppText>
+      }
       right={
-        <ButtonHeader disabled={disabled} handleClickButton={handleClickButton}>
+        <ButtonHeader disabled={disabled} handleClickButton={handleClickNext}>
           다음
         </ButtonHeader>
       }

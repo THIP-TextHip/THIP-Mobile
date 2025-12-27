@@ -1,8 +1,8 @@
 import { router, Stack } from "expo-router";
 import { useState } from "react";
 
+import { SignUpHeader } from "@screens/sign-up/components";
 import { NicknameGenreContext } from "@screens/sign-up/hooks";
-import { SignUpNicknameHeader } from "@screens/sign-up/nickname";
 import { colors } from "@theme/token";
 
 export default function NicknameGenreLayout() {
@@ -19,6 +19,12 @@ export default function NicknameGenreLayout() {
     router.push("/sign-up/genre");
   };
 
+  // TODO: 서버에 회원가입 요청
+  const handleToOnboarding = () => {
+    alert(`닉네임: ${nickname} / 장르: ${genre}`);
+    router.push("/sign-up/onboarding");
+  };
+
   return (
     <NicknameGenreContext.Provider
       value={{ nickname, isNicknameDuplicated, genre, setNickname, setGenre }}
@@ -32,9 +38,10 @@ export default function NicknameGenreLayout() {
           name="nickname"
           options={{
             header: () => (
-              <SignUpNicknameHeader
+              <SignUpHeader
+                step={1}
                 disabled={disabledNickname}
-                handleClickButton={handleToSelectGenre}
+                handleClickNext={handleToSelectGenre}
               />
             ),
           }}
@@ -42,7 +49,13 @@ export default function NicknameGenreLayout() {
         <Stack.Screen
           name="genre"
           options={{
-            headerShown: true,
+            header: () => (
+              <SignUpHeader
+                step={2}
+                disabled={!genre}
+                handleClickNext={handleToOnboarding}
+              />
+            ),
           }}
         />
       </Stack>

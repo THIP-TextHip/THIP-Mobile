@@ -5,7 +5,7 @@ interface NicknameGenreContextType {
   isNicknameDuplicated: boolean;
   genre: string | null;
   setNickname: (v: string) => void;
-  setGenre: (v: string) => void;
+  setGenre: (v: string | null) => void;
 }
 
 export const NicknameGenreContext =
