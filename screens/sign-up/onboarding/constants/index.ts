@@ -53,7 +53,7 @@ export const ONBOARDING: OnboardingItem[] = [
   },
   {
     step: 6,
-    title: "피드",
+    title: "Thip+",
     description:
       "모임방의 인상깊은 기록을\n‘핀하기’로 피드에 다시 공유해보세요.",
     image: OnboardingStep6,
