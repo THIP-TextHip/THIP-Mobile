@@ -1,6 +1,9 @@
 import { StyleSheet, TextInput, View } from "react-native";
 
-import { ALLOWED_NICKNAME_REGEX, NICKNAME_MAX_LENGTH } from "@shared/constants";
+import {
+  INVALID_NICKNAME_CHARS_REGEX,
+  NICKNAME_MAX_LENGTH,
+} from "@shared/constants";
 import { AppText } from "@shared/ui";
 import { colors, typography } from "@theme/token";
 
@@ -17,7 +20,7 @@ export default function InputNickname({
 }: InputNicknameProps) {
   const handleChangeText = (text: string) => {
     const normalized = text.toLowerCase();
-    const sanitized = normalized.replace(ALLOWED_NICKNAME_REGEX, "");
+    const sanitized = normalized.replace(INVALID_NICKNAME_CHARS_REGEX, "");
     setValue(sanitized.slice(0, NICKNAME_MAX_LENGTH));
   };
 

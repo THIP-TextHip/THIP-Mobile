@@ -6,7 +6,7 @@ import { colors } from "@theme/token";
 import { GenreCard } from "./components";
 import { GENRE_IMAGE_SIZE, GENRES } from "./constants";
 
-interface SignUpNicknameScreenProps {
+interface SignUpGenreScreenProps {
   selectedGenre: string | null;
   setSelectedGenre: (v: string | null) => void;
 }
@@ -19,7 +19,7 @@ const MAX_WIDTH = 180;
 export default function SignUpGenreScreen({
   selectedGenre,
   setSelectedGenre,
-}: SignUpNicknameScreenProps) {
+}: SignUpGenreScreenProps) {
   const { width: screenWidth } = useWindowDimensions();
 
   // 양쪽 패딩 제외한 공간

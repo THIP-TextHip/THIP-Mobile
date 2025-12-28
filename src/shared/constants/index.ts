@@ -1,2 +1,2 @@
 export { NICKNAME_MAX_LENGTH } from "./max-length";
-export { ALLOWED_NICKNAME_REGEX } from "./regex";
+export { INVALID_NICKNAME_CHARS_REGEX } from "./regex";
