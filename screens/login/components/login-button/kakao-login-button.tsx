@@ -8,7 +8,7 @@ import { colors } from "@theme/token";
 export default function KakaoLoginButton() {
   const handleLogin = () => {
     // TODO: 카카오 소셜 로그인
-    router.push("/(tabs)/feed");
+    router.push("/sign-up");
   };
   return (
     <Pressable style={styles.loginButtonContainer} onPress={handleLogin}>
