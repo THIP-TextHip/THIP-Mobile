@@ -7,7 +7,7 @@ import {
   OnboardingStep4,
   OnboardingStep5,
   OnboardingStep6,
-} from "@/assets/images/thip/onboarding";
+} from "@images/thip/onboarding";
 
 export type OnboardingItem = {
   step: number;

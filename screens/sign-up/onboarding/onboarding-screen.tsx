@@ -14,6 +14,7 @@ import Carousel, {
 
 import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
+
 import { OnboardingCarouselItem } from "./components";
 import { ONBOARDING } from "./constants";
 
