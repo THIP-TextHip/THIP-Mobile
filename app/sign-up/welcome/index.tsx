@@ -1,15 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
+import { WelcomeScreen } from "@screens/sign-up/welcome";
 
-export default function Welcome() {
-  return (
-    <View style={styles.pageContainer}>
-      <Text>온보딩</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  pageContainer: {
-    flex: 1,
-  },
-});
+export default WelcomeScreen;

@@ -9,7 +9,7 @@ export default function WelcomeLayout() {
         contentStyle: { backgroundColor: colors.black.main },
       }}
     >
-      <Stack.Screen name="index" />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
     </Stack>
   );
 }
