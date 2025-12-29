@@ -10,10 +10,13 @@ import {
   IcMypage,
   IcMypageFilled,
 } from "@images/icons";
+import { usePreventAndroidBack } from "@shared/hooks";
 import { CustomTabBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function TabLayout() {
+  // 탭 내부 경로일 때, 안드로이드 뒤로가기 버튼 막기
+  usePreventAndroidBack();
   // TODO: 탭바 아이콘 수정
   return (
     <Tabs
