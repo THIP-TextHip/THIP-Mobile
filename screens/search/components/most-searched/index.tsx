@@ -2,9 +2,16 @@ import { StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
+import MostSearchedBookItem from "../most-searched-book-item";
+
+interface MostSearchedBook {
+  ranking: number;
+  photo: string;
+  title: string;
+}
 
 interface MostSearchedProps {
-  mostSearchedBooks: string[];
+  mostSearchedBooks: MostSearchedBook[];
 }
 
 export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
@@ -32,7 +39,15 @@ export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
           </AppText>
         </View>
       ) : (
-        <></>
+        mostSearchedBooks.map((item, index) => (
+          <MostSearchedBookItem
+            key={item.ranking}
+            ranking={item.ranking}
+            photo={item.photo}
+            title={item.title}
+            isLast={index === mostSearchedBooks.length - 1}
+          />
+        ))
       )}
     </View>
   );
@@ -41,7 +56,7 @@ export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 16,
+    gap: 4,
   },
   titleWrapper: {
     flexDirection: "row",

@@ -11,6 +11,13 @@ const DUMMY_RECENT_DATA = [
   "어쩌구",
   "ㅁㄴㅇㄹ",
 ];
+const DUMMY_MOST_DATA = [
+  { ranking: 1, photo: "https://placehold.co/60", title: "예시입니다" },
+  { ranking: 2, photo: "https://placehold.co/60", title: "테스트" },
+  { ranking: 3, photo: "https://placehold.co/60", title: "배고프다" },
+  { ranking: 4, photo: "https://placehold.co/60", title: "테스트입니당" },
+  { ranking: 5, photo: "https://placehold.co/60", title: "26년도 화이팅!" },
+];
 
 export default function SearchScreen() {
   return (
@@ -20,7 +27,7 @@ export default function SearchScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         <RecentSearch recentSearchedKeywords={DUMMY_RECENT_DATA} />
-        <MostSearched mostSearchedBooks={[]} />
+        <MostSearched mostSearchedBooks={DUMMY_MOST_DATA} />
       </ScrollView>
     </View>
   );
@@ -35,8 +42,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   content: {
-    flex: 1,
-    paddingHorizontal: 20,
+    flexGrow: 1,
     gap: 32,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 });
