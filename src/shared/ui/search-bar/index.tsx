@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
-import { IcSearch } from "@/assets/images/icons";
+import { IcSearch, IcXCircle } from "@images/icons";
 import { colors, typography } from "@theme/token";
 
 interface SearchBarProps {
@@ -16,6 +16,9 @@ export default function SearchBar({
   setValue,
   handleSearch,
 }: SearchBarProps) {
+  const handleDelete = () => {
+    setValue("");
+  };
   return (
     <View style={styles.container}>
       <TextInput
@@ -29,9 +32,16 @@ export default function SearchBar({
         returnKeyType="search"
         onSubmitEditing={handleSearch}
       />
-      <Pressable onPress={handleSearch}>
-        <IcSearch />
-      </Pressable>
+      <View style={styles.buttonWrapper}>
+        {value && (
+          <Pressable onPress={handleDelete}>
+            <IcXCircle />
+          </Pressable>
+        )}
+        <Pressable onPress={handleSearch}>
+          <IcSearch />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -52,5 +62,10 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.regular,
+  },
+  buttonWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
   },
 });

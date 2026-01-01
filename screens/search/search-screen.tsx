@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import SearchBar from "@/src/shared/ui/search-bar";
-import { useState } from "react";
+import { SearchBar } from "@shared/ui";
 import { MostSearched, RecentSearch } from "./components";
 
 const DUMMY_RECENT_DATA = [
