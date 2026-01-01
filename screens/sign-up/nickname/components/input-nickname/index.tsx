@@ -40,11 +40,9 @@ export default function InputNickname({
           cursorColor={colors.neongreen}
           maxLength={NICKNAME_MAX_LENGTH}
         />
-        <View style={styles.maxLength}>
-          <AppText weight="regular" size="xs" color={colors.grey[100]}>
-            {value.length}/{NICKNAME_MAX_LENGTH}
-          </AppText>
-        </View>
+        <AppText weight="regular" size="xs" color={colors.grey[100]}>
+          {value.length}/{NICKNAME_MAX_LENGTH}
+        </AppText>
       </View>
       {isNicknameDuplicated && (
         <AppText
@@ -62,22 +60,20 @@ export default function InputNickname({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    position: "relative",
-  },
-  input: {
-    padding: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 12,
+    height: 48,
+    paddingHorizontal: 12,
     borderRadius: 12,
     backgroundColor: colors.darkgrey.dark,
+  },
+  input: {
+    flex: 1,
     color: colors.white,
     fontSize: typography.fontSize.sm,
     fontWeight: typography.fontWeight.regular,
-  },
-  maxLength: {
-    position: "absolute",
-    right: 24,
-    top: 0,
-    bottom: 0,
-    justifyContent: "center",
   },
 
   error: {
