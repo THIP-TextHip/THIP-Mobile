@@ -1,8 +1,8 @@
 import { StyleSheet, TextInput, View } from "react-native";
 
-import { AppText } from "@shared/ui";
 import { colors, typography } from "@theme/token";
 
+import AppText from "../app-text";
 import {
   INVALID_NICKNAME_CHARS_REGEX,
   NICKNAME_MAX_LENGTH,

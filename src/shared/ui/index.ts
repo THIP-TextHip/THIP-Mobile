@@ -1,6 +1,7 @@
 export { default as AppText } from "./app-text";
 export { ButtonHeader, CustomButton } from "./button";
 export { default as CustomHeader } from "./custom-header";
+export { default as CustomSwitch } from "./custom-switch";
 export { default as CustomTabBar } from "./custom-tab-bar";
 export { default as GenreCardGroup } from "./genre-card-group";
 export { default as InputNickname } from "./input-nickname";

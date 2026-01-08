@@ -10,6 +10,7 @@ export default function UserLayout() {
       }}
     >
       <Stack.Screen name="edit-profile" options={{ headerShown: false }} />
+      <Stack.Screen name="alarm-settings" options={{ headerShown: false }} />
     </Stack>
   );
 }

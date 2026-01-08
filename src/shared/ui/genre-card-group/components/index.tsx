@@ -1,8 +1,9 @@
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
+
+import AppText from "../../app-text";
 
 interface GenreCardProps {
   isSelected: boolean;

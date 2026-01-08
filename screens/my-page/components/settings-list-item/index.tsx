@@ -25,7 +25,7 @@ export default function SettingsListItem({ item }: SettingsListItemProps) {
         console.log("저장 페이지로 이동");
         break;
       case SETTINGS_OTHER[0].id:
-        console.log("알림설정 페이지로 이동");
+        router.push("/alarm-settings");
         break;
       case SETTINGS_OTHER[1].id:
         try {
@@ -48,7 +48,7 @@ export default function SettingsListItem({ item }: SettingsListItemProps) {
         });
         break;
       case SETTINGS_OTHER[5].id:
-        console.log("버전? 페이지로 이동");
+        console.log("버전 관련 액션");
         break;
     }
   };
