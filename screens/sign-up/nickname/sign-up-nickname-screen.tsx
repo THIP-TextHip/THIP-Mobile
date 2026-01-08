@@ -1,8 +1,9 @@
 import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
-import { AppText } from "@shared/ui";
+import { AppText, InputNickname } from "@shared/ui";
 import { colors } from "@theme/token";
-import { InputNickname } from "./components";
+
+import { SIGN_UP_NICKNAME_ERROR } from "./constants";
 
 interface SignUpNicknameScreenProps {
   nickname: string;
@@ -25,7 +26,8 @@ export default function SignUpNicknameScreen({
         <View pointerEvents="auto">
           <InputNickname
             value={nickname}
-            isNicknameDuplicated={isNicknameDuplicated}
+            isError={isNicknameDuplicated}
+            errorMessage={SIGN_UP_NICKNAME_ERROR}
             setValue={setNickname}
           />
         </View>

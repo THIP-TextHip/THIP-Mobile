@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import {
   Pressable,
@@ -27,9 +27,17 @@ export default function OnboardingScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isLastItem = currentIndex === ONBOARDING.length - 1;
 
+  const { from } = useLocalSearchParams<{ from?: string }>();
+  const isFromNickname = from === "my-page";
+
   const handlePressNext = () => {
-    if (isLastItem) router.push("/sign-up/welcome");
-    else {
+    if (isLastItem) {
+      if (isFromNickname) {
+        router.push("/my-page");
+        return;
+      }
+      router.push("/sign-up/welcome");
+    } else {
       ref.current?.scrollTo({
         count: 1,
         animated: true,

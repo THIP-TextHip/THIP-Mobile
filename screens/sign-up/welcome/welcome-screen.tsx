@@ -3,8 +3,8 @@ import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
-import { GENRES } from "@screens/sign-up/genre/constants";
 import { AppText, CustomButton, CustomHeader } from "@shared/ui";
+import { GENRES } from "@shared/ui/genre-card-group/constants";
 import { colors } from "@theme/token";
 
 // TODO: 서버에서 사용자 닉네임, 장르 가져오기

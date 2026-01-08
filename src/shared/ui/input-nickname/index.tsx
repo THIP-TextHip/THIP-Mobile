@@ -1,21 +1,25 @@
 import { StyleSheet, TextInput, View } from "react-native";
 
+import { colors, typography } from "@theme/token";
+
+import AppText from "../app-text";
 import {
   INVALID_NICKNAME_CHARS_REGEX,
   NICKNAME_MAX_LENGTH,
-} from "@shared/constants";
-import { AppText } from "@shared/ui";
-import { colors, typography } from "@theme/token";
+  NICKNAME_PLACEHOLDER,
+} from "./constants";
 
 interface InputNicknameProps {
   value: string;
-  isNicknameDuplicated: boolean;
+  isError: boolean;
+  errorMessage: string;
   setValue: (value: string) => void;
 }
 
 export default function InputNickname({
   value,
-  isNicknameDuplicated,
+  isError,
+  errorMessage,
   setValue,
 }: InputNicknameProps) {
   const handleChangeText = (text: string) => {
@@ -25,41 +29,42 @@ export default function InputNickname({
   };
 
   return (
-    <>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[
-            styles.input,
-            isNicknameDuplicated && { borderWidth: 1, borderColor: colors.red },
-          ]}
-          value={value}
-          onChangeText={handleChangeText}
-          placeholder="한글/영문소문자/숫자로 구성"
-          placeholderTextColor={colors.grey[300]}
-          selectionColor={colors.neongreen}
-          cursorColor={colors.neongreen}
-          maxLength={NICKNAME_MAX_LENGTH}
-        />
-        <AppText weight="regular" size="xs" color={colors.grey[100]}>
-          {value.length}/{NICKNAME_MAX_LENGTH}
-        </AppText>
-      </View>
-      {isNicknameDuplicated && (
+    <View
+      style={[
+        styles.inputContainer,
+        isError && { borderWidth: 1, borderColor: colors.red },
+      ]}
+    >
+      <TextInput
+        style={styles.input}
+        value={value}
+        onChangeText={handleChangeText}
+        placeholder={NICKNAME_PLACEHOLDER}
+        placeholderTextColor={colors.grey[300]}
+        selectionColor={colors.neongreen}
+        cursorColor={colors.neongreen}
+        maxLength={NICKNAME_MAX_LENGTH}
+      />
+      <AppText weight="regular" size="xs" color={colors.grey[100]}>
+        {value.length}/{NICKNAME_MAX_LENGTH}
+      </AppText>
+      {isError && (
         <AppText
           weight="regular"
           size="xs"
           color={colors.red}
           style={styles.error}
         >
-          이미 사용중인 닉네임입니다.
+          {errorMessage}
         </AppText>
       )}
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   inputContainer: {
+    position: "relative",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -77,7 +82,8 @@ const styles = StyleSheet.create({
   },
 
   error: {
-    paddingTop: 7,
-    paddingHorizontal: 4,
+    position: "absolute",
+    left: 4,
+    bottom: -22,
   },
 });

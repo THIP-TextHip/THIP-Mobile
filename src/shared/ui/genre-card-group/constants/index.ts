@@ -1,5 +1,3 @@
-import type { ComponentType } from "react";
-
 import {
   GenreArt,
   GenreHumanity,
@@ -9,24 +7,11 @@ import {
 } from "@images/thip/genre";
 import { colors } from "@theme/token";
 
+import { GenreItem } from "../types";
+
 export const GENRE_IMAGE_SIZE = { width: 80, height: 70 } as const;
 
-export type GenreId =
-  | "literature"
-  | "science"
-  | "socialScience"
-  | "art"
-  | "humanity";
-
-export type GenreItem = {
-  id: GenreId;
-  title: string;
-  subTitle: string;
-  color: string;
-  image: ComponentType<{ width: number; height: number }>;
-};
-
-export const GENRES: readonly GenreItem[] = [
+export const GENRES: GenreItem[] = [
   {
     id: "literature",
     title: "문학",

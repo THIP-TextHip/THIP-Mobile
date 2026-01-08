@@ -24,6 +24,7 @@ export default function RootLayout() {
         <Stack.Screen name="sign-up" options={{ headerShown: false }} />
         <Stack.Screen name="alarm" options={{ headerShown: false }} />
         <Stack.Screen name="book-request" options={{ headerShown: false }} />
+        <Stack.Screen name="(user)" options={{ headerShown: false }} />
       </Stack>
     </SafeAreaView>
   );
