@@ -1,5 +1,5 @@
 export { default as AppText } from "./app-text";
-export { ButtonHeader, CustomButton } from "./button";
+export { ButtonHeader, CustomButton, SelectChip } from "./button";
 export { default as CustomHeader } from "./custom-header";
 export { default as CustomSwitch } from "./custom-switch";
 export { default as CustomTabBar } from "./custom-tab-bar";
