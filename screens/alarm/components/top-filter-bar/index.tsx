@@ -9,22 +9,25 @@ interface TopFilterBarProps {
   handleSelectType: (type: AlarmType) => void;
 }
 
+const ALARM_FILTERS = [
+  { label: "피드", type: "feed" },
+  { label: "모임", type: "room" },
+] as const;
+
 export default function TopFilterBar({
   alarmType,
   handleSelectType,
 }: TopFilterBarProps) {
   return (
     <View style={styles.container}>
-      <SelectChip
-        label="피드"
-        isSelected={alarmType === "feed"}
-        handleSelect={() => handleSelectType("feed")}
-      />
-      <SelectChip
-        label="모임"
-        isSelected={alarmType === "room"}
-        handleSelect={() => handleSelectType("room")}
-      />
+      {ALARM_FILTERS.map(({ label, type }) => (
+        <SelectChip
+          key={type}
+          label={label}
+          isSelected={alarmType === type}
+          handleSelect={() => handleSelectType(type)}
+        />
+      ))}
     </View>
   );
 }

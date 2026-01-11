@@ -3,17 +3,17 @@ import { Pressable, StyleSheet } from "react-native";
 import { colors, typography } from "@theme/token";
 import AppText from "../../app-text";
 
-type SeletChipType = "filter" | "category";
+type SelectChipType = "filter" | "category";
 
 interface SelectChipProps {
   label: string;
   isSelected: boolean;
   handleSelect: () => void;
-  type?: SeletChipType;
+  type?: SelectChipType;
 }
 
 const TEXT_PRESET: Record<
-  SeletChipType,
+  SelectChipType,
   {
     size: keyof typeof typography.fontSize;
   }
