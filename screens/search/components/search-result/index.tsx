@@ -51,8 +51,8 @@ export default function SearchResult({
 
   return (
     <View style={styles.container}>
-      {hasSearched && (
-        <View style={styles.whole}>
+      {hasSearched && DUMMY_SEARCHED_BOOKS.length !== 0 && (
+        <View style={styles.entireCount}>
           <AppText weight="medium" size="sm" color={colors.grey[100]}>
             전체 {DUMMY_SEARCHED_BOOKS.length}
           </AppText>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 20,
   },
-  whole: {
+  entireCount: {
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.darkgrey.dark,

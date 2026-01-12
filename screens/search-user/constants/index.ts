@@ -1,0 +1,118 @@
+import { colors } from "@theme/token";
+
+import { SearchUserResponse } from "../types";
+
+export const RECENT_SEARCH_USER = [
+  "user1",
+  "유저",
+  "예시입니다",
+  "어쩌구",
+  "ㅁㄴㅇㄹ",
+];
+
+export const DUMMY_SEARCHED_USER: SearchUserResponse[] = [
+  {
+    userId: 1,
+    nickname: "테스트",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "문학가",
+    aliasColor: colors.character.mint,
+    followerCount: 3,
+  },
+  {
+    userId: 2,
+    nickname: "User2",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "사회학자",
+    aliasColor: colors.character.orange,
+    followerCount: 12,
+  },
+  {
+    userId: 3,
+    nickname: "thip1",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "과학자",
+    aliasColor: colors.character.lavender,
+    followerCount: 4,
+  },
+  {
+    userId: 4,
+    nickname: "thipthip",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "예술가",
+    aliasColor: colors.character.pink,
+    followerCount: 51,
+  },
+  {
+    userId: 5,
+    nickname: "찬란한문장",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "문학가",
+    aliasColor: colors.character.mint,
+    followerCount: 27,
+  },
+  {
+    userId: 6,
+    nickname: "코드연구소",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "과학자",
+    aliasColor: colors.character.lavender,
+    followerCount: 103,
+  },
+  {
+    userId: 7,
+    nickname: "사회관찰자",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "사회학자",
+    aliasColor: colors.character.orange,
+    followerCount: 8,
+  },
+  {
+    userId: 8,
+    nickname: "색연필",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "예술가",
+    aliasColor: colors.character.pink,
+    followerCount: 220,
+  },
+  {
+    userId: 9,
+    nickname: "사유하는밤",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "철학자",
+    aliasColor: colors.character.skyblue,
+    followerCount: 41,
+  },
+  {
+    userId: 10,
+    nickname: "문학소년",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "문학가",
+    aliasColor: colors.character.mint,
+    followerCount: 5,
+  },
+  {
+    userId: 11,
+    nickname: "실험실고양이",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "과학자",
+    aliasColor: colors.character.lavender,
+    followerCount: 76,
+  },
+  {
+    userId: 12,
+    nickname: "데이터사회",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "사회학자",
+    aliasColor: colors.character.orange,
+    followerCount: 19,
+  },
+  {
+    userId: 13,
+    nickname: "전시회산책",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "예술가",
+    aliasColor: colors.character.pink,
+    followerCount: 64,
+  },
+];
