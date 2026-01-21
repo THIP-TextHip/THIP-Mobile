@@ -7,6 +7,8 @@ import { colors } from "@theme/token";
 
 SplashScreen.preventAutoHideAsync();
 
+// TODO: 추후 tabs 밖의 페이지들도 카테고리별로 묶기 / screens 폴더 내부도 카테고리별 묶기 필요
+
 export default function RootLayout() {
   useLoadFonts();
 
@@ -24,6 +26,7 @@ export default function RootLayout() {
         <Stack.Screen name="sign-up" options={{ headerShown: false }} />
         <Stack.Screen name="alarm" options={{ headerShown: false }} />
         <Stack.Screen name="book-request" options={{ headerShown: false }} />
+        <Stack.Screen name="my-thip-list" options={{ headerShown: false }} />
         <Stack.Screen name="(user)" options={{ headerShown: false }} />
       </Stack>
     </SafeAreaView>

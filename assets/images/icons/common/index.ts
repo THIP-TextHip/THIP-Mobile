@@ -10,6 +10,8 @@ export { default as IcDelete } from "./ic_delete.svg";
 export { default as IcDocument } from "./ic_document.svg";
 export { default as IcDone } from "./ic_done.svg";
 export { default as IcDownmore } from "./ic_downmore.svg";
+export { default as IcGroupWhite } from "./ic_group_white.svg";
+export { default as IcGroupWhiteFilled } from "./ic_group_white_filled.svg";
 export { default as IcGuide } from "./ic_guide.svg";
 export { default as IcHeadset } from "./ic_headset.svg";
 export { default as IcLock } from "./ic_lock.svg";

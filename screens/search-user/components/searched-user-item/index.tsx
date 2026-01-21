@@ -1,7 +1,7 @@
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcRightRight } from "@images/icons";
-import { AppText } from "@shared/ui";
+import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { SearchUserResponse } from "../../types";
@@ -17,10 +17,7 @@ export default function SearchedUserItem({ userData }: SearchedUserItemProps) {
   return (
     <Pressable style={styles.container} onPress={handleToUserProfile}>
       <View style={styles.profile}>
-        <Image
-          source={{ uri: userData.profileImageUrl }}
-          style={styles.profileImage}
-        />
+        <ProfileImage image={userData.profileImageUrl} />
         <View style={styles.profileText}>
           <AppText weight="semibold" size="sm" color={colors.white}>
             {userData.nickname}
@@ -57,6 +54,8 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 999,
+    borderWidth: 0.5,
+    borderColor: colors.grey[300],
   },
   profileText: {
     gap: 4,

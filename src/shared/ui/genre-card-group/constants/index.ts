@@ -9,7 +9,7 @@ import { colors } from "@theme/token";
 
 import { GenreItem } from "../types";
 
-export const GENRE_IMAGE_SIZE = { width: 80, height: 70 } as const;
+export const GENRE_CARD_IMAGE_SIZE = { width: 80, height: 70 } as const;
 
 export const GENRES: GenreItem[] = [
   {

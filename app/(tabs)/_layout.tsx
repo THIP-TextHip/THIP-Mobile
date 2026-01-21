@@ -25,6 +25,15 @@ export default function TabLayout() {
         sceneStyle: { backgroundColor: colors.black.main },
       }}
       tabBar={(props) => <CustomTabBar {...props} />}
+      // !! 커스텀 탭바를 사용할 경우 TabBar를 특정 페이지에서 숨기려면 아래처럼
+      // tabBar={(props) => {
+      //   const route = props.state.routes[props.state.index];
+      //   const options = props.descriptors[route.key].options;
+      //   const style = options.tabBarStyle as any;
+
+      //   if (style?.display === "none") return null;
+      //   return <CustomTabBar {...props} />;
+      // }}
     >
       <Tabs.Screen
         name="feed"
@@ -62,6 +71,8 @@ export default function TabLayout() {
         name="search-user"
         options={{
           title: "사용자 검색",
+          // !! 커스텀 탭바를 숨기려면
+          // tabBarStyle: { display: "none" },
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}

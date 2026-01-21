@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, useWindowDimensions, View } from "react-native";
 
 import GenreCard from "./components";
-import { GENRE_IMAGE_SIZE, GENRES } from "./constants";
+import { GENRE_CARD_IMAGE_SIZE, GENRES } from "./constants";
 
 interface GenreCardGroupProps {
   selectedGenre: string | null;
@@ -27,7 +27,7 @@ export default function GenreCardGroup({
   // 각 카드의 폭
   const cardWidth = Math.min(
     MAX_WIDTH,
-    (containerWidth - GAP * (numColumns - 1)) / numColumns
+    (containerWidth - GAP * (numColumns - 1)) / numColumns,
   );
 
   return (
@@ -44,8 +44,8 @@ export default function GenreCardGroup({
             isSelected={item.subTitle === selectedGenre}
             image={
               <item.image
-                width={GENRE_IMAGE_SIZE.width}
-                height={GENRE_IMAGE_SIZE.height}
+                width={GENRE_CARD_IMAGE_SIZE.width}
+                height={GENRE_CARD_IMAGE_SIZE.height}
               />
             }
             title={item.title}

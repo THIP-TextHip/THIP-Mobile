@@ -5,6 +5,7 @@ export { default as CustomSwitch } from "./custom-switch";
 export { default as CustomTabBar } from "./custom-tab-bar";
 export { default as GenreCardGroup } from "./genre-card-group";
 export { default as InputNickname } from "./input-nickname";
+export { default as ProfileImage } from "./profile-image";
 export { default as RecentSearch } from "./recent-search";
 export { default as RemovableChip } from "./removable-chip";
 export { default as SearchBar } from "./search-bar";
