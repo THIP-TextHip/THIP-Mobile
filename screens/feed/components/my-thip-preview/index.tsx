@@ -1,10 +1,12 @@
+import { router } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcGroupWhite, IcRightRight } from "@images/icons";
 import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
-import { DUMMY_MY_THIP_PREVIEW } from "../../constants";
+
+import { DUMMY_MY_THIP_LIST } from "../../constants";
 
 export default function MyThipPreview() {
   const [visibleCount, setVisibleCount] = useState(0);
@@ -19,9 +21,13 @@ export default function MyThipPreview() {
   }, []);
 
   const visibleItems = useMemo(
-    () => DUMMY_MY_THIP_PREVIEW.slice(0, visibleCount),
+    () => DUMMY_MY_THIP_LIST.slice(0, visibleCount),
     [visibleCount],
   );
+
+  const handleToMyThipList = () => {
+    router.push("/my-thip-list");
+  };
 
   return (
     <View style={styles.container}>
@@ -34,7 +40,7 @@ export default function MyThipPreview() {
       <View style={styles.content} onLayout={handleItemAreaLayout}>
         <View style={styles.itemWrapper}>
           {visibleItems.map((item) => (
-            <View key={item.id} style={styles.item}>
+            <View key={item.userId} style={styles.item}>
               <ProfileImage image={item.profileImage} />
               <AppText
                 weight="regular"
@@ -48,7 +54,9 @@ export default function MyThipPreview() {
             </View>
           ))}
         </View>
-        <IcRightRight />
+        <Pressable onPress={handleToMyThipList}>
+          <IcRightRight />
+        </Pressable>
       </View>
     </View>
   );
