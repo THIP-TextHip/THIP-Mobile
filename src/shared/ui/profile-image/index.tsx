@@ -4,16 +4,20 @@ import { colors } from "@theme/token";
 
 interface ProfileImageProps {
   image: string;
+  size?: number;
 }
 
-export default function ProfileImage({ image }: ProfileImageProps) {
-  return <Image source={{ uri: image }} style={styles.profileImage} />;
+export default function ProfileImage({ image, size = 36 }: ProfileImageProps) {
+  return (
+    <Image
+      source={{ uri: image }}
+      style={[styles.profileImage, { width: size, height: size }]}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
   profileImage: {
-    width: 36,
-    height: 36,
     borderRadius: 999,
     borderWidth: 0.5,
     borderColor: colors.grey[300],

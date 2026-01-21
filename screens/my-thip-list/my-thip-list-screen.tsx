@@ -45,10 +45,11 @@ const styles = StyleSheet.create({
   },
   list: {
     padding: 20,
+    gap: 20,
   },
   separator: {
     height: 1,
     backgroundColor: colors.darkgrey.dark,
-    marginVertical: 20,
+    marginTop: 20,
   },
 });

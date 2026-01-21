@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
 
 import { IcGroupWhite, IcRightRight } from "@images/icons";
 import { AppText, ProfileImage } from "@shared/ui";
@@ -11,11 +11,11 @@ import { DUMMY_MY_THIP_LIST } from "../../constants";
 export default function MyThipPreview() {
   const [visibleCount, setVisibleCount] = useState(0);
 
-  const handleItemAreaLayout = useCallback((e: any) => {
+  const handleItemAreaLayout = useCallback((e: LayoutChangeEvent) => {
     const width = e.nativeEvent.layout.width;
 
     // 화살표 너비 : 24 / 마지막 아이템에는 gap 없이 너비만 적용 : -12
-    const count = (width - 12) / 48;
+    const count = Math.floor((width - 12) / 48);
 
     setVisibleCount(count);
   }, []);
