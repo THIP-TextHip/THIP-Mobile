@@ -65,6 +65,7 @@ export default function MyThipPreview() {
 const styles = StyleSheet.create({
   container: {
     gap: 4,
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: "row",

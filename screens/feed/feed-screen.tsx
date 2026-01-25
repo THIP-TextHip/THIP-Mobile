@@ -1,12 +1,7 @@
-import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import { AppText } from "@shared/ui";
-import { colors } from "@theme/token";
-
-import { TopTabBar } from "./components";
-import MyThipPreview from "./components/my-thip-preview";
+import { FeedContents, MyFeedContents, TopTabBar } from "./components";
 
 export default function FeedScreen() {
   const [isMyFeed, setIsMyFeed] = useState(false);
@@ -26,18 +21,7 @@ export default function FeedScreen() {
         handleFeed={handleFeed}
         handleMyFeed={handleMyFeed}
       />
-      <ScrollView contentContainerStyle={styles.content}>
-        <MyThipPreview />
-        <AppText
-          weight="extrabold"
-          size="lg"
-          color={colors.purple.sub}
-          // TODO: 로그인 페이지 테스트를 위한 것이니 추후 제거 필요
-          onPress={() => router.push("/login")}
-        >
-          {isMyFeed ? "내 피드" : "피드"}
-        </AppText>
-      </ScrollView>
+      {isMyFeed ? <MyFeedContents /> : <FeedContents />}
     </View>
   );
 }
@@ -45,9 +29,5 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-  },
-  content: {
-    padding: 20,
-    gap: 40,
   },
 });
