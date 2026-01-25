@@ -1,6 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useMemo, useState } from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import {
+  Image,
+  LayoutChangeEvent,
+  Pressable,
+  StyleSheet,
+  TextLayoutEvent,
+  View,
+} from "react-native";
 
 import { colors } from "@theme/token";
 
@@ -24,11 +31,23 @@ export default function FeedPostPreviewBody({
     [contentUrls.length],
   );
 
-  const [isTruncated, setIsTruncated] = useState(false);
-
   const [containerWidth, setContainerWidth] = useState(0);
+  const [fullLineCount, setFullLineCount] = useState(0);
+
+  const isTruncated = fullLineCount > collapsedLines;
 
   const imageSize = (containerWidth - IMAGE_GAP * 2) / 3;
+
+  const handleGetContainerWidth = (e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width;
+    setContainerWidth(w);
+  };
+
+  // 웹에서는 지원이 안됨. 라인 수 계산 불가
+  const handleCountTextLines = (e: TextLayoutEvent) => {
+    const lines = e.nativeEvent.lines.length;
+    setFullLineCount((prev) => (prev === lines ? prev : lines));
+  };
 
   const handleToFeedDetail = () => {
     console.log(feedId, "번 게시글로 이동");
@@ -38,41 +57,50 @@ export default function FeedPostPreviewBody({
     <Pressable
       style={styles.container}
       onPress={handleToFeedDetail}
-      onLayout={(e) => {
-        const w = e.nativeEvent.layout.width;
-        setContainerWidth(w);
-      }}
+      onLayout={handleGetContainerWidth}
     >
-      <AppText
-        weight="regular"
-        size="sm"
-        color={colors.grey[100]}
-        style={styles.contentBodyStyle}
-        numberOfLines={collapsedLines}
-        onTextLayout={(e) => {
-          setIsTruncated(e.nativeEvent.lines.length > collapsedLines);
-        }}
-      >
-        {contentBody}
-      </AppText>
-      {isTruncated && (
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          locations={[0.0702, 0.4515]}
-          colors={["rgba(18,18,18,0)", colors.black.main]}
-          style={styles.isTruncated}
+      <View style={styles.textWrapper}>
+        {/* 전체 라인 수 계산용 */}
+        <AppText
+          weight="regular"
+          size="sm"
+          color={colors.grey[100]}
+          style={[styles.contentBodyStyle, styles.measureText]}
+          onTextLayout={handleCountTextLines}
+          pointerEvents="none"
         >
-          <AppText
-            weight="semibold"
-            size="sm"
-            color={colors.grey[300]}
-            style={styles.isTruncatedText}
+          {contentBody}
+        </AppText>
+        {/* 실제 텍스트 (numberOfLines 적용) */}
+        <AppText
+          weight="regular"
+          size="sm"
+          color={colors.grey[100]}
+          style={styles.contentBodyStyle}
+          numberOfLines={collapsedLines}
+          ellipsizeMode="clip"
+        >
+          {contentBody}
+        </AppText>
+        {isTruncated && (
+          <LinearGradient
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            locations={[0.0702, 0.4515]}
+            colors={["rgba(18,18,18,0)", colors.black.main]}
+            style={styles.isTruncated}
           >
-            ...더보기
-          </AppText>
-        </LinearGradient>
-      )}
+            <AppText
+              weight="semibold"
+              size="sm"
+              color={colors.grey[300]}
+              style={styles.isTruncatedText}
+            >
+              ...더보기
+            </AppText>
+          </LinearGradient>
+        )}
+      </View>
       <View style={styles.imageWrapper}>
         {contentUrls.slice(0, 3).map((image, index) => (
           <Image
@@ -90,11 +118,17 @@ export default function FeedPostPreviewBody({
 
 const styles = StyleSheet.create({
   container: {
-    position: "relative",
     gap: 16,
+  },
+  textWrapper: {
+    position: "relative",
   },
   contentBodyStyle: {
     lineHeight: 20,
+  },
+  measureText: {
+    position: "absolute",
+    opacity: 0,
   },
   isTruncated: {
     position: "absolute",

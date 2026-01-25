@@ -1,12 +1,14 @@
+import { Pressable, StyleSheet, View } from "react-native";
+
 import {
   IcComment,
   IcHeartLeft,
   IcHeartLeftFilled,
   IcSave,
   IcSaveFilled,
-} from "@/assets/images/icons";
-import { colors } from "@/src/theme/token";
-import { Pressable, StyleSheet, View } from "react-native";
+} from "@images/icons";
+import { colors } from "@theme/token";
+
 import AppText from "../../../app-text";
 
 interface FeedPostPreviewFooterProps {

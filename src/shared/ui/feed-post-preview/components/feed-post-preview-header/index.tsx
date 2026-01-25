@@ -27,8 +27,8 @@ export default function FeedPostPreviewHeader({
     console.log(creatorId, "번 유저 피드 페이지로 이동");
   };
   return (
-    <View style={styles.header}>
-      <Pressable style={styles.profile} onPress={handleToUserFeed}>
+    <Pressable style={styles.header} onPress={handleToUserFeed}>
+      <View style={styles.profile}>
         <ProfileImage image={creatorProfileImageUrl} />
         <View style={styles.creatorInfo}>
           <AppText weight="medium" size="sm" color={colors.white}>
@@ -38,11 +38,11 @@ export default function FeedPostPreviewHeader({
             {aliasName}
           </AppText>
         </View>
-      </Pressable>
+      </View>
       <AppText weight="regular" size="2xs" color={colors.grey[200]}>
         {postDate}
       </AppText>
-    </View>
+    </Pressable>
   );
 }
 
