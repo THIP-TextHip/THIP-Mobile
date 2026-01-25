@@ -4,24 +4,24 @@ import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
 import ProfileImage from "../../../profile-image";
+import { FeedPostPreviewType } from "../../types";
 
 interface FeedPostPreviewHeaderProps {
-  creatorId: number;
-  creatorProfileImageUrl: string;
-  creatorNickname: string;
-  aliasName: string;
-  aliasColor: string;
-  postDate: string;
+  feedPreview: FeedPostPreviewType;
 }
 
 export default function FeedPostPreviewHeader({
-  creatorId,
-  creatorProfileImageUrl,
-  creatorNickname,
-  aliasName,
-  aliasColor,
-  postDate,
+  feedPreview,
 }: FeedPostPreviewHeaderProps) {
+  const {
+    creatorId,
+    creatorProfileImageUrl,
+    creatorNickname,
+    aliasName,
+    aliasColor,
+    postDate,
+  } = feedPreview;
+
   // TODO: 유저 피드 페이지로 이동
   const handleToUserFeed = () => {
     console.log(creatorId, "번 유저 피드 페이지로 이동");

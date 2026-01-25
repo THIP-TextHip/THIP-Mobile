@@ -14,48 +14,16 @@ interface FeedPostPreviewProps {
 }
 
 export default function FeedPostPreview({ feedPreview }: FeedPostPreviewProps) {
-  const {
-    feedId,
-    creatorId,
-    creatorNickname,
-    creatorProfileImageUrl,
-    aliasName,
-    aliasColor,
-    postDate,
-    isbn,
-    bookTitle,
-    bookAuthor,
-    contentBody,
-    contentUrls,
-    likeCount,
-    commentCount,
-    isSaved,
-    isLiked,
-  } = feedPreview;
-
   return (
     <View style={styles.container}>
-      <FeedPostPreviewHeader
-        creatorId={creatorId}
-        creatorProfileImageUrl={creatorProfileImageUrl}
-        creatorNickname={creatorNickname}
-        aliasName={aliasName}
-        aliasColor={aliasColor}
-        postDate={postDate}
+      <FeedPostPreviewHeader feedPreview={feedPreview} />
+      <BookInfoBar
+        isbn={feedPreview.isbn}
+        bookTitle={feedPreview.bookTitle}
+        bookAuthor={feedPreview.bookAuthor}
       />
-      <BookInfoBar isbn={isbn} bookTitle={bookTitle} bookAuthor={bookAuthor} />
-      <FeedPostPreviewBody
-        feedId={feedId}
-        contentBody={contentBody}
-        contentUrls={contentUrls}
-      />
-      <FeedPostPreviewFooter
-        feedId={feedId}
-        likeCount={likeCount}
-        commentCount={commentCount}
-        isLiked={isLiked}
-        isSaved={isSaved}
-      />
+      <FeedPostPreviewBody feedPreview={feedPreview} />
+      <FeedPostPreviewFooter feedPreview={feedPreview} />
     </View>
   );
 }

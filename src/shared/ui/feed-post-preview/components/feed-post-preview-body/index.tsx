@@ -12,20 +12,19 @@ import {
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
+import { FeedPostPreviewType } from "../../types";
 
 const IMAGE_GAP = 10;
 
 interface FeedPostPreviewBodyProps {
-  feedId: number;
-  contentBody: string;
-  contentUrls: string[];
+  feedPreview: FeedPostPreviewType;
 }
 
 export default function FeedPostPreviewBody({
-  feedId,
-  contentBody,
-  contentUrls,
+  feedPreview,
 }: FeedPostPreviewBodyProps) {
+  const { feedId, contentBody, contentUrls } = feedPreview;
+
   const collapsedLines = useMemo(
     () => (contentUrls.length === 0 ? 8 : 3),
     [contentUrls.length],
@@ -36,7 +35,8 @@ export default function FeedPostPreviewBody({
 
   const isTruncated = fullLineCount > collapsedLines;
 
-  const imageSize = (containerWidth - IMAGE_GAP * 2) / 3;
+  const imageSize =
+    containerWidth > 0 ? (containerWidth - IMAGE_GAP * 2) / 3 : 0;
 
   const handleGetContainerWidth = (e: LayoutChangeEvent) => {
     const w = e.nativeEvent.layout.width;
@@ -102,15 +102,18 @@ export default function FeedPostPreviewBody({
         )}
       </View>
       <View style={styles.imageWrapper}>
-        {contentUrls.slice(0, 3).map((image, index) => (
-          <Image
-            key={index}
-            source={{ uri: image }}
-            width={imageSize}
-            height={imageSize}
-            style={{ width: imageSize, height: imageSize }}
-          />
-        ))}
+        {imageSize > 0 &&
+          contentUrls
+            .slice(0, 3)
+            .map((image, index) => (
+              <Image
+                key={`${image}-${index}`}
+                source={{ uri: image }}
+                width={imageSize}
+                height={imageSize}
+                style={{ width: imageSize, height: imageSize }}
+              />
+            ))}
       </View>
     </Pressable>
   );

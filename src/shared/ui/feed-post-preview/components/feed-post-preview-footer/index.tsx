@@ -10,22 +10,17 @@ import {
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
+import { FeedPostPreviewType } from "../../types";
 
 interface FeedPostPreviewFooterProps {
-  feedId: number;
-  likeCount: number;
-  commentCount: number;
-  isLiked: boolean;
-  isSaved: boolean;
+  feedPreview: FeedPostPreviewType;
 }
 
 export default function FeedPostPreviewFooter({
-  feedId,
-  likeCount,
-  commentCount,
-  isLiked,
-  isSaved,
+  feedPreview,
 }: FeedPostPreviewFooterProps) {
+  const { feedId, likeCount, commentCount, isLiked, isSaved } = feedPreview;
+
   // TODO: 게시글 상세 페이지로 이동
   const handleToFeedDetail = () => {
     console.log(feedId, "번 게시글로 이동");
