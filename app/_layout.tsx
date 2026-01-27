@@ -1,8 +1,13 @@
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
-import { useLoadFonts } from "@shared/hooks/use-load-fonts";
+import { toastConfig } from "@config/toast.config";
+import { useLoadFonts } from "@shared/hooks";
 import { colors } from "@theme/token";
 
 SplashScreen.preventAutoHideAsync();
@@ -11,6 +16,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useLoadFonts();
+  const insets = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.black.main }}>
@@ -29,6 +35,8 @@ export default function RootLayout() {
         <Stack.Screen name="my-thip-list" options={{ headerShown: false }} />
         <Stack.Screen name="(user)" options={{ headerShown: false }} />
       </Stack>
+      <Toast config={toastConfig} position="top" topOffset={insets.top + 16} />
+      {/* <Toast position="top" topOffset={60} /> */}
     </SafeAreaView>
   );
 }
