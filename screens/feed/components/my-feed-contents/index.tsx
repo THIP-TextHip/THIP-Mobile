@@ -62,6 +62,7 @@ export default function MyFeedContents() {
       >
         바텀시트
       </AppText>
+      {/* TODO: 각 페이지에 필요한 모달은 components 하위에 생성. ex) DeleteModal */}
       <CustomModal
         isVisible={isModalVisible}
         handleCloseModal={handleCloseModal}
@@ -74,13 +75,30 @@ export default function MyFeedContents() {
             삭제 후에는 되돌릴 수 없어요.
           </AppText>
           <View style={styles.modalButtonWrapper}>
-            <CustomButton handlePress={handleCloseModal}>
-              <AppText weight="semibold" size="base" color={colors.white}>
+            <CustomButton
+              type="cancel"
+              size="fill"
+              handlePress={handleCloseModal}
+            >
+              <AppText
+                weight="semibold"
+                size="base"
+                color={colors.white}
+                style={{ lineHeight: 24 }}
+              >
                 아니오
               </AppText>
             </CustomButton>
-            <CustomButton handlePress={() => console.log("예 버튼 클릭")}>
-              <AppText weight="semibold" size="base" color={colors.white}>
+            <CustomButton
+              size="fill"
+              handlePress={() => console.log("'예' 버튼 클릭")}
+            >
+              <AppText
+                weight="semibold"
+                size="base"
+                color={colors.white}
+                style={{ lineHeight: 24 }}
+              >
                 예
               </AppText>
             </CustomButton>

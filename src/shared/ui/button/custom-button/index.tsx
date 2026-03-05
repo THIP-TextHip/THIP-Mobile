@@ -1,31 +1,52 @@
-import { ReactNode } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { ReactNode, useMemo } from "react";
+import { Pressable, StyleSheet, ViewStyle } from "react-native";
 
 import { colors } from "@theme/token";
 
 interface CustomButtonProps {
   children: ReactNode;
-  size?: "medium" | "fill";
+  type?: "primary" | "cancel";
+  size?: "fit" | "full" | "fill";
   disabled?: boolean;
   handlePress: () => void;
 }
 
 export default function CustomButton({
   children,
-  size = "medium",
+  type = "primary",
+  size = "fit",
   disabled = false,
   handlePress,
 }: CustomButtonProps) {
+  const bgColor =
+    type === "cancel" || disabled
+      ? colors.grey[300]
+      : type === "primary"
+        ? colors.purple.main
+        : "";
+
+  const sizeStyle = useMemo<ViewStyle | null>(() => {
+    if (size === "full") {
+      return {
+        paddingVertical: 13,
+        width: "100%",
+        borderRadius: 0,
+      };
+    }
+    if (size === "fill") {
+      return { flex: 1 };
+    }
+    return null;
+  }, [size]);
+
   return (
     <Pressable
       style={[
         styles.container,
-        disabled && { backgroundColor: colors.grey[300] },
-        size === "fill" && {
-          paddingVertical: 13,
-          width: "100%",
-          borderRadius: 0,
+        {
+          backgroundColor: bgColor,
         },
+        sizeStyle,
       ]}
       onPress={handlePress}
       disabled={disabled}
@@ -37,7 +58,6 @@ export default function CustomButton({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.purple.main,
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 12,
