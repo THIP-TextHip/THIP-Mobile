@@ -16,25 +16,23 @@ export default function CustomModal({
   handleCloseModal,
 }: CustomModalProps) {
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isVisible}
-        onRequestClose={handleCloseModal}
-      >
-        <View style={styles.centeredView}>
-          <Pressable style={styles.backdrop} onPress={handleCloseModal} />
-          <BlurView
-            intensity={15}
-            tint="dark"
-            style={styles.backdrop}
-            pointerEvents="none"
-          />
-          <View style={styles.modalContainer}>{children}</View>
-        </View>
-      </Modal>
-    </View>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={isVisible}
+      onRequestClose={handleCloseModal}
+    >
+      <View style={styles.centeredView}>
+        <Pressable style={styles.backdrop} onPress={handleCloseModal} />
+        <BlurView
+          intensity={15}
+          tint="dark"
+          style={styles.backdrop}
+          pointerEvents="none"
+        />
+        <View style={styles.modalContainer}>{children}</View>
+      </View>
+    </Modal>
   );
 }
 
