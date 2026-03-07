@@ -1,13 +1,20 @@
 import { router } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { AppText, CustomButton, CustomModal } from "@shared/ui";
+import {
+  AppText,
+  CustomBottomSheet,
+  CustomButton,
+  CustomModal,
+} from "@shared/ui";
 import { colors } from "@theme/token";
-import { useState } from "react";
 
 export default function MyFeedContents() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
   // TODO: 토스트 메시지 테스트용. 삭제 예정
   const handleShowToastTest = () => {
     Toast.show({
@@ -24,6 +31,15 @@ export default function MyFeedContents() {
   const handleCloseModal = () => {
     setIsModalVisible(false);
   };
+
+  // TODO: 바텀시트 컴포넌트 테스트용
+  const handleOpenBottomSheet = () => {
+    setIsBottomSheetVisible(true);
+  };
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetVisible(false);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <AppText
@@ -58,7 +74,7 @@ export default function MyFeedContents() {
         weight="extrabold"
         size="lg"
         color={colors.purple.sub}
-        onPress={handleShowToastTest}
+        onPress={handleOpenBottomSheet}
       >
         바텀시트
       </AppText>
@@ -105,6 +121,30 @@ export default function MyFeedContents() {
           </View>
         </View>
       </CustomModal>
+      <CustomBottomSheet
+        isVisible={isBottomSheetVisible}
+        handleClose={handleCloseBottomSheet}
+      >
+        <View style={styles.bottomSheetContentWrapper}>
+          <Pressable
+            style={styles.bottomSheetButton}
+            onPress={() => console.log("수정하기")}
+          >
+            <AppText weight="medium" size="base" color={colors.white}>
+              수정하기
+            </AppText>
+          </Pressable>
+          <View style={styles.bottomSheetDivider} />
+          <Pressable
+            style={styles.bottomSheetButton}
+            onPress={() => console.log("삭제하기")}
+          >
+            <AppText weight="medium" size="base" color={colors.red}>
+              삭제하기
+            </AppText>
+          </Pressable>
+        </View>
+      </CustomBottomSheet>
     </ScrollView>
   );
 }
@@ -121,5 +161,20 @@ const styles = StyleSheet.create({
   modalButtonWrapper: {
     flexDirection: "row",
     gap: 20,
+  },
+
+  // TODO: 바텀시트 테스트용. 삭제 예정
+  bottomSheetContentWrapper: {
+    gap: 8,
+  },
+  bottomSheetDivider: {
+    backgroundColor: "#525252",
+    width: "100%",
+    height: 1,
+  },
+  bottomSheetButton: {
+    paddingHorizontal: 12,
+    height: 50,
+    justifyContent: "center",
   },
 });

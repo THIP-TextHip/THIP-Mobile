@@ -1,6 +1,7 @@
 export { default as AppText } from "./app-text";
 export { default as BookInfoBar } from "./book-info-bar";
 export { ButtonHeader, CustomButton, SelectChip } from "./button";
+export { default as CustomBottomSheet } from "./custom-bottom-sheet";
 export { default as CustomHeader } from "./custom-header";
 export { default as CustomModal } from "./custom-modal";
 export { default as CustomSwitch } from "./custom-switch";

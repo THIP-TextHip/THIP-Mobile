@@ -1,5 +1,7 @@
+﻿import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -19,24 +21,38 @@ export default function RootLayout() {
   const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.black.main }}>
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen
-          name="login"
-          options={{ headerShown: false, gestureEnabled: false }}
-        />
-        <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-        <Stack.Screen name="alarm" options={{ headerShown: false }} />
-        <Stack.Screen name="book-request" options={{ headerShown: false }} />
-        <Stack.Screen name="my-thip-list" options={{ headerShown: false }} />
-        <Stack.Screen name="(user)" options={{ headerShown: false }} />
-      </Stack>
-      <Toast config={toastConfig} position="top" topOffset={insets.top + 16} />
-      {/* <Toast position="top" topOffset={60} /> */}
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <BottomSheetModalProvider>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.black.main }}>
+          <Stack>
+            <Stack.Screen
+              name="(tabs)"
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
+            <Stack.Screen
+              name="login"
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
+            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+            <Stack.Screen name="alarm" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="book-request"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="my-thip-list"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="(user)" options={{ headerShown: false }} />
+          </Stack>
+          <Toast
+            config={toastConfig}
+            position="top"
+            topOffset={insets.top + 16}
+          />
+          {/* <Toast position="top" topOffset={60} /> */}
+        </SafeAreaView>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
