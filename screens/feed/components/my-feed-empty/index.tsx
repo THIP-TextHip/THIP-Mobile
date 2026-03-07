@@ -16,6 +16,7 @@ export default function MyFeedEmpty() {
 const styles = StyleSheet.create({
   conatainer: {
     flex: 1,
+    marginBottom: 100,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { IcAlarm, IcPlusfriend } from "@images/icons";
 import { ThipLogo } from "@images/thip";
@@ -18,9 +18,13 @@ export default function FeedHeader() {
       left={<Image source={ThipLogo} style={{ width: 92, height: 23 }} />}
       right={
         <View style={styles.iconWrapper}>
-          <IcPlusfriend onPress={handleToSearchUser} />
+          <Pressable onPress={handleToSearchUser}>
+            <IcPlusfriend />
+          </Pressable>
           {/* TODO : 알림 없을 때는 => <IcNoAlarm /> */}
-          <IcAlarm onPress={handleToAlarm} />
+          <Pressable onPress={handleToAlarm}>
+            <IcAlarm />
+          </Pressable>
         </View>
       }
     />
