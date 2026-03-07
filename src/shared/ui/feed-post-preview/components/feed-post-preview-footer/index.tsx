@@ -4,34 +4,33 @@ import {
   IcComment,
   IcHeartLeft,
   IcHeartLeftFilled,
+  IcLock,
   IcSave,
   IcSaveFilled,
 } from "@images/icons";
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
-import { FeedPostPreviewType } from "../../types";
+import { FeedMyPostPreviewType, FeedPostPreviewType } from "../../types";
 
 interface FeedPostPreviewFooterProps {
-  feedPreview: FeedPostPreviewType;
+  feedPreview: FeedPostPreviewType | FeedMyPostPreviewType;
 }
 
 export default function FeedPostPreviewFooter({
   feedPreview,
 }: FeedPostPreviewFooterProps) {
-  const { feedId, likeCount, commentCount, isLiked, isSaved } = feedPreview;
-
   // TODO: 게시글 상세 페이지로 이동
   const handleToFeedDetail = () => {
-    console.log(feedId, "번 게시글로 이동");
+    console.log(feedPreview.feedId, "번 게시글로 이동");
   };
   // TODO: 좋아요 누르기 api
   const handleClickHeart = () => {
-    console.log(feedId, "번 게시글 좋아요");
+    console.log(feedPreview.feedId, "번 게시글 좋아요");
   };
   // TODO: 저장 api
   const handleSaveFeed = () => {
-    console.log(feedId, "번 게시글 저장");
+    console.log(feedPreview.feedId, "번 게시글 저장");
   };
 
   return (
@@ -39,10 +38,10 @@ export default function FeedPostPreviewFooter({
       <View style={styles.likeCommentWrapper}>
         <View style={styles.likeCommentStyle}>
           <Pressable onPress={handleClickHeart}>
-            {isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
+            {feedPreview.isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
-            {likeCount.toLocaleString()}
+            {feedPreview.likeCount.toLocaleString()}
           </AppText>
         </View>
         <View style={styles.likeCommentStyle}>
@@ -50,13 +49,17 @@ export default function FeedPostPreviewFooter({
             <IcComment />
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
-            {commentCount.toLocaleString()}
+            {feedPreview.commentCount.toLocaleString()}
           </AppText>
         </View>
       </View>
-      <Pressable onPress={handleSaveFeed}>
-        {isSaved ? <IcSaveFilled /> : <IcSave />}
-      </Pressable>
+      {feedPreview.isWriter ? (
+        "isPublic" in feedPreview && !feedPreview.isPublic && <IcLock />
+      ) : (
+        <Pressable onPress={handleSaveFeed}>
+          {feedPreview.isSaved ? <IcSaveFilled /> : <IcSave />}
+        </Pressable>
+      )}
     </View>
   );
 }

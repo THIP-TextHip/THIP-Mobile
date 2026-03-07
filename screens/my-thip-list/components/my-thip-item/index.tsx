@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { AppText, ProfileImage } from "@shared/ui";
+import { ButtonOutline } from "@shared/ui/button";
 import { colors } from "@theme/token";
 
 interface MyThipItemProps {
@@ -33,11 +34,7 @@ export default function MyThipItem({
           </AppText>
         </View>
       </View>
-      <Pressable style={styles.cancelButton} onPress={handleCancelThip}>
-        <AppText weight="medium" size="sm" color={colors.white}>
-          띱 취소
-        </AppText>
-      </Pressable>
+      <ButtonOutline handlePress={handleCancelThip}>띱 취소</ButtonOutline>
     </View>
   );
 }

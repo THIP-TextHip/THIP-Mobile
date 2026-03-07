@@ -1,22 +1,23 @@
 import { StyleSheet, View } from "react-native";
 
 import BookInfoBar from "../book-info-bar";
-
 import {
   FeedPostPreviewBody,
   FeedPostPreviewFooter,
   FeedPostPreviewHeader,
 } from "./components";
-import { FeedPostPreviewType } from "./types";
+import { FeedMyPostPreviewType, FeedPostPreviewType } from "./types";
 
 interface FeedPostPreviewProps {
-  feedPreview: FeedPostPreviewType;
+  feedPreview: FeedPostPreviewType | FeedMyPostPreviewType;
 }
 
 export default function FeedPostPreview({ feedPreview }: FeedPostPreviewProps) {
   return (
     <View style={styles.container}>
-      <FeedPostPreviewHeader feedPreview={feedPreview} />
+      {"creatorId" in feedPreview && (
+        <FeedPostPreviewHeader feedPreview={feedPreview} />
+      )}
       <BookInfoBar
         isbn={feedPreview.isbn}
         bookTitle={feedPreview.bookTitle}

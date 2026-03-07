@@ -6,7 +6,8 @@ import { IcGroupWhite, IcRightRight } from "@images/icons";
 import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DUMMY_MY_THIP_LIST } from "../../constants";
+// TODO: 서버에서 내 띱 리스트 가져오기
+import { DUMMY_THIP_LIST } from "../../constants";
 
 export default function MyThipPreview() {
   const [visibleCount, setVisibleCount] = useState(0);
@@ -21,7 +22,7 @@ export default function MyThipPreview() {
   }, []);
 
   const visibleItems = useMemo(
-    () => DUMMY_MY_THIP_LIST.slice(0, visibleCount),
+    () => DUMMY_THIP_LIST.slice(0, visibleCount),
     [visibleCount],
   );
 

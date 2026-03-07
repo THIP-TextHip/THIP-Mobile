@@ -1,15 +1,29 @@
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
-import { AppText } from "@shared/ui";
+import { AppText, UserProfile } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { ProfileSection, SettingsListItem } from "./components";
+import { router } from "expo-router";
+import { SettingsListItem } from "./components";
 import { SETTINGS_MY_ACTIVITY, SETTINGS_OTHER } from "./constants";
 
+// TODO: 서버에서 받아오기
+const nickname = "ThipUser01";
+const genre = "문학가";
+const profileColor = colors.character.mint;
+
 export default function MyPageScreen() {
+  const handleToEdit = () => {
+    router.push("/edit-profile");
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <ProfileSection />
+      <UserProfile
+        type="edit-profile"
+        userProfile={{ nickname, genre, profileColor }}
+        handleToEdit={handleToEdit}
+      />
       <View style={styles.section}>
         <AppText weight="semibold" size="lg" color={colors.white}>
           내 활동

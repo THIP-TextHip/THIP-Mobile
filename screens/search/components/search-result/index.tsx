@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-import { AppText, CustomButton } from "@shared/ui";
+import { AppText, CustomButton, ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import SearchedBookItem from "../../components/searched-book-item";
@@ -44,7 +44,7 @@ export default function SearchResult({
         isbn={item.isbn}
       />
     ),
-    []
+    [],
   );
 
   const Separator = () => <View style={styles.separator} />;
@@ -52,11 +52,7 @@ export default function SearchResult({
   return (
     <View style={styles.container}>
       {hasSearched && DUMMY_SEARCHED_BOOKS.length !== 0 && (
-        <View style={styles.entireCount}>
-          <AppText weight="medium" size="sm" color={colors.grey[100]}>
-            전체 {DUMMY_SEARCHED_BOOKS.length}
-          </AppText>
-        </View>
+        <ListTotalCountHeader length={DUMMY_SEARCHED_BOOKS.length} />
       )}
       {DUMMY_SEARCHED_BOOKS.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -90,7 +86,6 @@ export default function SearchResult({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
     gap: 20,
   },
   entireCount: {
@@ -101,6 +96,7 @@ const styles = StyleSheet.create({
   booksWrapper: {
     gap: 12,
     paddingBottom: 20,
+    paddingHorizontal: 20,
   },
   separator: {
     height: 1,
