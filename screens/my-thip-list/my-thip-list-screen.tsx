@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DUMMY_MY_THIP_LIST } from "../feed/constants";
+import { DUMMY_THIP_LIST } from "../feed/constants";
 import { MyThipItem } from "./components";
 
 export default function MyThipListScreen() {
@@ -11,12 +11,12 @@ export default function MyThipListScreen() {
     <View style={styles.page}>
       <View style={styles.entireCount}>
         <AppText weight="medium" size="sm" color={colors.grey[100]}>
-          전체 {DUMMY_MY_THIP_LIST.length}
+          전체 {DUMMY_THIP_LIST.length}
         </AppText>
       </View>
       <FlatList
         contentContainerStyle={styles.list}
-        data={DUMMY_MY_THIP_LIST}
+        data={DUMMY_THIP_LIST}
         keyExtractor={(item) => String(item.userId)}
         renderItem={({ item }) => (
           <MyThipItem

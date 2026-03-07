@@ -1,6 +1,6 @@
 import { colors } from "@theme/token";
 
-export const DUMMY_MY_THIP_LIST = [
+export const DUMMY_THIP_LIST = [
   {
     userId: 1,
     nickname: "user1234",

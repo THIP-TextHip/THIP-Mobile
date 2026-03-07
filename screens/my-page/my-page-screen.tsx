@@ -7,6 +7,7 @@ import { router } from "expo-router";
 import { SettingsListItem } from "./components";
 import { SETTINGS_MY_ACTIVITY, SETTINGS_OTHER } from "./constants";
 
+// TODO: 서버에서 받아오기
 const nickname = "ThipUser01";
 const genre = "문학가";
 const profileColor = colors.character.mint;
