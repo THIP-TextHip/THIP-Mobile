@@ -8,7 +8,7 @@ import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 
 interface ThipPreviewProps {
-  // TODO: 서버에서 가져오기
+  // TODO: 서버 연동 시 ThipPreviewItem 전용 타입으로 교체
   thipList: typeof DUMMY_THIP_LIST;
 }
 
