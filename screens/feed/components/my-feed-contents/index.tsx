@@ -32,6 +32,7 @@ const MyFeedTopContents = () => {
 
 export default function MyFeedContents() {
   const handleToWriteFeed = () => {
+    // TODO: 피드 글 작성 페이지로 이동
     console.log("피드 글 작성하러 가기");
   };
   return (
@@ -51,8 +52,8 @@ export default function MyFeedContents() {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       )}
-      <Pressable onPress={handleToWriteFeed}>
-        <FloatingFeedWrite style={styles.floating} />
+      <Pressable style={styles.floating} onPress={handleToWriteFeed}>
+        <FloatingFeedWrite />
       </Pressable>
     </View>
   );

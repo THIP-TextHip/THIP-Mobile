@@ -13,7 +13,8 @@ interface ThipPreviewProps {
 }
 
 export default function ThipPreview({ thipList }: ThipPreviewProps) {
-  const handleToThipsList = () => {
+  const handleToThipList = () => {
+    // TODO : 띱 리스트 화면으로 이동
     console.log("띱 리스트 화면으로 이동");
   };
   return (
@@ -40,7 +41,7 @@ export default function ThipPreview({ thipList }: ThipPreviewProps) {
               />
             ))}
           </View>
-          <Pressable onPress={handleToThipsList}>
+          <Pressable onPress={handleToThipList}>
             <IcRightRight />
           </Pressable>
         </View>
