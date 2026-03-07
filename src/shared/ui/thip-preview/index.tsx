@@ -1,8 +1,9 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { colors } from "@/src/theme/token";
 import { IcGroupWhite, IcRightRight } from "@images/icons";
 import { DUMMY_THIP_LIST } from "@screens/feed/constants";
+import { colors } from "@theme/token";
+
 import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 

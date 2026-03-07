@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native";
 
-import { AppText } from "@shared/ui";
+import { ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_THIP_LIST } from "../feed/constants";
@@ -9,11 +9,7 @@ import { MyThipItem } from "./components";
 export default function MyThipListScreen() {
   return (
     <View style={styles.page}>
-      <View style={styles.entireCount}>
-        <AppText weight="medium" size="sm" color={colors.grey[100]}>
-          전체 {DUMMY_THIP_LIST.length}
-        </AppText>
-      </View>
+      <ListTotalCountHeader length={DUMMY_THIP_LIST.length} />
       <FlatList
         contentContainerStyle={styles.list}
         data={DUMMY_THIP_LIST}

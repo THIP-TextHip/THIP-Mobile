@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-import { AppText } from "@shared/ui";
+import { AppText, ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_SEARCHED_USER } from "../../constants";
@@ -23,7 +23,7 @@ export default function SearchUserResult({
     ({ item }: { item: SearchUserResponse }) => (
       <SearchedUserItem userData={item} />
     ),
-    []
+    [],
   );
 
   const Separator = () => <View style={styles.separator} />;
@@ -31,11 +31,7 @@ export default function SearchUserResult({
   return (
     <View style={styles.container}>
       {hasSearched && DUMMY_SEARCHED_USER.length !== 0 && (
-        <View style={styles.entireCount}>
-          <AppText weight="medium" size="sm" color={colors.grey[100]}>
-            전체 {DUMMY_SEARCHED_USER.length}
-          </AppText>
-        </View>
+        <ListTotalCountHeader length={DUMMY_SEARCHED_USER.length} />
       )}
       {DUMMY_SEARCHED_USER.length === 0 ? (
         <View style={styles.empty}>

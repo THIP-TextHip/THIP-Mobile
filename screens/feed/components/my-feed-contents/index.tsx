@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import { ThipPreview, UserProfile } from "@shared/ui";
+import { ListTotalCountHeader, ThipPreview, UserProfile } from "@shared/ui";
 import { colors } from "@theme/token";
 
 // TODO: 서버에서 가져오기
@@ -18,17 +18,18 @@ export default function MyFeedContents() {
         <UserProfile userProfile={{ nickname, genre, profileColor }} />
         <ThipPreview thipList={DUMMY_THIP_LIST} />
       </View>
+      <ListTotalCountHeader length={3} />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   content: {
-    paddingHorizontal: 20,
     paddingTop: 32,
     gap: 40,
   },
   profile: {
     gap: 16,
+    paddingHorizontal: 20,
   },
 });

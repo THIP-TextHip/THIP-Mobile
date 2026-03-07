@@ -9,6 +9,7 @@ export { default as CustomTabBar } from "./custom-tab-bar";
 export { default as FeedPostPreview } from "./feed-post-preview";
 export { default as GenreCardGroup } from "./genre-card-group";
 export { default as InputNickname } from "./input-nickname";
+export { default as ListTotalCountHeader } from "./list-total-count-header";
 export { default as ProfileImage } from "./profile-image";
 export { default as RecentSearch } from "./recent-search";
 export { default as RemovableChip } from "./removable-chip";
