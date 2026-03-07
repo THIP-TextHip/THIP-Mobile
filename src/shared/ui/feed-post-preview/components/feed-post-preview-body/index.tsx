@@ -12,12 +12,12 @@ import {
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
-import { FeedPostPreviewType } from "../../types";
+import { FeedMyPostPreviewType, FeedPostPreviewType } from "../../types";
 
 const IMAGE_GAP = 10;
 
 interface FeedPostPreviewBodyProps {
-  feedPreview: FeedPostPreviewType;
+  feedPreview: FeedPostPreviewType | FeedMyPostPreviewType;
 }
 
 export default function FeedPostPreviewBody({

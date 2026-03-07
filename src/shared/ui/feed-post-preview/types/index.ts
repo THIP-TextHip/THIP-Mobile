@@ -17,3 +17,19 @@ export interface FeedPostPreviewType {
   isLiked: boolean;
   isWriter: boolean;
 }
+
+export interface FeedMyPostPreviewType {
+  feedId: number;
+  postDate: string;
+  isbn: string;
+  bookTitle: string;
+  bookAuthor: string;
+  contentBody: string;
+  contentUrls: string[];
+  likeCount: number;
+  commentCount: number;
+  isPublic: boolean;
+  isSaved: boolean;
+  isLiked: boolean;
+  isWriter: true;
+}

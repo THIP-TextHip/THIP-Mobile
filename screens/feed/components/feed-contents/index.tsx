@@ -1,9 +1,9 @@
 import { FlatList, StyleSheet, View } from "react-native";
 
 import { FeedPostPreview } from "@shared/ui";
-import { DUMMY_FEED_PREVIEW_LIST } from "@shared/ui/feed-post-preview/constants";
 import { colors } from "@theme/token";
 
+import { DUMMY_FEED_PREVIEW_LIST } from "../../constants";
 import MyThipPreview from "../my-thip-preview";
 
 // TODO: 추후 지금 뜨는 추천 글 기능 추가 예정
@@ -11,7 +11,7 @@ import MyThipPreview from "../my-thip-preview";
 export default function FeedContents() {
   return (
     <FlatList
-      contentContainerStyle={styles.contents}
+      contentContainerStyle={styles.list}
       ListHeaderComponent={<MyThipPreview />}
       data={DUMMY_FEED_PREVIEW_LIST}
       keyExtractor={(item) => String(item.feedId)}
@@ -22,7 +22,7 @@ export default function FeedContents() {
 }
 
 const styles = StyleSheet.create({
-  contents: {
+  list: {
     paddingTop: 20,
     paddingBottom: 40,
     gap: 40,
