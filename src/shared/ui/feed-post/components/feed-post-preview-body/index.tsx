@@ -1,4 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   Image,
@@ -11,7 +12,6 @@ import {
 
 import { colors } from "@theme/token";
 
-import { router } from "expo-router";
 import AppText from "../../../app-text";
 import { FeedMyPostPreviewType, FeedPostPreviewType } from "../../types";
 
