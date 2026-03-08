@@ -4,15 +4,13 @@ import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
 import ProfileImage from "../../../profile-image";
-import { FeedPostPreviewType } from "../../types";
+import { FeedPostDetailType, FeedPostPreviewType } from "../../types";
 
-interface FeedPostPreviewHeaderProps {
-  feedPreview: FeedPostPreviewType;
+interface FeedPostHeaderProps {
+  feed: FeedPostPreviewType | FeedPostDetailType;
 }
 
-export default function FeedPostPreviewHeader({
-  feedPreview,
-}: FeedPostPreviewHeaderProps) {
+export default function FeedPostHeader({ feed }: FeedPostHeaderProps) {
   const {
     creatorId,
     creatorProfileImageUrl,
@@ -20,7 +18,7 @@ export default function FeedPostPreviewHeader({
     aliasName,
     aliasColor,
     postDate,
-  } = feedPreview;
+  } = feed;
 
   // TODO: 유저 피드 페이지로 이동
   const handleToUserFeed = () => {

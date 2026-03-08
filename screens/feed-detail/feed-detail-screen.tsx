@@ -1,15 +1,16 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { AppText } from "@shared/ui";
-import { colors } from "@theme/token";
-
+import { FeedPostDetail } from "@/src/shared/ui";
 import { FeedDetailHeader } from "./components";
+import { DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
+
+  const handlePressMore = () => {};
 
   useEffect(() => {
     if (!feedId) {
@@ -23,8 +24,10 @@ export default function FeedDetailScreen() {
 
   return (
     <View style={styles.page}>
-      <FeedDetailHeader handlePressMore={() => {}} />
-      <AppText color={colors.white}>피드 상세 페이지 {feedId}</AppText>
+      <FeedDetailHeader handlePressMore={handlePressMore} />
+      <ScrollView>
+        <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
+      </ScrollView>
     </View>
   );
 }

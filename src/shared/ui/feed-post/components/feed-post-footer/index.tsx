@@ -12,17 +12,18 @@ import {
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
-import { FeedMyPostPreviewType, FeedPostPreviewType } from "../../types";
+import {
+  FeedMyPostPreviewType,
+  FeedPostDetailType,
+  FeedPostPreviewType,
+} from "../../types";
 
-interface FeedPostPreviewFooterProps {
-  feedPreview: FeedPostPreviewType | FeedMyPostPreviewType;
+interface FeedPostFooterProps {
+  feed: FeedPostPreviewType | FeedMyPostPreviewType | FeedPostDetailType;
 }
 
-export default function FeedPostPreviewFooter({
-  feedPreview,
-}: FeedPostPreviewFooterProps) {
-  const { feedId, likeCount, commentCount, isLiked, isSaved, isWriter } =
-    feedPreview;
+export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
+  const { feedId, likeCount, commentCount, isLiked, isSaved, isWriter } = feed;
   // TODO: 게시글 상세 페이지로 이동
   const handleToFeedDetail = () => {
     router.push({
@@ -60,7 +61,7 @@ export default function FeedPostPreviewFooter({
         </View>
       </View>
       {isWriter ? (
-        "isPublic" in feedPreview && !feedPreview.isPublic && <IcLock />
+        "isPublic" in feed && !feed.isPublic && <IcLock />
       ) : (
         <Pressable onPress={handleSaveFeed}>
           {isSaved ? <IcSaveFilled /> : <IcSave />}
