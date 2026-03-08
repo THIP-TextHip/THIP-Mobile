@@ -11,6 +11,7 @@ import {
 
 import { colors } from "@theme/token";
 
+import { router } from "expo-router";
 import AppText from "../../../app-text";
 import { FeedMyPostPreviewType, FeedPostPreviewType } from "../../types";
 
@@ -50,7 +51,10 @@ export default function FeedPostPreviewBody({
   };
 
   const handleToFeedDetail = () => {
-    console.log(feedId, "번 게시글로 이동");
+    router.push({
+      pathname: "/feed-detail/[feedId]",
+      params: { feedId: String(feedId) },
+    });
   };
 
   return (

@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
 import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
@@ -20,7 +21,13 @@ export default function SignUpHeader({
   };
   return (
     <CustomHeader
-      left={step === 2 && <IcArrowLeft onPress={handleClickBack} />}
+      left={
+        step === 2 && (
+          <Pressable onPress={handleClickBack}>
+            <IcArrowLeft />
+          </Pressable>
+        )
+      }
       center={
         <AppText weight="bold" size="2xl" color={colors.white}>
           설정 {step}/2

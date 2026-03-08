@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
 import { AppText, CustomButton, CustomHeader } from "@shared/ui";
@@ -25,7 +25,13 @@ export default function WelcomeScreen() {
 
   return (
     <View style={styles.page}>
-      <CustomHeader left={<IcArrowLeft onPress={handleGoBack} />} />
+      <CustomHeader
+        left={
+          <Pressable onPress={handleGoBack}>
+            <IcArrowLeft />
+          </Pressable>
+        }
+      />
       <View style={styles.container}>
         <View style={styles.textWrapper}>
           <AppText weight="bold" size="xl" color={colors.white}>

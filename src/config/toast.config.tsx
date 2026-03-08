@@ -1,9 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import {
-  BaseToast,
-  BaseToastProps,
-  ErrorToast,
-} from "react-native-toast-message";
+import { BaseToast, BaseToastProps } from "react-native-toast-message";
 
 import { AppText } from "../shared/ui";
 import { colors } from "../theme/token";
@@ -29,15 +25,11 @@ export const toastConfig = {
     by modifying the existing `ErrorToast` component
   */
   error: (props: BaseToastProps) => (
-    <ErrorToast
-      {...props}
-      text1Style={{
-        fontSize: 17,
-      }}
-      text2Style={{
-        fontSize: 15,
-      }}
-    />
+    <View style={styles.container}>
+      <AppText weight="medium" size="xs" color={colors.red}>
+        {props.text1}
+      </AppText>
+    </View>
   ),
 
   // Thip 기본 토스트
