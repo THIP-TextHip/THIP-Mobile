@@ -11,41 +11,27 @@ export interface FeedPostBase {
   commentCount: number;
   isSaved: boolean;
   isLiked: boolean;
-  isWriter: true;
+  isWriter: boolean;
 }
 
-export interface FeedPostPreviewType {
-  feedId: number;
+export interface FeedPostPreviewType extends FeedPostBase {
   creatorId: number;
   creatorNickname: string;
   creatorProfileImageUrl: string;
   aliasName: string;
   aliasColor: string;
-  postDate: string;
-  isbn: string;
-  bookTitle: string;
-  bookAuthor: string;
-  contentBody: string;
-  contentUrls: string[];
-  likeCount: number;
-  commentCount: number;
-  isSaved: boolean;
-  isLiked: boolean;
-  isWriter: boolean;
 }
 
-export interface FeedMyPostPreviewType {
-  feedId: number;
-  postDate: string;
-  isbn: string;
-  bookTitle: string;
-  bookAuthor: string;
-  contentBody: string;
-  contentUrls: string[];
-  likeCount: number;
-  commentCount: number;
+export interface FeedMyPostPreviewType extends FeedPostBase {
   isPublic: boolean;
-  isSaved: boolean;
-  isLiked: boolean;
-  isWriter: true;
+}
+
+export interface FeedPostDetailType extends FeedPostBase {
+  creatorId: number;
+  creatorNickname: string;
+  creatorProfileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  tagList: string[];
+  isPublic: boolean;
 }

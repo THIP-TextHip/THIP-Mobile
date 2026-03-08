@@ -1,7 +1,4 @@
-import {
-  FeedMyPostPreviewType,
-  FeedPostPreviewType,
-} from "@shared/ui/feed-post-preview/types";
+import { FeedMyPostPreviewType, FeedPostPreviewType } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export const DUMMY_THIP_LIST = [

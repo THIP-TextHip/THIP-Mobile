@@ -9,6 +9,7 @@ export { default as CustomTabBar } from "./custom-tab-bar";
 export {
   FeedMyPostPreviewType,
   FeedPostDetail,
+  FeedPostDetailType,
   FeedPostPreview,
   FeedPostPreviewType,
 } from "./feed-post";
