@@ -7,7 +7,6 @@ interface FeedPostDetailBodyProps {
   feedDetail: FeedPostDetailType;
 }
 
-// TODO: 컴포넌트 구현
 export default function FeedPostDetailBody({
   feedDetail,
 }: FeedPostDetailBodyProps) {

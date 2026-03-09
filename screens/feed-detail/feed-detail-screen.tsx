@@ -28,6 +28,7 @@ export default function FeedDetailScreen() {
       <ScrollView>
         <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
         {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
+        <View style={{ height: 200 }}></View>
       </ScrollView>
     </View>
   );
