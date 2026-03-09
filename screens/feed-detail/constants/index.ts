@@ -1,5 +1,5 @@
-import { colors } from "@/src/theme/token";
 import { FeedPostDetailType } from "@shared/ui";
+import { colors } from "@theme/token";
 
 export const DUMMY_FEED_DETAIL: FeedPostDetailType = {
   feedId: 3,

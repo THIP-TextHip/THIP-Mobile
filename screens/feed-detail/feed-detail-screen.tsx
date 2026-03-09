@@ -1,16 +1,37 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { FeedPostDetail } from "@/src/shared/ui";
-import { FeedDetailHeader } from "./components";
+import { FeedPostDetail } from "@shared/ui";
+
+import { FeedDetailBottomSheet, FeedDetailHeader } from "./components";
 import { DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
 
-  const handlePressMore = () => {};
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
+  const handlePressMore = () => {
+    setIsBottomSheetVisible(true);
+  };
+
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetVisible(false);
+  };
+
+  const handleReport = () => {
+    console.log("피드 신고하기");
+  };
+  const handleToEdit = () => {
+    console.log("피드 수정하기");
+  };
+  const handleDelete = () => {
+    console.log("피드 삭제하기");
+  };
+
+  console.log(DUMMY_FEED_DETAIL.isWriter);
 
   useEffect(() => {
     if (!feedId) {
@@ -30,6 +51,14 @@ export default function FeedDetailScreen() {
         {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
         <View style={{ height: 200 }}></View>
       </ScrollView>
+      <FeedDetailBottomSheet
+        isWriter={false}
+        isVisible={isBottomSheetVisible}
+        handleCloseBottomSheet={handleCloseBottomSheet}
+        handleReport={handleReport}
+        handleToEdit={handleToEdit}
+        handleDelete={handleDelete}
+      />
     </View>
   );
 }

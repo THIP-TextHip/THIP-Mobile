@@ -1,5 +1,7 @@
-import { colors } from "@/src/theme/token";
 import { StyleSheet, View } from "react-native";
+
+import { colors } from "@theme/token";
+
 import BookInfoBar from "../book-info-bar";
 import {
   FeedPostDetailBody,

@@ -1,5 +1,7 @@
-import { colors } from "@/src/theme/token";
 import { FlatList, Image, StyleSheet, View } from "react-native";
+
+import { colors } from "@theme/token";
+
 import AppText from "../../../app-text";
 import { FeedPostDetailType } from "../../types";
 
