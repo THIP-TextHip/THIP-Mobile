@@ -31,8 +31,6 @@ export default function FeedDetailScreen() {
     console.log("피드 삭제하기");
   };
 
-  console.log(DUMMY_FEED_DETAIL.isWriter);
-
   useEffect(() => {
     if (!feedId) {
       Toast.show({
