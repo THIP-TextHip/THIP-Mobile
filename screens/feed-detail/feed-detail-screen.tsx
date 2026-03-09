@@ -50,7 +50,7 @@ export default function FeedDetailScreen() {
         <View style={{ height: 200 }}></View>
       </ScrollView>
       <FeedDetailBottomSheet
-        isWriter={false}
+        isWriter={DUMMY_FEED_DETAIL.isWriter}
         isVisible={isBottomSheetVisible}
         handleCloseBottomSheet={handleCloseBottomSheet}
         handleReport={handleReport}
