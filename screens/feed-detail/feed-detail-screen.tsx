@@ -37,9 +37,15 @@ export default function FeedDetailScreen() {
         type: "error",
         text1: "해당 피드가 존재하지 않습니다.",
       });
-      router.back();
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace("/feed");
+      }
     }
   }, [feedId]);
+
+  if (!feedId) return null;
 
   return (
     <View style={styles.page}>
