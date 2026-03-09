@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { useCallback } from "react";
+import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
 import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
@@ -20,7 +21,11 @@ export default function EditProfileHeader({
 
   return (
     <CustomHeader
-      left={<IcArrowLeft onPress={handleGoBack} />}
+      left={
+        <Pressable onPress={handleGoBack}>
+          <IcArrowLeft />
+        </Pressable>
+      }
       center={
         <AppText weight="bold" size="2xl" color={colors.white}>
           프로필 편집

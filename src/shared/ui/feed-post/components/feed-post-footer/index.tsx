@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import {
@@ -11,26 +12,32 @@ import {
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
-import { FeedMyPostPreviewType, FeedPostPreviewType } from "../../types";
+import {
+  FeedMyPostPreviewType,
+  FeedPostDetailType,
+  FeedPostPreviewType,
+} from "../../types";
 
-interface FeedPostPreviewFooterProps {
-  feedPreview: FeedPostPreviewType | FeedMyPostPreviewType;
+interface FeedPostFooterProps {
+  feed: FeedPostPreviewType | FeedMyPostPreviewType | FeedPostDetailType;
 }
 
-export default function FeedPostPreviewFooter({
-  feedPreview,
-}: FeedPostPreviewFooterProps) {
+export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
+  const { feedId, likeCount, commentCount, isLiked, isSaved, isWriter } = feed;
   // TODO: 게시글 상세 페이지로 이동
   const handleToFeedDetail = () => {
-    console.log(feedPreview.feedId, "번 게시글로 이동");
+    router.push({
+      pathname: "/feed-detail/[feedId]",
+      params: { feedId: String(feedId) },
+    });
   };
   // TODO: 좋아요 누르기 api
   const handleClickHeart = () => {
-    console.log(feedPreview.feedId, "번 게시글 좋아요");
+    console.log(feedId, "번 게시글 좋아요");
   };
   // TODO: 저장 api
   const handleSaveFeed = () => {
-    console.log(feedPreview.feedId, "번 게시글 저장");
+    console.log(feedId, "번 게시글 저장");
   };
 
   return (
@@ -38,10 +45,10 @@ export default function FeedPostPreviewFooter({
       <View style={styles.likeCommentWrapper}>
         <View style={styles.likeCommentStyle}>
           <Pressable onPress={handleClickHeart}>
-            {feedPreview.isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
+            {isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
-            {feedPreview.likeCount.toLocaleString()}
+            {likeCount.toLocaleString()}
           </AppText>
         </View>
         <View style={styles.likeCommentStyle}>
@@ -49,15 +56,15 @@ export default function FeedPostPreviewFooter({
             <IcComment />
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
-            {feedPreview.commentCount.toLocaleString()}
+            {commentCount.toLocaleString()}
           </AppText>
         </View>
       </View>
-      {feedPreview.isWriter ? (
-        "isPublic" in feedPreview && !feedPreview.isPublic && <IcLock />
+      {isWriter ? (
+        "isPublic" in feed && !feed.isPublic && <IcLock />
       ) : (
         <Pressable onPress={handleSaveFeed}>
-          {feedPreview.isSaved ? <IcSaveFilled /> : <IcSave />}
+          {isSaved ? <IcSaveFilled /> : <IcSave />}
         </Pressable>
       )}
     </View>

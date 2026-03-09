@@ -1,4 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   Image,
@@ -50,7 +51,10 @@ export default function FeedPostPreviewBody({
   };
 
   const handleToFeedDetail = () => {
-    console.log(feedId, "번 게시글로 이동");
+    router.push({
+      pathname: "/feed-detail/[feedId]",
+      params: { feedId: String(feedId) },
+    });
   };
 
   return (
