@@ -27,6 +27,7 @@ export default function FeedDetailScreen() {
       <FeedDetailHeader handlePressMore={handlePressMore} />
       <ScrollView>
         <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
+        {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
       </ScrollView>
     </View>
   );

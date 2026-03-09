@@ -1,3 +1,4 @@
+import { colors } from "@/src/theme/token";
 import { StyleSheet, View } from "react-native";
 import BookInfoBar from "../book-info-bar";
 import {
@@ -14,7 +15,7 @@ interface FeedPostDetailProps {
 export default function FeedPostDetail({ feedDetail }: FeedPostDetailProps) {
   return (
     <View style={styles.container}>
-      {"creatorId" in feedDetail && <FeedPostHeader feed={feedDetail} />}
+      <FeedPostHeader feed={feedDetail} />
       <BookInfoBar
         isbn={feedDetail.isbn}
         bookTitle={feedDetail.bookTitle}
@@ -29,6 +30,9 @@ export default function FeedPostDetail({ feedDetail }: FeedPostDetailProps) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    paddingBottom: 30,
     gap: 16,
+    borderBottomWidth: 6,
+    borderBottomColor: colors.darkgrey.divider,
   },
 });
