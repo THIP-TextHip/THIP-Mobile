@@ -5,6 +5,7 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from "react-native";
 import {
@@ -32,22 +33,30 @@ export default function ImageViewer({
 }: ImageViewerProps) {
   const insets = useSafeAreaInsets();
   const { currentIndex, totalCount } = useGestureViewerState();
+  const { height } = useWindowDimensions();
 
   const imageItems = useMemo(
     () => images.map((uri, index) => ({ id: `${index}`, uri })),
     [images],
   );
 
-  const renderItem = useCallback((item: { id: string; uri: string }) => {
-    return (
-      <Image
-        key={item.id}
-        source={{ uri: item.uri }}
-        style={{ width: "100%", height: "100%", maxHeight: 500 }}
-        resizeMode="contain"
-      />
-    );
-  }, []);
+  // TODO: insets을 고려하여 이미지 최대 높이 및 정렬 수정
+  const renderItem = useCallback(
+    (item: { id: string; uri: string }) => {
+      return (
+        <Image
+          source={{ uri: item.uri }}
+          style={{
+            width: "100%",
+            height: "100%",
+            maxHeight: height - insets.top - insets.bottom - 150,
+          }}
+          resizeMode="contain"
+        />
+      );
+    },
+    [height, insets],
+  );
 
   return (
     <Modal
@@ -63,7 +72,7 @@ export default function ImageViewer({
         ListComponent={FlatList}
         renderItem={renderItem}
         renderContainer={(children, { dismiss }) => (
-          <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+          <View style={[styles.container]}>
             <CustomHeader
               left={
                 <Pressable onPress={dismiss}>
@@ -113,7 +122,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black.main,
-    paddingBottom: 50,
   },
   header: {
     position: "absolute",
