@@ -14,7 +14,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { IcArrowLeft } from "@images/icons";
-import { CustomHeader } from "@shared/ui";
+import CustomHeader from "@shared/ui/custom-header";
 import { colors } from "@theme/token";
 
 interface ImageViewerProps {

@@ -5,18 +5,12 @@ import Toast from "react-native-toast-message";
 
 import { FeedPostDetail } from "@shared/ui";
 
-import {
-  FeedDetailBottomSheet,
-  FeedDetailHeader,
-  ImageViewer,
-} from "./components";
+import { FeedDetailBottomSheet, FeedDetailHeader } from "./components";
 import { DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
 
-  const [isImageViewerVisible, setIsImageViewerVisible] = useState(false);
-  const [pressedImageIndex, setPressedImageIndex] = useState(0);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   const handlePressMore = () => {
@@ -25,16 +19,6 @@ export default function FeedDetailScreen() {
 
   const handleCloseBottomSheet = () => {
     setIsBottomSheetVisible(false);
-  };
-
-  const handleOpenImageView = (index: number) => {
-    setPressedImageIndex(index);
-    setIsImageViewerVisible(true);
-  };
-
-  const handleCloseImageView = () => {
-    setPressedImageIndex(0);
-    setIsImageViewerVisible(false);
   };
 
   const handleReport = () => {
@@ -67,19 +51,11 @@ export default function FeedDetailScreen() {
     <View style={styles.page}>
       <FeedDetailHeader handlePressMore={handlePressMore} />
       <ScrollView>
-        <FeedPostDetail
-          feedDetail={DUMMY_FEED_DETAIL}
-          handleOpenImageView={handleOpenImageView}
-        />
+        <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
         {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
         <View style={{ height: 200 }}></View>
       </ScrollView>
-      <ImageViewer
-        isVisible={isImageViewerVisible}
-        images={DUMMY_FEED_DETAIL.contentUrls}
-        initialIndex={pressedImageIndex}
-        onClose={handleCloseImageView}
-      />
+
       <FeedDetailBottomSheet
         // TODO: 서버에서 받아온 데이터로 수정 예정
         isWriter={DUMMY_FEED_DETAIL.isWriter}

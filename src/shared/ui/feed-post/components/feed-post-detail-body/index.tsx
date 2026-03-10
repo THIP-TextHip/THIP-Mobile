@@ -1,19 +1,32 @@
+import { useState } from "react";
 import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
 import { FeedPostDetailType } from "../../types";
+import ImageViewer from "../image-viewer";
 
 interface FeedPostDetailBodyProps {
   feedDetail: FeedPostDetailType;
-  handleOpenImageView: (index: number) => void;
 }
 
 export default function FeedPostDetailBody({
   feedDetail,
-  handleOpenImageView,
 }: FeedPostDetailBodyProps) {
+  const [isImageViewerVisible, setIsImageViewerVisible] = useState(false);
+  const [pressedImageIndex, setPressedImageIndex] = useState(0);
+
+  const handleOpenImageView = (index: number) => {
+    setPressedImageIndex(index);
+    setIsImageViewerVisible(true);
+  };
+
+  const handleCloseImageView = () => {
+    setPressedImageIndex(0);
+    setIsImageViewerVisible(false);
+  };
+
   return (
     <View style={styles.body}>
       <AppText
@@ -50,6 +63,12 @@ export default function FeedPostDetailBody({
         ))}
       </View>
       <View style={styles.divider} />
+      <ImageViewer
+        isVisible={isImageViewerVisible}
+        images={feedDetail.contentUrls}
+        initialIndex={pressedImageIndex}
+        onClose={handleCloseImageView}
+      />
     </View>
   );
 }
