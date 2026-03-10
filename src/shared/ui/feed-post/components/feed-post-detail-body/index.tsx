@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 
 import { colors } from "@theme/token";
 
@@ -7,10 +7,12 @@ import { FeedPostDetailType } from "../../types";
 
 interface FeedPostDetailBodyProps {
   feedDetail: FeedPostDetailType;
+  handleOpenImageView: (index: number) => void;
 }
 
 export default function FeedPostDetailBody({
   feedDetail,
+  handleOpenImageView,
 }: FeedPostDetailBodyProps) {
   return (
     <View style={styles.body}>
@@ -28,12 +30,14 @@ export default function FeedPostDetailBody({
         contentContainerStyle={styles.imageWrapper}
         data={feedDetail.contentUrls}
         keyExtractor={(item, index) => `${item}-${index}`}
-        renderItem={({ item }) => (
-          <Image
-            source={{ uri: item }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+        renderItem={({ item, index }) => (
+          <Pressable onPress={() => handleOpenImageView(index)}>
+            <Image
+              source={{ uri: item }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          </Pressable>
         )}
       />
       <View style={styles.tagWrapper}>

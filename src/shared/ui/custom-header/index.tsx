@@ -1,20 +1,23 @@
-import { colors } from "@theme/token";
 import { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+
+import { colors } from "@theme/token";
 
 interface CustomHeaderProps {
   left?: ReactNode;
   center?: ReactNode;
   right?: ReactNode;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default function CustomHeader({
   left,
   center,
   right,
+  containerStyle,
 }: CustomHeaderProps) {
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, containerStyle]}>
       <View style={styles.headerLeft}>{left}</View>
       <View style={styles.headerContent}>{center}</View>
       <View style={styles.headerRight}>{right}</View>

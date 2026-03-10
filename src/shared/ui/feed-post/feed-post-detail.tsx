@@ -12,9 +12,13 @@ import { FeedPostDetailType } from "./types";
 
 interface FeedPostDetailProps {
   feedDetail: FeedPostDetailType;
+  handleOpenImageView: (index: number) => void;
 }
 
-export default function FeedPostDetail({ feedDetail }: FeedPostDetailProps) {
+export default function FeedPostDetail({
+  feedDetail,
+  handleOpenImageView,
+}: FeedPostDetailProps) {
   return (
     <View style={styles.container}>
       <FeedPostHeader feed={feedDetail} />
@@ -23,7 +27,10 @@ export default function FeedPostDetail({ feedDetail }: FeedPostDetailProps) {
         bookTitle={feedDetail.bookTitle}
         bookAuthor={feedDetail.bookAuthor}
       />
-      <FeedPostDetailBody feedDetail={feedDetail} />
+      <FeedPostDetailBody
+        feedDetail={feedDetail}
+        handleOpenImageView={handleOpenImageView}
+      />
       <FeedPostFooter feed={feedDetail} />
     </View>
   );
