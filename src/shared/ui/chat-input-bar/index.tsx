@@ -50,8 +50,10 @@ export default function ChatInputBar({
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={insets.bottom}
+      behavior={"padding"}
+      keyboardVerticalOffset={
+        Platform.OS === "ios" ? insets.bottom : insets.bottom + 10
+      }
       style={styles.container}
     >
       {targetName && (
@@ -102,7 +104,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingTop: 10,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: colors.darkgrey.dark,
     gap: 12,
