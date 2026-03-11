@@ -23,7 +23,10 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheetModalProvider>
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.black.main }}>
+        <SafeAreaView
+          style={{ flex: 1, backgroundColor: colors.black.main }}
+          edges={["top", "left", "right"]}
+        >
           <Stack>
             <Stack.Screen
               name="(tabs)"
