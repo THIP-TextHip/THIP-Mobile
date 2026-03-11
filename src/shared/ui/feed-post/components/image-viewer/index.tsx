@@ -75,7 +75,12 @@ export default function ImageViewer({
           <View style={[styles.container]}>
             <CustomHeader
               left={
-                <Pressable onPress={dismiss}>
+                <Pressable
+                  onPress={dismiss}
+                  accessibilityRole="button"
+                  accessibilityLabel="close image viewer"
+                  hitSlop={12}
+                >
                   <IcArrowLeft />
                 </Pressable>
               }
