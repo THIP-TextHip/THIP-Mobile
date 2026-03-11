@@ -1,8 +1,9 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { colors } from "@theme/token";
 import { Pressable, View } from "react-native";
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { colors } from "@theme/token";
+
 import AppText from "../app-text";
 import { styles } from "./custom-tab-bar.styles";
 
