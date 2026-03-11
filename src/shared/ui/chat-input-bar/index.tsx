@@ -65,7 +65,7 @@ export default function ChatInputBar({
               님에게 답글 작성
             </AppText>
           </View>
-          <Pressable onPress={handleResetReply}>
+          <Pressable onPress={handleResetReply} hitSlop={5}>
             <IcX />
           </Pressable>
         </View>
