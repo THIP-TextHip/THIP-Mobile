@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { AppText, CustomBottomSheet } from "@shared/ui";
+import AppText from "@shared/ui/app-text";
+import CustomBottomSheet from "@shared/ui/custom-bottom-sheet";
 import { colors } from "@theme/token";
 
 // TODO: 추후 api 연동 시 수정

@@ -1,9 +1,11 @@
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
 import { FeedPostDetailType } from "../../types";
+import ImageViewer from "../image-viewer";
 
 interface FeedPostDetailBodyProps {
   feedDetail: FeedPostDetailType;
@@ -12,6 +14,19 @@ interface FeedPostDetailBodyProps {
 export default function FeedPostDetailBody({
   feedDetail,
 }: FeedPostDetailBodyProps) {
+  const [isImageViewerVisible, setIsImageViewerVisible] = useState(false);
+  const [pressedImageIndex, setPressedImageIndex] = useState(0);
+
+  const handleOpenImageView = (index: number) => {
+    setPressedImageIndex(index);
+    setIsImageViewerVisible(true);
+  };
+
+  const handleCloseImageView = () => {
+    setPressedImageIndex(0);
+    setIsImageViewerVisible(false);
+  };
+
   return (
     <View style={styles.body}>
       <AppText
@@ -28,12 +43,14 @@ export default function FeedPostDetailBody({
         contentContainerStyle={styles.imageWrapper}
         data={feedDetail.contentUrls}
         keyExtractor={(item, index) => `${item}-${index}`}
-        renderItem={({ item }) => (
-          <Image
-            source={{ uri: item }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+        renderItem={({ item, index }) => (
+          <Pressable onPress={() => handleOpenImageView(index)}>
+            <Image
+              source={{ uri: item }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          </Pressable>
         )}
       />
       <View style={styles.tagWrapper}>
@@ -46,6 +63,12 @@ export default function FeedPostDetailBody({
         ))}
       </View>
       <View style={styles.divider} />
+      <ImageViewer
+        isVisible={isImageViewerVisible}
+        images={feedDetail.contentUrls}
+        initialIndex={pressedImageIndex}
+        onClose={handleCloseImageView}
+      />
     </View>
   );
 }

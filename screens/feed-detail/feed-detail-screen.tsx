@@ -55,6 +55,7 @@ export default function FeedDetailScreen() {
         {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
         <View style={{ height: 200 }}></View>
       </ScrollView>
+
       <FeedDetailBottomSheet
         // TODO: 서버에서 받아온 데이터로 수정 예정
         isWriter={DUMMY_FEED_DETAIL.isWriter}

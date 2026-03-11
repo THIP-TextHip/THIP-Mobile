@@ -15,11 +15,11 @@ export const DUMMY_FEED_DETAIL: FeedPostDetailType = {
   contentBody:
     "밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. 밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. \n밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. 밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. 밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. 밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. 밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다. 밑줄 친 문장 정리 중. '생존'이라는 단어를 다시 생각하게 만드는 챕터였다.",
   contentUrls: [
-    "https://placehold.co/200/png",
-    "https://placehold.co/200/png",
-    "https://placehold.co/200/png",
-    "https://placehold.co/200/png",
-    "https://placehold.co/200/png",
+    "https://placehold.co/200x100/png",
+    "https://placehold.co/200x400/png",
+    "https://placehold.co/200x50/png",
+    "https://placehold.co/200x800/png",
+    "https://placehold.co/200x200/png",
   ],
   likeCount: 201,
   commentCount: 33,
