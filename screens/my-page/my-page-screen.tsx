@@ -41,7 +41,7 @@ export default function MyPageScreen() {
         </View>
       </View>
       <View style={styles.account}>
-        <Pressable>
+        <Pressable onPress={() => router.push("/login")}>
           <AppText weight="regular" size="sm" color={colors.grey[200]}>
             로그아웃
           </AppText>
