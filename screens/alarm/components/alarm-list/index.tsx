@@ -1,4 +1,5 @@
 import { FlatList, StyleSheet } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AlarmResponse, AlarmType } from "../../types";
 import AlarmEmptyView from "../alarm-empty-view";
@@ -10,6 +11,8 @@ interface AlarmListProps {
 }
 
 export default function AlarmList({ filter, alarmData }: AlarmListProps) {
+  const { bottom } = useSafeAreaInsets();
+
   const filteredAlarmList =
     filter === null
       ? alarmData
@@ -17,7 +20,7 @@ export default function AlarmList({ filter, alarmData }: AlarmListProps) {
 
   return filteredAlarmList.length > 0 ? (
     <FlatList
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingBottom: bottom }]}
       data={filteredAlarmList}
       keyExtractor={(item) => String(item.notificationId)}
       renderItem={({ item }) => <AlarmItem alarm={item} />}

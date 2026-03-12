@@ -26,6 +26,7 @@ export { default as IcPlusfriend } from "./ic_plusfriend.svg";
 export { default as IcRankdash } from "./ic_rankdash.svg";
 export { default as IcRankdown } from "./ic_rankdown.svg";
 export { default as IcRankup } from "./ic_rankup.svg";
+export { default as IcReplyGrey } from "./ic_reply-grey.svg";
 export { default as IcReply } from "./ic_reply.svg";
 export { default as IcReset } from "./ic_reset.svg";
 export { default as IcSearch } from "./ic_search.svg";

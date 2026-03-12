@@ -1,4 +1,5 @@
 import { FlatList, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -7,11 +8,13 @@ import { DUMMY_THIP_LIST } from "../feed/constants";
 import { MyThipItem } from "./components";
 
 export default function MyThipListScreen() {
+  const { bottom } = useSafeAreaInsets();
+
   return (
     <View style={styles.page}>
       <ListTotalCountHeader length={DUMMY_THIP_LIST.length} />
       <FlatList
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
         data={DUMMY_THIP_LIST}
         keyExtractor={(item) => String(item.userId)}
         renderItem={({ item }) => (

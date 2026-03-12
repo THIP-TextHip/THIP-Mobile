@@ -1,17 +1,33 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { FeedPostDetail } from "@shared/ui";
+import { ChatInputBar, FeedPostDetail } from "@shared/ui";
 
 import { FeedDetailBottomSheet, FeedDetailHeader } from "./components";
 import { DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
+  const { bottom } = useSafeAreaInsets();
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
 
+  const [comment, setComment] = useState("");
+  // TODO: 테스트용 상태입니다. 답글 작성 상태 관련으로 수정
+  const [replyNickname, setReplyNickname] = useState("사용자1");
+
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
+  const handleSendText = () => {
+    console.log(comment.trim(), " 전송");
+    setComment("");
+  };
+
+  // TODO: 답글 작성 상태 초기화로
+  const handleResetReply = () => {
+    setReplyNickname("");
+  };
 
   const handlePressMore = () => {
     setIsBottomSheetVisible(true);
@@ -48,13 +64,22 @@ export default function FeedDetailScreen() {
   if (!feedId) return null;
 
   return (
-    <View style={styles.page}>
+    <View style={[styles.page, { paddingBottom: bottom }]}>
       <FeedDetailHeader handlePressMore={handlePressMore} />
       <ScrollView>
         <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
         {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
         <View style={{ height: 200 }}></View>
       </ScrollView>
+
+      <ChatInputBar
+        text={comment}
+        placeholder="여러분의 생각을 남겨주세요."
+        setText={setComment}
+        handleSend={handleSendText}
+        targetName={replyNickname}
+        handleResetReply={handleResetReply}
+      />
 
       <FeedDetailBottomSheet
         // TODO: 서버에서 받아온 데이터로 수정 예정
