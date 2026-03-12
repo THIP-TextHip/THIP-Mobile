@@ -1,31 +1,48 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { ChatInputBar, FeedPostDetail } from "@shared/ui";
+import { ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
 
 import { FeedDetailBottomSheet, FeedDetailHeader } from "./components";
-import { DUMMY_FEED_DETAIL } from "./constants";
+import { DUMMY_COMMENT_LIST, DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
   const { bottom } = useSafeAreaInsets();
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
 
   const [comment, setComment] = useState("");
-  // TODO: 테스트용 상태입니다. 답글 작성 상태 관련으로 수정
-  const [replyNickname, setReplyNickname] = useState("사용자1");
+
+  const [replyCommentId, setReplyCommentId] = useState<number | null>();
+  const [replyNickname, setReplyNickname] = useState("");
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   const handleSendText = () => {
-    console.log(comment.trim(), " 전송");
+    if (replyCommentId) {
+      console.log(
+        replyNickname,
+        "에게 ",
+        replyCommentId,
+        "번에 대한 답글 ",
+        comment.trim(),
+        " 전송",
+      );
+    } else {
+      console.log(comment.trim(), " 전송");
+    }
     setComment("");
   };
 
-  // TODO: 답글 작성 상태 초기화로
+  const handlePressReply = (commentId: number, replyNickname: string) => {
+    setReplyCommentId(commentId);
+    setReplyNickname(replyNickname);
+  };
+
   const handleResetReply = () => {
+    setReplyCommentId(null);
     setReplyNickname("");
   };
 
@@ -66,11 +83,22 @@ export default function FeedDetailScreen() {
   return (
     <View style={[styles.page, { paddingBottom: bottom }]}>
       <FeedDetailHeader handlePressMore={handlePressMore} />
-      <ScrollView>
-        <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
-        {/* TODO: 댓글 리스트 및 입력창 구현 예정 */}
-        <View style={{ height: 200 }}></View>
-      </ScrollView>
+      <FlatList
+        ListHeaderComponent={() => (
+          <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
+        )}
+        contentContainerStyle={{ paddingBottom: bottom + 40 }}
+        data={DUMMY_COMMENT_LIST}
+        keyExtractor={(item) => String(item.commentId)}
+        renderItem={({ item, index }) => (
+          <CommentRoot
+            comment={item}
+            isFirst={index === 0}
+            isLast={index === DUMMY_COMMENT_LIST.length - 1}
+            handlePressReply={handlePressReply}
+          />
+        )}
+      />
 
       <ChatInputBar
         text={comment}
