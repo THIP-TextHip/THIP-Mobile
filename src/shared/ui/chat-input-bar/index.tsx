@@ -58,7 +58,7 @@ export default function ChatInputBar({
     >
       {targetName && (
         <View style={styles.replyContainer}>
-          <View style={styles.replayTextWrapper}>
+          <View style={styles.replyTextWrapper}>
             <IcReplyGrey style={styles.replyIcon} />
             <AppText size="xs" color={colors.neongreen}>
               @{targetName}
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  replayTextWrapper: {
+  replyTextWrapper: {
     flexDirection: "row",
     alignItems: "center",
     gap: 2,
