@@ -4,7 +4,8 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
+import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
+import { colors } from "@theme/token";
 
 import { FeedDetailBottomSheet, FeedDetailHeader } from "./components";
 import { DUMMY_COMMENT_LIST, DUMMY_FEED_DETAIL } from "./constants";
@@ -98,6 +99,16 @@ export default function FeedDetailScreen() {
             handlePressReply={handlePressReply}
           />
         )}
+        ListEmptyComponent={() => (
+          <View style={styles.empty}>
+            <AppText weight="semibold" size="lg" color={colors.white}>
+              아직 댓글이 없어요
+            </AppText>
+            <AppText weight="regular" size="sm" color={colors.grey[100]}>
+              첫번째 댓글을 남겨보세요
+            </AppText>
+          </View>
+        )}
       />
 
       <ChatInputBar
@@ -125,5 +136,12 @@ export default function FeedDetailScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
+  },
+  empty: {
+    flex: 1,
+    gap: 8,
+    minHeight: 300,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

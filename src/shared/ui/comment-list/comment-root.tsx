@@ -25,13 +25,15 @@ export default function CommentRoot({
       ]}
     >
       <CommentItem comment={comment} handlePressReply={handlePressReply} />
-      <FlatList
-        data={comment.replyList}
-        style={styles.replyList}
-        renderItem={({ item }) => (
-          <CommentItem comment={item} handlePressReply={handlePressReply} />
-        )}
-      />
+      {comment.replyList.length !== 0 && (
+        <FlatList
+          data={comment.replyList}
+          style={styles.replyList}
+          renderItem={({ item }) => (
+            <CommentItem comment={item} handlePressReply={handlePressReply} />
+          )}
+        />
+      )}
     </View>
   );
 }
