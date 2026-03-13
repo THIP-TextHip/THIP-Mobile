@@ -16,13 +16,13 @@ export default function FeedDetailScreen() {
 
   const [comment, setComment] = useState("");
 
-  const [replyCommentId, setReplyCommentId] = useState<number | null>();
+  const [replyCommentId, setReplyCommentId] = useState<number | null>(null);
   const [replyNickname, setReplyNickname] = useState("");
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
   const handleSendText = () => {
-    if (replyCommentId) {
+    if (replyCommentId !== null) {
       console.log(
         replyNickname,
         "에게 ",
