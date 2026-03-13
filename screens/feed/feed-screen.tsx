@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+
+import { FloatingFeedWrite } from "@images/icons";
 
 import { FeedContents, MyFeedContents, TopTabBar } from "./components";
 
@@ -14,6 +16,11 @@ export default function FeedScreen() {
     setIsMyFeed(true);
   };
 
+  const handleToWriteFeed = () => {
+    // TODO: 피드 글 작성 페이지로 이동
+    console.log("피드 글 작성하러 가기");
+  };
+
   return (
     <View style={styles.page}>
       <TopTabBar
@@ -22,6 +29,9 @@ export default function FeedScreen() {
         handleMyFeed={handleMyFeed}
       />
       {isMyFeed ? <MyFeedContents /> : <FeedContents />}
+      <Pressable style={styles.floating} onPress={handleToWriteFeed}>
+        <FloatingFeedWrite />
+      </Pressable>
     </View>
   );
 }
@@ -29,5 +39,10 @@ export default function FeedScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
+  },
+  floating: {
+    position: "absolute",
+    bottom: 32,
+    right: 20,
   },
 });

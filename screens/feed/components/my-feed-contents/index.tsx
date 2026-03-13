@@ -1,6 +1,5 @@
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
-import { FloatingFeedWrite } from "@images/icons";
 import {
   FeedPostPreview,
   ListTotalCountHeader,
@@ -31,10 +30,6 @@ const MyFeedTopContents = () => {
 };
 
 export default function MyFeedContents() {
-  const handleToWriteFeed = () => {
-    // TODO: 피드 글 작성 페이지로 이동
-    console.log("피드 글 작성하러 가기");
-  };
   return (
     <View style={styles.content}>
       {DUMMY_MY_FEED_PREVIEW_LIST.length === 0 ? (
@@ -52,9 +47,6 @@ export default function MyFeedContents() {
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       )}
-      <Pressable style={styles.floating} onPress={handleToWriteFeed}>
-        <FloatingFeedWrite />
-      </Pressable>
     </View>
   );
 }
@@ -73,16 +65,11 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   list: {
-    paddingBottom: 120,
+    paddingBottom: 100,
   },
   separator: {
     marginVertical: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
-  },
-  floating: {
-    position: "absolute",
-    bottom: 32,
-    right: 20,
   },
 });

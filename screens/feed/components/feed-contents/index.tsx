@@ -24,7 +24,7 @@ export default function FeedContents() {
 const styles = StyleSheet.create({
   list: {
     paddingTop: 20,
-    paddingBottom: 40,
+    paddingBottom: 100,
     gap: 40,
   },
   separator: {
