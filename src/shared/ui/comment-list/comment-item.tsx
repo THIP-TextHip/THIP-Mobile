@@ -1,8 +1,9 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 
 import { IcHeart, IcHeartFilled, IcReply } from "@images/icons";
 import { colors } from "@theme/token";
 
+import { useRef, useState } from "react";
 import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 import { CommentListType, CommentReplyListType } from "./types";
@@ -16,6 +17,10 @@ export default function CommentItem({
   comment,
   handlePressReply,
 }: CommentItemProps) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalPositionY, setModalPositionY] = useState(0);
+  const commentItemRef = useRef<View>(null);
+
   const handleToUser = () => {
     console.log(comment.creatorId, "번 유저로 이동");
   };
@@ -26,10 +31,33 @@ export default function CommentItem({
     console.log(comment.commentId, "번 댓글 하트 누르기");
   };
 
+  const handleLongPressComment = () => {
+    commentItemRef.current?.measureInWindow((_, y) => {
+      setModalPositionY(y + 50);
+      setIsModalVisible(true);
+    });
+  };
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+  const handlePressModalButton = () => {
+    if (comment.isWriter) {
+      console.log(comment.commentId, "번 댓글 삭제");
+      setIsModalVisible(false);
+    } else {
+      console.log(comment.commentId, "번 댓글 신고");
+      setIsModalVisible(false);
+    }
+  };
+
   const renderContents = () => {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <Pressable
+        ref={commentItemRef}
+        style={styles.container}
+        onLongPress={handleLongPressComment}
+      >
+        <Pressable style={styles.header}>
           <Pressable style={styles.profile} onPress={handleToUser}>
             <ProfileImage image={comment.creatorProfileImageUrl} size={24} />
             <View style={styles.creatorInfo}>
@@ -44,7 +72,7 @@ export default function CommentItem({
           <AppText weight="regular" size="2xs" color={colors.grey[200]}>
             {comment.postDate}
           </AppText>
-        </View>
+        </Pressable>
         <View style={styles.content}>
           <View style={styles.commentContainer}>
             <AppText
@@ -85,7 +113,23 @@ export default function CommentItem({
             </AppText>
           </View>
         </View>
-      </View>
+        <Modal
+          transparent
+          visible={isModalVisible}
+          onRequestClose={handleCloseModal}
+        >
+          <Pressable style={styles.backdrop} onPress={handleCloseModal}>
+            <Pressable
+              style={[styles.modalButton, { top: modalPositionY }]}
+              onPress={handlePressModalButton}
+            >
+              <AppText color={comment.isWriter ? colors.white : colors.red}>
+                {comment.isWriter ? "삭제하기" : "신고하기"}
+              </AppText>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      </Pressable>
     );
   };
 
@@ -131,5 +175,21 @@ const styles = StyleSheet.create({
     gap: 2,
     alignItems: "center",
     justifyContent: "center",
+  },
+  backdrop: {
+    flex: 1,
+    backgroundColor: "rgba(18, 18, 18, 0.30)",
+  },
+  modalButton: {
+    position: "absolute",
+    right: 20,
+    zIndex: 10,
+    width: 120,
+    paddingVertical: 15,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: colors.white,
+    borderRadius: 20,
+    backgroundColor: colors.black.main,
   },
 });
