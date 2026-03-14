@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
-import AppText from "@shared/ui/app-text";
-import CustomBottomSheet from "@shared/ui/custom-bottom-sheet";
+import { AppText, CustomBottomSheet } from "@shared/ui";
 import { colors } from "@theme/token";
 
 // TODO: 추후 api 연동 시 수정
@@ -31,20 +30,20 @@ export default function FeedDetailBottomSheet({
         <View style={styles.bottomSheetContentWrapper}>
           <Pressable style={styles.bottomSheetButton} onPress={handleToEdit}>
             <AppText weight="medium" size="base" color={colors.white}>
-              수정하기
+              피드 수정하기
             </AppText>
           </Pressable>
           <View style={styles.bottomSheetDivider} />
           <Pressable style={styles.bottomSheetButton} onPress={handleDelete}>
             <AppText weight="medium" size="base" color={colors.red}>
-              삭제하기
+              피드 삭제하기
             </AppText>
           </Pressable>
         </View>
       ) : (
         <Pressable style={styles.bottomSheetButton} onPress={handleReport}>
           <AppText weight="medium" size="base" color={colors.red}>
-            신고하기
+            피드 신고하기
           </AppText>
         </Pressable>
       )}
