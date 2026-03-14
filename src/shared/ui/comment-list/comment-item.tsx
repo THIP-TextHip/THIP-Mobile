@@ -1,11 +1,12 @@
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcHeart, IcHeartFilled, IcReply } from "@images/icons";
 import { colors } from "@theme/token";
 
-import { useRef, useState } from "react";
 import AppText from "../app-text";
 import ProfileImage from "../profile-image";
+import CommentBottomSheet from "./comment-bottom-sheet";
 import { CommentListType, CommentReplyListType } from "./types";
 
 interface CommentItemProps {
@@ -17,8 +18,7 @@ export default function CommentItem({
   comment,
   handlePressReply,
 }: CommentItemProps) {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalPositionY, setModalPositionY] = useState(0);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const commentItemRef = useRef<View>(null);
 
   const handleToUser = () => {
@@ -32,22 +32,10 @@ export default function CommentItem({
   };
 
   const handleLongPressComment = () => {
-    commentItemRef.current?.measureInWindow((_, y) => {
-      setModalPositionY(y + 50);
-      setIsModalVisible(true);
-    });
+    setIsBottomSheetVisible(true);
   };
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-  };
-  const handlePressModalButton = () => {
-    if (comment.isWriter) {
-      console.log(comment.commentId, "번 댓글 삭제");
-      setIsModalVisible(false);
-    } else {
-      console.log(comment.commentId, "번 댓글 신고");
-      setIsModalVisible(false);
-    }
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetVisible(false);
   };
 
   const renderContents = () => {
@@ -113,22 +101,12 @@ export default function CommentItem({
             </AppText>
           </View>
         </View>
-        <Modal
-          transparent
-          visible={isModalVisible}
-          onRequestClose={handleCloseModal}
-        >
-          <Pressable style={styles.backdrop} onPress={handleCloseModal}>
-            <Pressable
-              style={[styles.modalButton, { top: modalPositionY }]}
-              onPress={handlePressModalButton}
-            >
-              <AppText color={comment.isWriter ? colors.white : colors.red}>
-                {comment.isWriter ? "삭제하기" : "신고하기"}
-              </AppText>
-            </Pressable>
-          </Pressable>
-        </Modal>
+        <CommentBottomSheet
+          commentId={comment.commentId}
+          isWriter={comment.isWriter}
+          isVisible={isBottomSheetVisible}
+          handleCloseBottomSheet={handleCloseBottomSheet}
+        />
       </Pressable>
     );
   };
