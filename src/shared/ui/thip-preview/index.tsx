@@ -1,18 +1,20 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcGroupWhite, IcRightRight } from "@images/icons";
-import { DUMMY_THIP_LIST } from "@screens/feed/constants";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 
 interface ThipPreviewProps {
-  // TODO: 서버 연동 시 ThipPreviewItem 전용 타입으로 교체
-  thipList: typeof DUMMY_THIP_LIST;
+  followerCount: number;
+  thipList: string[];
 }
 
-export default function ThipPreview({ thipList }: ThipPreviewProps) {
+export default function ThipPreview({
+  followerCount,
+  thipList,
+}: ThipPreviewProps) {
   const handleToThipList = () => {
     // TODO : 띱 리스트 화면으로 이동
     console.log("띱 리스트 화면으로 이동");
@@ -23,22 +25,18 @@ export default function ThipPreview({ thipList }: ThipPreviewProps) {
         <IcGroupWhite />
         <View style={styles.textWrapper}>
           <AppText weight="semibold" size="xs" color={colors.white}>
-            {thipList.length}명
+            {followerCount}명
           </AppText>
           <AppText weight="medium" size="xs" color={colors.grey[100]}>
             이 띱하는 중
           </AppText>
         </View>
       </View>
-      {thipList.length !== 0 && (
+      {followerCount !== 0 && (
         <View style={styles.right}>
           <View style={styles.thipList}>
-            {thipList.slice(0, 5).map((item) => (
-              <ProfileImage
-                key={item.userId}
-                image={item.profileImage}
-                size={24}
-              />
+            {thipList.slice(0, 5).map((item, index) => (
+              <ProfileImage key={`${item}-${index}`} image={item} size={24} />
             ))}
           </View>
           <Pressable onPress={handleToThipList}>

@@ -6,10 +6,14 @@ import {
   FeedPostHeader,
   FeedPostPreviewBody,
 } from "./components";
-import { FeedMyPostPreviewType, FeedPostPreviewType } from "./types";
+import {
+  FeedMyPostPreviewType,
+  FeedPostBase,
+  FeedPostPreviewType,
+} from "./types";
 
 interface FeedPostPreviewProps {
-  feedPreview: FeedPostPreviewType | FeedMyPostPreviewType;
+  feedPreview: FeedPostBase | FeedPostPreviewType | FeedMyPostPreviewType;
 }
 
 export default function FeedPostPreview({ feedPreview }: FeedPostPreviewProps) {

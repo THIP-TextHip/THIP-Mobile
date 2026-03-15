@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { colors } from "@theme/token";
@@ -20,13 +21,16 @@ export default function FeedPostHeader({ feed }: FeedPostHeaderProps) {
     postDate,
   } = feed;
 
-  // TODO: 유저 피드 페이지로 이동
-  const handleToUserFeed = () => {
-    console.log(creatorId, "번 유저 피드 페이지로 이동");
+  const handleToUserProfile = () => {
+    router.push({
+      pathname: "/user-profile/[userId]",
+      params: { userId: String(creatorId) },
+    });
   };
+
   return (
     <View style={styles.header}>
-      <Pressable style={styles.profile} onPress={handleToUserFeed}>
+      <Pressable style={styles.profile} onPress={handleToUserProfile}>
         <ProfileImage image={creatorProfileImageUrl} />
         <View style={styles.creatorInfo}>
           <AppText weight="medium" size="sm" color={colors.white}>

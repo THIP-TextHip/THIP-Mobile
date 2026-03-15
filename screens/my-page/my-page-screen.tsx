@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
-import { AppText, UserProfile } from "@shared/ui";
+import { AppText, UserProfileBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { router } from "expo-router";
@@ -19,7 +19,7 @@ export default function MyPageScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <UserProfile
+      <UserProfileBar
         type="edit-profile"
         userProfile={{ nickname, genre, profileColor }}
         handleToEdit={handleToEdit}

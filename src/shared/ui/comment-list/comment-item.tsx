@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -21,8 +22,11 @@ export default function CommentItem({
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const commentItemRef = useRef<View>(null);
 
-  const handleToUser = () => {
-    console.log(comment.creatorId, "번 유저로 이동");
+  const handleToUserProfile = () => {
+    router.push({
+      pathname: "/user-profile/[userId]",
+      params: { userId: String(comment.creatorId) },
+    });
   };
   const handlePressReplyButton = () => {
     handlePressReply(comment.commentId, comment.creatorNickname);
@@ -46,7 +50,7 @@ export default function CommentItem({
         onLongPress={handleLongPressComment}
       >
         <Pressable style={styles.header}>
-          <Pressable style={styles.profile} onPress={handleToUser}>
+          <Pressable style={styles.profile} onPress={handleToUserProfile}>
             <ProfileImage image={comment.creatorProfileImageUrl} size={24} />
             <View style={styles.creatorInfo}>
               <AppText weight="semibold" size="xs" color={colors.white}>
