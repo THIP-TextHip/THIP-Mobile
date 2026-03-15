@@ -31,31 +31,21 @@ const MyFeedTopContents = () => {
 
 export default function MyFeedContents() {
   return (
-    <View style={styles.content}>
-      {DUMMY_MY_FEED_PREVIEW_LIST.length === 0 ? (
-        <>
-          <MyFeedTopContents />
-          <MyFeedEmpty />
-        </>
-      ) : (
-        <FlatList
-          contentContainerStyle={styles.list}
-          ListHeaderComponent={() => <MyFeedTopContents />}
-          data={DUMMY_MY_FEED_PREVIEW_LIST}
-          keyExtractor={(item) => String(item.feedId)}
-          renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-        />
-      )}
-    </View>
+    <FlatList
+      contentContainerStyle={styles.list}
+      ListHeaderComponent={() => <MyFeedTopContents />}
+      data={DUMMY_MY_FEED_PREVIEW_LIST}
+      keyExtractor={(item) => String(item.feedId)}
+      renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+      ListEmptyComponent={() => <MyFeedEmpty />}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
   topContents: {
+    flex: 1,
     marginTop: 32,
     marginBottom: 20,
   },
