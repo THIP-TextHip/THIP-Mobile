@@ -52,7 +52,6 @@ export default function MyFeedContents() {
 
 const styles = StyleSheet.create({
   topContents: {
-    flex: 1,
     marginTop: 32,
     marginBottom: 20,
   },

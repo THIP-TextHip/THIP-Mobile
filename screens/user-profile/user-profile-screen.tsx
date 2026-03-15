@@ -68,17 +68,6 @@ export default function UserProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  topContents: {
-    flex: 1,
-    marginTop: 32,
-    marginBottom: 20,
-  },
-  profile: {
-    gap: 16,
-    paddingHorizontal: 20,
-    marginBottom: 40,
-  },
-
   separator: {
     marginVertical: 40,
     height: 6,

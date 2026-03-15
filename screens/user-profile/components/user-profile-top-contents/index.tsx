@@ -45,7 +45,6 @@ export default function UserProfileTopContents({
 
 const styles = StyleSheet.create({
   topContents: {
-    flex: 1,
     marginTop: 32,
     marginBottom: 20,
   },
