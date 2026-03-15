@@ -15,6 +15,7 @@ export { default as CustomSwitch } from "./custom-switch";
 export { default as CustomTabBar } from "./custom-tab-bar";
 export {
   FeedMyPostPreviewType,
+  FeedPostBase,
   FeedPostDetail,
   FeedPostDetailType,
   FeedPostPreview,

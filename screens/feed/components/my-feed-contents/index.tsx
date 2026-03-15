@@ -9,22 +9,29 @@ import {
 import { colors } from "@theme/token";
 
 // TODO: 서버에서 가져오기
-import { DUMMY_MY_FEED_PREVIEW_LIST, DUMMY_THIP_LIST } from "../../constants";
+import {
+  DUMMY_MY_FEED_PREVIEW_LIST,
+  DUMMY_MY_FEED_TOP_VIEW,
+} from "../../constants";
 import MyFeedEmpty from "../my-feed-empty";
-
-// TODO: 서버에서 받아오기
-const nickname = "ThipUser01";
-const genre = "문학가";
-const profileColor = colors.character.mint;
 
 const MyFeedTopContents = () => {
   return (
     <View style={styles.topContents}>
       <View style={styles.profile}>
-        <UserProfileBar userProfile={{ nickname, genre, profileColor }} />
-        <ThipPreview thipList={DUMMY_THIP_LIST} />
+        <UserProfileBar
+          userProfile={{
+            nickname: DUMMY_MY_FEED_TOP_VIEW.nickname,
+            genre: DUMMY_MY_FEED_TOP_VIEW.aliasName,
+            profileColor: DUMMY_MY_FEED_TOP_VIEW.aliasColor,
+          }}
+        />
+        <ThipPreview
+          followerCount={DUMMY_MY_FEED_TOP_VIEW.followerCount}
+          thipList={DUMMY_MY_FEED_TOP_VIEW.latestFollowerProfileImageUrls}
+        />
       </View>
-      <ListTotalCountHeader length={DUMMY_MY_FEED_PREVIEW_LIST.length} />
+      <ListTotalCountHeader length={DUMMY_MY_FEED_TOP_VIEW.totalFeedCount} />
     </View>
   );
 };

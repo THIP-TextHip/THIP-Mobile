@@ -1,6 +1,24 @@
 import { FeedMyPostPreviewType, FeedPostPreviewType } from "@shared/ui";
 import { colors } from "@theme/token";
 
+export const DUMMY_MY_FEED_TOP_VIEW = {
+  creatorId: 1,
+  profileImageUrl: "https://placehold.co/50/png",
+  nickname: "ThipUser01",
+  aliasName: "문학가",
+  aliasColor: colors.character.orange,
+  followerCount: 9,
+  totalFeedCount: 4,
+  isFollowing: true,
+  latestFollowerProfileImageUrls: [
+    "https://placehold.co/36/png",
+    "https://placehold.co/36/png",
+    "https://placehold.co/36/png",
+    "https://placehold.co/36/png",
+    "https://placehold.co/36/png",
+  ],
+};
+
 export const DUMMY_THIP_LIST = [
   {
     userId: 1,

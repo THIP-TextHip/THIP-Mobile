@@ -14,12 +14,17 @@ import { colors } from "@theme/token";
 import AppText from "../../../app-text";
 import {
   FeedMyPostPreviewType,
+  FeedPostBase,
   FeedPostDetailType,
   FeedPostPreviewType,
 } from "../../types";
 
 interface FeedPostFooterProps {
-  feed: FeedPostPreviewType | FeedMyPostPreviewType | FeedPostDetailType;
+  feed:
+    | FeedPostPreviewType
+    | FeedMyPostPreviewType
+    | FeedPostDetailType
+    | FeedPostBase;
 }
 
 export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
