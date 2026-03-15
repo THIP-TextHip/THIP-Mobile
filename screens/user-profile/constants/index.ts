@@ -9,7 +9,7 @@ export const DUMMY_USER_PROFILE_TOP_VIEW = {
   aliasColor: colors.character.orange,
   followerCount: 327,
   totalFeedCount: 3,
-  isFollowing: true,
+  isFollowing: false,
   latestFollowerProfileImageUrls: [
     "https://placehold.co/36/png",
     "https://placehold.co/36/png",

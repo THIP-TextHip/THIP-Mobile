@@ -23,6 +23,10 @@ export default function UserProfileScreen() {
   const { bottom } = useSafeAreaInsets();
   const { userId } = useLocalSearchParams<{ userId: string }>();
 
+  const handlePressThip = () => {
+    console.log(DUMMY_USER_PROFILE_TOP_VIEW.creatorId, "번 유저 띱하기");
+  };
+
   useEffect(() => {
     if (!userId) {
       Toast.show({
@@ -42,11 +46,14 @@ export default function UserProfileScreen() {
       <View style={styles.topContents}>
         <View style={styles.profile}>
           <UserProfileBar
+            type="thip"
+            isThipped={DUMMY_USER_PROFILE_TOP_VIEW.isFollowing}
             userProfile={{
               nickname: DUMMY_USER_PROFILE_TOP_VIEW.nickname,
               genre: DUMMY_USER_PROFILE_TOP_VIEW.aliasName,
               profileColor: DUMMY_USER_PROFILE_TOP_VIEW.aliasColor,
             }}
+            handlePressThip={handlePressThip}
           />
           <ThipPreview
             followerCount={DUMMY_USER_PROFILE_TOP_VIEW.followerCount}
