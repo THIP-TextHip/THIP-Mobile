@@ -12,7 +12,12 @@ export default function UserProfileHeader() {
   return (
     <CustomHeader
       left={
-        <Pressable onPress={handleGoBack}>
+        <Pressable
+          onPress={handleGoBack}
+          accessibilityRole="button"
+          accessibilityLabel="뒤로가기"
+          hitSlop={10}
+        >
           <IcArrowLeft />
         </Pressable>
       }

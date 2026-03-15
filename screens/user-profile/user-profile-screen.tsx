@@ -1,19 +1,14 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import {
-  FeedPostPreview,
-  ListTotalCountHeader,
-  ThipPreview,
-  UserProfileBar,
-} from "@shared/ui";
+import { FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
 // TODO: 추후 서버에서 가져올 데이터
-import { UserProfileFeedEmpty } from "./components";
+import { UserProfileFeedEmpty, UserProfileTopContents } from "./components";
 import {
   DUMMY_USER_PROFILE_FEEDS,
   DUMMY_USER_PROFILE_TOP_VIEW,
@@ -23,9 +18,27 @@ export default function UserProfileScreen() {
   const { bottom } = useSafeAreaInsets();
   const { userId } = useLocalSearchParams<{ userId: string }>();
 
-  const handlePressThip = () => {
+  const handlePressThip = useCallback(() => {
     console.log(DUMMY_USER_PROFILE_TOP_VIEW.creatorId, "번 유저 띱하기");
-  };
+  }, []);
+
+  const renderHeader = useCallback(
+    () => (
+      <UserProfileTopContents
+        isThipped={DUMMY_USER_PROFILE_TOP_VIEW.isFollowing}
+        userProfile={{
+          nickname: DUMMY_USER_PROFILE_TOP_VIEW.nickname,
+          aliasName: DUMMY_USER_PROFILE_TOP_VIEW.aliasName,
+          aliasColor: DUMMY_USER_PROFILE_TOP_VIEW.aliasColor,
+        }}
+        followerCount={DUMMY_USER_PROFILE_TOP_VIEW.followerCount}
+        thipList={DUMMY_USER_PROFILE_TOP_VIEW.latestFollowerProfileImageUrls}
+        totalFeedCount={DUMMY_USER_PROFILE_TOP_VIEW.totalFeedCount}
+        handlePressThip={handlePressThip}
+      />
+    ),
+    [handlePressThip],
+  );
 
   useEffect(() => {
     if (!userId) {
@@ -41,38 +54,10 @@ export default function UserProfileScreen() {
     }
   }, [userId]);
 
-  const UserProfileTopContents = () => {
-    return (
-      <View style={styles.topContents}>
-        <View style={styles.profile}>
-          <UserProfileBar
-            type="thip"
-            isThipped={DUMMY_USER_PROFILE_TOP_VIEW.isFollowing}
-            userProfile={{
-              nickname: DUMMY_USER_PROFILE_TOP_VIEW.nickname,
-              genre: DUMMY_USER_PROFILE_TOP_VIEW.aliasName,
-              profileColor: DUMMY_USER_PROFILE_TOP_VIEW.aliasColor,
-            }}
-            handlePressThip={handlePressThip}
-          />
-          <ThipPreview
-            followerCount={DUMMY_USER_PROFILE_TOP_VIEW.followerCount}
-            thipList={
-              DUMMY_USER_PROFILE_TOP_VIEW.latestFollowerProfileImageUrls
-            }
-          />
-        </View>
-        <ListTotalCountHeader
-          length={DUMMY_USER_PROFILE_TOP_VIEW.totalFeedCount}
-        />
-      </View>
-    );
-  };
-
   return (
     <FlatList
       contentContainerStyle={{ paddingBottom: bottom + 60 }}
-      ListHeaderComponent={() => <UserProfileTopContents />}
+      ListHeaderComponent={renderHeader}
       data={DUMMY_USER_PROFILE_FEEDS}
       keyExtractor={(item) => String(item.feedId)}
       renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}

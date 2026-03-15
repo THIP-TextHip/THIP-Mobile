@@ -5,7 +5,7 @@ import { colors } from "@theme/token";
 
 export default function MyFeedEmpty() {
   return (
-    <View style={styles.conatainer}>
+    <View style={styles.container}>
       <AppText weight="semibold" size="lg" color={colors.white}>
         피드에 글을 작성해보세요
       </AppText>
@@ -14,7 +14,7 @@ export default function MyFeedEmpty() {
 }
 
 const styles = StyleSheet.create({
-  conatainer: {
+  container: {
     height: "90%",
     justifyContent: "center",
     alignItems: "center",
