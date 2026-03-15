@@ -27,6 +27,7 @@ const MyFeedTopContents = () => {
           }}
         />
         <ThipPreview
+          userId={DUMMY_MY_FEED_TOP_VIEW.creatorId}
           followerCount={DUMMY_MY_FEED_TOP_VIEW.followerCount}
           thipList={DUMMY_MY_FEED_TOP_VIEW.latestFollowerProfileImageUrls}
         />

@@ -52,6 +52,7 @@ export default function RootLayout() {
               name="user-profile"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="thip-list" options={{ headerShown: false }} />
           </Stack>
           <Toast
             config={toastConfig}

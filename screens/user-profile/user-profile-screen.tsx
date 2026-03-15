@@ -25,6 +25,7 @@ export default function UserProfileScreen() {
   const renderHeader = useCallback(
     () => (
       <UserProfileTopContents
+        creatorId={DUMMY_USER_PROFILE_TOP_VIEW.creatorId}
         isThipped={DUMMY_USER_PROFILE_TOP_VIEW.isFollowing}
         userProfile={{
           nickname: DUMMY_USER_PROFILE_TOP_VIEW.nickname,

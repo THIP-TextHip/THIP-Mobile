@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { ListTotalCountHeader, ThipPreview, UserProfileBar } from "@shared/ui";
 
 interface UserProfileTopContentsProps {
+  creatorId: number;
   isThipped: boolean;
   userProfile: {
     nickname: string;
@@ -16,6 +17,7 @@ interface UserProfileTopContentsProps {
 }
 
 export default function UserProfileTopContents({
+  creatorId,
   isThipped,
   userProfile,
   followerCount,
@@ -36,7 +38,11 @@ export default function UserProfileTopContents({
           }}
           handlePressThip={handlePressThip}
         />
-        <ThipPreview followerCount={followerCount} thipList={thipList} />
+        <ThipPreview
+          userId={creatorId}
+          followerCount={followerCount}
+          thipList={thipList}
+        />
       </View>
       <ListTotalCountHeader length={totalFeedCount} />
     </View>
