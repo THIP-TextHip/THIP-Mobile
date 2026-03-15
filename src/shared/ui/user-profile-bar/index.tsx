@@ -7,13 +7,13 @@ import { ButtonOutline } from "../button";
 import { GENRES } from "../genre-card-group/constants";
 
 // TODO : 유저정보 관련 type은 추후에 따로 생성하여 관리
-interface UserProfileType {
+interface UserProfileBarType {
   nickname: string;
   genre: string;
   profileColor: string;
 }
 
-type UserProfileProps = (
+type UserProfileBarProps = (
   | { type?: "default" }
   | {
       type: "edit-profile";
@@ -24,9 +24,9 @@ type UserProfileProps = (
       isThipped: boolean;
       handlePressThip: () => void;
     }
-) & { userProfile: UserProfileType };
+) & { userProfile: UserProfileBarType };
 
-export default function UserProfile(props: UserProfileProps) {
+export default function UserProfileBar(props: UserProfileBarProps) {
   const nickname = props.userProfile.nickname;
   const genre = props.userProfile.genre;
   const profileColor = props.userProfile.profileColor;

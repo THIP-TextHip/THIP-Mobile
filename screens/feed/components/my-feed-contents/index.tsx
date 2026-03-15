@@ -4,7 +4,7 @@ import {
   FeedPostPreview,
   ListTotalCountHeader,
   ThipPreview,
-  UserProfile,
+  UserProfileBar,
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -21,7 +21,7 @@ const MyFeedTopContents = () => {
   return (
     <View style={styles.topContents}>
       <View style={styles.profile}>
-        <UserProfile userProfile={{ nickname, genre, profileColor }} />
+        <UserProfileBar userProfile={{ nickname, genre, profileColor }} />
         <ThipPreview thipList={DUMMY_THIP_LIST} />
       </View>
       <ListTotalCountHeader length={DUMMY_MY_FEED_PREVIEW_LIST.length} />
