@@ -1,9 +1,11 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcRightRight } from "@images/icons";
-import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
-import { router } from "expo-router";
+
+import AppText from "../app-text";
+import ProfileImage from "../profile-image";
 
 export interface UserListItemData {
   userId: number;
