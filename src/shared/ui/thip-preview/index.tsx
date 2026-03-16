@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcGroupWhite, IcRightRight } from "@images/icons";
@@ -7,18 +8,23 @@ import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 
 interface ThipPreviewProps {
+  userId: number;
   followerCount: number;
   thipList: string[];
 }
 
 export default function ThipPreview({
+  userId,
   followerCount,
   thipList,
 }: ThipPreviewProps) {
   const handleToThipList = () => {
-    // TODO : 띱 리스트 화면으로 이동
-    console.log("띱 리스트 화면으로 이동");
+    router.push({
+      pathname: "/thip-list/[userId]",
+      params: { userId: String(userId) },
+    });
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.left}>
@@ -39,7 +45,7 @@ export default function ThipPreview({
               <ProfileImage key={`${item}-${index}`} image={item} size={24} />
             ))}
           </View>
-          <Pressable onPress={handleToThipList}>
+          <Pressable onPress={handleToThipList} hitSlop={5}>
             <IcRightRight />
           </Pressable>
         </View>

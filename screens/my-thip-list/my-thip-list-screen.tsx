@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DUMMY_THIP_LIST } from "../feed/constants";
+import { DUMMY_MY_THIP_LIST } from "../feed/constants";
 import { MyThipItem } from "./components";
 
 export default function MyThipListScreen() {
@@ -12,13 +12,14 @@ export default function MyThipListScreen() {
 
   return (
     <View style={styles.page}>
-      <ListTotalCountHeader length={DUMMY_THIP_LIST.length} />
+      <ListTotalCountHeader length={DUMMY_MY_THIP_LIST.length} />
       <FlatList
         contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
-        data={DUMMY_THIP_LIST}
+        data={DUMMY_MY_THIP_LIST}
         keyExtractor={(item) => String(item.userId)}
         renderItem={({ item }) => (
           <MyThipItem
+            userId={item.userId}
             profileImage={item.profileImage}
             nickname={item.nickname}
             aliasName={item.aliasName}
