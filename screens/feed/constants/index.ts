@@ -19,7 +19,7 @@ export const DUMMY_MY_FEED_TOP_VIEW = {
   ],
 };
 
-export const DUMMY_THIP_LIST = [
+export const DUMMY_MY_THIP_LIST = [
   {
     userId: 1,
     nickname: "user1234",

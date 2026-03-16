@@ -1,10 +1,12 @@
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { AppText, ProfileImage } from "@shared/ui";
 import { ButtonOutline } from "@shared/ui/button";
 import { colors } from "@theme/token";
+import { router } from "expo-router";
 
 interface MyThipItemProps {
+  userId: number;
   profileImage: string;
   nickname: string;
   aliasName: string;
@@ -12,18 +14,26 @@ interface MyThipItemProps {
 }
 
 export default function MyThipItem({
+  userId,
   profileImage,
   nickname,
   aliasName,
   aliasColor,
 }: MyThipItemProps) {
+  const handleToUserProfile = () => {
+    router.push({
+      pathname: "/user-profile/[userId]",
+      params: { userId: String(userId) },
+    });
+  };
+
   // TODO: 서버에 띱 취소 요청
   const handleCancelThip = () => {
     console.log(nickname, "에 대하여 띱 취소");
   };
   return (
     <View style={styles.container}>
-      <View style={styles.profile}>
+      <Pressable style={styles.profile} onPress={handleToUserProfile}>
         <ProfileImage image={profileImage} />
         <View style={styles.textWrapper}>
           <AppText weight="medium" size="sm" color={colors.white}>
@@ -33,7 +43,7 @@ export default function MyThipItem({
             {aliasName}
           </AppText>
         </View>
-      </View>
+      </Pressable>
       <ButtonOutline handlePress={handleCancelThip}>띱 취소</ButtonOutline>
     </View>
   );
