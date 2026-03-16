@@ -3,19 +3,31 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { IcRightRight } from "@images/icons";
 import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
+import { router } from "expo-router";
 
-import { SearchUserResponse } from "../../types";
-
-interface SearchedUserItemProps {
-  userData: SearchUserResponse;
+export interface UserListItemData {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  isMySelf?: boolean;
 }
 
-export default function SearchedUserItem({ userData }: SearchedUserItemProps) {
+interface UserListItemProps {
+  userData: UserListItemData;
+}
+
+export default function UserListItem({ userData }: UserListItemProps) {
   const handleToUserProfile = () => {
-    console.log(userData.nickname, " 프로필로 이동");
+    router.push({
+      pathname: "/user-profile/[userId]",
+      params: { userId: String(userData.userId) },
+    });
   };
   return (
-    <Pressable style={styles.container} onPress={handleToUserProfile}>
+    <View style={styles.container}>
       <View style={styles.profile}>
         <ProfileImage image={userData.profileImageUrl} />
         <View style={styles.profileText}>
@@ -27,13 +39,13 @@ export default function SearchedUserItem({ userData }: SearchedUserItemProps) {
           </AppText>
         </View>
       </View>
-      <View style={styles.thipCount}>
+      <Pressable style={styles.thipCount} onPress={handleToUserProfile}>
         <AppText weight="regular" size="2xs" color={colors.white}>
           {userData.followerCount} 명이 띱 하는중
         </AppText>
         <IcRightRight />
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 }
 

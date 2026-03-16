@@ -1,12 +1,11 @@
 import { useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-import { AppText, ListTotalCountHeader } from "@shared/ui";
+import { AppText, ListTotalCountHeader, UserListItem } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_SEARCHED_USER } from "../../constants";
 import { SearchUserResponse } from "../../types";
-import SearchedUserItem from "../searched-user-item";
 
 interface SearchUserResultProps {
   searchText: string;
@@ -21,7 +20,7 @@ export default function SearchUserResult({
 
   const listItem = useCallback(
     ({ item }: { item: SearchUserResponse }) => (
-      <SearchedUserItem userData={item} />
+      <UserListItem userData={item} />
     ),
     [],
   );

@@ -29,4 +29,5 @@ export { default as RecentSearch } from "./recent-search";
 export { default as RemovableChip } from "./removable-chip";
 export { default as SearchBar } from "./search-bar";
 export { default as ThipPreview } from "./thip-preview";
+export { default as UserListItem } from "./user-list-item";
 export { default as UserProfileBar } from "./user-profile-bar";

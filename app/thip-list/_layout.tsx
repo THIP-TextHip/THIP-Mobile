@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 
+import { ThipListHeader } from "@/screens/thip-list";
 import { colors } from "@theme/token";
 
 export default function ThipListLayout() {
@@ -12,7 +13,7 @@ export default function ThipListLayout() {
       <Stack.Screen
         name="[userId]"
         options={{
-          headerShown: false,
+          header: () => <ThipListHeader />,
         }}
       />
     </Stack>

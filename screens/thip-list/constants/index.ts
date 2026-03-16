@@ -1,0 +1,58 @@
+import { colors } from "@/src/theme/token";
+
+export const DUMMY_THIP_LIST = [
+  {
+    userId: 15,
+    nickname: "user1",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "인플루언서",
+    aliasColor: colors.character.lavender,
+    followerCount: 3,
+    isMySelf: false,
+  },
+  {
+    userId: 151,
+    nickname: "test151",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "칭호",
+    aliasColor: colors.character.mint,
+    followerCount: 3,
+    isMySelf: false,
+  },
+  {
+    userId: 19,
+    nickname: "띱19",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "작가",
+    aliasColor: colors.character.orange,
+    followerCount: 3,
+    isMySelf: false,
+  },
+  {
+    userId: 113,
+    nickname: "user113",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "작가",
+    aliasColor: colors.character.pink,
+    followerCount: 3,
+    isMySelf: false,
+  },
+  {
+    userId: 43,
+    nickname: "user43",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "운영진",
+    aliasColor: colors.character.skyblue,
+    followerCount: 3,
+    isMySelf: false,
+  },
+  {
+    userId: 94,
+    nickname: "thip94",
+    profileImageUrl: "https://placehold.co/36/png",
+    aliasName: "칭호칭호",
+    aliasColor: colors.character.lavender,
+    followerCount: 3,
+    isMySelf: false,
+  },
+];
