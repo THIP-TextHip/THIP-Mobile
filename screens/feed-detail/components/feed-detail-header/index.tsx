@@ -24,7 +24,12 @@ export default function FeedDetailHeader({
         </Pressable>
       }
       right={
-        <Pressable onPress={handlePressMore}>
+        <Pressable
+          onPress={handlePressMore}
+          accessibilityRole="button"
+          accessibilityLabel="바텀시트 열기"
+          hitSlop={10}
+        >
           <IcMore />
         </Pressable>
       }

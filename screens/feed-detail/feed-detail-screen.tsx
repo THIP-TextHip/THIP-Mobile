@@ -7,7 +7,11 @@ import Toast from "react-native-toast-message";
 import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { FeedDetailBottomSheet, FeedDetailHeader } from "./components";
+import {
+  FeedDeleteModal,
+  FeedDetailBottomSheet,
+  FeedDetailHeader,
+} from "./components";
 import { DUMMY_COMMENT_LIST, DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
@@ -20,6 +24,7 @@ export default function FeedDetailScreen() {
   const [replyNickname, setReplyNickname] = useState("");
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSendText = () => {
     if (replyCommentId !== null) {
@@ -55,14 +60,29 @@ export default function FeedDetailScreen() {
     setIsBottomSheetVisible(false);
   };
 
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
   const handleReport = () => {
     console.log("피드 신고하기");
   };
   const handleToEdit = () => {
-    console.log("피드 수정하기");
+    console.log("피드 수정 페이지로 이동");
   };
-  const handleDelete = () => {
-    console.log("피드 삭제하기");
+  const handleOpenDeleteModal = () => {
+    setIsBottomSheetVisible(false);
+    setIsModalVisible(true);
+  };
+
+  const handleFeedDelete = () => {
+    // TODO: 삭제 성공 시 토스트로 알림
+    setIsModalVisible(false);
+    router.back();
+    Toast.show({
+      type: "default",
+      text1: "피드가 삭제되었어요.",
+    });
   };
 
   useEffect(() => {
@@ -127,7 +147,12 @@ export default function FeedDetailScreen() {
         handleCloseBottomSheet={handleCloseBottomSheet}
         handleReport={handleReport}
         handleToEdit={handleToEdit}
-        handleDelete={handleDelete}
+        handleDelete={handleOpenDeleteModal}
+      />
+      <FeedDeleteModal
+        isVisible={isModalVisible}
+        handleCloseModal={handleCloseModal}
+        handleFeedDelete={handleFeedDelete}
       />
     </View>
   );

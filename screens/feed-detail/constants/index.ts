@@ -29,7 +29,7 @@ export const DUMMY_FEED_DETAIL: FeedPostDetailType = {
   commentCount: 33,
   isSaved: true,
   isLiked: true,
-  isWriter: false,
+  isWriter: true,
   tagList: [
     "#태그1",
     "#태그2",
