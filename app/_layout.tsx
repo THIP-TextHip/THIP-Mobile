@@ -53,6 +53,7 @@ export default function RootLayout() {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="thip-list" options={{ headerShown: false }} />
+            <Stack.Screen name="book-detail" options={{ headerShown: false }} />
           </Stack>
           <Toast
             config={toastConfig}

@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { IcRight } from "@images/icons";
 import { colors } from "@theme/token";
 
+import { router } from "expo-router";
 import AppText from "../app-text";
 
 interface BookInfoBarProps {
@@ -18,7 +19,10 @@ export default function BookInfoBar({
 }: BookInfoBarProps) {
   // TODO: 클릭 시 책 상세 정보 페이지로 이동되도록
   const handleToBookDetail = () => {
-    console.log(isbn, " 상세로 이동");
+    router.push({
+      pathname: "/book-detail/[isbn]",
+      params: { isbn: String(isbn) },
+    });
   };
   return (
     <Pressable style={styles.container} onPress={handleToBookDetail}>
