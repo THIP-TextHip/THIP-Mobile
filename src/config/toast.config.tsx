@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { BaseToast, BaseToastProps } from "react-native-toast-message";
 
 import { AppText } from "../shared/ui";
@@ -49,7 +49,8 @@ export const toastConfig = {
 
 const styles = StyleSheet.create({
   container: {
-    width: Dimensions.get("window").width - 40,
+    alignSelf: "stretch",
+    marginHorizontal: 20,
     padding: 12,
     backgroundColor: colors.darkgrey.dark,
     borderRadius: 12,
