@@ -1,6 +1,7 @@
-import { colors } from "@/src/theme/token";
-import { AppText, CustomButton, CustomModal } from "@shared/ui";
 import { StyleSheet, View } from "react-native";
+
+import { AppText, CustomButton, CustomModal } from "@shared/ui";
+import { colors } from "@theme/token";
 
 interface FeedDeleteModalProps {
   isVisible: boolean;
