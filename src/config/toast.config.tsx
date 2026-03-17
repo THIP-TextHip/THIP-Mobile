@@ -35,7 +35,12 @@ export const toastConfig = {
   // Thip 기본 토스트
   default: (props: BaseToastProps) => (
     <View style={styles.container}>
-      <AppText weight="medium" size="xs" color={colors.white}>
+      <AppText
+        weight="medium"
+        size="xs"
+        color={colors.white}
+        style={{ lineHeight: 20 }}
+      >
         {props.text1}
       </AppText>
     </View>
@@ -44,7 +49,8 @@ export const toastConfig = {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    alignSelf: "stretch",
+    marginHorizontal: 20,
     padding: 12,
     backgroundColor: colors.darkgrey.dark,
     borderRadius: 12,
