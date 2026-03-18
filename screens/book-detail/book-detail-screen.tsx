@@ -1,11 +1,11 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { BookDetailHeader, ReadCountBar } from "./components";
+import { BookDetailHeader, BookInfo, ReadCountBar } from "./components";
 import { DUMMY_BOOK_DETAIL } from "./constants";
 
 export default function BookDetailScreen() {
@@ -28,10 +28,7 @@ export default function BookDetailScreen() {
       {isVisibleReadCount && (
         <ReadCountBar readCount={DUMMY_BOOK_DETAIL.readCount} />
       )}
-      <Image
-        source={{ uri: DUMMY_BOOK_DETAIL.imageUrl }}
-        style={styles.image}
-      />
+      <BookInfo bookInfo={DUMMY_BOOK_DETAIL} />
       <FlatList
         contentContainerStyle={{ gap: 100 }}
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -48,9 +45,5 @@ export default function BookDetailScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-  },
-  image: {
-    width: "100%",
-    aspectRatio: 0.86,
   },
 });
