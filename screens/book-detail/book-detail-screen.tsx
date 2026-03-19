@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
@@ -6,6 +6,7 @@ import { IcDownmoreGrey } from "@images/icons";
 import { AppText, FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
+import Toast from "react-native-toast-message";
 import { BookDetailHeader, BookInfo, ReadCountBar } from "./components";
 import { DUMMY_BOOK_DETAIL, DUMMY_BOOK_FEED_PREVIEW_LIST } from "./constants";
 
@@ -19,6 +20,20 @@ export default function BookDetailScreen() {
   const handleChangeSort = () => {
     setIsLatestOrder(!isLatestOrder);
   };
+
+  useEffect(() => {
+    if (!isbn) {
+      Toast.show({
+        type: "error",
+        text1: "책정보가 존재하지 않습니다.",
+      });
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace("/feed");
+      }
+    }
+  }, [isbn]);
 
   useEffect(() => {
     setIsVisibleReadCount(true);
