@@ -41,7 +41,7 @@ export default function MyFeedContents() {
   return (
     <FlatList
       contentContainerStyle={styles.list}
-      ListHeaderComponent={() => <MyFeedTopContents />}
+      ListHeaderComponent={<MyFeedTopContents />}
       data={DUMMY_MY_FEED_PREVIEW_LIST}
       keyExtractor={(item) => String(item.feedId)}
       renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}

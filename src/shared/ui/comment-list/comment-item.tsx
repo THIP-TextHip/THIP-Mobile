@@ -71,14 +71,14 @@ export default function CommentItem({
               weight="regular"
               size="sm"
               color={colors.grey[100]}
-              style={{ lineHeight: 20 }}
+              lineHeight={20}
             >
               {"parentCommentCreatorNickname" in comment && (
                 <AppText
                   weight="medium"
                   size="sm"
                   color={colors.white}
-                  style={{ lineHeight: 20 }}
+                  lineHeight={20}
                 >
                   @{comment.parentCommentCreatorNickname}{" "}
                 </AppText>

@@ -6,15 +6,32 @@ export const DUMMY_RECENT_DATA = [
   "ㅁㄴㅇㄹ",
 ];
 export const DUMMY_MOST_DATA = [
-  { ranking: 1, photo: "https://placehold.co/60/png", title: "예시입니다" },
-  { ranking: 2, photo: "https://placehold.co/60/png", title: "테스트" },
-  { ranking: 3, photo: "https://placehold.co/60/png", title: "배고프다" },
   {
+    isbn: "1236116",
+    ranking: 1,
+    photo: "https://placehold.co/60/png",
+    title: "예시입니다",
+  },
+  {
+    isbn: "915465",
+    ranking: 2,
+    photo: "https://placehold.co/60/png",
+    title: "테스트",
+  },
+  {
+    isbn: "164638",
+    ranking: 3,
+    photo: "https://placehold.co/60/png",
+    title: "배고프다",
+  },
+  {
+    isbn: "6165198",
     ranking: 4,
     photo: "https://placehold.co/60/png",
     title: "테스트입니당",
   },
   {
+    isbn: "765315",
     ranking: 5,
     photo: "https://placehold.co/60/png",
     title: "26년도 화이팅!",
