@@ -5,6 +5,7 @@ type AppTextProps = TextProps & {
   weight?: keyof typeof typography.fontWeight;
   size?: keyof typeof typography.fontSize;
   color?: string;
+  lineHeight?: number | "normal";
 };
 
 const FONT_BY_WEIGHT = {
@@ -20,6 +21,7 @@ export default function AppText({
   weight = "regular",
   size = "base",
   color = colors.black.main,
+  lineHeight = "normal",
   ...props
 }: AppTextProps) {
   return (
@@ -31,6 +33,7 @@ export default function AppText({
           fontWeight: "normal",
           fontSize: typography.fontSize[size],
           color,
+          ...(lineHeight !== "normal" && { lineHeight }),
         } as TextStyle,
         style,
       ]}
