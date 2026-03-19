@@ -1,12 +1,12 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { IcDownmoreGrey } from "@images/icons";
 import { AppText, FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import Toast from "react-native-toast-message";
 import { BookDetailHeader, BookInfo, ReadCountBar } from "./components";
 import { DUMMY_BOOK_DETAIL, DUMMY_BOOK_FEED_PREVIEW_LIST } from "./constants";
 

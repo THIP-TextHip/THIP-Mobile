@@ -1,7 +1,8 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
+import { router } from "expo-router";
 
 interface SearchedBookItemProps {
   title: string;
@@ -16,9 +17,17 @@ export default function SearchedBookItem({
   imageUrl,
   authorName,
   publisher,
+  isbn,
 }: SearchedBookItemProps) {
+  const handleToBookDetail = () => {
+    router.push({
+      pathname: "/book-detail/[isbn]",
+      params: { isbn: String(isbn) },
+    });
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={handleToBookDetail}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.textWrapper}>
         <AppText weight="semibold" size="base" color={colors.white}>
@@ -37,7 +46,7 @@ export default function SearchedBookItem({
           </AppText>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

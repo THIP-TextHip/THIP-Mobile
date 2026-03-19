@@ -1,9 +1,11 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
+import { router } from "expo-router";
 
 interface MostSearchedBookItemProps {
+  isbn: string;
   ranking: number;
   photo: string;
   title: string;
@@ -11,13 +13,24 @@ interface MostSearchedBookItemProps {
 }
 
 export default function MostSearchedBookItem({
+  isbn,
   ranking,
   photo,
   title,
   isLast = false,
 }: MostSearchedBookItemProps) {
+  const handleToBookDetail = () => {
+    router.push({
+      pathname: "/book-detail/[isbn]",
+      params: { isbn: String(isbn) },
+    });
+  };
+
   return (
-    <View style={[styles.container, isLast && styles.lastItem]}>
+    <Pressable
+      style={[styles.container, isLast && styles.lastItem]}
+      onPress={handleToBookDetail}
+    >
       <AppText
         weight="medium"
         size="base"
@@ -32,7 +45,7 @@ export default function MostSearchedBookItem({
           {title}
         </AppText>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

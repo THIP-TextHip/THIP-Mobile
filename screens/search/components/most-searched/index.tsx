@@ -7,6 +7,7 @@ import { colors } from "@theme/token";
 import MostSearchedBookItem from "../most-searched-book-item";
 
 interface MostSearchedBook {
+  isbn: string;
   ranking: number;
   photo: string;
   title: string;
@@ -47,7 +48,8 @@ export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
       ) : (
         mostSearchedBooks.map((item, index) => (
           <MostSearchedBookItem
-            key={item.ranking}
+            key={item.isbn}
+            isbn={item.isbn}
             ranking={item.ranking}
             photo={item.photo}
             title={item.title}
