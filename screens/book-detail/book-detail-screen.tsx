@@ -28,9 +28,9 @@ export default function BookDetailScreen() {
       {isVisibleReadCount && (
         <ReadCountBar readCount={DUMMY_BOOK_DETAIL.readCount} />
       )}
-      <BookInfo bookInfo={DUMMY_BOOK_DETAIL} />
       <FlatList
         contentContainerStyle={{ gap: 100 }}
+        ListHeaderComponent={() => <BookInfo bookInfo={DUMMY_BOOK_DETAIL} />}
         data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
         renderItem={() => (
           <AppText size="2xl" color={colors.white}>
