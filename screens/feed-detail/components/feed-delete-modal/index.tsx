@@ -17,12 +17,7 @@ export default function FeedDeleteModal({
   return (
     <CustomModal isVisible={isVisible} handleCloseModal={handleCloseModal}>
       <View style={styles.content}>
-        <AppText
-          weight="medium"
-          size="lg"
-          color={colors.white}
-          style={{ lineHeight: 24 }}
-        >
+        <AppText weight="medium" size="lg" color={colors.white} lineHeight={24}>
           이 피드를 삭제하시겠어요?
         </AppText>
         <AppText weight="regular" size="sm" color={colors.white}>
@@ -38,7 +33,7 @@ export default function FeedDeleteModal({
               weight="semibold"
               size="base"
               color={colors.white}
-              style={{ lineHeight: 24 }}
+              lineHeight={24}
             >
               아니오
             </AppText>
@@ -48,7 +43,7 @@ export default function FeedDeleteModal({
               weight="semibold"
               size="base"
               color={colors.white}
-              style={{ lineHeight: 24 }}
+              lineHeight={24}
             >
               예
             </AppText>

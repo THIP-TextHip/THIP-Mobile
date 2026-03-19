@@ -33,7 +33,7 @@ export default function FeedPostDetailBody({
         weight="regular"
         size="sm"
         color={colors.grey[100]}
-        style={{ lineHeight: 20 }}
+        lineHeight={20}
       >
         {feedDetail.contentBody}
       </AppText>

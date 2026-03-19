@@ -35,12 +35,7 @@ export const toastConfig = {
   // Thip 기본 토스트
   default: (props: BaseToastProps) => (
     <View style={styles.container}>
-      <AppText
-        weight="medium"
-        size="xs"
-        color={colors.white}
-        style={{ lineHeight: 20 }}
-      >
+      <AppText weight="medium" size="xs" color={colors.white} lineHeight={20}>
         {props.text1}
       </AppText>
     </View>

@@ -16,7 +16,7 @@ export default function ReadCountBar({ readCount }: ReadCountBarProps) {
           weight="regular"
           size="sm"
           color={colors.neongreen}
-          style={{ lineHeight: 24 }}
+          lineHeight={24}
         >
           {readCount}명이 읽기에 참여중이에요!
         </AppText>
