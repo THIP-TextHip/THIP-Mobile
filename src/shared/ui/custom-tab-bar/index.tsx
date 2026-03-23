@@ -13,13 +13,12 @@ export default function CustomTabBar({
   navigation,
 }: BottomTabBarProps) {
   const focusedKey = state.routes[state.index]?.key;
-  const routes = state.routes.filter((route) => route.name !== "search-user");
   const { bottom } = useSafeAreaInsets();
 
   return (
     <View style={[styles.tabBarOuter, { paddingBottom: bottom }]}>
       <View style={styles.tabBarContainer}>
-        {routes.map((route) => {
+        {state.routes.map((route) => {
           const focused = focusedKey === route.key;
           const { options } = descriptors[route.key];
 

@@ -63,18 +63,11 @@ export default function TabLayout() {
         name="my-page"
         options={{
           title: "내 정보",
-          tabBarIcon: ({ focused }) =>
-            focused ? <IcMypageFilled /> : <IcMypage />,
-        }}
-      />
-      <Tabs.Screen
-        name="search-user"
-        options={{
-          title: "사용자 검색",
           // !! 커스텀 탭바를 숨기려면
           // tabBarStyle: { display: "none" },
-          tabBarIcon: () => null,
-          tabBarButton: () => null,
+          // tabBarIcon: () => null,
+          tabBarIcon: ({ focused }) =>
+            focused ? <IcMypageFilled /> : <IcMypage />,
         }}
       />
     </Tabs>

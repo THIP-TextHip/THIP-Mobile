@@ -2,13 +2,7 @@ import { useSegments } from "expo-router";
 import { useEffect, useMemo, useRef } from "react";
 import { BackHandler, Platform } from "react-native";
 
-const TAB_ROUTES = new Set([
-  "feed",
-  "group",
-  "search",
-  "my-page",
-  "search-user",
-]);
+const TAB_ROUTES = new Set(["feed", "group", "search", "my-page"]);
 const ANDROID_BLOCK_ROUTES = new Set(["login"]);
 
 export function usePreventAndroidBack() {
