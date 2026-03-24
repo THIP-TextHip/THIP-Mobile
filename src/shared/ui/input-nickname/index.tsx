@@ -44,6 +44,7 @@ export default function InputNickname({
         selectionColor={colors.neongreen}
         cursorColor={colors.neongreen}
         maxLength={NICKNAME_MAX_LENGTH}
+        autoFocus
       />
       <AppText weight="regular" size="xs" color={colors.grey[100]}>
         {value.length}/{NICKNAME_MAX_LENGTH}

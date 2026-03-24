@@ -32,6 +32,7 @@ export default function SearchBar({
         cursorColor={colors.neongreen}
         returnKeyType="search"
         onSubmitEditing={handleSearch}
+        autoFocus
       />
       <View style={styles.buttonWrapper}>
         {!!value.trim() && (
