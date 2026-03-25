@@ -34,6 +34,7 @@ export default function SearchUserScreen() {
           placeholder="내가 찾는 사용자를 검색해보세요."
           setValue={handleChangeText}
           handleSearch={handleSearch}
+          autoFocus={true}
         />
       </View>
       <View style={styles.content}>
