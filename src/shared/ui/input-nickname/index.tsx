@@ -13,6 +13,7 @@ interface InputNicknameProps {
   value: string;
   isError: boolean;
   errorMessage: string;
+  autoFocus?: boolean;
   setValue: (value: string) => void;
 }
 
@@ -20,6 +21,7 @@ export default function InputNickname({
   value,
   isError,
   errorMessage,
+  autoFocus = false,
   setValue,
 }: InputNicknameProps) {
   const handleChangeText = (text: string) => {
@@ -44,6 +46,7 @@ export default function InputNickname({
         selectionColor={colors.neongreen}
         cursorColor={colors.neongreen}
         maxLength={NICKNAME_MAX_LENGTH}
+        autoFocus={autoFocus}
       />
       <AppText weight="regular" size="xs" color={colors.grey[100]}>
         {value.length}/{NICKNAME_MAX_LENGTH}

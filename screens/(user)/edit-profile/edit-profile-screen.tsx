@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { useCallback, useState } from "react";
+import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
 import { AppText, GenreCardGroup, InputNickname } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -14,13 +14,17 @@ import {
 export default function EditProfileScreen() {
   const [inputNickname, setInputNickname] = useState(DUMMY_NICKNAME);
   const [selectedGenre, setSelectedGenre] = useState<string | null>(
-    DUMMY_GENRE
+    DUMMY_GENRE,
   );
 
   const handleUpdateProfile = () => {
     // TODO: 서버 api 연동
     console.log(inputNickname, selectedGenre, "로 프로필 업데이트 요청");
   };
+
+  const handleDismissKeyboard = useCallback(() => {
+    Keyboard.dismiss();
+  }, []);
 
   // TODO: 변경사항이 있을 경우
   const isChanged =
@@ -29,13 +33,16 @@ export default function EditProfileScreen() {
     isChanged && inputNickname.length > 1 && selectedGenre !== null;
 
   return (
-    <View>
+    <Pressable onPress={handleDismissKeyboard}>
       <EditProfileHeader
         disabled={!ableToChange}
         handleUpdateProfile={handleUpdateProfile}
       />
       <View style={styles.container}>
-        <View style={styles.nicknameSection}>
+        <Pressable
+          style={styles.nicknameSection}
+          onPress={(e) => e.stopPropagation()}
+        >
           <AppText weight="semibold" size="lg" color={colors.white}>
             닉네임 변경
           </AppText>
@@ -45,7 +52,7 @@ export default function EditProfileScreen() {
             errorMessage={EDIT_PROFILE_NICKNAME_ERROR.INTERVAL_LIMIT}
             setValue={setInputNickname}
           />
-        </View>
+        </Pressable>
         <View style={styles.genreSection}>
           <View style={styles.genreText}>
             <AppText weight="semibold" size="lg" color={colors.white}>
@@ -61,7 +68,7 @@ export default function EditProfileScreen() {
           />
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

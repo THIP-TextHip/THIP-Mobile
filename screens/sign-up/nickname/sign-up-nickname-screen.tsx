@@ -29,6 +29,7 @@ export default function SignUpNicknameScreen({
             isError={isNicknameDuplicated}
             errorMessage={SIGN_UP_NICKNAME_ERROR}
             setValue={setNickname}
+            autoFocus={true}
           />
         </View>
       </View>

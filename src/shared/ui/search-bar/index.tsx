@@ -7,6 +7,7 @@ import { colors, typography } from "@theme/token";
 interface SearchBarProps {
   value: string;
   placeholder: string;
+  autoFocus?: boolean;
   setValue: (value: string) => void;
   handleSearch: () => void;
 }
@@ -14,6 +15,7 @@ interface SearchBarProps {
 export default function SearchBar({
   value,
   placeholder,
+  autoFocus = false,
   setValue,
   handleSearch,
 }: SearchBarProps) {
@@ -32,6 +34,7 @@ export default function SearchBar({
         cursorColor={colors.neongreen}
         returnKeyType="search"
         onSubmitEditing={handleSearch}
+        autoFocus={autoFocus}
       />
       <View style={styles.buttonWrapper}>
         {!!value.trim() && (

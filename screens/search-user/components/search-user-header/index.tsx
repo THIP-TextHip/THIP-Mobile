@@ -14,7 +14,7 @@ export default function SearchUserHeader() {
   return (
     <CustomHeader
       left={
-        <Pressable onPress={handleGoBack}>
+        <Pressable onPress={handleGoBack} hitSlop={10}>
           <IcArrowLeft />
         </Pressable>
       }
