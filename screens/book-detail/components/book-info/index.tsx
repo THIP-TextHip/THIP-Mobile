@@ -19,12 +19,10 @@ interface BookInfoProps {
     readCount: number;
     isSaved: boolean;
   };
+  handleOpenModal: () => void;
 }
 
-export default function BookInfo({ bookInfo }: BookInfoProps) {
-  const handleOpenIntroductionModal = () => {
-    console.log("소개 모달 띄우기");
-  };
+export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
   const handleToGroupList = () => {
     console.log("모집중인 모임방 리스트 페이지로 이동");
   };
@@ -72,7 +70,7 @@ export default function BookInfo({ bookInfo }: BookInfoProps) {
                 </AppText>
               </View>
             </View>
-            <View style={styles.descWrapper}>
+            <Pressable style={styles.descWrapper} onPress={handleOpenModal}>
               <AppText
                 weight="semibold"
                 size="sm"
@@ -81,18 +79,16 @@ export default function BookInfo({ bookInfo }: BookInfoProps) {
               >
                 소개
               </AppText>
-              <Pressable onPress={handleOpenIntroductionModal}>
-                <AppText
-                  weight="regular"
-                  size="2xs"
-                  color={colors.grey[100]}
-                  lineHeight={20}
-                  numberOfLines={2}
-                >
-                  {bookInfo.description}
-                </AppText>
-              </Pressable>
-            </View>
+              <AppText
+                weight="regular"
+                size="2xs"
+                color={colors.grey[100]}
+                lineHeight={20}
+                numberOfLines={2}
+              >
+                {bookInfo.description.replace(/\n/g, " ")}
+              </AppText>
+            </Pressable>
           </View>
           <View style={styles.buttonWrapper}>
             <Pressable style={styles.groupButton} onPress={handleToGroupList}>

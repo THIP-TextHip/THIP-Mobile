@@ -7,7 +7,12 @@ import { IcDownmoreGrey } from "@images/icons";
 import { AppText, FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { BookDetailHeader, BookInfo, ReadCountBar } from "./components";
+import {
+  BookDetailHeader,
+  BookInfo,
+  BookIntroModal,
+  ReadCountBar,
+} from "./components";
 import { DUMMY_BOOK_DETAIL, DUMMY_BOOK_FEED_PREVIEW_LIST } from "./constants";
 
 export default function BookDetailScreen() {
@@ -15,10 +20,19 @@ export default function BookDetailScreen() {
   const { isbn } = useLocalSearchParams<{ isbn: string }>();
   const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
   const [isLatestOrder, setIsLatestOrder] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   // TODO: 정렬 방식 변경 방법 논의
   const handleChangeSort = () => {
     setIsLatestOrder(!isLatestOrder);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
   };
 
   useEffect(() => {
@@ -49,7 +63,10 @@ export default function BookDetailScreen() {
   const BookDetailTopContents = () => {
     return (
       <View style={styles.topContents}>
-        <BookInfo bookInfo={DUMMY_BOOK_DETAIL} />
+        <BookInfo
+          bookInfo={DUMMY_BOOK_DETAIL}
+          handleOpenModal={handleOpenModal}
+        />
         <View style={styles.feedHeader}>
           <AppText
             weight="semibold"
@@ -94,6 +111,11 @@ export default function BookDetailScreen() {
         keyExtractor={(item) => String(item.feedId)}
         renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+      <BookIntroModal
+        isVisible={isModalVisible}
+        description={DUMMY_BOOK_DETAIL.description}
+        handleCloseModal={handleCloseModal}
       />
     </View>
   );
