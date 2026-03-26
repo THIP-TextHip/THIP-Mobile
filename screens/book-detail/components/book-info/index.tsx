@@ -70,7 +70,7 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
                 </AppText>
               </View>
             </View>
-            <View style={styles.descWrapper}>
+            <Pressable style={styles.descWrapper} onPress={handleOpenModal}>
               <AppText
                 weight="semibold"
                 size="sm"
@@ -79,18 +79,16 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
               >
                 소개
               </AppText>
-              <Pressable onPress={handleOpenModal}>
-                <AppText
-                  weight="regular"
-                  size="2xs"
-                  color={colors.grey[100]}
-                  lineHeight={20}
-                  numberOfLines={2}
-                >
-                  {bookInfo.description.replace(/\n/g, " ")}
-                </AppText>
-              </Pressable>
-            </View>
+              <AppText
+                weight="regular"
+                size="2xs"
+                color={colors.grey[100]}
+                lineHeight={20}
+                numberOfLines={2}
+              >
+                {bookInfo.description.replace(/\n/g, " ")}
+              </AppText>
+            </Pressable>
           </View>
           <View style={styles.buttonWrapper}>
             <Pressable style={styles.groupButton} onPress={handleToGroupList}>

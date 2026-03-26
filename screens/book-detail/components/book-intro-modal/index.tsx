@@ -61,7 +61,13 @@ export default function BookIntroModal({
             </AppText>
           </ScrollView>
         </View>
-        <Pressable style={styles.closeButton} onPress={handleCloseModal}>
+        <Pressable
+          style={styles.closeButton}
+          onPress={handleCloseModal}
+          accessibilityRole="button"
+          accessibilityLabel="소개 모달 닫기"
+          accessibilityHint="책 소개 모달을 닫습니다"
+        >
           <IcX />
         </Pressable>
       </View>
