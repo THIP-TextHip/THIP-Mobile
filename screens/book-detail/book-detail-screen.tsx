@@ -4,7 +4,12 @@ import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import { IcDownmoreGrey } from "@images/icons";
-import { AppText, FeedPostPreview } from "@shared/ui";
+import {
+  AppText,
+  DropdownFilter,
+  FeedPostPreview,
+  FilterType,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
@@ -19,13 +24,13 @@ export default function BookDetailScreen() {
   // TODO: 추후 서버에서 해당 isbn 으로 조회 예정
   const { isbn } = useLocalSearchParams<{ isbn: string }>();
   const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
-  const [isLatestOrder, setIsLatestOrder] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // TODO: 정렬 방식 변경 방법 논의
-  const handleChangeSort = () => {
-    setIsLatestOrder(!isLatestOrder);
-  };
+  const [sortType, setSortType] = useState<FilterType>({
+    label: "인기순",
+    type: "like",
+  });
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalVisible(true);
@@ -33,6 +38,15 @@ export default function BookDetailScreen() {
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
+  };
+
+  const handlePressDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
+  const handleSelectType = (type: FilterType) => {
+    setSortType(type);
+    setIsDropdownVisible(false);
   };
 
   useEffect(() => {
@@ -76,10 +90,10 @@ export default function BookDetailScreen() {
           >
             피드 글 둘러보기
           </AppText>
-          <Pressable style={styles.sort}>
+          <View style={styles.sort}>
             <Pressable
               style={styles.dropdownWrapper}
-              onPress={handleChangeSort}
+              onPress={handlePressDropdown}
               hitSlop={5}
             >
               <AppText
@@ -88,11 +102,26 @@ export default function BookDetailScreen() {
                 color={colors.grey[100]}
                 lineHeight={24}
               >
-                {isLatestOrder ? "최신순" : "인기순"}
+                {sortType.label}
               </AppText>
               <IcDownmoreGrey />
             </Pressable>
-          </Pressable>
+            <DropdownFilter
+              isVisible={isDropdownVisible}
+              currentType={sortType}
+              typeList={[
+                {
+                  label: "인기순",
+                  type: "like",
+                },
+                {
+                  label: "최신순",
+                  type: "latest",
+                },
+              ]}
+              handleSelectType={handleSelectType}
+            />
+          </View>
         </View>
       </View>
     );
@@ -106,6 +135,7 @@ export default function BookDetailScreen() {
       )}
       <FlatList
         contentContainerStyle={styles.list}
+        ListHeaderComponentStyle={styles.listHeader}
         ListHeaderComponent={BookDetailTopContents}
         data={DUMMY_BOOK_FEED_PREVIEW_LIST}
         keyExtractor={(item) => String(item.feedId)}
@@ -137,6 +167,8 @@ const styles = StyleSheet.create({
   sort: {
     alignItems: "flex-end",
     marginBottom: 4,
+    zIndex: 10,
+    elevation: 10,
   },
   dropdownWrapper: {
     flexDirection: "row",
@@ -144,6 +176,9 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: 40,
+  },
+  listHeader: {
+    zIndex: 100,
   },
   separator: {
     marginTop: 40,

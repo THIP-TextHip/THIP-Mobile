@@ -13,6 +13,7 @@ export { default as CustomHeader } from "./custom-header";
 export { default as CustomModal } from "./custom-modal";
 export { default as CustomSwitch } from "./custom-switch";
 export { default as CustomTabBar } from "./custom-tab-bar";
+export { default as DropdownFilter, FilterType } from "./dropdown-filter";
 export {
   FeedMyPostPreviewType,
   FeedPostBase,
