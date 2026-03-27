@@ -18,7 +18,11 @@ import {
   BookIntroModal,
   ReadCountBar,
 } from "./components";
-import { DUMMY_BOOK_DETAIL, DUMMY_BOOK_FEED_PREVIEW_LIST } from "./constants";
+import {
+  BOOK_DETAIL_FEED_SORT,
+  DUMMY_BOOK_DETAIL,
+  DUMMY_BOOK_FEED_PREVIEW_LIST,
+} from "./constants";
 
 export default function BookDetailScreen() {
   // TODO: 추후 서버에서 해당 isbn 으로 조회 예정
@@ -26,10 +30,9 @@ export default function BookDetailScreen() {
   const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const [sortType, setSortType] = useState<FilterType>({
-    label: "인기순",
-    type: "like",
-  });
+  const [sortType, setSortType] = useState<FilterType>(
+    BOOK_DETAIL_FEED_SORT[0],
+  );
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const handleOpenModal = () => {
@@ -109,16 +112,7 @@ export default function BookDetailScreen() {
             <DropdownFilter
               isVisible={isDropdownVisible}
               currentType={sortType}
-              typeList={[
-                {
-                  label: "인기순",
-                  type: "like",
-                },
-                {
-                  label: "최신순",
-                  type: "latest",
-                },
-              ]}
+              typeList={BOOK_DETAIL_FEED_SORT}
               handleSelectType={handleSelectType}
             />
           </View>

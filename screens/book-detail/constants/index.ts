@@ -1,5 +1,16 @@
 import { colors } from "@theme/token";
 
+export const BOOK_DETAIL_FEED_SORT = [
+  {
+    label: "인기순",
+    type: "like",
+  },
+  {
+    label: "최신순",
+    type: "latest",
+  },
+];
+
 export const DUMMY_BOOK_DETAIL = {
   title: "채식주의자",
   imageUrl: "https://placehold.co/400/png?text=book-image",
