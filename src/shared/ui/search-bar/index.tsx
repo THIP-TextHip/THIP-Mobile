@@ -1,5 +1,12 @@
 import { useCallback } from "react";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  View,
+  ViewStyle,
+} from "react-native";
 
 import { IcSearch, IcXCircle } from "@images/icons";
 import { colors, typography } from "@theme/token";
@@ -10,6 +17,7 @@ interface SearchBarProps {
   autoFocus?: boolean;
   setValue: (value: string) => void;
   handleSearch: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default function SearchBar({
@@ -18,12 +26,13 @@ export default function SearchBar({
   autoFocus = false,
   setValue,
   handleSearch,
+  containerStyle,
 }: SearchBarProps) {
   const handleDelete = useCallback(() => {
     setValue("");
   }, [setValue]);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <TextInput
         style={styles.input}
         value={value}

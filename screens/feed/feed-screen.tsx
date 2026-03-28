@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { FloatingFeedWrite } from "@images/icons";
 
-import { FeedContents, MyFeedContents, TopTabBar } from "./components";
+import { FeedContents, FeedTopTabBar, MyFeedContents } from "./components";
 
 export default function FeedScreen() {
   const [isMyFeed, setIsMyFeed] = useState(false);
@@ -23,7 +23,7 @@ export default function FeedScreen() {
 
   return (
     <View style={styles.page}>
-      <TopTabBar
+      <FeedTopTabBar
         isMyFeed={isMyFeed}
         handleFeed={handleFeed}
         handleMyFeed={handleMyFeed}

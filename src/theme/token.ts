@@ -18,6 +18,7 @@ export const colors = {
 
   white: "#FEFEFE",
   grey: {
+    50: "#E0E0E0",
     100: "#DADADA",
     200: "#ADADAD",
     300: "#888888",
