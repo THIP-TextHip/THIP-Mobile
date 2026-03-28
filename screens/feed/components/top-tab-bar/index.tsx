@@ -8,17 +8,17 @@ const TAB_WIDTH = 60;
 const TAB_GAP = 20;
 const INDICATOR_MOVE_X = TAB_WIDTH + TAB_GAP;
 
-interface TopTabBarProps {
+interface FeedTopTabBarProps {
   isMyFeed: boolean;
   handleFeed: () => void;
   handleMyFeed: () => void;
 }
 
-export default function TopTabBar({
+export default function FeedTopTabBar({
   isMyFeed,
   handleFeed,
   handleMyFeed,
-}: TopTabBarProps) {
+}: FeedTopTabBarProps) {
   const translateX = useRef(new Animated.Value(0)).current;
 
   const animateIndicator = (toValue: number) => {

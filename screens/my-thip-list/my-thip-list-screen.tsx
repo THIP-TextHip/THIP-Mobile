@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ListTotalCountHeader } from "@shared/ui";
+import { BookSearchBottomSheet, ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_MY_THIP_LIST } from "../feed/constants";
@@ -28,6 +28,7 @@ export default function MyThipListScreen() {
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+      <BookSearchBottomSheet isVisible={true} handleClose={() => {}} />
     </View>
   );
 }
