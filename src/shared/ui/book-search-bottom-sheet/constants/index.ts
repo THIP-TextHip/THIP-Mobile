@@ -1,14 +1,3 @@
-export const SEARCH_BOOK_TYPE = [
-  {
-    label: "인기순",
-    type: "like",
-  },
-  {
-    label: "최신순",
-    type: "latest",
-  },
-];
-
 export const DUMMY_SAVED_BOOK_LIST_BOTTOM_SHEET = [
   {
     bookId: 1,

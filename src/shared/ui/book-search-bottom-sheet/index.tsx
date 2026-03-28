@@ -41,6 +41,7 @@ export default function BookSearchBottomSheet({
   }, []);
 
   const handleSearch = useCallback(() => {
+    if (searchText.trim() === "") return;
     console.log(searchText, " 검색");
   }, [searchText]);
 
@@ -50,7 +51,7 @@ export default function BookSearchBottomSheet({
 
   // TODO: 서버에서 받아온 값으로 수정. 로직도 약간 수정 필요.
   const searchedBookList =
-    searchText !== ""
+    searchText.trim() !== ""
       ? DUMMY_SEARCHED_BOOK_LIST_BOTTOM_SHEET
       : bookType === "SAVED"
         ? DUMMY_SAVED_BOOK_LIST_BOTTOM_SHEET
@@ -71,7 +72,7 @@ export default function BookSearchBottomSheet({
           containerStyle={{ backgroundColor: colors.darkgrey.dark }}
           autoFocus={true}
         />
-        {searchText === "" && (
+        {searchText.trim() === "" && (
           <BottomSheetTopTabBar
             bookType={bookType}
             handleSetBookType={handleSetBookType}
@@ -92,7 +93,7 @@ export default function BookSearchBottomSheet({
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           ListEmptyComponent={() => (
             <BookSearchEmpty
-              searchText={searchText}
+              searchText={searchText.trim()}
               bookType={bookType}
               handleClose={handleClose}
             />
