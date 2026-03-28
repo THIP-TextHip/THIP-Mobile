@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { BookSearchBottomSheet, ListTotalCountHeader } from "@shared/ui";
+import { ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_MY_THIP_LIST } from "../feed/constants";
@@ -10,7 +9,6 @@ import { MyThipItem } from "./components";
 
 export default function MyThipListScreen() {
   const { bottom } = useSafeAreaInsets();
-  const [isVisible, setIsVisible] = useState(true);
 
   return (
     <View style={styles.page}>
@@ -29,10 +27,6 @@ export default function MyThipListScreen() {
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
-      <BookSearchBottomSheet
-        isVisible={isVisible}
-        handleClose={() => setIsVisible(false)}
       />
     </View>
   );
