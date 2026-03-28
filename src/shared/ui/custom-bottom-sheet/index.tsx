@@ -14,12 +14,14 @@ interface CustomBottomSheetProps {
   children: ReactNode;
   isVisible: boolean;
   handleClose: () => void;
+  containerPaddingBottom?: number;
 }
 
 export default function CustomBottomSheet({
   children,
   isVisible,
   handleClose,
+  containerPaddingBottom,
 }: CustomBottomSheetProps) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const insets = useSafeAreaInsets();
@@ -60,7 +62,10 @@ export default function CustomBottomSheet({
       handleComponent={null}
     >
       <BottomSheetView
-        style={[styles.contentContainer, { paddingBottom: 20 + insets.bottom }]}
+        style={[
+          styles.contentContainer,
+          { paddingBottom: containerPaddingBottom ?? 20 + insets.bottom },
+        ]}
       >
         {children}
       </BottomSheetView>

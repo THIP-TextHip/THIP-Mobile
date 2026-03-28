@@ -149,3 +149,38 @@ export const DUMMY_GROUP_BOOK_LIST_BOTTOM_SHEET = [
     isbn: "9788954655977",
   },
 ];
+
+export const DUMMY_SEARCHED_BOOK_LIST_BOTTOM_SHEET = [
+  {
+    bookId: 5,
+    bookTitle: "불편한 편의점 2",
+    authorName: "김호연",
+    publisher: "나무옆의자",
+    bookImageUrl: "https://placehold.co/45x60/png",
+    isbn: "9791161571379",
+  },
+  {
+    bookId: 6,
+    bookTitle: "아몬드",
+    authorName: "손원평",
+    publisher: "창비",
+    bookImageUrl: "https://placehold.co/45x60/png",
+    isbn: "9788936434260",
+  },
+  {
+    bookId: 7,
+    bookTitle: "서랍에 저녁을 넣어 두었다",
+    authorName: "한강",
+    publisher: "문학과지성사",
+    bookImageUrl: "https://placehold.co/45x60/png",
+    isbn: "9788932030623",
+  },
+  {
+    bookId: 8,
+    bookTitle: "82년생 김지영",
+    authorName: "조남주",
+    publisher: "민음사",
+    bookImageUrl: "https://placehold.co/45x60/png",
+    isbn: "9788937473135",
+  },
+];

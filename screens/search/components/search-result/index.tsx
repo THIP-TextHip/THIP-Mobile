@@ -65,7 +65,12 @@ export default function SearchResult({
             </AppText>
           </View>
           <CustomButton handlePress={handleToBookRequestPage}>
-            <AppText weight="semibold" size="base" color={colors.white}>
+            <AppText
+              weight="semibold"
+              size="base"
+              color={colors.white}
+              lineHeight={24}
+            >
               책 신청하기
             </AppText>
           </CustomButton>

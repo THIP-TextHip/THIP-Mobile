@@ -1,17 +1,18 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { colors } from "@theme/token";
+
 import AppText from "../../../app-text";
 
-interface BookSearchTopTabBarProps {
+interface BottomSheetTopTabBarProps {
   bookType: "SAVED" | "JOINING";
   handleSetBookType: (type: "SAVED" | "JOINING") => void;
 }
 
-export default function BookSearchTopTabBar({
+export default function BottomSheetTopTabBar({
   bookType,
   handleSetBookType,
-}: BookSearchTopTabBarProps) {
+}: BottomSheetTopTabBarProps) {
   return (
     <View style={styles.tabBar}>
       <Pressable

@@ -1,21 +1,20 @@
 import { useCallback, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, useWindowDimensions, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@theme/token";
 
-import AppText from "../app-text";
 import CustomBottomSheet from "../custom-bottom-sheet";
 import SearchBar from "../search-bar";
-import { BookSearchTopTabBar } from "./components";
+import {
+  BookSearchEmpty,
+  BottomSheetBookItem,
+  BottomSheetTopTabBar,
+} from "./components";
 import {
   DUMMY_GROUP_BOOK_LIST_BOTTOM_SHEET,
   DUMMY_SAVED_BOOK_LIST_BOTTOM_SHEET,
+  DUMMY_SEARCHED_BOOK_LIST_BOTTOM_SHEET,
 } from "./constants";
 
 interface BookSearchBottomSheetProps {
@@ -28,6 +27,8 @@ export default function BookSearchBottomSheet({
   handleClose,
 }: BookSearchBottomSheetProps) {
   const { height } = useWindowDimensions();
+  const { bottom } = useSafeAreaInsets();
+
   const [bookType, setBookType] = useState<"SAVED" | "JOINING">("SAVED");
   const [searchText, setSearchText] = useState("");
 
@@ -47,24 +48,20 @@ export default function BookSearchBottomSheet({
     console.log(isbn, " 책 클릭");
   }, []);
 
-  const BookItem = ({
-    bookTitle,
-    bookImageUrl,
-    isbn,
-  }: {
-    bookTitle: string;
-    bookImageUrl: string;
-    isbn: string;
-  }) => {
-    return (
-      <Pressable onPress={() => handlePressBookItem(isbn)}>
-        <AppText color={colors.white}>{bookTitle}</AppText>
-      </Pressable>
-    );
-  };
+  // TODO: 서버에서 받아온 값으로 수정. 로직도 약간 수정 필요.
+  const searchedBookList =
+    searchText !== ""
+      ? DUMMY_SEARCHED_BOOK_LIST_BOTTOM_SHEET
+      : bookType === "SAVED"
+        ? DUMMY_SAVED_BOOK_LIST_BOTTOM_SHEET
+        : DUMMY_GROUP_BOOK_LIST_BOTTOM_SHEET;
 
   return (
-    <CustomBottomSheet isVisible={isVisible} handleClose={handleClose}>
+    <CustomBottomSheet
+      isVisible={isVisible}
+      handleClose={handleClose}
+      containerPaddingBottom={0}
+    >
       <View style={[styles.container, { height: height * 0.65 }]}>
         <SearchBar
           value={searchText}
@@ -74,26 +71,32 @@ export default function BookSearchBottomSheet({
           containerStyle={{ backgroundColor: colors.darkgrey.dark }}
           autoFocus={true}
         />
-        <BookSearchTopTabBar
-          bookType={bookType}
-          handleSetBookType={handleSetBookType}
-        />
+        {searchText === "" && (
+          <BottomSheetTopTabBar
+            bookType={bookType}
+            handleSetBookType={handleSetBookType}
+          />
+        )}
         <FlatList
-          contentContainerStyle={styles.list}
-          data={
-            bookType === "SAVED"
-              ? DUMMY_SAVED_BOOK_LIST_BOTTOM_SHEET
-              : DUMMY_GROUP_BOOK_LIST_BOTTOM_SHEET
-          }
+          contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
+          data={searchedBookList}
           keyExtractor={(item) => String(item.bookId)}
           renderItem={({ item }) => (
-            <BookItem
+            <BottomSheetBookItem
               bookTitle={item.bookTitle}
               bookImageUrl={item.bookImageUrl}
               isbn={item.isbn}
+              handlePressBookItem={handlePressBookItem}
             />
           )}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ListEmptyComponent={() => (
+            <BookSearchEmpty
+              searchText={searchText}
+              bookType={bookType}
+              handleClose={handleClose}
+            />
+          )}
         />
       </View>
     </CustomBottomSheet>
