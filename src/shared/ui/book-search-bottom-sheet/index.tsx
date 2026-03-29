@@ -70,7 +70,6 @@ export default function BookSearchBottomSheet({
           setValue={handleChangeText}
           handleSearch={handleSearch}
           containerStyle={{ backgroundColor: colors.darkgrey.dark }}
-          autoFocus={true}
         />
         {searchText.trim() === "" && (
           <BottomSheetTopTabBar

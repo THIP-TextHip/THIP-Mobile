@@ -1,5 +1,5 @@
 import { ReactNode, useMemo } from "react";
-import { Pressable, StyleSheet, ViewStyle } from "react-native";
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 import { colors } from "@theme/token";
 
@@ -9,6 +9,7 @@ interface CustomButtonProps {
   size?: "fit" | "full" | "fill";
   disabled?: boolean;
   handlePress: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default function CustomButton({
@@ -17,6 +18,7 @@ export default function CustomButton({
   size = "fit",
   disabled = false,
   handlePress,
+  containerStyle,
 }: CustomButtonProps) {
   const bgColor =
     type === "cancel" || disabled
@@ -47,6 +49,7 @@ export default function CustomButton({
           backgroundColor: bgColor,
         },
         sizeStyle,
+        containerStyle,
       ]}
       onPress={handlePress}
       disabled={disabled}

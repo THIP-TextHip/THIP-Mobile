@@ -3,10 +3,18 @@ import { useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
-import { AppText, CustomHeader } from "@shared/ui";
+import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
-export default function FeedWriteHeader() {
+interface FeedWriteHeaderProps {
+  disabled: boolean;
+  handleConfirm: () => void;
+}
+
+export default function FeedWriteHeader({
+  disabled,
+  handleConfirm,
+}: FeedWriteHeaderProps) {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
@@ -21,6 +29,11 @@ export default function FeedWriteHeader() {
         <AppText weight="bold" size="2xl" color={colors.white}>
           새 글
         </AppText>
+      }
+      right={
+        <ButtonHeader disabled={disabled} handleClickButton={handleConfirm}>
+          완료
+        </ButtonHeader>
       }
     />
   );
