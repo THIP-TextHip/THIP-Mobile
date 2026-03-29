@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { router } from "expo-router";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { FloatingFeedWrite } from "@images/icons";
@@ -16,10 +17,9 @@ export default function FeedScreen() {
     setIsMyFeed(true);
   };
 
-  const handleToWriteFeed = () => {
-    // TODO: 피드 글 작성 페이지로 이동
-    console.log("피드 글 작성하러 가기");
-  };
+  const handleToWriteFeed = useCallback(() => {
+    router.push("/feed-write");
+  }, []);
 
   return (
     <View style={styles.page}>
