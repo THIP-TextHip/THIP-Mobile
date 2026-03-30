@@ -48,12 +48,16 @@ export default function FeedWriteScreen() {
   const Separator = () => {
     return <View style={styles.separator} />;
   };
-  // TODO: 책 선택 시 상태에 저장 및 BookSelectSection에도 반영
+
+  const confirmDisable = !feedBook || content.trim() === "";
 
   return (
     <View style={styles.page}>
       {/* TODO: 완료 버튼 상태는 필수 정보 입력 여부에 따라 바뀌도록 */}
-      <FeedWriteHeader disabled={true} handleConfirm={handleConfirmFeedWrite} />
+      <FeedWriteHeader
+        disabled={confirmDisable}
+        handleConfirm={handleConfirmFeedWrite}
+      />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
