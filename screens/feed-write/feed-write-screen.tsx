@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { BookSearchBottomSheet } from "@shared/ui";
+import { BookSearchBottomSheet, BottomSheetBookItemType } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
@@ -23,6 +23,9 @@ import {
 export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [feedBook, setFeedBook] = useState<BottomSheetBookItemType | null>(
+    null,
+  );
   const [content, setContent] = useState("");
 
   const handleOpenBottomSheet = () => {
@@ -31,6 +34,10 @@ export default function FeedWriteScreen() {
 
   const handleCloseBottomSheet = () => {
     setIsBottomSheetVisible(false);
+  };
+
+  const handleSelectBook = (bookItem: BottomSheetBookItemType) => {
+    setFeedBook(bookItem);
   };
 
   // TODO: 작성 정보 서버에 보내도록
@@ -55,7 +62,10 @@ export default function FeedWriteScreen() {
         <ScrollView
           contentContainerStyle={[styles.content, { paddingBottom: bottom }]}
         >
-          <BookSelectSection handleOpenBottomSheet={handleOpenBottomSheet} />
+          <BookSelectSection
+            feedBook={feedBook}
+            handleOpenBottomSheet={handleOpenBottomSheet}
+          />
           <Separator />
           <FeedContentSection
             content={content}
@@ -72,6 +82,7 @@ export default function FeedWriteScreen() {
 
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
+        handleSelectBook={handleSelectBook}
         handleClose={handleCloseBottomSheet}
       />
     </View>

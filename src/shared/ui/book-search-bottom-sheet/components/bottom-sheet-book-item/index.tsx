@@ -2,29 +2,26 @@ import { Image, Pressable, StyleSheet } from "react-native";
 
 import { colors } from "@theme/token";
 
+import { BottomSheetBookItemType } from "../..";
 import AppText from "../../../app-text";
 
 interface BottomSheetBookItemProps {
-  bookTitle: string;
-  bookImageUrl: string;
-  isbn: string;
-  handlePressBookItem: (isbn: string) => void;
+  bookItem: BottomSheetBookItemType;
+  handleSelectBook: (isbn: BottomSheetBookItemType) => void;
 }
 
 export default function BottomSheetBookItem({
-  bookTitle,
-  bookImageUrl,
-  isbn,
-  handlePressBookItem,
+  bookItem,
+  handleSelectBook,
 }: BottomSheetBookItemProps) {
   return (
     <Pressable
       style={styles.bookItem}
-      onPress={() => handlePressBookItem(isbn)}
+      onPress={() => handleSelectBook(bookItem)}
     >
-      <Image source={{ uri: bookImageUrl }} style={styles.bookImage} />
+      <Image source={{ uri: bookItem.bookImageUrl }} style={styles.bookImage} />
       <AppText weight="regular" size="sm" color={colors.white} lineHeight={20}>
-        {bookTitle}
+        {bookItem.bookTitle}
       </AppText>
     </Pressable>
   );

@@ -1,6 +1,9 @@
 export { default as AppText } from "./app-text";
 export { default as BookInfoBar } from "./book-info-bar";
-export { default as BookSearchBottomSheet } from "./book-search-bottom-sheet";
+export {
+  default as BookSearchBottomSheet,
+  BottomSheetBookItemType,
+} from "./book-search-bottom-sheet";
 export { ButtonHeader, CustomButton, SelectChip } from "./button";
 export { default as ChatInputBar } from "./chat-input-bar";
 export {
