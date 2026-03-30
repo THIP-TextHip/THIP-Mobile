@@ -29,6 +29,7 @@ export default function FeedWriteScreen() {
   );
   const [contentBody, setContentBody] = useState("");
   const [isPublic, setIsPublic] = useState(true);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -36,6 +37,10 @@ export default function FeedWriteScreen() {
 
   const handleCloseBottomSheet = () => {
     setIsBottomSheetVisible(false);
+  };
+
+  const handleImageUrls = (images: string[]) => {
+    setImageUrls(images);
   };
 
   // TODO: 작성 정보 서버에 보내도록
@@ -74,7 +79,10 @@ export default function FeedWriteScreen() {
             handleChangeContentBody={setContentBody}
           />
           <Separator />
-          <FeedImageSection />
+          <FeedImageSection
+            imageUrls={imageUrls}
+            handleImageUrls={handleImageUrls}
+          />
           <Separator />
           <FeedVisibilitySection
             isPublic={isPublic}
@@ -84,7 +92,6 @@ export default function FeedWriteScreen() {
           <FeedTagSection />
         </ScrollView>
       </KeyboardAvoidingView>
-
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
         handleSelectBook={setFeedBook}

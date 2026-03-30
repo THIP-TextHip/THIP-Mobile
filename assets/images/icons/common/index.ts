@@ -23,6 +23,7 @@ export { default as IcMoreCenter } from "./ic_more_center.svg";
 export { default as IcPin } from "./ic_pin.svg";
 export { default as IcPlay } from "./ic_play.svg";
 export { default as IcPlus } from "./ic_plus.svg";
+export { default as IcPlusGrey } from "./ic_plus_grey.svg";
 export { default as IcPlusfriend } from "./ic_plusfriend.svg";
 export { default as IcRankdash } from "./ic_rankdash.svg";
 export { default as IcRankdown } from "./ic_rankdown.svg";
