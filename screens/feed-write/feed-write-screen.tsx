@@ -23,10 +23,12 @@ import {
 export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
   const [feedBook, setFeedBook] = useState<BottomSheetBookItemType | null>(
     null,
   );
-  const [content, setContent] = useState("");
+  const [contentBody, setContentBody] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -34,10 +36,6 @@ export default function FeedWriteScreen() {
 
   const handleCloseBottomSheet = () => {
     setIsBottomSheetVisible(false);
-  };
-
-  const handleSelectBook = (bookItem: BottomSheetBookItemType) => {
-    setFeedBook(bookItem);
   };
 
   // TODO: 작성 정보 서버에 보내도록
@@ -49,7 +47,7 @@ export default function FeedWriteScreen() {
     return <View style={styles.separator} />;
   };
 
-  const confirmDisable = !feedBook || content.trim() === "";
+  const confirmDisable = !feedBook || contentBody.trim() === "";
 
   return (
     <View style={styles.page}>
@@ -72,13 +70,16 @@ export default function FeedWriteScreen() {
           />
           <Separator />
           <FeedContentSection
-            content={content}
-            handleChangeContent={setContent}
+            contentBody={contentBody}
+            handleChangeContentBody={setContentBody}
           />
           <Separator />
           <FeedImageSection />
           <Separator />
-          <FeedVisibilitySection />
+          <FeedVisibilitySection
+            isPublic={isPublic}
+            handleChangeVisibility={setIsPublic}
+          />
           <Separator />
           <FeedTagSection />
         </ScrollView>
@@ -86,7 +87,7 @@ export default function FeedWriteScreen() {
 
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
-        handleSelectBook={handleSelectBook}
+        handleSelectBook={setFeedBook}
         handleClose={handleCloseBottomSheet}
       />
     </View>

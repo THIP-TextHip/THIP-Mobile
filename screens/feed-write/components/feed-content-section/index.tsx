@@ -8,13 +8,13 @@ import {
 } from "../../constants";
 
 interface FeedContentSectionProps {
-  content: string;
-  handleChangeContent: (content: string) => void;
+  contentBody: string;
+  handleChangeContentBody: (contentBody: string) => void;
 }
 
 export default function FeedContentSection({
-  content,
-  handleChangeContent,
+  contentBody,
+  handleChangeContentBody,
 }: FeedContentSectionProps) {
   return (
     <View style={styles.section}>
@@ -23,8 +23,8 @@ export default function FeedContentSection({
       </AppText>
       <TextInput
         style={styles.input}
-        value={content}
-        onChangeText={handleChangeContent}
+        value={contentBody}
+        onChangeText={handleChangeContentBody}
         placeholder={FEED_CONTENT_PLACEHOLDER}
         placeholderTextColor={colors.grey[300]}
         selectionColor={colors.neongreen}
@@ -36,13 +36,13 @@ export default function FeedContentSection({
         weight="regular"
         size="xs"
         color={
-          content.length !== FEED_CONTENT_MAX_LENGTH
+          contentBody.length !== FEED_CONTENT_MAX_LENGTH
             ? colors.neongreen
             : colors.red
         }
         style={styles.count}
       >
-        {content.length} / {FEED_CONTENT_MAX_LENGTH}
+        {contentBody.length} / {FEED_CONTENT_MAX_LENGTH}
       </AppText>
     </View>
   );
