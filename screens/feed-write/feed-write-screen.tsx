@@ -1,16 +1,27 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BookSearchBottomSheet } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { useState } from "react";
 import {
   BookSelectSection,
   FeedContentSection,
+  FeedImageSection,
+  FeedTagSection,
+  FeedVisibilitySection,
   FeedWriteHeader,
 } from "./components";
 
 export default function FeedWriteScreen() {
+  const { bottom } = useSafeAreaInsets();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [content, setContent] = useState("");
 
@@ -22,22 +33,43 @@ export default function FeedWriteScreen() {
     setIsBottomSheetVisible(false);
   };
 
+  // TODO: 작성 정보 서버에 보내도록
+  const handleConfirmFeedWrite = () => {
+    console.log("피드 작성 완료");
+  };
+
   const Separator = () => {
     return <View style={styles.separator} />;
   };
+  // TODO: 책 선택 시 상태에 저장 및 BookSelectSection에도 반영
 
   return (
     <View style={styles.page}>
-      <FeedWriteHeader disabled={true} handleConfirm={() => {}} />
-      <ScrollView contentContainerStyle={styles.content}>
-        <BookSelectSection handleOpenBottomSheet={handleOpenBottomSheet} />
-        <Separator />
-        <FeedContentSection
-          content={content}
-          handleChangeContent={setContent}
-        />
-        <Separator />
-      </ScrollView>
+      {/* TODO: 완료 버튼 상태는 필수 정보 입력 여부에 따라 바뀌도록 */}
+      <FeedWriteHeader disabled={true} handleConfirm={handleConfirmFeedWrite} />
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
+        <ScrollView
+          contentContainerStyle={[styles.content, { paddingBottom: bottom }]}
+        >
+          <BookSelectSection handleOpenBottomSheet={handleOpenBottomSheet} />
+          <Separator />
+          <FeedContentSection
+            content={content}
+            handleChangeContent={setContent}
+          />
+          <Separator />
+          <FeedImageSection />
+          <Separator />
+          <FeedVisibilitySection />
+          <Separator />
+          <FeedTagSection />
+        </ScrollView>
+      </KeyboardAvoidingView>
+
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
         handleClose={handleCloseBottomSheet}
@@ -48,6 +80,9 @@ export default function FeedWriteScreen() {
 
 const styles = StyleSheet.create({
   page: {
+    flex: 1,
+  },
+  keyboardAvoidingView: {
     flex: 1,
   },
   content: {

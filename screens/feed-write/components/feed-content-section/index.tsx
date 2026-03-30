@@ -21,7 +21,6 @@ export default function FeedContentSection({
       <AppText weight="semibold" size="lg" color={colors.white} lineHeight={24}>
         글 작성
       </AppText>
-      {/* TODO: 글의 높이가 늘어나면 그에 따라 키보드도 아래쪽으로 내려가도록 하기 */}
       <TextInput
         style={styles.input}
         value={content}
@@ -36,7 +35,11 @@ export default function FeedContentSection({
       <AppText
         weight="regular"
         size="xs"
-        color={colors.neongreen}
+        color={
+          content.length !== FEED_CONTENT_MAX_LENGTH
+            ? colors.neongreen
+            : colors.red
+        }
         style={styles.count}
       >
         {content.length} / {FEED_CONTENT_MAX_LENGTH}
