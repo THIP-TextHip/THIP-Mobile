@@ -49,7 +49,7 @@ export default function FeedWriteScreen() {
     setSelectedTagList((prev) =>
       prev.includes(tag)
         ? prev.filter((item) => item !== tag)
-        : prev.length !== FEED_TAG_MAX
+        : prev.length < FEED_TAG_MAX
           ? [...prev, tag]
           : [...prev],
     );
