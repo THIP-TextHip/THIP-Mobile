@@ -4,7 +4,7 @@ export {
   default as BookSearchBottomSheet,
   BottomSheetBookItemType,
 } from "./book-search-bottom-sheet";
-export { ButtonHeader, CustomButton, SelectChip } from "./button";
+export { ButtonHeader, CustomButton, SelectChip, TagButton } from "./button";
 export { default as ChatInputBar } from "./chat-input-bar";
 export {
   CommentItem,

@@ -19,6 +19,7 @@ import {
   FeedVisibilitySection,
   FeedWriteHeader,
 } from "./components";
+import { FEED_TAG_MAX } from "./constants";
 
 export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -30,6 +31,7 @@ export default function FeedWriteScreen() {
   const [contentBody, setContentBody] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [selectedTagList, setSelectedTagList] = useState<string[]>([]);
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -43,9 +45,25 @@ export default function FeedWriteScreen() {
     setImageUrls(images);
   };
 
+  const handlePressTag = (tag: string) => {
+    setSelectedTagList((prev) =>
+      prev.includes(tag)
+        ? prev.filter((item) => item !== tag)
+        : prev.length !== FEED_TAG_MAX
+          ? [...prev, tag]
+          : [...prev],
+    );
+  };
+
+  const handleDeleteTag = (tag: string) => {
+    setSelectedTagList((prev) => prev.filter((item) => item !== tag));
+  };
+
   // TODO: 작성 정보 서버에 보내도록
   const handleConfirmFeedWrite = () => {
-    console.log("피드 작성 완료");
+    alert(
+      `책 : ${feedBook?.bookTitle}\n글 : ${contentBody}\n사진 : ${imageUrls}\n공개 설정 : ${isPublic}\n태그 : ${selectedTagList}`,
+    );
   };
 
   const Separator = () => {
@@ -67,7 +85,10 @@ export default function FeedWriteScreen() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
         <ScrollView
-          contentContainerStyle={[styles.content, { paddingBottom: bottom }]}
+          contentContainerStyle={[
+            styles.content,
+            { paddingBottom: bottom + 20 },
+          ]}
         >
           <BookSelectSection
             feedBook={feedBook}
@@ -89,7 +110,11 @@ export default function FeedWriteScreen() {
             handleChangeVisibility={setIsPublic}
           />
           <Separator />
-          <FeedTagSection />
+          <FeedTagSection
+            selectedTagList={selectedTagList}
+            handlePressTag={handlePressTag}
+            handleDeleteTag={handleDeleteTag}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
       <BookSearchBottomSheet
