@@ -74,7 +74,6 @@ export default function FeedWriteScreen() {
 
   return (
     <View style={styles.page}>
-      {/* TODO: 완료 버튼 상태는 필수 정보 입력 여부에 따라 바뀌도록 */}
       <FeedWriteHeader
         disabled={confirmDisable}
         handleConfirm={handleConfirmFeedWrite}
