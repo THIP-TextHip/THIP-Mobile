@@ -48,7 +48,13 @@ export default function FeedTagSection({
 
   return (
     <View style={styles.section}>
-      <AppText weight="semibold" size="lg" color={colors.white} lineHeight={24}>
+      <AppText
+        style={styles.label}
+        weight="semibold"
+        size="lg"
+        color={colors.white}
+        lineHeight={24}
+      >
         태그
       </AppText>
       <FlatList
@@ -88,7 +94,12 @@ export default function FeedTagSection({
       </AppText>
       {selectedTagList.length > 0 && (
         <View style={styles.selectedTagListSection}>
-          <AppText weight="regular" size="sm" color={colors.grey[100]}>
+          <AppText
+            style={styles.label}
+            weight="regular"
+            size="sm"
+            color={colors.grey[100]}
+          >
             선택된 태그
           </AppText>
           <FlatList
@@ -109,12 +120,22 @@ const styles = StyleSheet.create({
   section: {
     gap: 12,
   },
+  label: {
+    paddingHorizontal: 20,
+  },
   horizontalList: {
     gap: 8,
+    paddingHorizontal: 20,
   },
-  tagList: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  tagList: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    paddingHorizontal: 20,
+  },
   count: {
     textAlign: "right",
+    paddingRight: 20,
   },
   selectedTagListSection: {
     gap: 12,

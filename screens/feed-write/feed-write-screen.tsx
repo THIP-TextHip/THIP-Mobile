@@ -133,11 +133,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 20,
+    paddingVertical: 20,
     gap: 32,
   },
   separator: {
     height: 1,
+    marginHorizontal: 20,
     backgroundColor: colors.darkgrey.dark,
   },
 });

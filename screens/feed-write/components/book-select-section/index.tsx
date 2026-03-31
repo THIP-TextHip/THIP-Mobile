@@ -75,6 +75,7 @@ export default function BookSelectSection({
 const styles = StyleSheet.create({
   section: {
     gap: 12,
+    paddingHorizontal: 20,
   },
   bookSearchButtonContent: {
     flexDirection: "row",

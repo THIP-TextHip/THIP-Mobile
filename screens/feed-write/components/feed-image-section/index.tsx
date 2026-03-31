@@ -46,10 +46,20 @@ export default function FeedImageSection({
 
   return (
     <View style={styles.section}>
-      <AppText weight="semibold" size="lg" color={colors.white} lineHeight={24}>
+      <AppText
+        style={styles.label}
+        weight="semibold"
+        size="lg"
+        color={colors.white}
+        lineHeight={24}
+      >
         사진 추가
       </AppText>
-      <ScrollView contentContainerStyle={styles.imageWrapper} horizontal>
+      <ScrollView
+        contentContainerStyle={styles.imageWrapper}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
         <Pressable
           style={[
             styles.addImageButton,
@@ -88,8 +98,12 @@ const styles = StyleSheet.create({
   section: {
     gap: 12,
   },
+  label: {
+    paddingHorizontal: 20,
+  },
   imageWrapper: {
     gap: 12,
+    paddingHorizontal: 20,
   },
   addImageButton: {
     width: 80,
@@ -117,5 +131,6 @@ const styles = StyleSheet.create({
   },
   count: {
     textAlign: "right",
+    paddingRight: 20,
   },
 });

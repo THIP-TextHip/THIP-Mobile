@@ -40,6 +40,7 @@ export default function FeedVisibilitySection({
 const styles = StyleSheet.create({
   section: {
     gap: 12,
+    paddingHorizontal: 20,
   },
   content: {
     flexDirection: "row",

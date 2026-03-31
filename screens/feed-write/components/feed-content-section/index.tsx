@@ -52,6 +52,7 @@ export default function FeedContentSection({
 const styles = StyleSheet.create({
   section: {
     gap: 12,
+    paddingHorizontal: 20,
   },
   input: {
     color: colors.white,
