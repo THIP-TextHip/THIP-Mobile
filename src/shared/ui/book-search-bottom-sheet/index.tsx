@@ -17,13 +17,25 @@ import {
   DUMMY_SEARCHED_BOOK_LIST_BOTTOM_SHEET,
 } from "./constants";
 
+// TODO: 서버 제공 타입으로 변경
+export interface BottomSheetBookItemType {
+  bookId: number;
+  bookTitle: string;
+  authorName: string;
+  publisher: string;
+  bookImageUrl: string;
+  isbn: string;
+}
+
 interface BookSearchBottomSheetProps {
   isVisible: boolean;
+  handleSelectBook: (bookItem: BottomSheetBookItemType) => void;
   handleClose: () => void;
 }
 
 export default function BookSearchBottomSheet({
   isVisible,
+  handleSelectBook,
   handleClose,
 }: BookSearchBottomSheetProps) {
   const { height } = useWindowDimensions();
@@ -45,9 +57,13 @@ export default function BookSearchBottomSheet({
     console.log(searchText, " 검색");
   }, [searchText]);
 
-  const handlePressBookItem = useCallback((isbn: string) => {
-    console.log(isbn, " 책 클릭");
-  }, []);
+  const handlePressBook = useCallback(
+    (bookItem: BottomSheetBookItemType) => {
+      handleSelectBook(bookItem);
+      handleClose();
+    },
+    [handleSelectBook, handleClose],
+  );
 
   // TODO: 서버에서 받아온 값으로 수정. 로직도 약간 수정 필요.
   const searchedBookList =
@@ -70,7 +86,6 @@ export default function BookSearchBottomSheet({
           setValue={handleChangeText}
           handleSearch={handleSearch}
           containerStyle={{ backgroundColor: colors.darkgrey.dark }}
-          autoFocus={true}
         />
         {searchText.trim() === "" && (
           <BottomSheetTopTabBar
@@ -84,10 +99,8 @@ export default function BookSearchBottomSheet({
           keyExtractor={(item) => String(item.bookId)}
           renderItem={({ item }) => (
             <BottomSheetBookItem
-              bookTitle={item.bookTitle}
-              bookImageUrl={item.bookImageUrl}
-              isbn={item.isbn}
-              handlePressBookItem={handlePressBookItem}
+              bookItem={item}
+              handleSelectBook={handlePressBook}
             />
           )}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
