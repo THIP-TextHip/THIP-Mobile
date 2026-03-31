@@ -96,6 +96,7 @@ export default function FeedTagSection({
             horizontal
             showsHorizontalScrollIndicator={false}
             data={selectedTagList}
+            keyExtractor={(item) => item}
             renderItem={({ item }) => <SelectedTag selectedTag={item} />}
           />
         </View>
