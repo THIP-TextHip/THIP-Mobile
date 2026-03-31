@@ -2,6 +2,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 
 import { AppText } from "@shared/ui";
 import { colors, typography } from "@theme/token";
+
 import {
   FEED_CONTENT_MAX_LENGTH,
   FEED_CONTENT_PLACEHOLDER,
