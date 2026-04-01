@@ -40,6 +40,18 @@ export const toastConfig = {
       </AppText>
     </View>
   ),
+
+  // Thip 알림 설정 토스트
+  alarm: (props: BaseToastProps) => (
+    <View style={[styles.container, styles.alarmContainer]}>
+      <AppText weight="medium" size="xs" color={colors.white} lineHeight={20}>
+        {props.text1}
+      </AppText>
+      <AppText weight="regular" size="2xs" color={colors.grey[300]}>
+        {props.text2}
+      </AppText>
+    </View>
+  ),
 };
 
 const styles = StyleSheet.create({
@@ -51,5 +63,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.grey[300],
+  },
+  alarmContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
