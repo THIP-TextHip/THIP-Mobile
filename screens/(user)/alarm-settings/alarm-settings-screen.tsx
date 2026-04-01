@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { AppText, CustomSwitch } from "@shared/ui";
+import { getFormattedCurrentDateTime } from "@shared/utils";
 import { colors } from "@theme/token";
 
 export default function AlarmSettingsScreen() {
@@ -9,6 +11,20 @@ export default function AlarmSettingsScreen() {
   const [isOn, setIsOn] = useState(false);
   const handleToggleSwitch = () => {
     // TODO: 서버 요청 보내기
+    // 알림 설정 변경 성공 시 토스트 띄우기
+    if (isOn) {
+      Toast.show({
+        type: "alarm",
+        text1: "푸시 알림이 해제되었어요.",
+        text2: `${getFormattedCurrentDateTime()}`,
+      });
+    } else {
+      Toast.show({
+        type: "alarm",
+        text1: "푸시 알림이 설정되었어요.",
+        text2: `${getFormattedCurrentDateTime()}`,
+      });
+    }
     setIsOn((prev) => !prev);
   };
   return (
