@@ -56,6 +56,14 @@ export default function RootLayout() {
             <Stack.Screen name="book-detail" options={{ headerShown: false }} />
             <Stack.Screen name="search-user" options={{ headerShown: false }} />
             <Stack.Screen name="feed-write" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="delete-account"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="delete-account-complete"
+              options={{ headerShown: false, gestureEnabled: false }}
+            />
           </Stack>
           <Toast
             config={toastConfig}

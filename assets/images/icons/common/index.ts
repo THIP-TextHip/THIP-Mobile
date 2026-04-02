@@ -5,6 +5,7 @@ export { default as IcArrowRight } from "./ic_arrow_right.svg";
 export { default as IcBye } from "./ic_bye.svg";
 export { default as IcCalendar } from "./ic_calendar.svg";
 export { default as IcCheck } from "./ic_check.svg";
+export { default as IcCheckGreen } from "./ic_check_green.svg";
 export { default as IcComment } from "./ic_comment.svg";
 export { default as IcDelete } from "./ic_delete.svg";
 export { default as IcDocument } from "./ic_document.svg";
