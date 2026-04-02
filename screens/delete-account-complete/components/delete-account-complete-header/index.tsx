@@ -7,7 +7,7 @@ import { CustomHeader } from "@shared/ui";
 
 export default function DeleteAccountCompleteHeader() {
   const handleToLogin = useCallback(() => {
-    router.push("/login");
+    router.replace("/login");
   }, []);
 
   return (

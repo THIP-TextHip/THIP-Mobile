@@ -16,7 +16,7 @@ export default function DeleteAccountModal({
   // TODO: 회원탈퇴 api 연동
   const handleDeleteAccount = () => {
     handleCloseModal();
-    router.push("/delete-account-complete");
+    router.replace("/delete-account-complete");
   };
 
   return (

@@ -37,6 +37,8 @@ export default function DeleteAccountScreen() {
             style={styles.checkbox}
             onPress={handlePressButton}
             hitSlop={10}
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: isChecked }}
           >
             {isChecked && <IcCheckGreen />}
           </Pressable>
@@ -93,9 +95,11 @@ const styles = StyleSheet.create({
     borderColor: colors.grey[200],
   },
   bottomButton: {
-    position: "fixed",
+    position: "absolute",
     minHeight: 50,
     bottom: 0,
+    left: 0,
+    right: 0,
   },
   bottomButtonContent: {
     flexDirection: "row",

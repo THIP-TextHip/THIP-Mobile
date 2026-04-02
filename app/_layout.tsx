@@ -62,7 +62,7 @@ export default function RootLayout() {
             />
             <Stack.Screen
               name="delete-account-complete"
-              options={{ headerShown: false }}
+              options={{ headerShown: false, gestureEnabled: false }}
             />
           </Stack>
           <Toast
