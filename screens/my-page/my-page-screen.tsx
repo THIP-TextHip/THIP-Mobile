@@ -1,10 +1,11 @@
+import { router } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { AppText, UserProfileBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { router } from "expo-router";
-import { SettingsListItem } from "./components";
+import { LogoutModal, SettingsListItem } from "./components";
 import { SETTINGS_MY_ACTIVITY, SETTINGS_OTHER } from "./constants";
 
 // TODO: 서버에서 받아오기
@@ -13,8 +14,17 @@ const genre = "문학가";
 const profileColor = colors.character.mint;
 
 export default function MyPageScreen() {
+  const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
+
   const handleToEdit = () => {
     router.push("/edit-profile");
+  };
+
+  const handleOpenLogoutModal = () => {
+    setLogoutModalVisible(true);
+  };
+  const handleCloseLogoutModal = () => {
+    setLogoutModalVisible(false);
   };
 
   return (
@@ -42,7 +52,7 @@ export default function MyPageScreen() {
       </View>
       <View style={styles.account}>
         {/* TODO: 추후 api로 수정 */}
-        <Pressable onPress={() => router.push("/login")}>
+        <Pressable onPress={handleOpenLogoutModal} hitSlop={5}>
           <AppText weight="regular" size="sm" color={colors.grey[200]}>
             로그아웃
           </AppText>
@@ -53,6 +63,10 @@ export default function MyPageScreen() {
           </AppText>
         </Pressable>
       </View>
+      <LogoutModal
+        isVisible={isLogoutModalVisible}
+        handleCloseModal={handleCloseLogoutModal}
+      />
     </ScrollView>
   );
 }
