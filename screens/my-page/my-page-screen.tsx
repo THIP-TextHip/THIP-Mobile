@@ -27,6 +27,10 @@ export default function MyPageScreen() {
     setLogoutModalVisible(false);
   };
 
+  const handleToDeleteAccount = () => {
+    router.push("/delete-account");
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.page}>
       <UserProfileBar
@@ -53,12 +57,22 @@ export default function MyPageScreen() {
       <View style={styles.account}>
         {/* TODO: 추후 api로 수정 */}
         <Pressable onPress={handleOpenLogoutModal} hitSlop={5}>
-          <AppText weight="regular" size="sm" color={colors.grey[200]}>
+          <AppText
+            weight="regular"
+            size="sm"
+            color={colors.grey[200]}
+            lineHeight={20}
+          >
             로그아웃
           </AppText>
         </Pressable>
-        <Pressable>
-          <AppText weight="regular" size="sm" color={colors.grey[300]}>
+        <Pressable onPress={handleToDeleteAccount} hitSlop={5}>
+          <AppText
+            weight="regular"
+            size="sm"
+            color={colors.grey[300]}
+            lineHeight={20}
+          >
             회원탈퇴
           </AppText>
         </Pressable>
