@@ -1,23 +1,22 @@
 import { useRef } from "react";
 import { Animated, Easing, Pressable, StyleSheet, View } from "react-native";
 
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
-
-import AppText from "../../../app-text";
 
 const TAB_WIDTH = 60;
 const TAB_GAP = 20;
 const INDICATOR_MOVE_X = TAB_WIDTH + TAB_GAP;
 
-interface BottomSheetTopTabBarProps {
-  bookType: "SAVED" | "JOINING";
-  handleSetBookType: (type: "SAVED" | "JOINING") => void;
+interface SavedTopTabBarProps {
+  type: "FEED" | "BOOK";
+  handleChangeType: (type: "FEED" | "BOOK") => void;
 }
 
-export default function BottomSheetTopTabBar({
-  bookType,
-  handleSetBookType,
-}: BottomSheetTopTabBarProps) {
+export default function SavedTopTabBar({
+  type,
+  handleChangeType,
+}: SavedTopTabBarProps) {
   const translateX = useRef(new Animated.Value(0)).current;
 
   const animateIndicator = (toValue: number) => {
@@ -29,48 +28,34 @@ export default function BottomSheetTopTabBar({
     }).start();
   };
 
-  const handlePressSavedBook = () => {
-    handleSetBookType("SAVED");
+  const handlePressFeed = () => {
+    handleChangeType("FEED");
     animateIndicator(0);
   };
 
-  const handlePressGroupBook = () => {
-    handleSetBookType("JOINING");
+  const handlePressBook = () => {
+    handleChangeType("BOOK");
     animateIndicator(INDICATOR_MOVE_X);
   };
 
   return (
-    <View style={styles.tabBar}>
-      <Pressable
-        style={[
-          styles.tab,
-          bookType === "SAVED" && { borderBottomColor: colors.white },
-        ]}
-        onPress={handlePressSavedBook}
-      >
+    <View style={styles.tabBarContainer}>
+      <Pressable style={styles.tabBarItem} onPress={handlePressFeed}>
         <AppText
-          weight={bookType === "SAVED" ? "semibold" : "medium"}
-          size="sm"
-          color={bookType === "SAVED" ? colors.white : colors.grey[300]}
-          lineHeight={24}
+          weight={type === "FEED" ? "semibold" : "medium"}
+          size="lg"
+          color={type === "FEED" ? colors.white : colors.grey[300]}
         >
-          저장한 책
+          피드
         </AppText>
       </Pressable>
-      <Pressable
-        style={[
-          styles.tab,
-          bookType === "JOINING" && { borderBottomColor: colors.white },
-        ]}
-        onPress={handlePressGroupBook}
-      >
+      <Pressable style={styles.tabBarItem} onPress={handlePressBook}>
         <AppText
-          weight={bookType === "JOINING" ? "semibold" : "medium"}
-          size="sm"
-          color={bookType === "JOINING" ? colors.white : colors.grey[300]}
-          lineHeight={24}
+          weight={type === "BOOK" ? "semibold" : "medium"}
+          size="lg"
+          color={type === "BOOK" ? colors.white : colors.grey[300]}
         >
-          모임 책
+          책
         </AppText>
       </Pressable>
       <Animated.View
@@ -86,21 +71,29 @@ export default function BottomSheetTopTabBar({
 }
 
 const styles = StyleSheet.create({
-  tabBar: {
+  tabBarContainer: {
     position: "relative",
     display: "flex",
     flexDirection: "row",
+    paddingTop: 20,
+    paddingHorizontal: 20,
     gap: TAB_GAP,
   },
-  tab: {
+
+  tabBarItem: {
     width: TAB_WIDTH,
     height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
+
   tabIndicator: {
     position: "absolute",
+    left: 20,
     bottom: 0,
     width: TAB_WIDTH,
     height: 2,
