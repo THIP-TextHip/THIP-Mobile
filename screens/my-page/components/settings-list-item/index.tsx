@@ -18,7 +18,7 @@ export default function SettingsListItem({ item }: SettingsListItemProps) {
   const handlePress = async () => {
     switch (item.id) {
       case SETTINGS_ID.save:
-        console.log("저장 페이지로 이동");
+        router.push("/saved");
         break;
       case SETTINGS_ID.alarm:
         router.push("/alarm-settings");
