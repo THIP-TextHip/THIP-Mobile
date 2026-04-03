@@ -18,7 +18,9 @@ export default function BottomSheetTopTabBar({
   bookType,
   handleSetBookType,
 }: BottomSheetTopTabBarProps) {
-  const translateX = useRef(new Animated.Value(0)).current;
+  const translateX = useRef(
+    new Animated.Value(bookType === "JOINING" ? INDICATOR_MOVE_X : 0),
+  ).current;
 
   const animateIndicator = (toValue: number) => {
     Animated.timing(translateX, {
