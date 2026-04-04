@@ -18,7 +18,7 @@ export default function DeleteAccountHeader() {
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           회원탈퇴
         </AppText>
       }

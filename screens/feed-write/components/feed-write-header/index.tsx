@@ -26,7 +26,7 @@ export default function FeedWriteHeader({
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           새 글
         </AppText>
       }

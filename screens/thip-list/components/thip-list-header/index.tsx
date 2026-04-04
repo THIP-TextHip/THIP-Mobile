@@ -23,7 +23,7 @@ export default function ThpiListHeader() {
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           띱 목록
         </AppText>
       }

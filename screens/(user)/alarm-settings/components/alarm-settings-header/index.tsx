@@ -19,7 +19,7 @@ export default function AlarmSettingsHeader() {
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           알림 설정
         </AppText>
       }
