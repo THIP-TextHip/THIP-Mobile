@@ -33,7 +33,7 @@ export default function MyGroupCarouselItem({
           styles.carouselItem,
           { width: width },
           !isActive && {
-            height: 140,
+            height: 160,
           },
         ]}
       >

@@ -37,7 +37,7 @@ export default function MyGroupCarousel() {
         modeConfig={{
           parallaxScrollingScale: 1,
           parallaxScrollingOffset: 60,
-          parallaxAdjacentItemScale: 0.9,
+          parallaxAdjacentItemScale: 0.93,
         }}
         onScrollStart={() => setIsScrolling(true)}
         onScrollEnd={() => setIsScrolling(false)}
