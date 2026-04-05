@@ -1,3 +1,5 @@
+import { CharacterSearch } from "@images/thip/character";
+import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -6,10 +8,8 @@ import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 // TODO: 서버에서 온 데이터로 수정
-import { CharacterSearch } from "@/assets/images/thip/character";
-import { LinearGradient } from "expo-linear-gradient";
 import { DUMMY_MY_GROUP_CAROUSEL } from "../../constants";
-import MyGroupCarouselItem from "../my-group-carousel-item";
+import MyGroupCarouselItem from "./my-group-carousel-item";
 
 export default function MyGroupCarousel() {
   const { width: screenWidth } = useWindowDimensions();
