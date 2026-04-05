@@ -1,5 +1,3 @@
-import { CharacterSearch } from "@images/thip/character";
-import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -9,6 +7,7 @@ import { colors } from "@theme/token";
 
 // TODO: 서버에서 온 데이터로 수정
 import { DUMMY_MY_GROUP_CAROUSEL } from "../../constants";
+import MyGroupCarouselEmpty from "./my-group-carousel-empty";
 import MyGroupCarouselItem from "./my-group-carousel-item";
 
 export default function MyGroupCarousel() {
@@ -17,33 +16,6 @@ export default function MyGroupCarousel() {
 
   const handleToMyGroup = () => {
     console.log("내 모임방 페이지로 이동");
-  };
-
-  const MyGroupEmpty = () => {
-    return (
-      <LinearGradient
-        start={{ x: 0.2, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        locations={[0.2826, 1]}
-        colors={[colors.white, "#989898"]}
-        style={styles.emptyContainer}
-      >
-        <View style={styles.emptyTextWrapper}>
-          <AppText
-            weight="semibold"
-            size="lg"
-            color={colors.black.main}
-            lineHeight={24}
-          >
-            참여 중인 모임방이 없어요
-          </AppText>
-          <AppText weight="regular" size="sm" color={colors.grey[300]}>
-            모임방을 찾아 참여해보세요!
-          </AppText>
-        </View>
-        <CharacterSearch style={{ paddingTop: 1 }} />
-      </LinearGradient>
-    );
   };
 
   return (
@@ -57,7 +29,7 @@ export default function MyGroupCarousel() {
         </Pressable>
       </View>
       {DUMMY_MY_GROUP_CAROUSEL.length === 0 ? (
-        <MyGroupEmpty />
+        <MyGroupCarouselEmpty />
       ) : DUMMY_MY_GROUP_CAROUSEL.length === 1 ? (
         <MyGroupCarouselItem
           width={cardWidth}
@@ -96,16 +68,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  emptyContainer: {
-    marginHorizontal: 30,
-    borderRadius: 12,
-    paddingTop: 34,
-    alignItems: "center",
-    gap: 20,
-  },
-  emptyTextWrapper: {
-    gap: 4,
-    alignItems: "center",
   },
 });
