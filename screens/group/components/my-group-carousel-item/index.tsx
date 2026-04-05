@@ -1,5 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, View } from "react-native";
+import Animated, {
+  Extrapolation,
+  interpolate,
+  useAnimatedStyle,
+  type SharedValue,
+} from "react-native-reanimated";
 
 import { IcGroup } from "@images/icons";
 import { AppText } from "@shared/ui";
@@ -9,40 +15,78 @@ import { MyGroupCarouselItemType } from "../../types";
 
 interface MyGroupCarouselItemProps {
   width: number;
-  isActive: boolean;
   content: MyGroupCarouselItemType;
+  animationValue: SharedValue<number>;
 }
 
 export default function MyGroupCarouselItem({
   width,
-  isActive,
   content,
+  animationValue,
 }: MyGroupCarouselItemProps) {
+  const cardAnimatedStyle = useAnimatedStyle(() => {
+    const height = interpolate(
+      animationValue.value,
+      [-1, 0, 1],
+      [175, 175, 175],
+      Extrapolation.CLAMP,
+    );
+
+    const scale = interpolate(
+      animationValue.value,
+      [-1, 0, 1],
+      [0.8, 1, 0.8],
+      Extrapolation.CLAMP,
+    );
+
+    return {
+      height,
+      transform: [{ scale }],
+    };
+  });
+
+  const contentAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animationValue.value,
+      [-1, 0, 1],
+      [0, 1, 0],
+      Extrapolation.CLAMP,
+    );
+
+    return {
+      opacity,
+    };
+  });
+
+  const overlayAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animationValue.value,
+      [-1, 0, 1],
+      [1, 0, 1],
+      Extrapolation.CLAMP,
+    );
+
+    return {
+      opacity,
+    };
+  });
+
   return (
     <View style={styles.wrapper}>
-      <LinearGradient
-        start={{ x: 0.2, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        locations={[0.2826, 1]}
-        colors={
-          isActive
-            ? [colors.white, "#989898"]
-            : [colors.darkgrey.card, colors.darkgrey.card]
-        }
-        style={[
-          styles.carouselItem,
-          { width: width },
-          !isActive && {
-            height: 160,
-          },
-        ]}
-      >
-        {isActive && (
-          <>
+      <Animated.View style={[styles.cardWrapper, { width }, cardAnimatedStyle]}>
+        <LinearGradient
+          start={{ x: 0.2, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          locations={[0.2826, 1]}
+          colors={[colors.white, "#989898"]}
+          style={styles.carouselItem}
+        >
+          <Animated.View style={[styles.contentRow, contentAnimatedStyle]}>
             <Image
               source={{ uri: content.bookImageUrl }}
               style={styles.image}
             />
+
             <View style={styles.content}>
               <View style={styles.groupInfo}>
                 <AppText
@@ -54,6 +98,7 @@ export default function MyGroupCarouselItem({
                 >
                   {content.roomTitle}
                 </AppText>
+
                 <View style={styles.member}>
                   <IcGroup width={20} height={20} />
                   <AppText
@@ -66,6 +111,7 @@ export default function MyGroupCarouselItem({
                   </AppText>
                 </View>
               </View>
+
               <View style={styles.myProgressWrapper}>
                 <View style={styles.progressLabel}>
                   <AppText weight="medium" size="sm" color={colors.grey[300]}>
@@ -87,6 +133,7 @@ export default function MyGroupCarouselItem({
                     </AppText>
                   </AppText>
                 </View>
+
                 <View style={styles.progressBar}>
                   <View
                     style={[
@@ -97,9 +144,14 @@ export default function MyGroupCarouselItem({
                 </View>
               </View>
             </View>
-          </>
-        )}
-      </LinearGradient>
+          </Animated.View>
+
+          <Animated.View
+            pointerEvents="none"
+            style={[styles.darkOverlay, overlayAnimatedStyle]}
+          />
+        </LinearGradient>
+      </Animated.View>
     </View>
   );
 }
@@ -109,20 +161,24 @@ const styles = StyleSheet.create({
     height: 175,
     justifyContent: "center",
   },
-  container: {
-    borderRadius: 12,
-    flexDirection: "row",
-    height: 175,
-    gap: 12,
+  cardWrapper: {
+    alignSelf: "center",
   },
   carouselItem: {
-    alignSelf: "center",
+    flex: 1,
     borderRadius: 12,
+    overflow: "hidden",
     paddingVertical: 34,
     paddingHorizontal: 12,
+  },
+  contentRow: {
+    flex: 1,
     flexDirection: "row",
-    height: 175,
     gap: 12,
+  },
+  darkOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: colors.darkgrey.card,
   },
   image: {
     width: 80,

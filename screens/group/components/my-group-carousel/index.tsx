@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -12,8 +11,6 @@ import MyGroupCarouselItem from "../my-group-carousel-item";
 export default function MyGroupCarousel() {
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth - 60;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   const handleToMyGroup = () => {
     console.log("내 모임방 페이지로 이동");
@@ -36,18 +33,14 @@ export default function MyGroupCarousel() {
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 1,
-          parallaxScrollingOffset: 60,
-          parallaxAdjacentItemScale: 0.93,
+          parallaxScrollingOffset: 80,
         }}
-        onScrollStart={() => setIsScrolling(true)}
-        onScrollEnd={() => setIsScrolling(false)}
-        onSnapToItem={(index) => setActiveIndex(index)}
         data={DUMMY_MY_GROUP_CAROUSEL}
-        renderItem={({ item, index }) => (
+        renderItem={({ item, animationValue }) => (
           <MyGroupCarouselItem
             width={cardWidth}
-            isActive={isScrolling || index === activeIndex}
             content={item}
+            animationValue={animationValue}
           />
         )}
       />
