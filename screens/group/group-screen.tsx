@@ -3,7 +3,11 @@ import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { FloatingGroupCreate } from "@images/icons";
 import { colors } from "@theme/token";
 
-import { GroupSearchButton, MyGroupCarousel } from "./components";
+import {
+  AllGroupButton,
+  GroupSearchButton,
+  MyGroupCarousel,
+} from "./components";
 
 export default function GroupScreen() {
   const handleToGroupCreate = () => {
@@ -11,16 +15,19 @@ export default function GroupScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.page}>
-      <GroupSearchButton />
-      <View style={styles.content}>
-        <MyGroupCarousel />
-        <View style={styles.separator} />
-      </View>
+    <>
+      <ScrollView contentContainerStyle={styles.page}>
+        <GroupSearchButton />
+        <View style={styles.content}>
+          <MyGroupCarousel />
+          <View style={styles.separator} />
+          <AllGroupButton />
+        </View>
+      </ScrollView>
       <Pressable style={styles.floating} onPress={handleToGroupCreate}>
         <FloatingGroupCreate />
       </Pressable>
-    </ScrollView>
+    </>
   );
 }
 

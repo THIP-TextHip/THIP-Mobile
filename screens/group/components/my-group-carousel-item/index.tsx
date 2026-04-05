@@ -4,6 +4,7 @@ import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
+  useSharedValue,
   type SharedValue,
 } from "react-native-reanimated";
 
@@ -16,7 +17,7 @@ import { MyGroupCarouselItemType } from "../../types";
 interface MyGroupCarouselItemProps {
   width: number;
   content: MyGroupCarouselItemType;
-  animationValue: SharedValue<number>;
+  animationValue?: SharedValue<number>;
 }
 
 export default function MyGroupCarouselItem({
@@ -24,16 +25,19 @@ export default function MyGroupCarouselItem({
   content,
   animationValue,
 }: MyGroupCarouselItemProps) {
+  const fallbackAnimationValue = useSharedValue(0);
+  const currentAnimationValue = animationValue ?? fallbackAnimationValue;
+
   const cardAnimatedStyle = useAnimatedStyle(() => {
     const height = interpolate(
-      animationValue.value,
+      currentAnimationValue.value,
       [-1, 0, 1],
       [175, 175, 175],
       Extrapolation.CLAMP,
     );
 
     const scale = interpolate(
-      animationValue.value,
+      currentAnimationValue.value,
       [-1, 0, 1],
       [0.8, 1, 0.8],
       Extrapolation.CLAMP,
@@ -47,7 +51,7 @@ export default function MyGroupCarouselItem({
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
-      animationValue.value,
+      currentAnimationValue.value,
       [-1, 0, 1],
       [0, 1, 0],
       Extrapolation.CLAMP,
@@ -60,7 +64,7 @@ export default function MyGroupCarouselItem({
 
   const overlayAnimatedStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
-      animationValue.value,
+      currentAnimationValue.value,
       [-1, 0, 1],
       [1, 0, 1],
       Extrapolation.CLAMP,
