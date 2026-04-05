@@ -27,7 +27,7 @@ export default function EditProfileHeader({
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           프로필 편집
         </AppText>
       }

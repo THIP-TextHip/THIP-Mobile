@@ -5,7 +5,12 @@ export default function SearchHeader() {
   return (
     <CustomHeader
       left={
-        <AppText weight="bold" size="2xl" style={{ color: colors.white }}>
+        <AppText
+          weight="bold"
+          size="2xl"
+          style={{ color: colors.white }}
+          lineHeight={24}
+        >
           검색
         </AppText>
       }

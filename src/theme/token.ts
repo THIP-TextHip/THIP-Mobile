@@ -27,6 +27,7 @@ export const colors = {
     main: "#3D3D3D",
     dark: "#282828",
     divider: "#1C1C1C",
+    card: "#525252",
   },
   black: {
     main: "#121212",
