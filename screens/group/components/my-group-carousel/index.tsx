@@ -45,6 +45,11 @@ export default function MyGroupCarousel() {
             parallaxScrollingScale: 1,
             parallaxScrollingOffset: 80,
           }}
+          onConfigurePanGesture={(gesture) => {
+            gesture
+              .activeOffsetX([-10, 10]) // 가로로 어느 정도 움직였을 때만 캐러셀 동작
+              .failOffsetY([-5, 5]); // 세로로 조금이라도 움직이면 캐러셀 제스처 실패 처리
+          }}
           data={DUMMY_MY_GROUP_CAROUSEL}
           renderItem={({ item, animationValue }) => (
             <MyGroupCarouselItem

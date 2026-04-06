@@ -1,6 +1,10 @@
-import { MyGroupCarouselItemType } from "../types";
+import {
+  GroupCarouselItemType,
+  RecruitingGroupCarouselType,
+  RecruitingGroupCategoryType,
+} from "../types";
 
-export const DUMMY_MY_GROUP_CAROUSEL: MyGroupCarouselItemType[] = [
+export const DUMMY_MY_GROUP_CAROUSEL: GroupCarouselItemType[] = [
   {
     roomId: 1,
     bookImageUrl: "https://placehold.co/80x107/png",
@@ -41,6 +45,20 @@ export const DUMMY_MY_GROUP_CAROUSEL: MyGroupCarouselItemType[] = [
     userPercentage: 55,
     deadlineDate: "2일",
   },
+];
+
+export const RECRUITING_GROUP_CAROUSEL_TYPE: RecruitingGroupCarouselType[] = [
+  "deadlineRoomList",
+  "popularRoomList",
+  "recentRoomList",
+];
+
+export const RECRUITING_GROUP_CATEGORY: RecruitingGroupCategoryType[] = [
+  "문학",
+  "과학•IT",
+  "사회과학",
+  "인문학",
+  "예술",
 ];
 
 export const DUMMY_RECRUITING_GROUP_CAROUSEL = {

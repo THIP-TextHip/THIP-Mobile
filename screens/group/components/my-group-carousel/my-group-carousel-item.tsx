@@ -12,11 +12,11 @@ import { IcGroup } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { MyGroupCarouselItemType } from "../../types";
+import { GroupCarouselItemType } from "../../types";
 
 interface MyGroupCarouselItemProps {
   width: number;
-  content: MyGroupCarouselItemType;
+  content: GroupCarouselItemType;
   animationValue?: SharedValue<number>;
 }
 
@@ -76,95 +76,86 @@ export default function MyGroupCarouselItem({
   });
 
   return (
-    <View style={styles.wrapper}>
-      <Animated.View style={[styles.cardWrapper, { width }, cardAnimatedStyle]}>
-        <LinearGradient
-          start={{ x: 0.2, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          locations={[0.2826, 1]}
-          colors={[colors.white, "#989898"]}
-          style={styles.carouselItem}
-        >
-          <Animated.View style={[styles.contentRow, contentAnimatedStyle]}>
-            <Image
-              source={{ uri: content.bookImageUrl }}
-              style={styles.image}
-            />
+    <Animated.View style={[styles.cardWrapper, { width }, cardAnimatedStyle]}>
+      <LinearGradient
+        start={{ x: 0.2, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        locations={[0.2826, 1]}
+        colors={[colors.white, "#989898"]}
+        style={styles.carouselItem}
+      >
+        <Animated.View style={[styles.contentRow, contentAnimatedStyle]}>
+          <Image source={{ uri: content.bookImageUrl }} style={styles.image} />
 
-            <View style={styles.content}>
-              <View style={styles.groupInfo}>
+          <View style={styles.content}>
+            <View style={styles.groupInfo}>
+              <AppText
+                weight="semibold"
+                size="lg"
+                color={colors.black.main}
+                lineHeight={24}
+                numberOfLines={1}
+              >
+                {content.roomTitle}
+              </AppText>
+
+              <View style={styles.member}>
+                <IcGroup width={20} height={20} />
                 <AppText
                   weight="semibold"
-                  size="lg"
-                  color={colors.black.main}
+                  size="sm"
+                  color={colors.grey[300]}
                   lineHeight={24}
-                  numberOfLines={1}
                 >
-                  {content.roomTitle}
+                  {content.memberCount}명
                 </AppText>
-
-                <View style={styles.member}>
-                  <IcGroup width={20} height={20} />
-                  <AppText
-                    weight="semibold"
-                    size="sm"
-                    color={colors.grey[300]}
-                    lineHeight={24}
-                  >
-                    {content.memberCount}명
-                  </AppText>
-                </View>
-              </View>
-
-              <View style={styles.myProgressWrapper}>
-                <View style={styles.progressLabel}>
-                  <AppText weight="medium" size="sm" color={colors.grey[300]}>
-                    내 진행도
-                  </AppText>
-                  <AppText
-                    weight="semibold"
-                    size="base"
-                    color={colors.purple.main}
-                    lineHeight={20}
-                  >
-                    {content.userPercentage}
-                    <AppText
-                      weight="semibold"
-                      size="xs"
-                      color={colors.purple.main}
-                    >
-                      %
-                    </AppText>
-                  </AppText>
-                </View>
-
-                <View style={styles.progressBar}>
-                  <View
-                    style={[
-                      styles.currentProgress,
-                      { width: `${content.userPercentage}%` },
-                    ]}
-                  />
-                </View>
               </View>
             </View>
-          </Animated.View>
 
-          <Animated.View
-            pointerEvents="none"
-            style={[styles.darkOverlay, overlayAnimatedStyle]}
-          />
-        </LinearGradient>
-      </Animated.View>
-    </View>
+            <View style={styles.myProgressWrapper}>
+              <View style={styles.progressLabel}>
+                <AppText weight="medium" size="sm" color={colors.grey[300]}>
+                  내 진행도
+                </AppText>
+                <AppText
+                  weight="semibold"
+                  size="base"
+                  color={colors.purple.main}
+                  lineHeight={20}
+                >
+                  {content.userPercentage}
+                  <AppText
+                    weight="semibold"
+                    size="xs"
+                    color={colors.purple.main}
+                  >
+                    %
+                  </AppText>
+                </AppText>
+              </View>
+
+              <View style={styles.progressBar}>
+                <View
+                  style={[
+                    styles.currentProgress,
+                    { width: `${content.userPercentage}%` },
+                  ]}
+                />
+              </View>
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.darkOverlay, overlayAnimatedStyle]}
+        />
+      </LinearGradient>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    height: 175,
-    justifyContent: "center",
-  },
   cardWrapper: {
     alignSelf: "center",
   },

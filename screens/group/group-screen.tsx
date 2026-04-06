@@ -7,6 +7,7 @@ import {
   AllGroupButton,
   GroupSearchButton,
   MyGroupCarousel,
+  RecruitingGroupCarousel,
 } from "./components";
 
 export default function GroupScreen() {
@@ -22,6 +23,7 @@ export default function GroupScreen() {
           <MyGroupCarousel />
           <View style={styles.separator} />
           <AllGroupButton />
+          <RecruitingGroupCarousel />
         </View>
       </ScrollView>
       <Pressable style={styles.floating} onPress={handleToGroupCreate}>
@@ -33,10 +35,11 @@ export default function GroupScreen() {
 
 const styles = StyleSheet.create({
   page: {
-    flex: 1,
+    flexGrow: 1,
   },
   content: {
-    paddingVertical: 20,
+    paddingTop: 20,
+    paddingBottom: 100,
     gap: 32,
   },
   separator: {
