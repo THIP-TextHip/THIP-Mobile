@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     height: 7,
     borderRadius: 12,
     backgroundColor: colors.grey[300],
+    overflow: "hidden",
   },
   currentProgress: {
     position: "absolute",

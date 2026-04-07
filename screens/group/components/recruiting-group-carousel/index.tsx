@@ -2,7 +2,7 @@ import { useWindowDimensions } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
 import { GRID_WIDTH, RECRUITING_GROUP_CAROUSEL_TYPE } from "../../constants";
-import RecruitingGroupCarouselItem from "./recruiting-roup-carousel-item";
+import RecruitingGroupCarouselItem from "./recruiting-group-carousel-item";
 
 export default function RecruitingGroupCarousel() {
   const { width: screenWidth } = useWindowDimensions();
