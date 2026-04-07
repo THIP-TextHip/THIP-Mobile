@@ -19,7 +19,7 @@ export default function SavedHeader() {
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           저장
         </AppText>
       }

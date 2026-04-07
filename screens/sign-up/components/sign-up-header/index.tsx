@@ -29,7 +29,7 @@ export default function SignUpHeader({
         )
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           설정 {step}/2
         </AppText>
       }

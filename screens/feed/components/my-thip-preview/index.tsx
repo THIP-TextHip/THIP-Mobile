@@ -7,6 +7,7 @@ import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
 
 // TODO: 서버에서 내 띱 리스트 가져오기
+// TODO: 내 띱 리스트 없는 경우 엠티뷰 추가
 import { DUMMY_MY_THIP_LIST } from "../../constants";
 
 export default function MyThipPreview() {

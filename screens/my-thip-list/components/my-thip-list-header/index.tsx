@@ -18,7 +18,7 @@ export default function MyThipListHeader() {
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="2xl" color={colors.white}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           내 띱 목록
         </AppText>
       }
