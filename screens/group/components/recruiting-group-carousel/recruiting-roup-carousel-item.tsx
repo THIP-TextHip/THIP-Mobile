@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_RECRUITING_GROUP_CAROUSEL } from "../../constants";
@@ -85,11 +86,27 @@ export default function RecruitingGroupCarouselItem({
           selectedCategory={selectedCategory}
           handleChangeCategory={handleChangeCategory}
         />
-        <View style={styles.roomListWrapper}>
-          {roomList.map((room) => (
-            <RecruitingGroupCard key={room.roomId} roomInfo={room} />
-          ))}
-        </View>
+        {roomList.length === 0 ? (
+          <View style={styles.empty}>
+            <AppText
+              weight="semibold"
+              size="lg"
+              color={colors.white}
+              lineHeight={24}
+            >
+              모임방이 아직 없어요.
+            </AppText>
+            <AppText weight="regular" size="sm" color={colors.grey[100]}>
+              해당 장르의 모임방이 생기면 보여줄게요!
+            </AppText>
+          </View>
+        ) : (
+          <View style={styles.roomListWrapper}>
+            {roomList.map((room) => (
+              <RecruitingGroupCard key={room.roomId} roomInfo={room} />
+            ))}
+          </View>
+        )}
       </LinearGradient>
     </Animated.View>
   );
@@ -108,5 +125,10 @@ const styles = StyleSheet.create({
   roomListWrapper: {
     paddingHorizontal: 20,
     gap: 20,
+  },
+  empty: {
+    marginTop: 40,
+    gap: 8,
+    alignItems: "center",
   },
 });
