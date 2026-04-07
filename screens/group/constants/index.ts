@@ -133,3 +133,5 @@ export const DUMMY_RECRUITING_GROUP_CAROUSEL = {
     },
   ],
 };
+
+export const GRID_WIDTH = 600;

@@ -12,7 +12,7 @@ import Animated, {
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DUMMY_RECRUITING_GROUP_CAROUSEL } from "../../constants";
+import { DUMMY_RECRUITING_GROUP_CAROUSEL, GRID_WIDTH } from "../../constants";
 import {
   RecruitingGroupCarouselType,
   RecruitingGroupCategoryType,
@@ -36,6 +36,17 @@ export default function RecruitingGroupCarouselItem({
     useState<RecruitingGroupCategoryType>("문학");
   // TODO: 서버에서 가져오기. 여기에 selectedCategory도 추가로 필터링 해야함
   const roomList = DUMMY_RECRUITING_GROUP_CAROUSEL[carouselType];
+  const isGrid = width >= GRID_WIDTH;
+  const gridCardWidth = (width - 40) / 2 - 10;
+
+  const cardHeight = isGrid ? 430 : 730;
+
+  const label =
+    carouselType === "deadlineRoomList"
+      ? "마감 임박한"
+      : carouselType === "popularRoomList"
+        ? "인기 있는"
+        : "최근 생성된";
 
   const fallbackAnimationValue = useSharedValue(0);
   const currentAnimationValue = animationValue ?? fallbackAnimationValue;
@@ -44,7 +55,7 @@ export default function RecruitingGroupCarouselItem({
     const height = interpolate(
       currentAnimationValue.value,
       [-1, 0, 1],
-      [730, 730, 730],
+      [cardHeight, cardHeight, cardHeight],
       Extrapolation.CLAMP,
     );
 
@@ -65,13 +76,6 @@ export default function RecruitingGroupCarouselItem({
     setSelectedCategory(category);
   };
 
-  const label =
-    carouselType === "deadlineRoomList"
-      ? "마감 임박한"
-      : carouselType === "popularRoomList"
-        ? "인기 있는"
-        : "최근 생성된";
-
   return (
     <Animated.View style={[styles.wrapper, { width }, cardAnimatedStyle]}>
       <LinearGradient
@@ -79,7 +83,7 @@ export default function RecruitingGroupCarouselItem({
         end={{ x: 0.5, y: 1 }}
         locations={[0, 1]}
         colors={[colors.darkgrey.card, colors.black.main]}
-        style={[styles.container, { width: width }]}
+        style={[styles.container, { width: width }, { height: cardHeight }]}
       >
         <RecruitingGroupCarouselHeader
           label={label}
@@ -101,9 +105,19 @@ export default function RecruitingGroupCarouselItem({
             </AppText>
           </View>
         ) : (
-          <View style={styles.roomListWrapper}>
+          <View
+            style={[
+              styles.roomListWrapper,
+              isGrid && styles.roomListWrapperGrid,
+            ]}
+          >
             {roomList.map((room) => (
-              <RecruitingGroupCard key={room.roomId} roomInfo={room} />
+              <View
+                key={room.roomId}
+                style={isGrid ? { width: gridCardWidth } : undefined}
+              >
+                <RecruitingGroupCard roomInfo={room} />
+              </View>
             ))}
           </View>
         )}
@@ -117,7 +131,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   container: {
-    height: 730,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     paddingVertical: 20,
@@ -125,6 +138,12 @@ const styles = StyleSheet.create({
   roomListWrapper: {
     paddingHorizontal: 20,
     gap: 20,
+  },
+  roomListWrapperGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    rowGap: 20,
   },
   empty: {
     marginTop: 40,

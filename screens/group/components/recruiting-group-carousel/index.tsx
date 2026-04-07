@@ -1,18 +1,19 @@
 import { useWindowDimensions } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
-import { RECRUITING_GROUP_CAROUSEL_TYPE } from "../../constants";
+import { GRID_WIDTH, RECRUITING_GROUP_CAROUSEL_TYPE } from "../../constants";
 import RecruitingGroupCarouselItem from "./recruiting-roup-carousel-item";
 
 export default function RecruitingGroupCarousel() {
   const { width: screenWidth } = useWindowDimensions();
   const cardWidth = screenWidth - 60;
+  const isGrid = cardWidth > GRID_WIDTH;
 
   return (
     <Carousel
       loop
       width={screenWidth}
-      height={730}
+      height={isGrid ? 430 : 730}
       mode="parallax"
       modeConfig={{
         parallaxScrollingScale: 1,
