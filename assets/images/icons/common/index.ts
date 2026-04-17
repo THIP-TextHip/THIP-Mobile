@@ -32,6 +32,7 @@ export { default as IcRankup } from "./ic_rankup.svg";
 export { default as IcReplyGrey } from "./ic_reply-grey.svg";
 export { default as IcReply } from "./ic_reply.svg";
 export { default as IcReset } from "./ic_reset.svg";
+export { default as IcRoomLock } from "./ic_room_lock.svg";
 export { default as IcSearch } from "./ic_search.svg";
 export { default as IcSend } from "./ic_send.svg";
 export { default as IcSendFilled } from "./ic_send_filled.svg";

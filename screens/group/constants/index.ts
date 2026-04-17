@@ -55,7 +55,7 @@ export const RECRUITING_GROUP_CAROUSEL_TYPE: RecruitingGroupCarouselType[] = [
 
 export const RECRUITING_GROUP_CATEGORY: RecruitingGroupCategoryType[] = [
   "문학",
-  "과학•IT",
+  "과학·IT",
   "사회과학",
   "인문학",
   "예술",

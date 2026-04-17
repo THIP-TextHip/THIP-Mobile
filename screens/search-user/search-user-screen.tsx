@@ -1,5 +1,10 @@
 import { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
 import { RecentSearch, SearchBar } from "@shared/ui";
 
@@ -15,6 +20,7 @@ export default function SearchUserScreen() {
     setHasSearched(false);
   }, []);
   const handleSearch = useCallback(() => {
+    if (searchText.trim() === "") return;
     console.log(searchText, " 검색");
     setHasSearched(true);
   }, [searchText]);
@@ -27,30 +33,32 @@ export default function SearchUserScreen() {
   }, []);
 
   return (
-    <View style={styles.page}>
-      <View style={styles.searchBar}>
-        <SearchBar
-          value={searchText}
-          placeholder="내가 찾는 사용자를 검색해보세요."
-          setValue={handleChangeText}
-          handleSearch={handleSearch}
-          autoFocus={true}
-        />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.page}>
+        <View style={styles.searchBar}>
+          <SearchBar
+            value={searchText}
+            placeholder="내가 찾는 사용자를 검색해보세요."
+            setValue={handleChangeText}
+            handleSearch={handleSearch}
+            autoFocus={true}
+          />
+        </View>
+        <View style={styles.content}>
+          {!!searchText.trim() ? (
+            <SearchUserResult searchText={searchText} hasSearched={hasSearched} />
+          ) : (
+            <View style={styles.recentSearch}>
+              <RecentSearch
+                recentSearchedKeywords={RECENT_SEARCH_USER}
+                handleClickKeyword={handleClickKeyword}
+                handleRemoveKeyword={handleRemoveKeyword}
+              />
+            </View>
+          )}
+        </View>
       </View>
-      <View style={styles.content}>
-        {!!searchText.trim() ? (
-          <SearchUserResult searchText={searchText} hasSearched={hasSearched} />
-        ) : (
-          <View style={styles.recentSearch}>
-            <RecentSearch
-              recentSearchedKeywords={RECENT_SEARCH_USER}
-              handleClickKeyword={handleClickKeyword}
-              handleRemoveKeyword={handleRemoveKeyword}
-            />
-          </View>
-        )}
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

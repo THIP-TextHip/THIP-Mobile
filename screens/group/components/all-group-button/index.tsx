@@ -5,6 +5,7 @@ import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function AllGroupButton() {
+  // TODO: 모임 검색 페이지 이동 및 전체 칩 클릭된 상태
   const handleToAllGroup = () => {
     console.log("모임 검색 페이지로 이동. 전체 칩 눌린 상태로");
   };

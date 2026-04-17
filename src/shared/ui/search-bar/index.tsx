@@ -44,6 +44,7 @@ export default function SearchBar({
         returnKeyType="search"
         onSubmitEditing={handleSearch}
         autoFocus={autoFocus}
+        hitSlop={10}
       />
       <View style={styles.buttonWrapper}>
         {!!value.trim() && (

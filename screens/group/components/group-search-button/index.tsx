@@ -1,3 +1,5 @@
+import { router } from "expo-router";
+import { useCallback } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcSearch } from "@images/icons";
@@ -5,9 +7,9 @@ import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function GroupSearchButton() {
-  const handleToGroupSearch = () => {
-    console.log("모임 검색 페이지로 이동");
-  };
+  const handleToGroupSearch = useCallback(() => {
+    router.push("/search-group");
+  }, []);
 
   return (
     <View style={styles.searchContainer}>
