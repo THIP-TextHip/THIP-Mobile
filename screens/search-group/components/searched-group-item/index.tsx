@@ -13,6 +13,8 @@ interface SearchedGroupItemProps {
 export default function SearchedGroupItem({
   searchedGroup,
 }: SearchedGroupItemProps) {
+  // TODO: 모임방 클릭 시 처리. 해당 모임방 참여 페이지로 이동
+
   return (
     <Pressable style={styles.container}>
       {searchedGroup.isPublic ? (
