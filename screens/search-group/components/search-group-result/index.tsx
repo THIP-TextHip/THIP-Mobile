@@ -11,6 +11,21 @@ import {
 import { SearchGroupCategoryType } from "../../types";
 import SearchedGroupItem from "../searched-group-item";
 
+const Separator = () => <View style={styles.separator} />;
+
+const EmptyView = () => {
+  return (
+    <View style={styles.empty}>
+      <AppText weight="semibold" size="lg" color={colors.white} lineHeight={24}>
+        해당하는 모임방이 없어요
+      </AppText>
+      <AppText weight="regular" size="sm" color={colors.grey[100]}>
+        직접 모임방을 만들어보세요.
+      </AppText>
+    </View>
+  );
+};
+
 interface SearchGroupResultProps {
   searchText: string;
   roomCategory: SearchGroupCategoryType | null;
@@ -24,25 +39,6 @@ export default function SearchGroupResult({
 }: SearchGroupResultProps) {
   const { bottom } = useSafeAreaInsets();
   // TODO: 서버에 searchText와 roomCategory로 검색 요청
-  const Separator = () => <View style={styles.separator} />;
-
-  const EmptyView = () => {
-    return (
-      <View style={styles.empty}>
-        <AppText
-          weight="semibold"
-          size="lg"
-          color={colors.white}
-          lineHeight={24}
-        >
-          해당하는 모임방이 없어요
-        </AppText>
-        <AppText weight="regular" size="sm" color={colors.grey[100]}>
-          직접 모임방을 만들어보세요.
-        </AppText>
-      </View>
-    );
-  };
 
   return (
     <View style={styles.container}>

@@ -38,20 +38,22 @@ export default function SearchGroupScreen() {
     console.log(keyword, " 삭제");
   }, []);
 
-  const handleChangeCateogoryToEntire = () => {
+  const handleChangeCategoryToEntire = useCallback(() => {
     Keyboard.dismiss();
     setRoomCategory("전체");
-  };
+  }, []);
 
-  const handleChangeCategory = (roomCategory: SearchGroupCategoryType) => {
-    setRoomCategory((prev) => {
-      if (prev === roomCategory) {
+  const handleChangeCategory = useCallback(
+    (nextCategory: SearchGroupCategoryType) => {
+      if (roomCategory === nextCategory) {
         setSearchText("");
-        return null;
+        setRoomCategory(null);
+        return;
       }
-      return roomCategory;
-    });
-  };
+      setRoomCategory(nextCategory);
+    },
+    [roomCategory],
+  );
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -67,36 +69,36 @@ export default function SearchGroupScreen() {
         </View>
         <View style={styles.content}>
           {searchText.trim() !== "" || roomCategory !== null ? (
-          <SearchGroupResult
-            searchText={searchText}
-            roomCategory={roomCategory}
-            handleChangeCategory={handleChangeCategory}
-          />
-        ) : (
-          <>
-            <View style={styles.recentSection}>
-              <RecentSearch
-                recentSearchedKeywords={RECENT_SEARCH_GROUP}
-                handleClickKeyword={handleClickKeyword}
-                handleRemoveKeyword={handleRemoveKeyword}
-              />
-            </View>
-            <Pressable
-              style={styles.toEntire}
-              onPress={handleChangeCateogoryToEntire}
-              hitSlop={10}
-            >
-              <AppText
-                weight="semibold"
-                size="lg"
-                color={colors.grey[100]}
-                lineHeight={24}
+            <SearchGroupResult
+              searchText={searchText}
+              roomCategory={roomCategory}
+              handleChangeCategory={handleChangeCategory}
+            />
+          ) : (
+            <>
+              <View style={styles.recentSection}>
+                <RecentSearch
+                  recentSearchedKeywords={RECENT_SEARCH_GROUP}
+                  handleClickKeyword={handleClickKeyword}
+                  handleRemoveKeyword={handleRemoveKeyword}
+                />
+              </View>
+              <Pressable
+                style={styles.toEntire}
+                onPress={handleChangeCategoryToEntire}
+                hitSlop={10}
               >
-                전체 모임방 둘러보기
-              </AppText>
-              <IcRightRight />
-            </Pressable>
-          </>
+                <AppText
+                  weight="semibold"
+                  size="lg"
+                  color={colors.grey[100]}
+                  lineHeight={24}
+                >
+                  전체 모임방 둘러보기
+                </AppText>
+                <IcRightRight />
+              </Pressable>
+            </>
           )}
         </View>
       </View>
