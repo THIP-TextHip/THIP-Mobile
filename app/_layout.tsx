@@ -49,6 +49,10 @@ export default function RootLayout() {
             <Stack.Screen name="(user)" options={{ headerShown: false }} />
             <Stack.Screen name="feed-detail" options={{ headerShown: false }} />
             <Stack.Screen
+              name="search-group"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="user-profile"
               options={{ headerShown: false }}
             />

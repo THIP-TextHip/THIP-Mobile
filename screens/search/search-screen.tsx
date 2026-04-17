@@ -1,5 +1,11 @@
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import {
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
 import { RecentSearch, SearchBar } from "@shared/ui";
 
@@ -27,28 +33,30 @@ export default function SearchScreen() {
   }, []);
 
   return (
-    <View style={styles.page}>
-      <View style={styles.searchBar}>
-        <SearchBar
-          value={searchText}
-          placeholder="책 제목, 작가명을 검색해보세요."
-          setValue={handleChangeText}
-          handleSearch={handleSearch}
-        />
-      </View>
-      {!!searchText.trim() ? (
-        <SearchResult searchText={searchText} hasSearched={hasSearched} />
-      ) : (
-        <ScrollView contentContainerStyle={styles.content}>
-          <RecentSearch
-            recentSearchedKeywords={DUMMY_RECENT_DATA}
-            handleClickKeyword={handleClickKeyword}
-            handleRemoveKeyword={handleRemoveKeyword}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.page}>
+        <View style={styles.searchBar}>
+          <SearchBar
+            value={searchText}
+            placeholder="책 제목, 작가명을 검색해보세요."
+            setValue={handleChangeText}
+            handleSearch={handleSearch}
           />
-          <MostSearched mostSearchedBooks={DUMMY_MOST_DATA} />
-        </ScrollView>
-      )}
-    </View>
+        </View>
+        {!!searchText.trim() ? (
+          <SearchResult searchText={searchText} hasSearched={hasSearched} />
+        ) : (
+          <ScrollView contentContainerStyle={styles.content}>
+            <RecentSearch
+              recentSearchedKeywords={DUMMY_RECENT_DATA}
+              handleClickKeyword={handleClickKeyword}
+              handleRemoveKeyword={handleRemoveKeyword}
+            />
+            <MostSearched mostSearchedBooks={DUMMY_MOST_DATA} />
+          </ScrollView>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
