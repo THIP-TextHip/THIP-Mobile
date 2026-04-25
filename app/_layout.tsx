@@ -53,6 +53,10 @@ export default function RootLayout() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="expired-group-list"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="user-profile"
               options={{ headerShown: false }}
             />
