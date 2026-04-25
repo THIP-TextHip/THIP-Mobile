@@ -31,6 +31,7 @@ export default function MyGroupListScreen() {
   }, [myGroupType]);
 
   const MyGroupEmpty = () => {
+    // TODO: 필터 적용 후 결과가 없다면 어떻게 할지 논의 필요
     return (
       myGroupType === null && (
         <View style={[styles.empty, { height: height - 300 }]}>
@@ -48,7 +49,7 @@ export default function MyGroupListScreen() {
             color={colors.grey[100]}
             lineHeight={20}
           >
-            첫번쨰 모임방에 참여해보세요.
+            첫번째 모임방에 참여해보세요.
           </AppText>
         </View>
       )
