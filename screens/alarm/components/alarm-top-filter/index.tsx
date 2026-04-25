@@ -4,7 +4,7 @@ import { SelectChip } from "@shared/ui";
 
 import { AlarmType } from "../../types";
 
-interface TopFilterBarProps {
+interface AlarmTopFilterProps {
   alarmType: AlarmType | null;
   handleSelectType: (type: AlarmType) => void;
 }
@@ -14,10 +14,10 @@ const ALARM_FILTERS = [
   { label: "모임", type: "room" },
 ] as const;
 
-export default function TopFilterBar({
+export default function AlarmTopFilter({
   alarmType,
   handleSelectType,
-}: TopFilterBarProps) {
+}: AlarmTopFilterProps) {
   return (
     <View style={styles.container}>
       {ALARM_FILTERS.map(({ label, type }) => (
@@ -34,8 +34,7 @@ export default function TopFilterBar({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
+    padding: 20,
     flexDirection: "row",
     gap: 12,
   },

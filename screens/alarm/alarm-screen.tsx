@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { AlarmList, TopFilterBar } from "./components";
+import { AlarmList, AlarmTopFilter } from "./components";
 import { DUMMY_ALARMS } from "./constants";
 import { AlarmResponse, AlarmType } from "./types";
 
@@ -24,7 +24,10 @@ export default function AlarmScreen() {
 
   return (
     <View style={styles.page}>
-      <TopFilterBar alarmType={alarmType} handleSelectType={handleSelectType} />
+      <AlarmTopFilter
+        alarmType={alarmType}
+        handleSelectType={handleSelectType}
+      />
       {alarmData && <AlarmList filter={alarmType} alarmData={alarmData} />}
     </View>
   );
