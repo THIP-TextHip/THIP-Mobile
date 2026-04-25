@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
 
@@ -15,7 +16,7 @@ export default function MyGroupCarousel() {
   const cardWidth = screenWidth - 60;
 
   const handleToMyGroup = () => {
-    console.log("내 모임방 페이지로 이동");
+    router.push("/my-group-list");
   };
 
   return (

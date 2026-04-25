@@ -31,5 +31,9 @@ export default function AlarmList({ filter, alarmData }: AlarmListProps) {
 }
 
 const styles = StyleSheet.create({
-  content: { paddingHorizontal: 20, gap: 20, paddingBottom: 20 },
+  content: {
+    paddingHorizontal: 20,
+    gap: 20,
+    paddingBottom: 20,
+  },
 });
