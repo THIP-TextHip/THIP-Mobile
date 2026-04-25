@@ -6,16 +6,32 @@ import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 
-interface MyGroupCardProps {
+interface MyGroupCardBaseProps {
   roomId: number;
   bookImageUrl: string;
   roomName: string;
-  recruitCount?: number;
   memberCount: number;
-  endDate?: string;
-  type: "playingAndRecruiting" | "recruiting" | "playing" | "expired";
-  isPublic?: boolean;
+  isPublic?: boolean; // 피그마 상에서 해당 부분 사용 x
 }
+
+export type MyGroupCardProps = MyGroupCardBaseProps &
+  (
+    | {
+        type: "recruiting";
+        recruitCount: number;
+        endDate: string;
+      }
+    | {
+        type: "playing";
+        recruitCount?: never;
+        endDate: string;
+      }
+    | {
+        type: "expired";
+        recruitCount?: never;
+        endDate?: never;
+      }
+  );
 
 export default function MyGroupCard({
   roomId,
@@ -25,7 +41,7 @@ export default function MyGroupCard({
   memberCount,
   endDate,
   type,
-  isPublic,
+  // isPublic,
 }: MyGroupCardProps) {
   const handleToGroupDetail = useCallback(() => {
     console.log(roomId, "번 모임방 상세 페이지로 이동");
@@ -41,7 +57,6 @@ export default function MyGroupCard({
           lineHeight={24}
           color={colors.white}
           numberOfLines={1}
-          ellipsizeMode="tail"
         >
           {roomName}
         </AppText>

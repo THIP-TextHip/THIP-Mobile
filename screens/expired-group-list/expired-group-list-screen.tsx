@@ -49,15 +49,7 @@ export default function ExpiredGroupListScreen() {
       data={DUMMY_EXPIRED_ROOM_LIST}
       keyExtractor={(item) => String(item.roomId)}
       ListHeaderComponent={ListHeader}
-      renderItem={({ item }) => (
-        <MyGroupCard
-          roomId={item.roomId}
-          bookImageUrl={item.bookImageUrl}
-          roomName={item.roomName}
-          memberCount={item.memberCount}
-          type={item.type}
-        />
-      )}
+      renderItem={({ item }) => <MyGroupCard {...item} />}
       ListEmptyComponent={ExpiredGroupEmpty}
     />
   );
