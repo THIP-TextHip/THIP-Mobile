@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 
 import { CharacterSearch } from "@images/thip/character";
@@ -7,7 +8,12 @@ import { colors } from "@theme/token";
 export default function AllGroupButton() {
   // TODO: 모임 검색 페이지 이동 및 전체 칩 클릭된 상태
   const handleToAllGroup = () => {
-    console.log("모임 검색 페이지로 이동. 전체 칩 눌린 상태로");
+    router.push({
+      pathname: "/search-group",
+      params: {
+        roomCategory: "전체",
+      },
+    });
   };
   return (
     <Pressable style={styles.container} onPress={handleToAllGroup}>

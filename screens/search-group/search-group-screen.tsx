@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   Keyboard,
@@ -16,9 +17,12 @@ import { RECENT_SEARCH_GROUP } from "./constants";
 import { SearchGroupCategoryType } from "./types";
 
 export default function SearchGroupScreen() {
+  const { roomCategory: initialRoomCategory } = useLocalSearchParams<{
+    roomCategory?: SearchGroupCategoryType;
+  }>();
   const [searchText, setSearchText] = useState("");
   const [roomCategory, setRoomCategory] =
-    useState<SearchGroupCategoryType | null>(null);
+    useState<SearchGroupCategoryType | null>(initialRoomCategory ?? null);
 
   const handleChangeText = useCallback((text: string) => {
     setSearchText(text);
@@ -62,7 +66,7 @@ export default function SearchGroupScreen() {
           <SearchBar
             value={searchText}
             placeholder="방제목, 책제목을 검색해보세요."
-            autoFocus={true}
+            autoFocus={initialRoomCategory ? false : true}
             setValue={handleChangeText}
             handleSearch={handleSearch}
           />
