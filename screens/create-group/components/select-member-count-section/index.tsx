@@ -41,12 +41,10 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   content: {
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
   item: {
-    justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
     gap: 2,
