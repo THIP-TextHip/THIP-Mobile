@@ -156,7 +156,7 @@ export default function NumberPicker({
 
       <LinearGradient
         pointerEvents="none"
-        colors={[colors.black.main, "rgba(18,18,18,0)"]}
+        colors={[colors.black.main, colors.darkgrey.gradStart]}
         locations={[0, 1]}
         style={[
           styles.fadeOverlay,
@@ -169,7 +169,7 @@ export default function NumberPicker({
 
       <LinearGradient
         pointerEvents="none"
-        colors={["rgba(18,18,18,0)", colors.black.main]}
+        colors={[colors.darkgrey.gradStart, colors.black.main]}
         locations={[0, 1]}
         style={[
           styles.fadeOverlay,

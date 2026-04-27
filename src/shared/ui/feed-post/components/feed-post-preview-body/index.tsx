@@ -95,7 +95,7 @@ export default function FeedPostPreviewBody({
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             locations={[0.0702, 0.4515]}
-            colors={["rgba(18,18,18,0)", colors.black.main]}
+            colors={[colors.darkgrey.gradStart, colors.black.main]}
             style={styles.isTruncated}
           >
             <AppText

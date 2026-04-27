@@ -28,6 +28,7 @@ export const colors = {
     dark: "#282828",
     divider: "#1C1C1C",
     card: "#525252",
+    gradStart: "rgba(18,18,18,0)",
   },
   black: {
     main: "#121212",
