@@ -53,6 +53,10 @@ export default function RootLayout() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="create-group"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="my-group-list"
               options={{ headerShown: false }}
             />

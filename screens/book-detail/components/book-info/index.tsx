@@ -38,7 +38,7 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
       style={styles.background}
     >
       <LinearGradient
-        colors={["rgba(18,18,18,0)", "#121212"]}
+        colors={[colors.darkgrey.gradStart, colors.black.main]}
         locations={[0.0594, 0.94]}
         start={{ x: 0.43, y: 0 }}
         end={{ x: 0.57, y: 1 }}

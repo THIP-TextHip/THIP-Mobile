@@ -1,3 +1,5 @@
+import { router } from "expo-router";
+import { useCallback } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { FloatingGroupCreate } from "@images/icons";
@@ -11,9 +13,9 @@ import {
 } from "./components";
 
 export default function GroupScreen() {
-  const handleToGroupCreate = () => {
-    console.log("모임 만들기 페이지로 이동");
-  };
+  const handleToGroupCreate = useCallback(() => {
+    router.push("/create-group");
+  }, []);
 
   return (
     <>
