@@ -1,9 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ScrollView,
   StyleSheet,
   View,
 } from "react-native";
@@ -30,7 +30,7 @@ export default function NumberPicker({
   itemHeight = 32,
   isInfinite = false,
 }: NumberPickerProps) {
-  const listRef = useRef<FlatList<number>>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
   const REPEAT_COUNT = 100; // 배열 반복 횟수. 무한 배열로 보이기 위함
   const CONTAINER_HEIGHT = itemHeight * 3; // 전체 컨테이너 높이
@@ -57,8 +57,8 @@ export default function NumberPicker({
 
   useEffect(() => {
     requestAnimationFrame(() => {
-      listRef.current?.scrollToOffset({
-        offset: initialIndex * itemHeight,
+      scrollRef.current?.scrollTo({
+        y: initialIndex * itemHeight,
         animated: false,
       });
     });
@@ -97,8 +97,8 @@ export default function NumberPicker({
       Math.floor(REPEAT_COUNT / 2) * values.length + valueIndex;
 
     requestAnimationFrame(() => {
-      listRef.current?.scrollToOffset({
-        offset: resetIndex * itemHeight,
+      scrollRef.current?.scrollTo({
+        y: resetIndex * itemHeight,
         animated: false,
       });
     });
@@ -120,28 +120,23 @@ export default function NumberPicker({
         ]}
       />
 
-      <FlatList
-        ref={listRef}
-        data={data}
-        keyExtractor={(_, index) => String(index)}
+      <ScrollView
+        ref={scrollRef}
+        nestedScrollEnabled
         showsVerticalScrollIndicator={false}
         snapToInterval={itemHeight}
         decelerationRate="fast"
         bounces={false}
         onMomentumScrollEnd={handleMomentumScrollEnd}
-        getItemLayout={(_, index) => ({
-          length: itemHeight,
-          offset: itemHeight * index,
-          index,
-        })}
         contentContainerStyle={{
           paddingVertical: (CONTAINER_HEIGHT - itemHeight) / 2,
         }}
-        renderItem={({ item }) => {
+      >
+        {data.map((item, index) => {
           const isSelected = item === value;
 
           return (
-            <View style={[styles.item, { height: itemHeight }]}>
+            <View key={index} style={[styles.item, { height: itemHeight }]}>
               <AppText
                 weight={isSelected ? "medium" : "regular"}
                 size="xs"
@@ -151,8 +146,8 @@ export default function NumberPicker({
               </AppText>
             </View>
           );
-        }}
-      />
+        })}
+      </ScrollView>
 
       <LinearGradient
         pointerEvents="none"
