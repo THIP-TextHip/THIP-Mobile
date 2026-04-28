@@ -98,6 +98,7 @@ export default function CreateGroupScreen() {
     });
   };
 
+  // TODO: 서버에 모임 생성 요청 보내기
   const handleCreateGroup = () => {
     console.log(
       "모임 만들기 : ",

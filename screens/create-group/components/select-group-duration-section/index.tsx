@@ -7,6 +7,8 @@ import { colors } from "@theme/token";
 
 const { currentYear, currentMonth, currentDay } = getCurrentDate();
 
+const tomorrow = new Date(currentYear, currentMonth - 1, currentDay + 1);
+
 const YEARS_LIST = [currentYear, currentYear + 1, currentYear + 2];
 
 const MONTHS_LIST = Array.from({ length: 12 }, (_, index) => index + 1);
@@ -26,12 +28,12 @@ export default function SelectGroupDurationSection({
   handleChangeStartDate,
   handleChangeEndDate,
 }: SelectGroupDurationSectionProps) {
-  const [startYear, setStartYear] = useState(currentYear);
-  const [startMonth, setStartMonth] = useState(currentMonth);
-  const [startDay, setStartDay] = useState(currentDay + 1);
-  const [endYear, setEndYear] = useState(currentYear);
-  const [endMonth, setEndMonth] = useState(currentMonth);
-  const [endDay, setEndDay] = useState(currentDay + 1);
+  const [startYear, setStartYear] = useState(tomorrow.getFullYear());
+  const [startMonth, setStartMonth] = useState(tomorrow.getMonth() + 1);
+  const [startDay, setStartDay] = useState(tomorrow.getDate());
+  const [endYear, setEndYear] = useState(tomorrow.getFullYear());
+  const [endMonth, setEndMonth] = useState(tomorrow.getMonth() + 1);
+  const [endDay, setEndDay] = useState(tomorrow.getDate());
 
   const startDaysList = useMemo(
     () => getDaysList(startYear, startMonth),
@@ -42,6 +44,16 @@ export default function SelectGroupDurationSection({
     () => getDaysList(endYear, endMonth),
     [endYear, endMonth],
   );
+
+  useEffect(() => {
+    const maxDay = startDaysList[startDaysList.length - 1];
+    if (startDay > maxDay) setStartDay(maxDay);
+  }, [startDay, startDaysList]);
+
+  useEffect(() => {
+    const maxDay = endDaysList[endDaysList.length - 1];
+    if (endDay > maxDay) setEndDay(maxDay);
+  }, [endDay, endDaysList]);
 
   useEffect(() => {
     handleChangeStartDate(
