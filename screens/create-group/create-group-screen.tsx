@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { GroupCategoryType } from "@shared/types";
+import type { GroupCategoryType } from "@shared/types";
 import {
   BookSearchBottomSheet,
   BookSelectSection,
-  BottomSheetBookItemType,
+  type BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
 import { getKoreaDate, parseStringToDate } from "@shared/utils";
