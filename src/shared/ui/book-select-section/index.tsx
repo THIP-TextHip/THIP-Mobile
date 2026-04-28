@@ -1,16 +1,19 @@
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { IcSearch } from "@images/icons";
-import { AppText, BottomSheetBookItemType, CustomButton } from "@shared/ui";
 import { colors } from "@theme/token";
 
+import AppText from "../app-text";
+import { type BottomSheetBookItemType } from "../book-search-bottom-sheet";
+import { CustomButton } from "../button";
+
 interface BookSelectSectionProps {
-  feedBook: BottomSheetBookItemType | null;
+  book: BottomSheetBookItemType | null;
   handleOpenBottomSheet: () => void;
 }
 
 export default function BookSelectSection({
-  feedBook,
+  book,
   handleOpenBottomSheet,
 }: BookSelectSectionProps) {
   return (
@@ -18,12 +21,9 @@ export default function BookSelectSection({
       <AppText weight="semibold" size="lg" color={colors.white} lineHeight={24}>
         책 선택
       </AppText>
-      {feedBook ? (
+      {book ? (
         <View style={styles.bookItem}>
-          <Image
-            source={{ uri: feedBook.bookImageUrl }}
-            style={styles.bookImage}
-          />
+          <Image source={{ uri: book.bookImageUrl }} style={styles.bookImage} />
           <View style={styles.textWrapper}>
             <AppText
               weight="semibold"
@@ -31,7 +31,7 @@ export default function BookSelectSection({
               color={colors.white}
               lineHeight={24}
             >
-              {feedBook.bookTitle}
+              {book.bookTitle}
             </AppText>
             <AppText
               weight="medium"
@@ -39,7 +39,7 @@ export default function BookSelectSection({
               color={colors.grey[200]}
               lineHeight={20}
             >
-              {feedBook.authorName} 저
+              {book.authorName} 저
             </AppText>
           </View>
           <Pressable

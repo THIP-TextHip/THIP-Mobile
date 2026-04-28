@@ -1,17 +1,19 @@
 import { StyleSheet, View } from "react-native";
 
-import { AppText, CustomSwitch } from "@shared/ui";
 import { colors } from "@theme/token";
 
-interface FeedVisibilitySectionProps {
+import AppText from "../app-text";
+import CustomSwitch from "../custom-switch";
+
+interface VisibilitySectionProps {
   isPublic: boolean;
   handleChangeVisibility: (isPublic: boolean) => void;
 }
 
-export default function FeedVisibilitySection({
+export default function VisibilitySection({
   isPublic,
   handleChangeVisibility,
-}: FeedVisibilitySectionProps) {
+}: VisibilitySectionProps) {
   const handleToggle = () => {
     handleChangeVisibility(!isPublic);
   };
