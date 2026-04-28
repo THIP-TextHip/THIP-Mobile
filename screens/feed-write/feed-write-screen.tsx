@@ -8,15 +8,18 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { BookSearchBottomSheet, BottomSheetBookItemType } from "@shared/ui";
+import {
+  BookSearchBottomSheet,
+  BookSelectSection,
+  VisibilitySection,
+  type BottomSheetBookItemType,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
-  BookSelectSection,
   FeedContentSection,
   FeedImageSection,
   FeedTagSection,
-  FeedVisibilitySection,
   FeedWriteHeader,
 } from "./components";
 import { FEED_TAG_MAX } from "./constants";
@@ -24,7 +27,6 @@ import { FEED_TAG_MAX } from "./constants";
 export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-
   const [feedBook, setFeedBook] = useState<BottomSheetBookItemType | null>(
     null,
   );
@@ -90,7 +92,7 @@ export default function FeedWriteScreen() {
           ]}
         >
           <BookSelectSection
-            feedBook={feedBook}
+            book={feedBook}
             handleOpenBottomSheet={handleOpenBottomSheet}
           />
           <Separator />
@@ -104,7 +106,7 @@ export default function FeedWriteScreen() {
             handleImageUrls={handleImageUrls}
           />
           <Separator />
-          <FeedVisibilitySection
+          <VisibilitySection
             isPublic={isPublic}
             handleChangeVisibility={setIsPublic}
           />

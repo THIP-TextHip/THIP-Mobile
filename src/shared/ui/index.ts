@@ -4,6 +4,7 @@ export {
   default as BookSearchBottomSheet,
   BottomSheetBookItemType,
 } from "./book-search-bottom-sheet";
+export { default as BookSelectSection } from "./book-select-section";
 export { ButtonHeader, CustomButton, SelectChip, TagButton } from "./button";
 export { default as ChatInputBar } from "./chat-input-bar";
 export {
@@ -39,3 +40,4 @@ export { default as SearchBar } from "./search-bar";
 export { default as ThipPreview } from "./thip-preview";
 export { default as UserListItem } from "./user-list-item";
 export { default as UserProfileBar } from "./user-profile-bar";
+export { default as VisibilitySection } from "./visibility-section";

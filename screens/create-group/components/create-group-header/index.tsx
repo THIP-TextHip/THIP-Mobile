@@ -3,10 +3,18 @@ import { useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
-import { AppText, CustomHeader } from "@shared/ui";
+import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
-export default function CreateGroupHeader() {
+interface CreateGroupHeaderProps {
+  disabled: boolean;
+  handleConfirm: () => void;
+}
+
+export default function CreateGroupHeader({
+  disabled,
+  handleConfirm,
+}: CreateGroupHeaderProps) {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
@@ -23,8 +31,11 @@ export default function CreateGroupHeader() {
           모임 만들기
         </AppText>
       }
-      // TODO: 완료 버튼
-      right={<></>}
+      right={
+        <ButtonHeader disabled={disabled} handleClickButton={handleConfirm}>
+          완료
+        </ButtonHeader>
+      }
     />
   );
 }

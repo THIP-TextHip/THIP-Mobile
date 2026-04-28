@@ -1,15 +1,14 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { GROUP_CATEGORY } from "@shared/constants";
+import type { GroupCategoryType } from "@shared/types";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { RECRUITING_GROUP_CATEGORY } from "../../constants";
-import { RecruitingGroupCategoryType } from "../../types";
-
 interface RecruitingGroupCarouselHeaderProps {
   label: string;
-  selectedCategory: RecruitingGroupCategoryType;
-  handleChangeCategory: (category: RecruitingGroupCategoryType) => void;
+  selectedCategory: GroupCategoryType;
+  handleChangeCategory: (category: GroupCategoryType) => void;
 }
 
 export default function RecruitingGroupCarouselHeader({
@@ -29,7 +28,7 @@ export default function RecruitingGroupCarouselHeader({
         {label} 독서 모임방
       </AppText>
       <View style={styles.categoryWrapper}>
-        {RECRUITING_GROUP_CATEGORY.map((category) => (
+        {GROUP_CATEGORY.map((category) => (
           <Pressable
             key={category}
             style={[

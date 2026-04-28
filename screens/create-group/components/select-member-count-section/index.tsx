@@ -38,6 +38,7 @@ export default function SelectMemberCountSection({
 
 const styles = StyleSheet.create({
   section: {
+    paddingHorizontal: 20,
     gap: 12,
   },
   content: {

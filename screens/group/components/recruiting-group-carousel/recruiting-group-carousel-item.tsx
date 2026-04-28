@@ -9,14 +9,12 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import type { GroupCategoryType } from "@shared/types";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_RECRUITING_GROUP_CAROUSEL, GRID_WIDTH } from "../../constants";
-import {
-  RecruitingGroupCarouselType,
-  RecruitingGroupCategoryType,
-} from "../../types";
+import type { RecruitingGroupCarouselType } from "../../types";
 import RecruitingGroupCard from "./recruiting-group-card";
 import RecruitingGroupCarouselHeader from "./recruiting-group-carousel-header";
 
@@ -33,7 +31,7 @@ export default function RecruitingGroupCarouselItem({
 }: RecruitingGroupCarouselItemProps) {
   // 서버에서 카테고리에 따라 다른 list 줌.
   const [selectedCategory, setSelectedCategory] =
-    useState<RecruitingGroupCategoryType>("문학");
+    useState<GroupCategoryType>("문학");
   // TODO: 서버에서 가져오기. 여기에 selectedCategory도 추가로 필터링 해야함
   const roomList = DUMMY_RECRUITING_GROUP_CAROUSEL[carouselType];
   const isGrid = width > GRID_WIDTH;
@@ -72,10 +70,6 @@ export default function RecruitingGroupCarouselItem({
     };
   });
 
-  const handleChangeCategory = (category: RecruitingGroupCategoryType) => {
-    setSelectedCategory(category);
-  };
-
   return (
     <Animated.View style={[styles.wrapper, { width }, cardAnimatedStyle]}>
       <LinearGradient
@@ -88,7 +82,7 @@ export default function RecruitingGroupCarouselItem({
         <RecruitingGroupCarouselHeader
           label={label}
           selectedCategory={selectedCategory}
-          handleChangeCategory={handleChangeCategory}
+          handleChangeCategory={setSelectedCategory}
         />
         {roomList.length === 0 ? (
           <View style={styles.empty}>
