@@ -3,4 +3,5 @@ export {
   getDaysList,
   getFormattedCurrentDateTime,
   getKoreaDate,
+  parseStringToDate,
 } from "./date";

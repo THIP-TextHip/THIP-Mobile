@@ -54,3 +54,13 @@ export const getDaysList = (year: number, month: number) => {
 
   return Array.from({ length: daysInMonth }, (_, index) => index + 1);
 };
+
+export const parseStringToDate = (date: string) => {
+  const [year, month, day] = date.split(".").map(Number);
+
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  return new Date(year, month - 1, day);
+};

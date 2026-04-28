@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -15,6 +15,7 @@ import {
   BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
+import { getKoreaDate, parseStringToDate } from "@shared/utils";
 import { colors } from "@theme/token";
 
 import {
@@ -25,6 +26,7 @@ import {
   SelectGroupDurationSection,
   SelectMemberCountSection,
 } from "./components";
+import { DAY_IN_MS } from "./constants";
 
 export default function CreateGroupScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -49,6 +51,37 @@ export default function CreateGroupScreen() {
     groupTitle.trim() === "" ||
     groupDesc.trim() === "" ||
     durationErrorMessage !== "";
+
+  useEffect(() => {
+    const today = getKoreaDate();
+    const parsedStartDate = parseStringToDate(startDate);
+    const parsedEndDate = parseStringToDate(endDate);
+
+    if (!parsedStartDate || !parsedEndDate) {
+      setDurationErrorMessage("오류가 발생했습니다. 재시도 해주세요.");
+      return;
+    }
+
+    const durationDays =
+      (parsedEndDate.getTime() - parsedStartDate.getTime()) / DAY_IN_MS;
+
+    if (parsedStartDate <= today || parsedEndDate <= today) {
+      setDurationErrorMessage("모임 기간은 오늘 이후부터 설정 가능합니다.");
+      return;
+    }
+
+    if (parsedEndDate < parsedStartDate) {
+      setDurationErrorMessage("종료일은 시작일보다 빠를 수 없어요.");
+      return;
+    }
+
+    if (durationDays > 90) {
+      setDurationErrorMessage("모임 기간은 최대 90일 까지 설정 가능합니다.");
+      return;
+    }
+
+    setDurationErrorMessage("");
+  }, [startDate, endDate]);
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -124,6 +157,7 @@ export default function CreateGroupScreen() {
           <SelectGroupDurationSection
             startDate={startDate}
             endDate={endDate}
+            errorMessage={durationErrorMessage}
             handleChangeStartDate={setStartDate}
             handleChangeEndDate={setEndDate}
           />

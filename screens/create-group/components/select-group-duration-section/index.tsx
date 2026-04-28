@@ -14,6 +14,7 @@ const MONTHS_LIST = Array.from({ length: 12 }, (_, index) => index + 1);
 interface SelectGroupDurationSectionProps {
   startDate: string;
   endDate: string;
+  errorMessage: string;
   handleChangeStartDate: (date: string) => void;
   handleChangeEndDate: (date: string) => void;
 }
@@ -21,6 +22,7 @@ interface SelectGroupDurationSectionProps {
 export default function SelectGroupDurationSection({
   startDate,
   endDate,
+  errorMessage,
   handleChangeStartDate,
   handleChangeEndDate,
 }: SelectGroupDurationSectionProps) {
@@ -143,9 +145,10 @@ export default function SelectGroupDurationSection({
         style={styles.desc}
         weight="regular"
         size="xs"
-        color={colors.neongreen}
+        color={errorMessage ? colors.red : colors.neongreen}
       >
-        모임방 활동이 시작되면, 독서메이트 모집이 자동으로 종료돼요.
+        {errorMessage ||
+          "모임방 활동이 시작되면, 독서메이트 모집이 자동으로 종료돼요."}
       </AppText>
     </View>
   );
