@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { IcGroupWhite } from "@images/icons";
@@ -13,10 +14,15 @@ interface SearchedGroupItemProps {
 export default function SearchedGroupItem({
   searchedGroup,
 }: SearchedGroupItemProps) {
-  // TODO: 모임방 클릭 시 처리. 해당 모임방 참여 페이지로 이동
+  const handleToJoinGroup = () => {
+    router.push({
+      pathname: "/join-group/[roomId]",
+      params: { roomId: String(searchedGroup.roomId) },
+    });
+  };
 
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={handleToJoinGroup}>
       {searchedGroup.isPublic ? (
         <Image
           source={{ uri: searchedGroup.bookImageUrl }}

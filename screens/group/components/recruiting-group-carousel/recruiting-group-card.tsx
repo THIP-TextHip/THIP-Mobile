@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { IcGroupWhite } from "@images/icons";
@@ -13,8 +14,14 @@ interface RecruitingGroupCardProps {
 export default function RecruitingGroupCard({
   roomInfo,
 }: RecruitingGroupCardProps) {
+  const handleToJoinGroup = () => {
+    router.push({
+      pathname: "/join-group/[roomId]",
+      params: { roomId: String(roomInfo.roomId) },
+    });
+  };
   return (
-    <Pressable style={styles.roomContainer}>
+    <Pressable style={styles.roomContainer} onPress={handleToJoinGroup}>
       <Image source={{ uri: roomInfo.bookImageUrl }} style={styles.image} />
       <View style={styles.roomInfo}>
         <AppText

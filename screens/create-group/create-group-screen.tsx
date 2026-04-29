@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -111,6 +112,11 @@ export default function CreateGroupScreen() {
       memberCount,
       isPublic,
     );
+    // TODO: 모임방 생성 성공 응답의 roomId 사용
+    router.push({
+      pathname: "/join-group/[roomId]",
+      params: { roomId: String(123) },
+    });
   };
 
   const Separator = () => {
