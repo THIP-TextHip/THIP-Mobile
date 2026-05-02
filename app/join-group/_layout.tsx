@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-import { JoinGroupHeader } from "@screens/join-group";
 import { colors } from "@theme/token";
 
 export default function JoinGroupLayout() {
@@ -8,14 +7,10 @@ export default function JoinGroupLayout() {
     <Stack
       screenOptions={{
         contentStyle: { backgroundColor: colors.black.main },
+        headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="[roomId]"
-        options={{
-          header: () => <JoinGroupHeader />,
-        }}
-      />
+      <Stack.Screen name="[roomId]" />
     </Stack>
   );
 }
