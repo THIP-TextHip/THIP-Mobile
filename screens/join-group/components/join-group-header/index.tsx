@@ -6,7 +6,7 @@ import { Pressable, StyleSheet } from "react-native";
 import { IcArrowLeft } from "@images/icons";
 import { CustomHeader } from "@shared/ui";
 
-export default function BookDetailHeader() {
+export default function JoinGroupHeader() {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);

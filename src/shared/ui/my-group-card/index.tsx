@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useCallback } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
@@ -47,8 +48,18 @@ export default function MyGroupCard({
     console.log(roomId, "번 모임방 상세 페이지로 이동");
   }, [roomId]);
 
+  const handleToJoinGroup = () => {
+    router.push({
+      pathname: "/join-group/[roomId]",
+      params: { roomId: String(roomId) },
+    });
+  };
+
   return (
-    <Pressable style={styles.container} onPress={handleToGroupDetail}>
+    <Pressable
+      style={styles.container}
+      onPress={type === "recruiting" ? handleToJoinGroup : handleToGroupDetail}
+    >
       <Image source={{ uri: bookImageUrl }} style={styles.image} />
       <View style={styles.content}>
         <AppText

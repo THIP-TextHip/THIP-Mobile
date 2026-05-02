@@ -33,112 +33,107 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
     console.log("책 저장 및 저장 취소");
   };
   return (
-    <ImageBackground
-      source={{ uri: bookInfo.imageUrl }}
-      style={styles.background}
-    >
+    <ImageBackground source={{ uri: bookInfo.imageUrl }}>
       <LinearGradient
         colors={[colors.darkgrey.gradStart, colors.black.main]}
         locations={[0.0594, 0.94]}
         start={{ x: 0.43, y: 0 }}
         end={{ x: 0.57, y: 1 }}
-        style={styles.container}
-      >
-        <BlurView intensity={12} tint="default" style={styles.container}>
-          <View style={styles.contentWrapper}>
-            <View style={styles.infoWrapper}>
-              <AppText weight="bold" size="2xl" color={colors.white}>
-                {bookInfo.title}
-              </AppText>
-              <View style={styles.authorPublisher}>
-                <AppText
-                  weight="semibold"
-                  size="xs"
-                  color={colors.grey[200]}
-                  lineHeight={24}
-                >
-                  {bookInfo.authorName} 저
-                </AppText>
-                <View style={styles.dot} />
-                <AppText
-                  weight="semibold"
-                  size="xs"
-                  color={colors.grey[200]}
-                  lineHeight={24}
-                >
-                  {bookInfo.publisher}
-                </AppText>
-              </View>
-            </View>
-            <Pressable style={styles.descWrapper} onPress={handleOpenModal}>
+        style={styles.linearBlur}
+      />
+      <BlurView intensity={12} tint="default" style={styles.linearBlur} />
+      <View style={styles.container}>
+        <View style={styles.contentWrapper}>
+          <View style={styles.infoWrapper}>
+            <AppText weight="bold" size="2xl" color={colors.white}>
+              {bookInfo.title}
+            </AppText>
+            <View style={styles.authorPublisher}>
               <AppText
                 weight="semibold"
-                size="sm"
-                color={colors.white}
+                size="xs"
+                color={colors.grey[200]}
                 lineHeight={24}
               >
-                소개
+                {bookInfo.authorName} 저
               </AppText>
+              <View style={styles.dot} />
               <AppText
-                weight="regular"
-                size="2xs"
-                color={colors.grey[100]}
-                lineHeight={20}
-                numberOfLines={2}
-              >
-                {bookInfo.description.replace(/\n/g, " ")}
-              </AppText>
-            </Pressable>
-          </View>
-          <View style={styles.buttonWrapper}>
-            <Pressable style={styles.groupButton} onPress={handleToGroupList}>
-              <AppText
-                weight="medium"
-                size="base"
-                color={colors.white}
+                weight="semibold"
+                size="xs"
+                color={colors.grey[200]}
                 lineHeight={24}
               >
-                모집중인 모임방 {bookInfo.recruitingRoomCount}개
+                {bookInfo.publisher}
               </AppText>
-              <IcRight />
-            </Pressable>
-            <View style={styles.feedBookmarkButtonWrapper}>
-              <CustomButton size="fill" handlePress={handleToFeedWrite}>
-                <View style={styles.feedButtonContent}>
-                  <AppText
-                    weight="medium"
-                    size="base"
-                    color={colors.white}
-                    lineHeight={24}
-                  >
-                    피드에 글 쓰기
-                  </AppText>
-                  <IcPlus />
-                </View>
-              </CustomButton>
-              <Pressable
-                style={styles.saveButton}
-                onPress={handlePressSaveButton}
-              >
-                {bookInfo.isSaved ? <IcSaveFilled /> : <IcSave />}
-              </Pressable>
             </View>
           </View>
-        </BlurView>
-      </LinearGradient>
+          <Pressable style={styles.descWrapper} onPress={handleOpenModal}>
+            <AppText
+              weight="semibold"
+              size="sm"
+              color={colors.white}
+              lineHeight={24}
+            >
+              소개
+            </AppText>
+            <AppText
+              weight="regular"
+              size="2xs"
+              color={colors.grey[100]}
+              lineHeight={20}
+              numberOfLines={2}
+            >
+              {bookInfo.description.replace(/\n/g, " ")}
+            </AppText>
+          </Pressable>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Pressable style={styles.groupButton} onPress={handleToGroupList}>
+            <AppText
+              weight="medium"
+              size="base"
+              color={colors.white}
+              lineHeight={24}
+            >
+              모집중인 모임방 {bookInfo.recruitingRoomCount}개
+            </AppText>
+            <IcRight />
+          </Pressable>
+          <View style={styles.feedBookmarkButtonWrapper}>
+            <CustomButton size="fill" handlePress={handleToFeedWrite}>
+              <View style={styles.feedButtonContent}>
+                <AppText
+                  weight="medium"
+                  size="base"
+                  color={colors.white}
+                  lineHeight={24}
+                >
+                  피드에 글 쓰기
+                </AppText>
+                <IcPlus />
+              </View>
+            </CustomButton>
+            <Pressable
+              style={styles.saveButton}
+              onPress={handlePressSaveButton}
+            >
+              {bookInfo.isSaved ? <IcSaveFilled /> : <IcSave />}
+            </Pressable>
+          </View>
+        </View>
+      </View>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    width: "100%",
-    aspectRatio: 0.86,
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
   },
   container: {
-    ...StyleSheet.absoluteFillObject,
     padding: 20,
-    justifyContent: "flex-end",
+    paddingTop: 76,
     gap: 20,
   },
   contentWrapper: {

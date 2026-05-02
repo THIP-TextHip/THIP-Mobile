@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black.main,
     paddingVertical: 16,
     paddingHorizontal: 20,
+    height: 56,
   },
   headerLeft: {
     flex: 1,
