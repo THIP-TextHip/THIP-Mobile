@@ -33,7 +33,7 @@ const recommendRooms: RecommendRoomType[] = [
   {
     roomId: 25,
     bookImageUrl: "https://placehold.co/60x80/png",
-    roomName: "방제목입니다 방 제목입니다.",
+    roomName: "방제목입니다 방 제목입니다. 긴 방제목입니다~~~",
     memberCount: 3,
     recruitCount: 15,
     recruitEndDate: "13일",
@@ -54,7 +54,7 @@ export const DUMMY_JOIN_GROUP_INFO: JoinGroupResponseType = {
   roomId: 3,
   roomName: "시집만 읽는 사람들 3월",
   roomImageUrl: Asset.fromModule(GroupBgExample).uri,
-  isPublic: true,
+  isPublic: false,
   progressStartDate: "2026.06.16",
   progressEndDate: "2026.06.30",
   recruitEndDate: "3일",

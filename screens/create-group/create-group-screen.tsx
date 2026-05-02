@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 import type { GroupCategoryType } from "@shared/types";
 import {
@@ -112,7 +113,11 @@ export default function CreateGroupScreen() {
       memberCount,
       isPublic,
     );
-    // TODO: 모임방 생성 성공 응답의 roomId 사용
+    // TODO: 모임방 생성 성공 응답의 roomId 사용. 성공 시 토스트도 띄워야 함!
+    Toast.show({
+      type: "default",
+      text1: "모임방 생성이 완료되었습니다.",
+    });
     router.push({
       pathname: "/join-group/[roomId]",
       params: { roomId: String(123) },
