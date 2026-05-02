@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import { JoinGroupHeader, JoinGroupInfo } from "./components";
+import { JoinGroupBook, JoinGroupHeader, JoinGroupInfo } from "./components";
 // TODO: 추후 서버에서 데이터 가져오기. url 파라미터의 roomId 이용
 import { DUMMY_JOIN_GROUP_INFO } from "./constants";
 
@@ -22,6 +22,16 @@ export default function JoinGroupScreen() {
           memberCount={DUMMY_JOIN_GROUP_INFO.memberCount}
           recruitCount={DUMMY_JOIN_GROUP_INFO.recruitCount}
         />
+        <View style={styles.bookWrapper}>
+          <JoinGroupBook
+            isbn={DUMMY_JOIN_GROUP_INFO.isbn}
+            bookImageUrl={DUMMY_JOIN_GROUP_INFO.bookImageUrl}
+            bookTitle={DUMMY_JOIN_GROUP_INFO.bookTitle}
+            authorName={DUMMY_JOIN_GROUP_INFO.authorName}
+            bookDescription={DUMMY_JOIN_GROUP_INFO.bookDescription}
+            publisher={DUMMY_JOIN_GROUP_INFO.publisher}
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -30,5 +40,8 @@ export default function JoinGroupScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
+  },
+  bookWrapper: {
+    paddingHorizontal: 20,
   },
 });

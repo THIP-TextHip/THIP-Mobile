@@ -69,7 +69,7 @@ export const DUMMY_JOIN_GROUP_INFO: JoinGroupResponseType = {
   bookTitle: "호르몬 체인지",
   authorName: "최정화",
   bookDescription:
-    "‘젊고 건강한 몸’을 향한 욕망. 그것을 비대하게 부풀리는 기형적인 시스템. 어리나어리ㅏ넝리ㅏ넝라ㅣ너이라ㅓㄴㅇ라ㅓㄴ이ㅏ런이ㅏ러",
+    "‘젊고 건강한 몸’을 향한 욕망. 그것을 비대하게 부풀리는 기형적인 시스템. 어리나어리ㅏ넝리ㅏ넝라ㅣ너이라ㅓㄴㅇ라ㅓㄴ이ㅏ런이ㅏ러alsdkfjlasdhflkbasf",
   publisher: "은행나무",
   recommendRooms: recommendRooms,
 };
