@@ -23,7 +23,7 @@ export default function JoinGroupHeader() {
           <Pressable
             onPress={handleGoBack}
             accessibilityRole="button"
-            accessibilityLabel="go back"
+            accessibilityLabel="뒤로 가기"
             hitSlop={10}
           >
             <IcArrowLeft />
