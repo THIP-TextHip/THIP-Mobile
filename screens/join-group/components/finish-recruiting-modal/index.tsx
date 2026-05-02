@@ -18,10 +18,10 @@ export default function FinishRecruitingModal({
     <CustomModal isVisible={isVisible} handleCloseModal={handleClose}>
       <View style={styles.content}>
         <AppText weight="medium" size="lg" color={colors.white} lineHeight={24}>
-          정말로 탈퇴하시겠어요?
+          모집을 마감하시겠습니까?
         </AppText>
         <AppText weight="regular" size="sm" color={colors.white}>
-          {`‘예’를 누르면 모든 기록이 사라져요.\n지금 바로 모임방 활동을 시작할 수 있어요.`}
+          {`독서메이트 모집을 마감하면\n지금 바로 모임방 활동을 시작할 수 있어요.`}
         </AppText>
         <View style={styles.buttonWrapper}>
           <CustomButton type="cancel" size="fill" handlePress={handleClose}>
