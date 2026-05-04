@@ -4,6 +4,7 @@ import {
   useNavigation,
   usePreventRemove,
 } from "@react-navigation/native";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   BackHandler,
@@ -15,7 +16,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { router } from "expo-router";
 import {
   CancelJoinModal,
   FinishRecruitingModal,
@@ -28,13 +28,10 @@ import {
 } from "./components";
 import { DUMMY_JOIN_GROUP_INFO } from "./constants";
 
-export default function JoinGroupScreen() {
-  const navigation = useNavigation<NavigationProp<ParamListBase>>();
-  const { bottom } = useSafeAreaInsets();
-  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
-  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
-
+function usePreventPasswordOverlayNavigation(
+  isPasswordOpen: boolean,
+  navigation: NavigationProp<ParamListBase>,
+) {
   usePreventRemove(isPasswordOpen, () => {});
 
   useEffect(() => {
@@ -60,6 +57,16 @@ export default function JoinGroupScreen() {
 
     return () => subscription.remove();
   }, [isPasswordOpen]);
+}
+
+export default function JoinGroupScreen() {
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+  const { bottom } = useSafeAreaInsets();
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isFinishModalOpen, setIsFinishModalOpen] = useState(false);
+  const [isPasswordOpen, setIsPasswordOpen] = useState(false);
+
+  usePreventPasswordOverlayNavigation(isPasswordOpen, navigation);
 
   // TODO: 추후 서버에서 데이터 가져오기. url 파라미터의 roomId 이용
   const {
@@ -86,8 +93,10 @@ export default function JoinGroupScreen() {
     recommendRooms,
   } = DUMMY_JOIN_GROUP_INFO;
 
+  const isRecruitingFull = memberCount === recruitCount;
+
   const handlePressJoinButton = () => {
-    if (memberCount === recruitCount) {
+    if (isRecruitingFull) {
       Toast.show({
         type: "default",
         text1: "모임방 인원이 다 찼어요.",
@@ -175,7 +184,7 @@ export default function JoinGroupScreen() {
       <JoinButton
         isHost={isHost}
         isJoining={isJoining}
-        disabled={recruitCount === memberCount}
+        disabled={isRecruitingFull}
         handlePressJoinButton={handlePressJoinButton}
       />
       <CancelJoinModal
