@@ -7,12 +7,14 @@ import { colors } from "@theme/token";
 interface JoinButtonProps {
   isHost: boolean;
   isJoining: boolean;
+  disabled: boolean;
   handlePressJoinButton: () => void;
 }
 
 export default function JoinButton({
   isHost,
   isJoining,
+  disabled,
   handlePressJoinButton,
 }: JoinButtonProps) {
   const { bottom } = useSafeAreaInsets();
@@ -22,6 +24,7 @@ export default function JoinButton({
       style={[
         styles.joinButton,
         { height: bottom + 50, paddingBottom: bottom },
+        disabled && { backgroundColor: colors.grey[300] },
       ]}
       onPress={handlePressJoinButton}
     >

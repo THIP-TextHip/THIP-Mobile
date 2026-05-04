@@ -87,6 +87,13 @@ export default function JoinGroupScreen() {
   } = DUMMY_JOIN_GROUP_INFO;
 
   const handlePressJoinButton = () => {
+    if (memberCount === recruitCount) {
+      Toast.show({
+        type: "default",
+        text1: "모임방 인원이 다 찼어요.",
+      });
+      return;
+    }
     // TODO: 모집 마감 및 참여 취소 모달 추가 필요 / roomId로 신청 및 해제
     if (isHost) {
       setIsFinishModalOpen(true);
@@ -168,6 +175,7 @@ export default function JoinGroupScreen() {
       <JoinButton
         isHost={isHost}
         isJoining={isJoining}
+        disabled={recruitCount === memberCount}
         handlePressJoinButton={handlePressJoinButton}
       />
       <CancelJoinModal
