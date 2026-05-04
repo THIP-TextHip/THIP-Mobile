@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, View } from "react-native";
+import { router } from "expo-router";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -75,6 +76,13 @@ export default function MyGroupCarouselItem({
     };
   });
 
+  const handleToGroupDetail = () => {
+    router.push({
+      pathname: "/group-detail/[roomId]",
+      params: { roomId: String(content.roomId) },
+    });
+  };
+
   return (
     <Animated.View style={[styles.cardWrapper, { width }, cardAnimatedStyle]}>
       <LinearGradient
@@ -87,7 +95,8 @@ export default function MyGroupCarouselItem({
         <Animated.View style={[styles.contentRow, contentAnimatedStyle]}>
           <Image source={{ uri: content.bookImageUrl }} style={styles.image} />
 
-          <View style={styles.content}>
+          {/* TODO: 이미지 영역까지 포함해서 눌렀을 때 넘어가도록 수정하고 싶음. 현재는 이유모르게 UX적인 오류가 뜸 */}
+          <Pressable style={styles.content} onPress={handleToGroupDetail}>
             <View style={styles.groupInfo}>
               <AppText
                 weight="semibold"
@@ -143,7 +152,7 @@ export default function MyGroupCarouselItem({
                 />
               </View>
             </View>
-          </View>
+          </Pressable>
         </Animated.View>
 
         <Animated.View
