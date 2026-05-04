@@ -10,6 +10,7 @@ export const useLoadFonts = () => {
     Pretendard_600: require("@assets/fonts/Pretendard-SemiBold.otf"),
     Pretendard_700: require("@assets/fonts/Pretendard-Bold.otf"),
     Pretendard_800: require("@assets/fonts/Pretendard-ExtraBold.otf"),
+    Paperlogy_600: require("@assets/fonts/Paperlogy-6SemiBold.ttf"),
   });
 
   useEffect(() => {

@@ -2,6 +2,7 @@ import { colors, typography } from "@theme/token";
 import { Text, TextProps, TextStyle } from "react-native";
 
 type AppTextProps = TextProps & {
+  type?: "default" | "paperlogy";
   weight?: keyof typeof typography.fontWeight;
   size?: keyof typeof typography.fontSize;
   color?: string;
@@ -18,18 +19,21 @@ const FONT_BY_WEIGHT = {
 
 export default function AppText({
   style,
+  type = "default",
   weight = "regular",
   size = "base",
   color = colors.black.main,
   lineHeight = "normal",
   ...props
 }: AppTextProps) {
+  const fontFamily = type === "paperlogy" ? "Paperlogy_600" : FONT_BY_WEIGHT[weight];
+
   return (
     <Text
       {...props}
       style={[
         {
-          fontFamily: FONT_BY_WEIGHT[weight],
+          fontFamily,
           fontWeight: "normal",
           fontSize: typography.fontSize[size],
           color,
