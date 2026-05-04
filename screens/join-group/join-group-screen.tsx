@@ -97,7 +97,7 @@ export default function JoinGroupScreen() {
     } else {
       Toast.show({
         type: "default",
-        text1: "모임방에 참여했어요.",
+        text1: "모임방 참여가 완료되었어요!",
       });
     }
   };

@@ -5,6 +5,8 @@ import { colors } from "@theme/token";
 
 import { JoinGroupResponseType, RecommendRoomType } from "../types";
 
+export const DUMMY_GROUP_PASSWORD = "1234";
+
 const recommendRooms: RecommendRoomType[] = [
   {
     roomId: 13,
