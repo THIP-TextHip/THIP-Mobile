@@ -5,7 +5,7 @@ import {
   usePreventRemove,
 } from "@react-navigation/native";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   BackHandler,
   Platform,
@@ -95,7 +95,7 @@ export default function JoinGroupScreen() {
 
   const isRecruitingFull = memberCount === recruitCount;
 
-  const handlePressJoinButton = () => {
+  const handlePressJoinButton = useCallback(() => {
     if (isRecruitingFull) {
       Toast.show({
         type: "default",
@@ -116,37 +116,37 @@ export default function JoinGroupScreen() {
         text1: "모임방 참여가 완료되었어요!",
       });
     }
-  };
+  }, [isHost, isJoining, isPublic, isRecruitingFull]);
 
-  const handleCloseCancelModal = () => {
+  const handleCloseCancelModal = useCallback(() => {
     setIsCancelModalOpen(false);
-  };
+  }, []);
 
-  const handleCancelJoin = () => {
+  const handleCancelJoin = useCallback(() => {
     setIsCancelModalOpen(false);
     router.push("/group");
     Toast.show({
       type: "default",
       text1: "모임방 참여가 취소되었어요! 다른 방을 찾아보세요.",
     });
-  };
+  }, []);
 
-  const handleCloseFinishModal = () => {
+  const handleCloseFinishModal = useCallback(() => {
     setIsFinishModalOpen(false);
-  };
+  }, []);
 
   // TODO: 서버에 요청 성공 시 토스트 띄우고 모임방 상세 페이지로 이동
-  const handleFinishRecruiting = () => {
+  const handleFinishRecruiting = useCallback(() => {
     setIsFinishModalOpen(false);
     Toast.show({
       type: "default",
       text1: "독서메이트 모집을 성공적으로 마감했어요.",
     });
-  };
+  }, []);
 
-  const handleClosePassword = () => {
+  const handleClosePassword = useCallback(() => {
     setIsPasswordOpen(false);
-  };
+  }, []);
 
   return (
     <View style={styles.page}>
