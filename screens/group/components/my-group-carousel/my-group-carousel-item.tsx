@@ -1,5 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { useCallback, useRef } from "react";
+import type { GestureResponderEvent } from "react-native";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
@@ -15,6 +17,8 @@ import { colors } from "@theme/token";
 
 import { GroupCarouselItemType } from "../../types";
 
+const TAP_MOVE_THRESHOLD = 8;
+
 interface MyGroupCarouselItemProps {
   width: number;
   content: GroupCarouselItemType;
@@ -26,6 +30,7 @@ export default function MyGroupCarouselItem({
   content,
   animationValue,
 }: MyGroupCarouselItemProps) {
+  const pressStartRef = useRef<{ x: number; y: number } | null>(null);
   const fallbackAnimationValue = useSharedValue(0);
   const currentAnimationValue = animationValue ?? fallbackAnimationValue;
 
@@ -76,12 +81,36 @@ export default function MyGroupCarouselItem({
     };
   });
 
-  const handleToGroupDetail = () => {
-    router.push({
-      pathname: "/group-detail/[roomId]",
-      params: { roomId: String(content.roomId) },
-    });
-  };
+  const handlePressIn = useCallback((event: GestureResponderEvent) => {
+    pressStartRef.current = {
+      x: event.nativeEvent.pageX,
+      y: event.nativeEvent.pageY,
+    };
+  }, []);
+
+  const handleToGroupDetail = useCallback(
+    (event: GestureResponderEvent) => {
+      const pressStart = pressStartRef.current;
+      pressStartRef.current = null;
+
+      if (!pressStart) {
+        return;
+      }
+
+      const moveX = Math.abs(event.nativeEvent.pageX - pressStart.x);
+      const moveY = Math.abs(event.nativeEvent.pageY - pressStart.y);
+
+      if (moveX > TAP_MOVE_THRESHOLD || moveY > TAP_MOVE_THRESHOLD) {
+        return;
+      }
+
+      router.push({
+        pathname: "/group-detail/[roomId]",
+        params: { roomId: String(content.roomId) },
+      });
+    },
+    [content.roomId],
+  );
 
   return (
     <Animated.View style={[styles.cardWrapper, { width }, cardAnimatedStyle]}>
@@ -92,64 +121,75 @@ export default function MyGroupCarouselItem({
         colors={[colors.white, "#989898"]}
         style={styles.carouselItem}
       >
-        <Animated.View style={[styles.contentRow, contentAnimatedStyle]}>
-          <Image source={{ uri: content.bookImageUrl }} style={styles.image} />
+        <Animated.View
+          style={[styles.contentAnimatedContainer, contentAnimatedStyle]}
+        >
+          <Pressable
+            style={styles.contentRow}
+            onPressIn={handlePressIn}
+            onPress={handleToGroupDetail}
+          >
+            <Image
+              source={{ uri: content.bookImageUrl }}
+              style={styles.image}
+            />
 
-          {/* TODO: 이미지 영역까지 포함해서 눌렀을 때 넘어가도록 수정하고 싶음. 현재는 이유모르게 UX적인 오류가 뜸 */}
-          <Pressable style={styles.content} onPress={handleToGroupDetail}>
-            <View style={styles.groupInfo}>
-              <AppText
-                weight="semibold"
-                size="lg"
-                color={colors.black.main}
-                lineHeight={24}
-                numberOfLines={1}
-              >
-                {content.roomTitle}
-              </AppText>
-
-              <View style={styles.member}>
-                <IcGroup width={20} height={20} />
+            {/* TODO: 이미지 영역까지 포함해서 눌렀을 때 넘어가도록 수정하고 싶음. 현재는 이유모르게 UX적인 오류가 뜸 */}
+            <View style={styles.content}>
+              <View style={styles.groupInfo}>
                 <AppText
                   weight="semibold"
-                  size="sm"
-                  color={colors.grey[300]}
+                  size="lg"
+                  color={colors.black.main}
                   lineHeight={24}
+                  numberOfLines={1}
                 >
-                  {content.memberCount}명
+                  {content.roomTitle}
                 </AppText>
-              </View>
-            </View>
 
-            <View style={styles.myProgressWrapper}>
-              <View style={styles.progressLabel}>
-                <AppText weight="medium" size="sm" color={colors.grey[300]}>
-                  내 진행도
-                </AppText>
-                <AppText
-                  weight="semibold"
-                  size="base"
-                  color={colors.purple.main}
-                  lineHeight={20}
-                >
-                  {content.userPercentage}
+                <View style={styles.member}>
+                  <IcGroup width={20} height={20} />
                   <AppText
                     weight="semibold"
-                    size="xs"
-                    color={colors.purple.main}
+                    size="sm"
+                    color={colors.grey[300]}
+                    lineHeight={24}
                   >
-                    %
+                    {content.memberCount}명
                   </AppText>
-                </AppText>
+                </View>
               </View>
 
-              <View style={styles.progressBar}>
-                <View
-                  style={[
-                    styles.currentProgress,
-                    { width: `${content.userPercentage}%` },
-                  ]}
-                />
+              <View style={styles.myProgressWrapper}>
+                <View style={styles.progressLabel}>
+                  <AppText weight="medium" size="sm" color={colors.grey[300]}>
+                    내 진행도
+                  </AppText>
+                  <AppText
+                    weight="semibold"
+                    size="base"
+                    color={colors.purple.main}
+                    lineHeight={20}
+                  >
+                    {content.userPercentage}
+                    <AppText
+                      weight="semibold"
+                      size="xs"
+                      color={colors.purple.main}
+                    >
+                      %
+                    </AppText>
+                  </AppText>
+                </View>
+
+                <View style={styles.progressBar}>
+                  <View
+                    style={[
+                      styles.currentProgress,
+                      { width: `${content.userPercentage}%` },
+                    ]}
+                  />
+                </View>
               </View>
             </View>
           </Pressable>
@@ -174,6 +214,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     paddingVertical: 34,
     paddingHorizontal: 12,
+  },
+  contentAnimatedContainer: {
+    flex: 1,
   },
   contentRow: {
     flex: 1,
