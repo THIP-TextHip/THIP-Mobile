@@ -4,7 +4,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { GroupInfo } from "@shared/ui";
 
-import { GroupBook, GroupDetailHeader, RecordBookOverview } from "./components";
+import {
+  DailyGreetingButton,
+  GroupBook,
+  GroupDetailHeader,
+  RecordBookOverview,
+} from "./components";
 import { DUMMY_GROUP_DETAIL } from "./constants";
 
 export default function GroupDetailScreen() {
@@ -63,6 +68,7 @@ export default function GroupDetailScreen() {
             currentPage={currentPage}
             userPercentage={userPercentage}
           />
+          <DailyGreetingButton roomId={roomId} />
         </View>
       </ScrollView>
     </View>
