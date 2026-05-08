@@ -13,6 +13,7 @@ import {
   GroupDetailHeader,
   GroupDetailModal,
   RecordBookOverview,
+  VotesCarousel,
 } from "./components";
 import { DUMMY_GROUP_DETAIL } from "./constants";
 
@@ -133,6 +134,7 @@ export default function GroupDetailScreen() {
             userPercentage={userPercentage}
           />
           <DailyGreetingButton roomId={roomId} />
+          <VotesCarousel currentVotes={currentVotes} />
         </View>
       </ScrollView>
       <GroupDetailBottomSheet
