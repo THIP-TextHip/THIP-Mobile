@@ -45,7 +45,10 @@ export default function MyGroupCard({
   // isPublic,
 }: MyGroupCardProps) {
   const handleToGroupDetail = useCallback(() => {
-    console.log(roomId, "번 모임방 상세 페이지로 이동");
+    router.push({
+      pathname: "/group-detail/[roomId]",
+      params: { roomId: String(roomId) },
+    });
   }, [roomId]);
 
   const handleToJoinGroup = () => {

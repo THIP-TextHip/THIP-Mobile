@@ -3,12 +3,16 @@ import { router } from "expo-router";
 import { useCallback } from "react";
 import { Pressable, StyleSheet } from "react-native";
 
-import { IcArrowLeft } from "@images/icons";
+import { IcArrowLeft, IcMore } from "@images/icons";
 import { CustomHeader } from "@shared/ui";
 
-// TODO: 오른쪽 상단 더보기 추가
+interface GroupDetailHeaderProps {
+  handlePressMore: () => void;
+}
 
-export default function GroupDetailHeader() {
+export default function GroupDetailHeader({
+  handlePressMore,
+}: GroupDetailHeaderProps) {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
@@ -29,6 +33,16 @@ export default function GroupDetailHeader() {
             hitSlop={10}
           >
             <IcArrowLeft />
+          </Pressable>
+        }
+        right={
+          <Pressable
+            onPress={handlePressMore}
+            accessibilityRole="button"
+            accessibilityLabel="바텀시트 열기"
+            hitSlop={10}
+          >
+            <IcMore />
           </Pressable>
         }
         containerStyle={styles.container}

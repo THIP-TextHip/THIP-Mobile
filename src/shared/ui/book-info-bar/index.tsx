@@ -21,7 +21,7 @@ export default function BookInfoBar({
   const handleToBookDetail = () => {
     router.push({
       pathname: "/book-detail/[isbn]",
-      params: { isbn: String(isbn) },
+      params: { isbn },
     });
   };
   return (

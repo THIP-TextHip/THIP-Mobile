@@ -16,13 +16,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { GroupInfo } from "@shared/ui";
+
 import {
   CancelJoinModal,
   FinishRecruitingModal,
   JoinButton,
   JoinGroupBook,
   JoinGroupHeader,
-  JoinGroupInfo,
   JoinPassword,
   RecommendGroupSection,
 } from "./components";
@@ -152,7 +153,9 @@ export default function JoinGroupScreen() {
     <View style={styles.page}>
       <JoinGroupHeader />
       <ScrollView contentContainerStyle={{ paddingBottom: bottom + 90 }}>
-        <JoinGroupInfo
+        <GroupInfo
+          roomId={roomId}
+          isRecruiting={true}
           roomName={roomName}
           roomImageUrl={roomImageUrl}
           isPublic={isPublic}
