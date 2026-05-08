@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { GroupInfo } from "@shared/ui";
 
-import { GroupBook, GroupDetailHeader } from "./components";
+import { GroupBook, GroupDetailHeader, RecordBookOverview } from "./components";
 import { DUMMY_GROUP_DETAIL } from "./constants";
 
 export default function GroupDetailScreen() {
@@ -27,6 +27,9 @@ export default function GroupDetailScreen() {
     isbn,
     bookTitle,
     authorName,
+    currentPage,
+    userPercentage,
+    currentVotes,
   } = DUMMY_GROUP_DETAIL;
 
   const handleOpenBottomSheet = () => {
@@ -54,6 +57,11 @@ export default function GroupDetailScreen() {
             isbn={isbn}
             bookTitle={bookTitle}
             authorName={authorName}
+          />
+          <RecordBookOverview
+            roomId={roomId}
+            currentPage={currentPage}
+            userPercentage={userPercentage}
           />
         </View>
       </ScrollView>
