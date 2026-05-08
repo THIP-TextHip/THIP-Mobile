@@ -6,7 +6,7 @@ import { colors } from "@theme/token";
 import { GroupDetailResponseType } from "../types";
 
 export const DUMMY_GROUP_DETAIL: GroupDetailResponseType = {
-  isHost: true,
+  isHost: false,
   roomId: 3,
   roomName: "시집만 읽는 사람들 3월",
   roomImageUrl: Asset.fromModule(GroupBgExample).uri,
