@@ -142,7 +142,7 @@ export default function GroupDetailScreen() {
             userPercentage={userPercentage}
           />
           <DailyGreetingButton roomId={roomId} />
-          <VotesCarousel currentVotes={currentVotes} />
+          <VotesCarousel roomId={roomId} currentVotes={currentVotes} />
         </View>
       </ScrollView>
       <GroupDetailBottomSheet

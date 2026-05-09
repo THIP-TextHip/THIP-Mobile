@@ -77,6 +77,7 @@ export default function RootLayout() {
               name="daily-greeting"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="record-book" options={{ headerShown: false }} />
             <Stack.Screen
               name="user-profile"
               options={{ headerShown: false }}

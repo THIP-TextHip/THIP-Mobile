@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcRightRight } from "@images/icons";
@@ -17,7 +18,10 @@ export default function RecordBookOverview({
 }: RecordBookOverviewProps) {
   const clampedPercentage = Math.max(0, Math.min(100, userPercentage));
   const handleToRecordBook = () => {
-    console.log(roomId, "번 기록장 페이지로 이동");
+    router.push({
+      pathname: "/record-book/[roomId]",
+      params: { roomId: String(roomId) },
+    });
   };
   return (
     <Pressable style={styles.container} onPress={handleToRecordBook}>
