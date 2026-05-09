@@ -98,7 +98,7 @@ export default function GroupInfo({
                     {isRecruiting && "참여 중인"} 독서메이트
                   </AppText>
                 </View>
-                {!isRecruiting && <IcRightRight />}
+                {!isRecruiting && !!onPressReadingMate && <IcRightRight />}
               </View>
               {isRecruiting ? (
                 <AppText weight="medium" size="xs" color={colors.grey[100]}>
