@@ -45,7 +45,7 @@ export default function DailyGreetingScreen() {
   return (
     <View style={[styles.page, { paddingBottom: bottom }]}>
       <DailyGreetingHeader />
-      {DUMMY_DAILY_GREETING.length !== 0 ? (
+      {DUMMY_DAILY_GREETING.length === 0 ? (
         <EmptyView />
       ) : (
         <FlatList
