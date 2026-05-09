@@ -79,6 +79,11 @@ export default function RootLayout() {
             />
             <Stack.Screen name="record-book" options={{ headerShown: false }} />
             <Stack.Screen
+              name="record-write"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="create-vote" options={{ headerShown: false }} />
+            <Stack.Screen
               name="user-profile"
               options={{ headerShown: false }}
             />

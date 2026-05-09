@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -10,7 +11,13 @@ import {
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-export default function RecordBookFloating() {
+interface RecordBookFloatingProps {
+  roomId: string;
+}
+
+export default function RecordBookFloating({
+  roomId,
+}: RecordBookFloatingProps) {
   const [isOptionOpen, setIsOptionOpen] = useState(false);
 
   const handlePressOption = () => {
@@ -18,11 +25,17 @@ export default function RecordBookFloating() {
   };
 
   const handleToRecordWrite = () => {
-    console.log("기록 작성 페이지로 이동");
+    router.push({
+      pathname: "/record-write/[roomId]",
+      params: { roomId },
+    });
   };
 
   const handleToCreateVote = () => {
-    console.log("투표 생성 페이지로 이동");
+    router.push({
+      pathname: "/create-vote/[roomId]",
+      params: { roomId },
+    });
   };
 
   return (
