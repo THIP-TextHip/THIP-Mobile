@@ -5,7 +5,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppText, ChatInputBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DailyGreetingHeader } from "./components";
+import { DailyGreetingHeader, GreetingListItem } from "./components";
+// TODO: 추후 서버 제공 배열로 수정. 무한 스크롤 적용
+import { DUMMY_DAILY_GREETING } from "./constants";
 
 export default function DailyGreetingScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -21,21 +23,55 @@ export default function DailyGreetingScreen() {
     setComment("");
   };
 
+  const EmptyView = () => {
+    return (
+      <View style={[styles.empty, { marginBottom: inputBarHeight }]}>
+        <AppText
+          weight="semibold"
+          size="lg"
+          color={colors.white}
+          lineHeight={24}
+        >
+          아직 대화가 없어요
+        </AppText>
+        <AppText weight="regular" size="sm" color={colors.grey[100]}>
+          첫번째 한마디를 남겨보세요!
+        </AppText>
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.page, { paddingBottom: bottom }]}>
       <DailyGreetingHeader />
-      <FlatList
-        contentContainerStyle={[
-          styles.listContent,
-          { paddingBottom: inputBarHeight },
-        ]}
-        data={[1, 2, 3, 4, 5, 6]}
-        renderItem={({ item }) => (
-          <AppText weight="bold" size="2xl" color={colors.white}>
-            {item}
-          </AppText>
-        )}
-      />
+      {DUMMY_DAILY_GREETING.length === 0 ? (
+        <EmptyView />
+      ) : (
+        <FlatList
+          inverted
+          contentContainerStyle={{ paddingTop: inputBarHeight }}
+          data={DUMMY_DAILY_GREETING}
+          keyExtractor={(item) => String(item.attendanceCheckId)}
+          renderItem={({ item, index }) => {
+            const isLatestComment = index === 0;
+            const isOldestComment =
+              DUMMY_DAILY_GREETING[index + 1] === undefined;
+            const isFirstCommentOfDate =
+              item.date !== DUMMY_DAILY_GREETING[index + 1]?.date;
+
+            return (
+              <GreetingListItem
+                isLatestComment={isLatestComment}
+                isOldestComment={isOldestComment}
+                isFirstCommentOfDate={isFirstCommentOfDate}
+                greetingItem={item}
+              />
+            );
+          }}
+          ListEmptyComponent={EmptyView}
+        />
+      )}
+
       <ChatInputBar
         text={comment}
         placeholder="메이트들과 간단한 인사를 나눠보세요!"
@@ -53,7 +89,11 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  listContent: {
-    gap: 200,
+
+  empty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
   },
 });
