@@ -17,6 +17,7 @@ export default function DailyGreetingScreen() {
 
   const [inputBarHeight, setInputBarHeight] = useState(0);
 
+  // TODO: 추후 하루에 최대 5개까지 작성할 수 있다는 에러 메시지 토스트로 알림. 서버에서 주는 에러메시지 활용
   const handleSendText = () => {
     if (comment.trim() === "") return;
     console.log(comment.trim(), " 전송");
@@ -44,7 +45,7 @@ export default function DailyGreetingScreen() {
   return (
     <View style={[styles.page, { paddingBottom: bottom }]}>
       <DailyGreetingHeader />
-      {DUMMY_DAILY_GREETING.length === 0 ? (
+      {DUMMY_DAILY_GREETING.length !== 0 ? (
         <EmptyView />
       ) : (
         <FlatList
@@ -68,7 +69,6 @@ export default function DailyGreetingScreen() {
               />
             );
           }}
-          ListEmptyComponent={EmptyView}
         />
       )}
 

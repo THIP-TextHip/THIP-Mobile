@@ -54,7 +54,12 @@ export default function GreetingItem({
     <>
       <View style={[styles.container, isLatest && { paddingBottom: 0 }]}>
         <View style={styles.header}>
-          <Pressable style={styles.profile} onPress={handleToUserProfile}>
+          <Pressable
+            style={styles.profile}
+            onPress={handleToUserProfile}
+            accessibilityRole="button"
+            accessibilityLabel={`${greetingItem.creatorNickname} 프로필로 이동`}
+          >
             <Image
               source={{ uri: greetingItem.creatorProfileImageUrl }}
               style={styles.image}
@@ -68,7 +73,16 @@ export default function GreetingItem({
               </AppText>
             </View>
           </Pressable>
-          <Pressable onPress={handleOpenBottomSheet} hitSlop={5}>
+          <Pressable
+            onPress={handleOpenBottomSheet}
+            hitSlop={5}
+            accessibilityRole="button"
+            accessibilityLabel={
+              greetingItem.isWriter
+                ? "댓글 삭제 메뉴 열기"
+                : "댓글 신고 메뉴 열기"
+            }
+          >
             <IcMore />
           </Pressable>
         </View>
