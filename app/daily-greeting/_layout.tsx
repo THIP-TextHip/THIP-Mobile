@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-import { DailyGreetingHeader } from "@screens/daily-greeting";
 import { colors } from "@theme/token";
 
 export default function DailyGreetingLayout() {
@@ -13,7 +12,7 @@ export default function DailyGreetingLayout() {
       <Stack.Screen
         name="[roomId]"
         options={{
-          header: () => <DailyGreetingHeader />,
+          headerShown: false,
         }}
       />
     </Stack>
