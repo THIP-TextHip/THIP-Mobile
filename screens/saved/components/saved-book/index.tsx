@@ -36,7 +36,7 @@ export default function SavedBook() {
   const handleToBookDetail = (isbn: string) => {
     router.push({
       pathname: "/book-detail/[isbn]",
-      params: { isbn: String(isbn) },
+      params: { isbn },
     });
   };
 

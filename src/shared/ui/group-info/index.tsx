@@ -1,25 +1,31 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
-import { IcCalendar, IcGroupWhite, IcLock } from "@images/icons";
-import { AppText } from "@shared/ui";
+import { IcCalendar, IcGroupWhite, IcLock, IcRightRight } from "@images/icons";
 import { colors } from "@theme/token";
 
-interface RecruitingGroupInfoProps {
+import AppText from "../app-text";
+
+interface GroupInfoProps {
+  roomId: number;
+  isRecruiting?: boolean;
   roomName: string;
   roomImageUrl: string;
   isPublic: boolean;
   progressStartDate: string;
   progressEndDate: string;
-  recruitEndDate: string;
+  recruitEndDate?: string;
   category: string;
   categoryColor: string;
   roomDescription: string;
   memberCount: number;
   recruitCount: number;
+  onPressReadingMate?: () => void;
 }
 
-export default function RecruitingGroupInfo({
+export default function GroupInfo({
+  roomId,
+  isRecruiting = false,
   roomName,
   roomImageUrl,
   isPublic,
@@ -31,7 +37,8 @@ export default function RecruitingGroupInfo({
   roomDescription,
   memberCount,
   recruitCount,
-}: RecruitingGroupInfoProps) {
+  onPressReadingMate,
+}: GroupInfoProps) {
   return (
     <ImageBackground source={{ uri: roomImageUrl }}>
       <LinearGradient
@@ -79,30 +86,45 @@ export default function RecruitingGroupInfo({
                 {progressStartDate} ~ {progressEndDate}
               </AppText>
             </View>
-            <View style={styles.memberWrapper}>
-              <View style={styles.title}>
-                <IcGroupWhite />
-                <AppText weight="medium" size="xs" color={colors.white}>
-                  참여 중인 독서메이트
-                </AppText>
+            <Pressable
+              style={styles.memberWrapper}
+              onPress={onPressReadingMate}
+              disabled={isRecruiting || !onPressReadingMate}
+            >
+              <View style={styles.readingMateHeader}>
+                <View style={styles.title}>
+                  <IcGroupWhite />
+                  <AppText weight="medium" size="xs" color={colors.white}>
+                    {isRecruiting && "참여 중인"} 독서메이트
+                  </AppText>
+                </View>
+                {!isRecruiting && !!onPressReadingMate && <IcRightRight />}
               </View>
-              <AppText weight="medium" size="xs" color={colors.grey[100]}>
+              {isRecruiting ? (
+                <AppText weight="medium" size="xs" color={colors.grey[100]}>
+                  <AppText weight="semibold" size="xs" color={colors.white}>
+                    {memberCount}
+                  </AppText>{" "}
+                  / {recruitCount}명
+                </AppText>
+              ) : (
                 <AppText weight="semibold" size="xs" color={colors.white}>
-                  {memberCount}
-                </AppText>{" "}
-                / {recruitCount}명
-              </AppText>
-            </View>
+                  {memberCount}명이 참여 중
+                </AppText>
+              )}
+            </Pressable>
           </View>
           <View style={styles.endDateCategoryWrapper}>
-            <View style={styles.endDateCategoryItem}>
-              <AppText weight="medium" size="xs" color={colors.white}>
-                모집
-              </AppText>
-              <AppText weight="medium" size="xs" color={colors.neongreen}>
-                {recruitEndDate} 남음
-              </AppText>
-            </View>
+            {recruitEndDate && (
+              <View style={styles.endDateCategoryItem}>
+                <AppText weight="medium" size="xs" color={colors.white}>
+                  모집
+                </AppText>
+                <AppText weight="medium" size="xs" color={colors.neongreen}>
+                  {recruitEndDate} 남음
+                </AppText>
+              </View>
+            )}
             <View style={styles.endDateCategoryItem}>
               <AppText weight="medium" size="xs" color={colors.white}>
                 장르
@@ -133,6 +155,11 @@ const styles = StyleSheet.create({
     gap: 2,
     alignItems: "center",
   },
+  readingMateHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   infoWrapper: {
     gap: 20,
   },
@@ -144,9 +171,11 @@ const styles = StyleSheet.create({
     gap: 40,
   },
   durationWrapper: {
+    flex: 1,
     gap: 12,
   },
   memberWrapper: {
+    flex: 1,
     gap: 12,
   },
   endDateCategoryWrapper: {

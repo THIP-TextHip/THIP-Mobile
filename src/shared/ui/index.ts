@@ -28,6 +28,7 @@ export {
   FeedPostPreviewType,
 } from "./feed-post";
 export { default as GenreCardGroup } from "./genre-card-group";
+export { default as GroupInfo } from "./group-info";
 export { default as InputNickname } from "./input-nickname";
 export { default as ListTotalCountHeader } from "./list-total-count-header";
 export { default as MyGroupCard, type MyGroupCardProps } from "./my-group-card";
