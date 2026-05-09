@@ -46,7 +46,10 @@ export default function GroupDetailScreen() {
   } = DUMMY_GROUP_DETAIL;
 
   const handleToReadingMateList = () => {
-    console.log(roomId, "번 독서메이트 목록 페이지로 이동");
+    router.push({
+      pathname: "/reading-mate/[roomId]",
+      params: { roomId: String(roomId) },
+    });
   };
 
   const handleOpenBottomSheet = () => {
