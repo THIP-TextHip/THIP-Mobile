@@ -6,7 +6,7 @@ import { IcArrowLeft } from "@images/icons";
 import { AppText, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
-export default function ThpiListHeader() {
+export default function DailyGreetingHeader() {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
@@ -24,7 +24,7 @@ export default function ThpiListHeader() {
       }
       center={
         <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
-          띱 목록
+          오늘의 한마디
         </AppText>
       }
     />

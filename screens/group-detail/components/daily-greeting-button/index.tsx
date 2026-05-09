@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcRightRight } from "@images/icons";
@@ -12,7 +13,10 @@ export default function DailyGreetingButton({
   roomId,
 }: DailyGreetingButtonProps) {
   const handleToDailyGreeting = () => {
-    alert(`${roomId}번 오늘의 한마디 페이지 준비 중`);
+    router.push({
+      pathname: "/daily-greeting/[roomId]",
+      params: { roomId: String(roomId) },
+    });
   };
   return (
     <Pressable style={styles.container} onPress={handleToDailyGreeting}>

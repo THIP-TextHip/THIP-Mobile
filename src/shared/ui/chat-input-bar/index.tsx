@@ -1,6 +1,7 @@
 import {
   Keyboard,
   KeyboardAvoidingView,
+  LayoutChangeEvent,
   Platform,
   Pressable,
   StyleSheet,
@@ -21,6 +22,7 @@ interface ChatInputBarProps {
   handleSend: () => void;
   targetName?: string;
   handleResetReply?: () => void;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 export default function ChatInputBar({
@@ -30,8 +32,9 @@ export default function ChatInputBar({
   handleSend,
   targetName,
   handleResetReply,
+  onLayout,
 }: ChatInputBarProps) {
-  const insets = useSafeAreaInsets();
+  const { bottom } = useSafeAreaInsets();
 
   const handleChangeText = (text: string) => {
     setText(text);
@@ -51,10 +54,9 @@ export default function ChatInputBar({
   return (
     <KeyboardAvoidingView
       behavior={"padding"}
-      keyboardVerticalOffset={
-        Platform.OS === "ios" ? insets.bottom : insets.bottom + 10
-      }
+      keyboardVerticalOffset={Platform.OS === "ios" ? bottom : bottom + 10}
       style={styles.container}
+      onLayout={onLayout}
     >
       {targetName && (
         <View style={styles.replyContainer}>
@@ -72,7 +74,12 @@ export default function ChatInputBar({
           </Pressable>
         </View>
       )}
-      <View style={[styles.inputContainer, { marginBottom: insets.bottom }]}>
+      <View
+        style={[
+          styles.inputContainer,
+          { marginBottom: Platform.OS === "ios" ? bottom : bottom + 10 },
+        ]}
+      >
         <TextInput
           style={styles.input}
           value={text}

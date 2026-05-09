@@ -27,7 +27,7 @@ export default function CreateGroupHeader({
         </Pressable>
       }
       center={
-        <AppText weight="bold" size="xl" color={colors.white} lineHeight={24}>
+        <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           모임 만들기
         </AppText>
       }

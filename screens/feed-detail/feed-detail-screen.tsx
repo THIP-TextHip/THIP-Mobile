@@ -16,6 +16,7 @@ import { DUMMY_COMMENT_LIST, DUMMY_FEED_DETAIL } from "./constants";
 
 export default function FeedDetailScreen() {
   const { bottom } = useSafeAreaInsets();
+  const [inputBarHeight, setInputBarHeight] = useState(0);
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
 
   const [comment, setComment] = useState("");
@@ -108,14 +109,13 @@ export default function FeedDetailScreen() {
         ListHeaderComponent={() => (
           <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
         )}
-        contentContainerStyle={{ paddingBottom: bottom + 40 }}
+        contentContainerStyle={{ paddingBottom: inputBarHeight, gap: 24 }}
         data={DUMMY_COMMENT_LIST}
         keyExtractor={(item) => String(item.commentId)}
         renderItem={({ item, index }) => (
           <CommentRoot
             comment={item}
             isFirst={index === 0}
-            isLast={index === DUMMY_COMMENT_LIST.length - 1}
             handlePressReply={handlePressReply}
           />
         )}
@@ -138,6 +138,9 @@ export default function FeedDetailScreen() {
         handleSend={handleSendText}
         targetName={replyNickname}
         handleResetReply={handleResetReply}
+        onLayout={(event) => {
+          setInputBarHeight(event.nativeEvent.layout.height);
+        }}
       />
 
       <FeedDetailBottomSheet

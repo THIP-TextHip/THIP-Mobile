@@ -56,17 +56,25 @@ export default function RootLayout() {
               name="create-group"
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="join-group" options={{ headerShown: false }} />
             <Stack.Screen
               name="group-detail"
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="join-group" options={{ headerShown: false }} />
             <Stack.Screen
               name="my-group-list"
               options={{ headerShown: false }}
             />
             <Stack.Screen
               name="expired-group-list"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="reading-mate"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="daily-greeting"
               options={{ headerShown: false }}
             />
             <Stack.Screen
