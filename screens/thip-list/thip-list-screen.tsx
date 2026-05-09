@@ -2,8 +2,11 @@ import { useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ListTotalCountHeader, UserListItem } from "@shared/ui";
-import { type UserListItemData } from "@shared/ui/user-list-item";
+import {
+  ListTotalCountHeader,
+  UserListItem,
+  type UserListItemData,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_THIP_LIST } from "./constants";
@@ -22,10 +25,7 @@ export default function ThipListScreen() {
 
   return (
     <FlatList
-      contentContainerStyle={[
-        styles.resultWrapper,
-        { paddingBottom: bottom + 20 },
-      ]}
+      contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
       ListHeaderComponent={() => (
         <ListTotalCountHeader length={DUMMY_THIP_LIST.length} />
       )}
@@ -38,7 +38,7 @@ export default function ThipListScreen() {
 }
 
 const styles = StyleSheet.create({
-  resultWrapper: {
+  list: {
     paddingTop: 20,
   },
   separator: {
