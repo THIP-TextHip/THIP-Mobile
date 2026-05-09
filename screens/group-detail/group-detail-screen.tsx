@@ -45,6 +45,10 @@ export default function GroupDetailScreen() {
     currentVotes,
   } = DUMMY_GROUP_DETAIL;
 
+  const handleToReadingMateList = () => {
+    console.log(roomId, "번 독서메이트 목록 페이지로 이동");
+  };
+
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
   };
@@ -121,6 +125,7 @@ export default function GroupDetailScreen() {
           roomDescription={roomDescription}
           memberCount={memberCount}
           recruitCount={recruitCount}
+          onPressReadingMate={handleToReadingMateList}
         />
         <View style={styles.content}>
           <GroupBook

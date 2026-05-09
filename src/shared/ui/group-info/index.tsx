@@ -20,6 +20,7 @@ interface GroupInfoProps {
   roomDescription: string;
   memberCount: number;
   recruitCount: number;
+  onPressReadingMate?: () => void;
 }
 
 export default function GroupInfo({
@@ -36,10 +37,8 @@ export default function GroupInfo({
   roomDescription,
   memberCount,
   recruitCount,
+  onPressReadingMate,
 }: GroupInfoProps) {
-  const handleToReadingMateList = () => {
-    console.log(roomId, "번 독서메이트 목록 페이지로 이동");
-  };
   return (
     <ImageBackground source={{ uri: roomImageUrl }}>
       <LinearGradient
@@ -89,8 +88,8 @@ export default function GroupInfo({
             </View>
             <Pressable
               style={styles.memberWrapper}
-              onPress={handleToReadingMateList}
-              disabled={isRecruiting}
+              onPress={onPressReadingMate}
+              disabled={isRecruiting || !onPressReadingMate}
             >
               <View style={styles.readingMateHeader}>
                 <View style={styles.title}>

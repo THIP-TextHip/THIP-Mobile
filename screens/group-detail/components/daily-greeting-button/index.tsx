@@ -12,7 +12,7 @@ export default function DailyGreetingButton({
   roomId,
 }: DailyGreetingButtonProps) {
   const handleToDailyGreeting = () => {
-    console.log(roomId, "번 오늘의 한마디 페이지로 이동");
+    alert(`${roomId}번 오늘의 한마디 페이지 준비 중`);
   };
   return (
     <Pressable style={styles.container} onPress={handleToDailyGreeting}>

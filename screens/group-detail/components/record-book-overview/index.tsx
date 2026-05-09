@@ -15,6 +15,7 @@ export default function RecordBookOverview({
   currentPage,
   userPercentage,
 }: RecordBookOverviewProps) {
+  const clampedPercentage = Math.max(0, Math.min(100, userPercentage));
   const handleToRecordBook = () => {
     console.log(roomId, "번 기록장 페이지로 이동");
   };
@@ -42,7 +43,7 @@ export default function RecordBookOverview({
             color={colors.purple.main}
             lineHeight={20}
           >
-            {userPercentage}
+            {clampedPercentage}
           </AppText>
           <AppText
             weight="semibold"
@@ -55,7 +56,7 @@ export default function RecordBookOverview({
         </View>
         <View style={styles.progressBar}>
           <View
-            style={[styles.currentProgress, { width: `${userPercentage}%` }]}
+            style={[styles.currentProgress, { width: `${clampedPercentage}%` }]}
           />
         </View>
       </View>

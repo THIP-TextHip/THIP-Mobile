@@ -17,6 +17,11 @@ export default function GroupDetailModal({
   handleAccept,
 }: GroupDetailModalProps) {
   if (!type) return;
+  const description =
+    type === "delete"
+      ? "방을 삭제하게 되면\n독서메이트들과의 추억이 사라집니다."
+      : "방을 나가시게 되면\n독서메이트들과의 추억이 사라집니다.";
+
   return (
     <CustomModal isVisible={isVisible} handleCloseModal={handleCloseModal}>
       <View style={styles.content}>
@@ -24,7 +29,7 @@ export default function GroupDetailModal({
           모임방을 {type === "delete" ? "삭제하" : "나가"}시겠어요?
         </AppText>
         <AppText weight="regular" size="sm" color={colors.white}>
-          {`방을 삭제하게 되면\n독서메이트들과의 추억이 사라집니다.`}
+          {description}
         </AppText>
         <View style={styles.buttonWrapper}>
           <CustomButton
