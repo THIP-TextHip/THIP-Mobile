@@ -24,6 +24,22 @@ interface VotesCarouselItemProps {
 }
 
 const TAP_MOVE_THRESHOLD = 8;
+const VOTES_CAROUSEL_HEIGHT_BY_ITEM_COUNT: Record<number, number> = {
+  2: 130,
+  3: 190,
+  4: 245,
+  5: 300,
+};
+
+const getVotesCarouselHeight = (currentVotes: CurrentVoteType[]) => {
+  const maxVoteItemCount = Math.max(
+    2,
+    ...currentVotes.map((vote) => vote.voteItems.length),
+  );
+  const clampedVoteItemCount = Math.min(maxVoteItemCount, 5);
+
+  return VOTES_CAROUSEL_HEIGHT_BY_ITEM_COUNT[clampedVoteItemCount];
+};
 
 const VotesCarouselItem = ({ roomId, vote }: VotesCarouselItemProps) => {
   const pressStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -93,6 +109,7 @@ export default function VotesCarousel({
 
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
+  const carouselHeight = getVotesCarouselHeight(currentVotes);
 
   const handlePressDot = (index: number) => {
     ref.current?.scrollTo({
@@ -123,7 +140,7 @@ export default function VotesCarousel({
         <>
           <Carousel
             width={width - 40}
-            height={185}
+            height={carouselHeight}
             ref={ref}
             data={currentVotes}
             loop={true}

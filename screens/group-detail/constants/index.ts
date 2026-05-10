@@ -33,6 +33,8 @@ export const DUMMY_GROUP_DETAIL: GroupDetailResponseType = {
         { itemName: "토마토를 바라보는 장면" },
         { itemName: "몸의 변화를 처음 감지하는 장면" },
         { itemName: "인물들이 대화를 나누는 장면" },
+        { itemName: "인물들이 대화를 나누는 장면22" },
+        { itemName: "인물들이 대화를 나누는 장면333" },
       ],
     },
     {
