@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import { IcAlertGrey, IcX, IcXCircleBlack } from "@images/icons";
@@ -14,6 +14,7 @@ interface RecordPageSectionProps {
   isOverview: boolean;
   handleChangeRecordPage: (page: number) => void;
   handleChangeOverview: () => void;
+  handleChangeIsImpossiblePage: (isImpossiblePage: boolean) => void;
 }
 
 export default function RecordPageSection({
@@ -23,6 +24,7 @@ export default function RecordPageSection({
   isOverview,
   handleChangeRecordPage,
   handleChangeOverview,
+  handleChangeIsImpossiblePage,
 }: RecordPageSectionProps) {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
@@ -52,6 +54,10 @@ export default function RecordPageSection({
   );
 
   const isExceeded = recordPage > totalPage && !isOverview;
+
+  useEffect(() => {
+    handleChangeIsImpossiblePage(isExceeded);
+  }, [isExceeded, handleChangeIsImpossiblePage]);
 
   return (
     <View style={styles.section}>
