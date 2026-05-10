@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-import { CreateVoteHeader } from "@screens/create-vote";
 import { colors } from "@theme/token";
 
 export default function CreateVoteLayout() {
@@ -13,7 +12,7 @@ export default function CreateVoteLayout() {
       <Stack.Screen
         name="[roomId]"
         options={{
-          header: () => <CreateVoteHeader />,
+          headerShown: false,
         }}
       />
     </Stack>

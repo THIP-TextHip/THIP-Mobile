@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-import { RecordWriteHeader } from "@screens/record-write";
 import { colors } from "@theme/token";
 
 export default function RecordWriteLayout() {
@@ -13,7 +12,7 @@ export default function RecordWriteLayout() {
       <Stack.Screen
         name="[roomId]"
         options={{
-          header: () => <RecordWriteHeader />,
+          headerShown: false,
         }}
       />
     </Stack>

@@ -3,10 +3,18 @@ import { useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
-import { AppText, CustomHeader } from "@shared/ui";
+import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
-export default function CreateVoteHeader() {
+interface CreateVoteHeaderProps {
+  disabled: boolean;
+  handleCreateVote: () => void;
+}
+
+export default function CreateVoteHeader({
+  disabled,
+  handleCreateVote,
+}: CreateVoteHeaderProps) {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
@@ -26,6 +34,11 @@ export default function CreateVoteHeader() {
         <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
           투표 생성
         </AppText>
+      }
+      right={
+        <ButtonHeader disabled={disabled} handleClickButton={handleCreateVote}>
+          완료
+        </ButtonHeader>
       }
     />
   );
