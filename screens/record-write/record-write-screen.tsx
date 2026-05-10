@@ -12,12 +12,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RecordPageSection } from "@shared/ui";
 
 import { RecordWriteContentSection, RecordWriteHeader } from "./components";
-import { DUMMY_RECORD_GROUP_STATE } from "./constants";
+import { DUMMY_RECORD_BOOK_STATE } from "./constants";
 
 export default function RecordWriteScreen() {
   const { bottom } = useSafeAreaInsets();
   const [recordPage, setRecordPage] = useState(
-    DUMMY_RECORD_GROUP_STATE.recentBookPage,
+    DUMMY_RECORD_BOOK_STATE.recentBookPage,
   );
   const [isOverview, setIsOverview] = useState(false);
   const [isImpossiblePage, setIsImpossiblePage] = useState(false);
@@ -53,8 +53,8 @@ export default function RecordWriteScreen() {
           ]}
         >
           <RecordPageSection
-            totalPage={DUMMY_RECORD_GROUP_STATE.totalBookPage}
-            isOverviewPossible={DUMMY_RECORD_GROUP_STATE.isOverviewPossible}
+            totalPage={DUMMY_RECORD_BOOK_STATE.totalBookPage}
+            isOverviewPossible={DUMMY_RECORD_BOOK_STATE.isOverviewPossible}
             recordPage={recordPage}
             isOverview={isOverview}
             handleChangeRecordPage={setRecordPage}

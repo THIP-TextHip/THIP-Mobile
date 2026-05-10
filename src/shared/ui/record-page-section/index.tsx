@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -10,
     top: 42,
-    zIndex: 1,
+    zIndex: 10,
     flexDirection: "row",
     gap: 12,
     alignItems: "center",

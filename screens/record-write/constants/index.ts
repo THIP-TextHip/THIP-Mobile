@@ -1,4 +1,4 @@
-export const DUMMY_RECORD_GROUP_STATE = {
+export const DUMMY_RECORD_BOOK_STATE = {
   totalBookPage: 600,
   recentBookPage: 213,
   isOverviewPossible: false,
