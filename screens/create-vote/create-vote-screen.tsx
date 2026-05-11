@@ -43,9 +43,9 @@ export default function CreateVoteScreen() {
     router.back();
   };
 
-  const cleanedVoteItemList = voteItemList.filter(
-    (voteItem) => voteItem.itemName !== "",
-  );
+  const cleanedVoteItemList = voteItemList
+    .map(({ itemName }) => ({ itemName: itemName.trim() }))
+    .filter(({ itemName }) => itemName.length > 0);
 
   const disabled =
     isImpossiblePage ||

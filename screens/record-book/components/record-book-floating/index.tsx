@@ -43,13 +43,23 @@ export default function RecordBookFloating({
       {isOptionOpen ? (
         <View style={styles.wrapper}>
           <View style={styles.optionContainer}>
-            <Pressable style={styles.option} onPress={handleToRecordWrite}>
+            <Pressable
+              style={styles.option}
+              onPress={handleToRecordWrite}
+              accessibilityRole="button"
+              accessibilityLabel="기록 작성 페이지로 이동"
+            >
               <IcWrite />
               <AppText weight="medium" size="base" color={colors.white}>
                 기록 작성
               </AppText>
             </Pressable>
-            <Pressable style={styles.option} onPress={handleToCreateVote}>
+            <Pressable
+              style={styles.option}
+              onPress={handleToCreateVote}
+              accessibilityRole="button"
+              accessibilityLabel="투표 생성 페이지로 이동"
+            >
               <IcVote />
               <AppText weight="medium" size="base" color={colors.white}>
                 투표 생성

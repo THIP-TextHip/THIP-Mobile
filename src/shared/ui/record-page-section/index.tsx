@@ -86,7 +86,12 @@ export default function RecordPageSection({
                 style={[styles.input, { width: inputWidth }]}
                 keyboardType="number-pad"
                 value={String(recordPage)}
-                onChangeText={(text) => handleChangeRecordPage(Number(text))}
+                onChangeText={(text) => {
+                  const numericText = text.replace(/[^0-9]/g, "");
+                  handleChangeRecordPage(
+                    numericText.length === 0 ? 0 : Number(numericText),
+                  );
+                }}
                 selectionColor={colors.neongreen}
                 cursorColor={colors.neongreen}
                 autoFocus
@@ -95,7 +100,12 @@ export default function RecordPageSection({
                 /{totalPage}p
               </AppText>
             </View>
-            <Pressable onPress={handleResetRecordPage} hitSlop={5}>
+            <Pressable
+              onPress={handleResetRecordPage}
+              hitSlop={5}
+              accessibilityRole="button"
+              accessibilityLabel="기록 페이지 입력 초기화"
+            >
               <IcXCircleBlack />
             </Pressable>
           </>
@@ -122,13 +132,23 @@ export default function RecordPageSection({
             >
               독서 진행도 80%를 달성해야 평을 작성할 수 있어요.
             </AppText>
-            <Pressable onPress={handleCloseTooltip} hitSlop={8}>
+            <Pressable
+              onPress={handleCloseTooltip}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="총평 안내 툴팁 닫기"
+            >
               <IcX />
             </Pressable>
           </View>
         )}
         <View style={styles.overviewInfo}>
-          <Pressable onPress={handleOpenTooltip} hitSlop={5}>
+          <Pressable
+            onPress={handleOpenTooltip}
+            hitSlop={5}
+            accessibilityRole="button"
+            accessibilityLabel="총평 안내 툴팁 열기"
+          >
             <IcAlertGrey />
           </Pressable>
           <AppText weight="regular" size="xs" color={colors.grey[100]}>
