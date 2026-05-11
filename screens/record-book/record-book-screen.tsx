@@ -1,10 +1,20 @@
 import { useLocalSearchParams } from "expo-router";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { RecordBookFloating } from "./components";
+import { RecordBookFloating, RecordBookTopTabBar } from "./components";
 
 export default function RecordBookScreen() {
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
+  const [isMyRecord, setIsMyRecord] = useState(false);
+
+  const handleGroupRecord = () => {
+    setIsMyRecord(false);
+  };
+
+  const handleMyRecord = () => {
+    setIsMyRecord(true);
+  };
 
   // TODO: 추후 에러 화면 표시
   if (!roomId || Array.isArray(roomId)) {
@@ -13,6 +23,11 @@ export default function RecordBookScreen() {
 
   return (
     <View style={styles.page}>
+      <RecordBookTopTabBar
+        isMyRecord={isMyRecord}
+        handleGroupRecord={handleGroupRecord}
+        handleMyRecord={handleMyRecord}
+      />
       <RecordBookFloating roomId={roomId} />
     </View>
   );
