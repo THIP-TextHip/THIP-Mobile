@@ -36,7 +36,6 @@ export default function ButtonHeader({
 const styles = StyleSheet.create({
   buttonContainer: {
     height: 28,
-    paddingVertical: 4,
     paddingHorizontal: 12,
     justifyContent: "center",
     alignItems: "center",

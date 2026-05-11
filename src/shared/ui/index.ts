@@ -36,6 +36,7 @@ export { default as NumberPicker } from "./number-picker";
 export { default as PrivateRoomImage } from "./private-room-image";
 export { default as ProfileImage } from "./profile-image";
 export { default as RecentSearch } from "./recent-search";
+export { default as RecordPageSection } from "./record-page-section";
 export { default as RemovableChip } from "./removable-chip";
 export { default as SearchBar } from "./search-bar";
 export { default as ThipPreview } from "./thip-preview";

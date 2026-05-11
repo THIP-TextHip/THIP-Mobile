@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { useCallback, useRef } from "react";
 import type { GestureResponderEvent } from "react-native";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
@@ -13,12 +14,34 @@ import { colors } from "@theme/token";
 import { CurrentVoteType } from "../../types";
 
 interface VotesCarouselProps {
+  roomId: number;
   currentVotes: CurrentVoteType[];
 }
 
-const TAP_MOVE_THRESHOLD = 8;
+interface VotesCarouselItemProps {
+  roomId: number;
+  vote: CurrentVoteType;
+}
 
-const VotesCarouselItem = (vote: CurrentVoteType) => {
+const TAP_MOVE_THRESHOLD = 8;
+const VOTES_CAROUSEL_HEIGHT_BY_ITEM_COUNT: Record<number, number> = {
+  2: 130,
+  3: 190,
+  4: 245,
+  5: 300,
+};
+
+const getVotesCarouselHeight = (currentVotes: CurrentVoteType[]) => {
+  const maxVoteItemCount = Math.max(
+    2,
+    ...currentVotes.map((vote) => vote.voteItems.length),
+  );
+  const clampedVoteItemCount = Math.min(maxVoteItemCount, 5);
+
+  return VOTES_CAROUSEL_HEIGHT_BY_ITEM_COUNT[clampedVoteItemCount];
+};
+
+const VotesCarouselItem = ({ roomId, vote }: VotesCarouselItemProps) => {
   const pressStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const handlePressIn = useCallback((event: GestureResponderEvent) => {
@@ -28,23 +51,30 @@ const VotesCarouselItem = (vote: CurrentVoteType) => {
     };
   }, []);
 
-  const handleToRecordBook = useCallback((event: GestureResponderEvent) => {
-    const pressStart = pressStartRef.current;
-    pressStartRef.current = null;
+  const handleToRecordBook = useCallback(
+    (event: GestureResponderEvent) => {
+      const pressStart = pressStartRef.current;
+      pressStartRef.current = null;
 
-    if (!pressStart) {
-      return;
-    }
+      if (!pressStart) {
+        return;
+      }
 
-    const moveX = Math.abs(event.nativeEvent.pageX - pressStart.x);
-    const moveY = Math.abs(event.nativeEvent.pageY - pressStart.y);
+      const moveX = Math.abs(event.nativeEvent.pageX - pressStart.x);
+      const moveY = Math.abs(event.nativeEvent.pageY - pressStart.y);
 
-    if (moveX > TAP_MOVE_THRESHOLD || moveY > TAP_MOVE_THRESHOLD) {
-      return;
-    }
+      if (moveX > TAP_MOVE_THRESHOLD || moveY > TAP_MOVE_THRESHOLD) {
+        return;
+      }
 
-    console.log(vote.page, " 페이지에 해당하는 기록장 페이지로 이동");
-  }, [vote.page]);
+      // TODO: 추후 특정 페이지로 이동하도록 수정 필요.
+      router.push({
+        pathname: "/record-book/[roomId]",
+        params: { roomId: String(roomId) },
+      });
+    },
+    [roomId],
+  );
 
   return (
     <Pressable
@@ -71,11 +101,15 @@ const VotesCarouselItem = (vote: CurrentVoteType) => {
   );
 };
 
-export default function VotesCarousel({ currentVotes }: VotesCarouselProps) {
+export default function VotesCarousel({
+  roomId,
+  currentVotes,
+}: VotesCarouselProps) {
   const { width } = useWindowDimensions();
 
   const ref = useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
+  const carouselHeight = getVotesCarouselHeight(currentVotes);
 
   const handlePressDot = (index: number) => {
     ref.current?.scrollTo({
@@ -106,12 +140,14 @@ export default function VotesCarousel({ currentVotes }: VotesCarouselProps) {
         <>
           <Carousel
             width={width - 40}
-            height={185}
+            height={carouselHeight}
             ref={ref}
             data={currentVotes}
             loop={true}
             onProgressChange={progress}
-            renderItem={({ item }) => <VotesCarouselItem {...item} />}
+            renderItem={({ item }) => (
+              <VotesCarouselItem roomId={roomId} vote={item} />
+            )}
           />
           <Pagination.Basic
             progress={progress}
