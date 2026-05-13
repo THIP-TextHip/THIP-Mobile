@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { IcDownmoreGrey } from "@images/icons";
@@ -7,26 +6,23 @@ import { colors } from "@theme/token";
 
 import { GROUP_RECORD_SORT } from "../../constants";
 
-export default function RecordBookFilter() {
-  const [selectedChip, setSelectedChip] = useState<"page" | "overview" | null>(
-    null,
-  );
-  const [sortType, setSortType] = useState<FilterType>(GROUP_RECORD_SORT[0]);
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+interface RecordBookFilterProps {
+  selectedChip: "page" | "overview" | null;
+  isDropdownVisible: boolean;
+  sortType: FilterType;
+  handleSelectOverview: () => void;
+  handlePressDropdown: () => void;
+  handleSelectType: (type: FilterType) => void;
+}
 
-  const handleSelectOverview = () => {
-    setSelectedChip((prev) => (prev === "overview" ? null : "overview"));
-  };
-
-  const handlePressDropdown = () => {
-    setIsDropdownVisible(!isDropdownVisible);
-  };
-
-  const handleSelectType = (type: FilterType) => {
-    setSortType(type);
-    setIsDropdownVisible(false);
-  };
-
+export default function RecordBookFilter({
+  selectedChip,
+  isDropdownVisible,
+  sortType,
+  handleSelectOverview,
+  handlePressDropdown,
+  handleSelectType,
+}: RecordBookFilterProps) {
   return (
     <View style={styles.container}>
       <View style={styles.chipWrapper}>
