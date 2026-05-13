@@ -2,7 +2,11 @@ import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { RecordBookFloating, RecordBookTopTabBar } from "./components";
+import {
+  RecordBookFilter,
+  RecordBookFloating,
+  RecordBookTopTabBar,
+} from "./components";
 
 export default function RecordBookScreen() {
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
@@ -28,6 +32,7 @@ export default function RecordBookScreen() {
         handleGroupRecord={handleGroupRecord}
         handleMyRecord={handleMyRecord}
       />
+      <RecordBookFilter />
       <RecordBookFloating roomId={roomId} />
     </View>
   );
