@@ -19,6 +19,12 @@ export default function RecordBookScreen() {
   const [selectedChip, setSelectedChip] = useState<"page" | "overview" | null>(
     null,
   );
+  const [pageSettingMode, setPageSettingMode] = useState(false);
+  const [selectedPages, setSelectedPages] = useState<{
+    start: number | null;
+    end: number | null;
+  }>({ start: null, end: null });
+
   const [sortType, setSortType] = useState<FilterType>(GROUP_RECORD_SORT[0]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -30,7 +36,33 @@ export default function RecordBookScreen() {
     setIsMyRecord(true);
   };
 
-  const handleSelectOverview = () => {
+  const handlePressPageChip = () => {
+    if (selectedChip !== "page") {
+      if (selectedPages.start !== null || selectedPages.end !== null) {
+        setSelectedChip("page");
+        return;
+      }
+    }
+    setPageSettingMode(true);
+  };
+
+  const handleResetPage = () => {
+    setSelectedPages({ start: null, end: null });
+    setPageSettingMode(false);
+    setSelectedChip(null);
+  };
+
+  const handleApplyPage = (start: number | null, end: number | null) => {
+    setPageSettingMode(false);
+    setSelectedPages({ start, end });
+    if (start === null && end === null) {
+      setSelectedChip(null);
+      return;
+    }
+    setSelectedChip("page");
+  };
+
+  const handlePressOverviewChip = () => {
     setSelectedChip((prev) => (prev === "overview" ? null : "overview"));
   };
 
@@ -49,6 +81,7 @@ export default function RecordBookScreen() {
   }
 
   const RecordListHeader = () => {
+    if (isMyRecord) return;
     return (
       <View style={styles.listHeader}>
         <IcAlertGrey />
@@ -70,14 +103,20 @@ export default function RecordBookScreen() {
         handleGroupRecord={handleGroupRecord}
         handleMyRecord={handleMyRecord}
       />
-      <RecordBookFilter
-        selectedChip={selectedChip}
-        isDropdownVisible={isDropdownVisible}
-        sortType={sortType}
-        handleSelectOverview={handleSelectOverview}
-        handlePressDropdown={handlePressDropdown}
-        handleSelectType={handleSelectType}
-      />
+      {!isMyRecord && (
+        <RecordBookFilter
+          selectedChip={selectedChip}
+          pageSettingMode={pageSettingMode}
+          isDropdownVisible={isDropdownVisible}
+          sortType={sortType}
+          handlePressPageChip={handlePressPageChip}
+          handleResetPage={handleResetPage}
+          handleApplyPage={handleApplyPage}
+          handlePressOverviewChip={handlePressOverviewChip}
+          handlePressDropdown={handlePressDropdown}
+          handleSelectType={handleSelectType}
+        />
+      )}
       <FlatList
         contentContainerStyle={styles.list}
         data={[1]}
