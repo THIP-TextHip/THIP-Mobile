@@ -6,5 +6,6 @@ export const calculateVoteFillPercent = (
     return 0;
   }
 
-  return (voteCount / totalCount) * 100;
+  const percent = (voteCount / totalCount) * 100;
+  return Math.min(100, Math.max(0, percent));
 };

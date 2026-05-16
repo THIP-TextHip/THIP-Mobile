@@ -8,7 +8,7 @@ const TAB_WIDTH = 75;
 const TAB_GAP = 20;
 const INDICATOR_MOVE_X = TAB_WIDTH + TAB_GAP;
 
-interface FeedTopTabBarProps {
+interface RecordBookTopTabBarProps {
   isMyRecord: boolean;
   handleGroupRecord: () => void;
   handleMyRecord: () => void;
@@ -18,7 +18,7 @@ export default function RecordBookTopTabBar({
   isMyRecord,
   handleGroupRecord,
   handleMyRecord,
-}: FeedTopTabBarProps) {
+}: RecordBookTopTabBarProps) {
   const translateX = useRef(new Animated.Value(0)).current;
 
   const animateIndicator = (toValue: number) => {

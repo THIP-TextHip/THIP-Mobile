@@ -89,7 +89,7 @@ export default function RecordBookScreen() {
     : DUMMY_RECORD_BOOK_RESPONSE.postList;
 
   const RecordListHeader = () => {
-    if (isMyRecord) return;
+    if (isMyRecord) return null;
     return (
       <View style={styles.listHeader}>
         <IcAlertGrey />

@@ -44,6 +44,28 @@ export default function RecordBookFilter({
   const handleApply = () => {
     const start = startPage === "" ? null : Number(startPage);
     const end = endPage === "" ? null : Number(endPage);
+
+    // 숫자 변환 검증
+    if (
+      (startPage !== "" && isNaN(start!)) ||
+      (endPage !== "" && isNaN(end!))
+    ) {
+      // TODO: 에러 토스트 또는 알림 표시
+      return;
+    }
+
+    // 페이지 범위 검증
+    if (start !== null && end !== null && start > end) {
+      // TODO: 에러 토스트 또는 알림 표시
+      return;
+    }
+
+    // 양수 검증
+    if ((start !== null && start <= 0) || (end !== null && end <= 0)) {
+      // TODO: 에러 토스트 또는 알림 표시
+      return;
+    }
+
     handleApplyPage(start, end);
   };
 
