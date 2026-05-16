@@ -6,14 +6,17 @@ import { IcAlertGrey } from "@images/icons";
 import { AppText, FilterType } from "@shared/ui";
 import { colors } from "@theme/token";
 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   RecordBookFilter,
   RecordBookFloating,
+  RecordBookPostItem,
   RecordBookTopTabBar,
 } from "./components";
-import { GROUP_RECORD_SORT } from "./constants";
+import { DUMMY_RECORD_BOOK_RESPONSE, GROUP_RECORD_SORT } from "./constants";
 
 export default function RecordBookScreen() {
+  const { bottom } = useSafeAreaInsets();
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
   const [isMyRecord, setIsMyRecord] = useState(false);
   const [selectedChip, setSelectedChip] = useState<"page" | "overview" | null>(
@@ -80,6 +83,11 @@ export default function RecordBookScreen() {
     return null;
   }
 
+  // TODO: 추후 서버에서 받아온 리스트로 사용할 예정
+  const recordBookPostList = isMyRecord
+    ? DUMMY_RECORD_BOOK_RESPONSE.postList.filter((post) => post.isWriter)
+    : DUMMY_RECORD_BOOK_RESPONSE.postList;
+
   const RecordListHeader = () => {
     if (isMyRecord) return;
     return (
@@ -118,9 +126,12 @@ export default function RecordBookScreen() {
         />
       )}
       <FlatList
-        contentContainerStyle={styles.list}
-        data={[1]}
-        renderItem={() => <></>}
+        contentContainerStyle={[styles.list, { paddingBottom: bottom + 80 }]}
+        data={recordBookPostList}
+        keyExtractor={(item) => String(item.postId)}
+        renderItem={({ item }) => (
+          <RecordBookPostItem roomId={Number(roomId)} post={item} />
+        )}
         ListHeaderComponent={RecordListHeader}
       />
       <RecordBookFloating roomId={roomId} />
