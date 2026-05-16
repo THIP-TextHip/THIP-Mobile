@@ -2,12 +2,6 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import {
-  IcComment,
-  IcHeartLeft,
-  IcHeartLeftFilled,
-  IcPin,
-} from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -17,6 +11,8 @@ import {
   RecordOptionBottomSheet,
 } from "../../components";
 import { RecordBookPostType } from "../../types";
+import RecordPostActions from "./record-post-actions";
+import RecordVoteList from "./record-vote-list";
 
 interface RecordBookPostItemProps {
   roomId: number;
@@ -96,15 +92,6 @@ export default function RecordBookPostItem({
     setIsModalOpen(false);
   };
 
-  const getFillPercent = (voteCount: number) => {
-    let totalCount = 0;
-    post.voteItems.map((item) => {
-      totalCount += item.count;
-    });
-
-    return (voteCount / totalCount) * 100;
-  };
-
   return (
     <>
       <Pressable style={styles.container} onLongPress={handleOpenOption}>
@@ -135,72 +122,16 @@ export default function RecordBookPostItem({
         >
           {post.content}
         </AppText>
-        {post.voteItems.length > 0 && (
-          <View style={styles.voteWrapper}>
-            {post.voteItems.map((item, index) => (
-              <Pressable
-                key={item.voteItemId}
-                style={[styles.voteItem, item.isVoted && styles.isVotedItem]}
-                onPress={() => handleVote(item.voteItemId)}
-              >
-                <AppText
-                  style={styles.voteContent}
-                  weight="semibold"
-                  size="sm"
-                  color={item.isVoted ? colors.neongreen : colors.white}
-                >
-                  {index + 1}. {item.itemName}
-                </AppText>
-                <AppText
-                  style={styles.voteCount}
-                  weight="semibold"
-                  size="sm"
-                  color={item.isVoted ? colors.neongreen : colors.white}
-                >
-                  {item.count}표
-                </AppText>
-                <View
-                  style={[
-                    styles.voteFill,
-                    item.isVoted && { backgroundColor: colors.purple.main },
-                    { width: `${getFillPercent(item.count)}%` },
-                    getFillPercent(item.count) >= 97 && {
-                      borderRadius: 12,
-                    },
-                  ]}
-                />
-              </Pressable>
-            ))}
-          </View>
-        )}
-
-        <View style={styles.likeCommentWrapper}>
-          <Pressable
-            style={styles.likeComment}
-            onPress={handlePressLike}
-            hitSlop={5}
-          >
-            {post.isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
-            <AppText weight="medium" size="xs" color={colors.white}>
-              {post.likeCount}
-            </AppText>
-          </Pressable>
-          <Pressable
-            style={styles.likeComment}
-            onPress={handleOpenComment}
-            hitSlop={5}
-          >
-            <IcComment />
-            <AppText weight="medium" size="xs" color={colors.white}>
-              {post.commentCount}
-            </AppText>
-          </Pressable>
-          {post.isWriter && (
-            <Pressable onPress={handleOpenPinModal} hitSlop={5}>
-              <IcPin />
-            </Pressable>
-          )}
-        </View>
+        <RecordVoteList voteItems={post.voteItems} handleVote={handleVote} />
+        <RecordPostActions
+          isLiked={post.isLiked}
+          isWriter={post.isWriter}
+          likeCount={post.likeCount}
+          commentCount={post.commentCount}
+          handlePressLike={handlePressLike}
+          handleOpenComment={handleOpenComment}
+          handleOpenPinModal={handleOpenPinModal}
+        />
       </Pressable>
       <RecordComment
         isVisible={isCommentOpen}
@@ -248,44 +179,5 @@ const styles = StyleSheet.create({
   },
   profileText: {
     gap: 4,
-  },
-  voteWrapper: {
-    gap: 12,
-  },
-  voteItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: 12,
-    backgroundColor: colors.darkgrey.main,
-    height: 44,
-  },
-  voteFill: {
-    position: "absolute",
-    height: 44,
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    left: 0,
-    backgroundColor: colors.grey[300],
-    zIndex: -1,
-  },
-  voteContent: {
-    paddingLeft: 12,
-  },
-  voteCount: {
-    paddingRight: 12,
-  },
-  isVotedItem: {
-    backgroundColor: colors.purple.dark,
-  },
-  likeCommentWrapper: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-  },
-  likeComment: {
-    flexDirection: "row",
-    gap: 2,
-    alignItems: "center",
   },
 });
