@@ -20,6 +20,7 @@ export default function CommentRoot({
     <View
       style={[
         styles.container,
+        { gap: type === "feed" ? 24 : 20 },
         isFirst && type !== "record" && { paddingTop: 40 },
       ]}
     >
@@ -40,7 +41,6 @@ export default function CommentRoot({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    gap: 24,
   },
   content: {
     gap: 12,
