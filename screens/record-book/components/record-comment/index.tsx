@@ -26,6 +26,7 @@ export default function RecordComment({
   const [comment, setComment] = useState("");
   const [replyCommentId, setReplyCommentId] = useState<number | null>(null);
   const [replyNickname, setReplyNickname] = useState("");
+  const [isInputFocus, setIsInputFocus] = useState(false);
 
   const handleSendText = () => {
     if (replyCommentId !== null) {
@@ -51,11 +52,15 @@ export default function RecordComment({
   const handleResetReply = () => {
     setReplyCommentId(null);
     setReplyNickname("");
+    setIsInputFocus(false);
   };
 
   return (
     <CustomBottomSheet
-      containerStyle={[styles.container, { height: height * 0.7 }]}
+      containerStyle={[
+        styles.container,
+        { height: isInputFocus ? height * 0.93 : height * 0.7 },
+      ]}
       isVisible={isVisible}
       handleClose={handleClose}
     >
@@ -107,6 +112,8 @@ export default function RecordComment({
         onLayout={(event) => {
           setInputBarHeight(event.nativeEvent.layout.height);
         }}
+        verticalAdditionalOffset={200}
+        handleIsFocus={setIsInputFocus}
       />
     </CustomBottomSheet>
   );
