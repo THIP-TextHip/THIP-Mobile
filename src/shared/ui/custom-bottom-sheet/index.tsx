@@ -5,7 +5,7 @@
 } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
 import { ReactNode, useEffect, useRef } from "react";
-import { StyleSheet } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@theme/token";
@@ -15,6 +15,7 @@ interface CustomBottomSheetProps {
   isVisible: boolean;
   handleClose: () => void;
   containerPaddingBottom?: number;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default function CustomBottomSheet({
@@ -22,9 +23,16 @@ export default function CustomBottomSheet({
   isVisible,
   handleClose,
   containerPaddingBottom,
+  containerStyle,
 }: CustomBottomSheetProps) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const insets = useSafeAreaInsets();
+
+  const contentContainerStyle = StyleSheet.flatten([
+    styles.contentContainer,
+    { paddingBottom: containerPaddingBottom ?? 20 + insets.bottom },
+    containerStyle,
+  ]);
 
   useEffect(() => {
     if (isVisible) {
@@ -61,12 +69,7 @@ export default function CustomBottomSheet({
       backgroundStyle={styles.sheetBackground}
       handleComponent={null}
     >
-      <BottomSheetView
-        style={[
-          styles.contentContainer,
-          { paddingBottom: containerPaddingBottom ?? 20 + insets.bottom },
-        ]}
-      >
+      <BottomSheetView style={contentContainerStyle}>
         {children}
       </BottomSheetView>
     </BottomSheetModal>

@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-import { RecordBookHeader } from "@screens/record-book";
 import { colors } from "@theme/token";
 
 export default function RecordBookLayout() {
@@ -13,7 +12,7 @@ export default function RecordBookLayout() {
       <Stack.Screen
         name="[roomId]"
         options={{
-          header: () => <RecordBookHeader />,
+          headerShown: false,
         }}
       />
     </Stack>
