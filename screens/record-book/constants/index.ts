@@ -1,3 +1,6 @@
+import { CommentListType, CommentReplyListType } from "@shared/ui";
+import { colors } from "@theme/token";
+
 import { RecordBookPostType, RecordBookResponse } from "../types";
 
 // TODO: 추후 type은 서버에서 사용하는 것으로 수정 필요
@@ -188,3 +191,68 @@ export const DUMMY_RECORD_BOOK_RESPONSE: RecordBookResponse = {
   nextCursor: "", // 이건 추후 무한스크롤에 사용. 현재는 신경 X
   isLast: false, // 이건 추후 무한스크롤에 사용. 현재는 신경 X
 };
+
+export const DUMMY_RECORD_COMMENT_REPLY_LIST: CommentReplyListType[] = [
+  {
+    commentId: 8,
+    parentCommentCreatorNickname: "user1",
+    creatorId: 12,
+    creatorProfileImageUrl: "https://placehold.co/30/png",
+    creatorNickname: "user12",
+    aliasName: "칭호칭호",
+    aliasColor: colors.character.mint,
+    postDate: "12시간 전",
+    content: "답글입니다.",
+    likeCount: 5,
+    isLike: false,
+    isWriter: true,
+  },
+  {
+    commentId: 456,
+    parentCommentCreatorNickname: "user12",
+    creatorId: 123,
+    creatorProfileImageUrl: "https://placehold.co/30/png",
+    creatorNickname: "user123",
+    aliasName: "칭호칭호",
+    aliasColor: colors.character.lavender,
+    postDate: "8시간 전",
+    content:
+      "답글입니다. ~~~~~ 긴 댓글? 댓글 내용을 입력하세요. 긴 댓글? 댓글 내용을 입력하세요. 긴 댓글? 댓글 내용을 입력하세요. 긴 댓글? 댓글 내용을 입력하세요. 긴 댓글? 댓글 내용을 입력하세요. 긴 댓글? 댓글 내용을 입력하세요. 긴 댓글? 댓글 내용을 입력하세요.",
+    likeCount: 9,
+    isLike: false,
+    isWriter: false,
+  },
+];
+
+export const DUMMY_RECORD_COMMENT_LIST: CommentListType[] = [
+  {
+    commentId: 3,
+    creatorId: 5,
+    creatorProfileImageUrl: "https://placehold.co/30/png",
+    creatorNickname: "user1",
+    aliasName: "칭호",
+    aliasColor: colors.character.pink,
+    postDate: "2026.02.12",
+    content: `입력하세요. 댓글 내용을 입력하세요오.\n줄바꿈 할게요.\n댓글 내용을 입력하세요. 댓글 내용을 입력하세요. `,
+    likeCount: 12,
+    isLike: true,
+    isDeleted: false,
+    isWriter: false,
+    replyList: DUMMY_RECORD_COMMENT_REPLY_LIST,
+  },
+  {
+    commentId: 123,
+    creatorId: 16,
+    creatorProfileImageUrl: "https://placehold.co/30/png",
+    creatorNickname: "테스트유저16",
+    aliasName: "칭호2",
+    aliasColor: colors.character.orange,
+    postDate: "5시간 전",
+    content: `입력하세요. 댓글 내용을 입력하세요오.\n줄바꿈 할게요.\n댓글 내용을 입력하세요. 댓글 내용을 입력하세요. `,
+    likeCount: 135,
+    isLike: true,
+    isDeleted: false,
+    isWriter: false,
+    replyList: [],
+  },
+];

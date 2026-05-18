@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -23,6 +24,8 @@ interface ChatInputBarProps {
   targetName?: string;
   handleResetReply?: () => void;
   onLayout?: (event: LayoutChangeEvent) => void;
+  verticalAdditionalOffset?: number;
+  handleIsFocus?: (value: boolean) => void;
 }
 
 export default function ChatInputBar({
@@ -33,17 +36,25 @@ export default function ChatInputBar({
   targetName,
   handleResetReply,
   onLayout,
+  verticalAdditionalOffset = 0,
+  handleIsFocus,
 }: ChatInputBarProps) {
   const { bottom } = useSafeAreaInsets();
+  const inputRef = useRef<TextInput>(null);
 
   const handleChangeText = (text: string) => {
     setText(text);
   };
 
+  const handlePressResetReply = () => {
+    handleResetReply?.();
+    inputRef.current?.blur();
+  };
+
   const handlePressSend = () => {
     if (!text.trim()) return;
 
-    if (targetName && handleResetReply) handleResetReply();
+    if (targetName && handleResetReply) handlePressResetReply();
 
     handleSend();
     Keyboard.dismiss();
@@ -54,7 +65,11 @@ export default function ChatInputBar({
   return (
     <KeyboardAvoidingView
       behavior={"padding"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? bottom : bottom + 10}
+      keyboardVerticalOffset={
+        Platform.OS === "ios"
+          ? bottom + verticalAdditionalOffset
+          : bottom + verticalAdditionalOffset + 10
+      }
       style={styles.container}
       onLayout={onLayout}
     >
@@ -69,7 +84,7 @@ export default function ChatInputBar({
               님에게 답글 작성
             </AppText>
           </View>
-          <Pressable onPress={handleResetReply} hitSlop={5}>
+          <Pressable onPress={handlePressResetReply} hitSlop={5}>
             <IcX />
           </Pressable>
         </View>
@@ -81,6 +96,7 @@ export default function ChatInputBar({
         ]}
       >
         <TextInput
+          ref={inputRef}
           style={styles.input}
           value={text}
           onChangeText={handleChangeText}
@@ -89,6 +105,8 @@ export default function ChatInputBar({
           selectionColor={colors.neongreen}
           cursorColor={colors.neongreen}
           multiline
+          onFocus={() => handleIsFocus && handleIsFocus(true)}
+          onBlur={() => handleIsFocus && handleIsFocus(false)}
         />
         <Pressable
           style={[

@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     flexDirection: "row",
-    paddingTop: 32,
+    paddingTop: 20,
     paddingHorizontal: 20,
     gap: TAB_GAP,
   },

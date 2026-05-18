@@ -109,7 +109,7 @@ export default function FeedDetailScreen() {
         ListHeaderComponent={() => (
           <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
         )}
-        contentContainerStyle={{ paddingBottom: inputBarHeight, gap: 24 }}
+        contentContainerStyle={[styles.list, { paddingBottom: inputBarHeight }]}
         data={DUMMY_COMMENT_LIST}
         keyExtractor={(item) => String(item.commentId)}
         renderItem={({ item, index }) => (
@@ -164,6 +164,9 @@ export default function FeedDetailScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
+  },
+  list: {
+    gap: 24,
   },
   empty: {
     flex: 1,

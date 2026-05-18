@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   RecordBookFilter,
   RecordBookFloating,
+  RecordBookHeader,
   RecordBookPostItem,
   RecordBookTopTabBar,
 } from "./components";
@@ -106,6 +107,7 @@ export default function RecordBookScreen() {
 
   return (
     <View style={styles.page}>
+      <RecordBookHeader />
       <RecordBookTopTabBar
         isMyRecord={isMyRecord}
         handleGroupRecord={handleGroupRecord}

@@ -5,12 +5,10 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import {
-  RecordComment,
-  RecordModal,
-  RecordOptionBottomSheet,
-} from "../../components";
 import { RecordBookPostType } from "../../types";
+import RecordComment from "../record-comment";
+import RecordModal from "../record-modal";
+import RecordOptionBottomSheet from "../record-option-bottom-sheet";
 import RecordPostActions from "./record-post-actions";
 import RecordVoteList from "./record-vote-list";
 
