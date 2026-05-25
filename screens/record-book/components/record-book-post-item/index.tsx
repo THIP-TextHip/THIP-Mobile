@@ -60,15 +60,19 @@ export default function RecordBookPostItem({
     console.log(post.postId, "번 기록 신고");
     setIsOptionOpen(false);
   };
+
+  // TODO: 전역 상태로 진행
   const handleToEdit = () => {
     console.log(post.postId, "번 기록 수정하러 가기");
     setIsOptionOpen(false);
   };
+
   const handleDelete = () => {
     console.log(post.postId, "번 기록 삭제");
     setIsModalOpen(false);
   };
 
+  // TODO: 전역 상태로 진행
   const handleToPin = () => {
     console.log(post.postId, "번 핀하러 가기");
     setIsModalOpen(false);
