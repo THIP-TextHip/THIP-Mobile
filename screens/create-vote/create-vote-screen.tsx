@@ -79,7 +79,7 @@ export default function CreateVoteScreen() {
     isImpossiblePage ||
     content.trim().length === 0 ||
     cleanedVoteItemList.length < 2 ||
-    (prevRecord !== null && prevRecord.content === content);
+    (prevRecord !== null && prevRecord.content.trim() === content.trim());
 
   return (
     <View style={styles.page}>

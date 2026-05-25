@@ -59,7 +59,7 @@ export default function RecordWriteScreen() {
   const disabled =
     isImpossiblePage ||
     content.trim().length === 0 ||
-    (prevRecord !== null && prevRecord.content === content);
+    (prevRecord !== null && prevRecord.content.trim() === content.trim());
 
   return (
     <View style={styles.page}>
