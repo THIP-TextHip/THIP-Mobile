@@ -5,6 +5,7 @@ import type { RecordBookVoteItemType } from "@screens/record-book/types";
 export interface PrevRecord {
   postId: number;
   page: number;
+  isOverview: boolean;
   content: string;
   voteItems: RecordBookVoteItemType[];
 }

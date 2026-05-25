@@ -68,6 +68,7 @@ export default function RecordBookPostItem({
     setPrevRecord({
       postId: post.postId,
       page: post.page,
+      isOverview: post.isOverview,
       content: post.content,
       voteItems: post.voteItems,
     });

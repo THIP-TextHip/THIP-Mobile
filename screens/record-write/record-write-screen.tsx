@@ -25,7 +25,9 @@ export default function RecordWriteScreen() {
   const [recordPage, setRecordPage] = useState(
     prevRecord ? prevRecord.page : DUMMY_RECORD_BOOK_STATE.recentBookPage,
   );
-  const [isOverview, setIsOverview] = useState(false);
+  const [isOverview, setIsOverview] = useState(
+    prevRecord ? prevRecord.isOverview : false,
+  );
   const [isImpossiblePage, setIsImpossiblePage] = useState(false);
   const [content, setContent] = useState(prevRecord ? prevRecord.content : "");
 

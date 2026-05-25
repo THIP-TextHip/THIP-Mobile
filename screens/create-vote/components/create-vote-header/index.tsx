@@ -5,15 +5,17 @@ import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface CreateVoteHeaderProps {
+  isEdit: boolean;
   disabled: boolean;
   handleGoBack: () => void;
-  handleCreateVote: () => void;
+  handleComplete: () => void;
 }
 
 export default function CreateVoteHeader({
+  isEdit,
   disabled,
   handleGoBack,
-  handleCreateVote,
+  handleComplete,
 }: CreateVoteHeaderProps) {
   return (
     <CustomHeader
@@ -29,11 +31,11 @@ export default function CreateVoteHeader({
       }
       center={
         <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
-          투표 생성
+          투표 {isEdit ? "수정" : "작성"}
         </AppText>
       }
       right={
-        <ButtonHeader disabled={disabled} handleClickButton={handleCreateVote}>
+        <ButtonHeader disabled={disabled} handleClickButton={handleComplete}>
           완료
         </ButtonHeader>
       }
