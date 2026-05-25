@@ -1,5 +1,3 @@
-import { router } from "expo-router";
-import { useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
@@ -7,17 +5,18 @@ import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface CreateVoteHeaderProps {
+  isEdit: boolean;
   disabled: boolean;
-  handleCreateVote: () => void;
+  handleGoBack: () => void;
+  handleComplete: () => void;
 }
 
 export default function CreateVoteHeader({
+  isEdit,
   disabled,
-  handleCreateVote,
+  handleGoBack,
+  handleComplete,
 }: CreateVoteHeaderProps) {
-  const handleGoBack = useCallback(() => {
-    router.back();
-  }, []);
   return (
     <CustomHeader
       left={
@@ -32,11 +31,11 @@ export default function CreateVoteHeader({
       }
       center={
         <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
-          투표 생성
+          투표 {isEdit ? "수정" : "작성"}
         </AppText>
       }
       right={
-        <ButtonHeader disabled={disabled} handleClickButton={handleCreateVote}>
+        <ButtonHeader disabled={disabled} handleClickButton={handleComplete}>
           완료
         </ButtonHeader>
       }

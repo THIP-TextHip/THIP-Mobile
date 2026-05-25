@@ -12,6 +12,7 @@ import {
 } from "../../constants";
 
 interface VoteContentSectionProps {
+  editable: boolean;
   content: string;
   voteItemList: { itemName: string }[];
   handleChangeContent: (content: string) => void;
@@ -19,6 +20,7 @@ interface VoteContentSectionProps {
 }
 
 export default function VoteContentSection({
+  editable,
   content,
   voteItemList,
   handleChangeContent,
@@ -69,15 +71,16 @@ export default function VoteContentSection({
               selectionColor={colors.neongreen}
               cursorColor={colors.neongreen}
               maxLength={VOTE_CONTENT_ITEM_MAX_LENGTH}
+              editable={editable}
             />
-            {index >= 2 && (
+            {index >= 2 && editable && (
               <Pressable onPress={() => handleDeleteItem(index)} hitSlop={5}>
                 <IcDeleteGrey />
               </Pressable>
             )}
           </View>
         ))}
-        {voteItemList.length < VOTE_ITEM_MAX_COUNT && (
+        {voteItemList.length < VOTE_ITEM_MAX_COUNT && editable && (
           <Pressable style={styles.addButton} onPress={handleAddItem}>
             <AppText weight="semibold" size="base" color={colors.black.main}>
               항목 추가

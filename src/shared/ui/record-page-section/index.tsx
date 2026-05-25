@@ -8,6 +8,7 @@ import AppText from "../app-text";
 import CustomSwitch from "../custom-switch";
 
 interface RecordPageSectionProps {
+  editable: boolean;
   totalPage: number;
   isOverviewPossible: boolean;
   recordPage: number;
@@ -18,6 +19,7 @@ interface RecordPageSectionProps {
 }
 
 export default function RecordPageSection({
+  editable,
   totalPage,
   isOverviewPossible,
   recordPage,
@@ -95,19 +97,22 @@ export default function RecordPageSection({
                 selectionColor={colors.neongreen}
                 cursorColor={colors.neongreen}
                 autoFocus
+                editable={editable}
               />
               <AppText weight="regular" size="sm" color={colors.grey[300]}>
                 /{totalPage}p
               </AppText>
             </View>
-            <Pressable
-              onPress={handleResetRecordPage}
-              hitSlop={5}
-              accessibilityRole="button"
-              accessibilityLabel="기록 페이지 입력 초기화"
-            >
-              <IcXCircleBlack />
-            </Pressable>
+            {editable && (
+              <Pressable
+                onPress={handleResetRecordPage}
+                hitSlop={5}
+                accessibilityRole="button"
+                accessibilityLabel="기록 페이지 입력 초기화"
+              >
+                <IcXCircleBlack />
+              </Pressable>
+            )}
           </>
         )}
         {isExceeded && (
@@ -121,45 +126,47 @@ export default function RecordPageSection({
           </AppText>
         )}
       </View>
-      <View style={styles.overviewWrapper}>
-        {isTooltipVisible && (
-          <View style={styles.tooltip}>
-            <View style={styles.tooltipTriangle} />
-            <AppText
-              weight="medium"
-              size="xs"
-              color={isOverviewPossible ? colors.neongreen : colors.red}
-            >
-              독서 진행도 80%를 달성해야 평을 작성할 수 있어요.
-            </AppText>
+      {editable && (
+        <View style={styles.overviewWrapper}>
+          {isTooltipVisible && (
+            <View style={styles.tooltip}>
+              <View style={styles.tooltipTriangle} />
+              <AppText
+                weight="medium"
+                size="xs"
+                color={isOverviewPossible ? colors.neongreen : colors.red}
+              >
+                독서 진행도 80%를 달성해야 평을 작성할 수 있어요.
+              </AppText>
+              <Pressable
+                onPress={handleCloseTooltip}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel="총평 안내 툴팁 닫기"
+              >
+                <IcX />
+              </Pressable>
+            </View>
+          )}
+          <View style={styles.overviewInfo}>
             <Pressable
-              onPress={handleCloseTooltip}
-              hitSlop={8}
+              onPress={handleOpenTooltip}
+              hitSlop={5}
               accessibilityRole="button"
-              accessibilityLabel="총평 안내 툴팁 닫기"
+              accessibilityLabel="총평 안내 툴팁 열기"
             >
-              <IcX />
+              <IcAlertGrey />
             </Pressable>
+            <AppText weight="regular" size="xs" color={colors.grey[100]}>
+              총평
+            </AppText>
           </View>
-        )}
-        <View style={styles.overviewInfo}>
-          <Pressable
-            onPress={handleOpenTooltip}
-            hitSlop={5}
-            accessibilityRole="button"
-            accessibilityLabel="총평 안내 툴팁 열기"
-          >
-            <IcAlertGrey />
-          </Pressable>
-          <AppText weight="regular" size="xs" color={colors.grey[100]}>
-            총평
-          </AppText>
+          <CustomSwitch
+            isOn={isOverview}
+            handleToggleButton={handleChangeOverviewToggle}
+          />
         </View>
-        <CustomSwitch
-          isOn={isOverview}
-          handleToggleButton={handleChangeOverviewToggle}
-        />
-      </View>
+      )}
     </View>
   );
 }

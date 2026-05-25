@@ -153,7 +153,7 @@ export const DUMMY_RECORD_BOOK_POST_LIST: RecordBookPostType[] = [
     userId: 101,
     nickName: "책읽는사람",
     profileImageUrl: "https://picsum.photos/seed/user101/100/100",
-    content: "이번 챕터의 분위기는 어떻게 느껴졌나요?",
+    content: "이번 챕터의 분위기는 어떻게",
     likeCount: 9,
     commentCount: 2,
     isOverview: false,

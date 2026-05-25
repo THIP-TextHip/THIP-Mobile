@@ -14,6 +14,7 @@ module.exports = function (api) {
             "@app": "./app",
             "@assets": "./assets",
             "@shared": "./src/shared",
+            "@stores": "./src/stores",
             "@theme": "./src/theme",
             "@config": "./src/config",
             "@images/*": "./assets/images",
