@@ -1,5 +1,5 @@
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,36 +10,62 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { RecordPageSection } from "@shared/ui";
+import { usePrevRecordStore } from "@stores/record-book";
 
 import { RecordWriteContentSection, RecordWriteHeader } from "./components";
+// TODO: 서버에서 받아온 값으로 변경
 import { DUMMY_RECORD_BOOK_STATE } from "./constants";
 
 export default function RecordWriteScreen() {
+  const { roomId } = useLocalSearchParams();
   const { bottom } = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const { prevRecord, clearPrevRecord } = usePrevRecordStore();
+
   const [recordPage, setRecordPage] = useState(
-    DUMMY_RECORD_BOOK_STATE.recentBookPage,
+    prevRecord ? prevRecord.page : DUMMY_RECORD_BOOK_STATE.recentBookPage,
   );
   const [isOverview, setIsOverview] = useState(false);
   const [isImpossiblePage, setIsImpossiblePage] = useState(false);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(prevRecord ? prevRecord.content : "");
+
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", clearPrevRecord);
+  }, [clearPrevRecord, navigation]);
 
   const handleChangeOverview = () => {
     setIsOverview((prev) => !prev);
   };
 
-  // TODO: 서버에 api 요청. 성공 시 기록장 페이지 내 기록 탭으로 이동
-  const handleWriteRecord = () => {
-    console.log("기록 작성", recordPage, isOverview, content);
+  const handleGoBack = useCallback(() => {
+    clearPrevRecord();
     router.back();
+  }, [clearPrevRecord]);
+
+  // TODO: 서버에 api 요청. 성공 시 기록장 페이지 내 기록 탭으로 이동
+  const handleCompleteWrite = () => {
+    if (prevRecord === null) {
+      console.log("기록 작성", roomId, recordPage, isOverview, content);
+      router.back();
+    } else {
+      console.log("기록 수정", roomId, prevRecord.postId, content);
+      clearPrevRecord();
+      router.back();
+    }
   };
 
-  const disabled = isImpossiblePage || content.trim().length === 0;
+  const disabled =
+    isImpossiblePage ||
+    content.trim().length === 0 ||
+    (prevRecord !== null && prevRecord.content === content);
 
   return (
     <View style={styles.page}>
       <RecordWriteHeader
+        isEdit={prevRecord !== null}
         disabled={disabled}
-        handleWriteRecord={handleWriteRecord}
+        handleGoBack={handleGoBack}
+        handleComplete={handleCompleteWrite}
       />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
@@ -50,9 +76,11 @@ export default function RecordWriteScreen() {
           contentContainerStyle={[
             styles.content,
             { paddingBottom: bottom + 40 },
+            prevRecord !== null && { gap: 70 },
           ]}
         >
           <RecordPageSection
+            editable={prevRecord === null}
             totalPage={DUMMY_RECORD_BOOK_STATE.totalBookPage}
             isOverviewPossible={DUMMY_RECORD_BOOK_STATE.isOverviewPossible}
             recordPage={recordPage}

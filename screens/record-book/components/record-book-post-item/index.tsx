@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
+import { usePrevRecordStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
 import { RecordBookPostType } from "../../types";
@@ -22,6 +23,8 @@ export default function RecordBookPostItem({
   roomId,
   post,
 }: RecordBookPostItemProps) {
+  const { setPrevRecord } = usePrevRecordStore();
+
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,10 +64,25 @@ export default function RecordBookPostItem({
     setIsOptionOpen(false);
   };
 
-  // TODO: 전역 상태로 진행
   const handleToEdit = () => {
-    console.log(post.postId, "번 기록 수정하러 가기");
+    setPrevRecord({
+      postId: post.postId,
+      page: post.page,
+      content: post.content,
+      voteItems: post.voteItems,
+    });
     setIsOptionOpen(false);
+    if (post.voteItems.length === 0) {
+      router.push({
+        pathname: "/record-write/[roomId]",
+        params: { roomId },
+      });
+    } else {
+      router.push({
+        pathname: "/create-vote/[roomId]",
+        params: { roomId },
+      });
+    }
   };
 
   const handleDelete = () => {

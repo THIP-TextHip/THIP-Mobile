@@ -1,5 +1,5 @@
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,12 +10,15 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { RecordPageSection } from "@shared/ui";
+import { usePrevRecordStore } from "@stores/record-book";
 
 import { CreateVoteHeader, VoteContentSection } from "./components";
 import { DUMMY_RECORD_BOOK_STATE } from "./constants";
 
 export default function CreateVoteScreen() {
   const { bottom } = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const { clearPrevRecord } = usePrevRecordStore();
   const [recordPage, setRecordPage] = useState(
     DUMMY_RECORD_BOOK_STATE.recentBookPage,
   );
@@ -30,6 +33,15 @@ export default function CreateVoteScreen() {
   const handleChangeOverview = () => {
     setIsOverview((prev) => !prev);
   };
+
+  const handleGoBack = useCallback(() => {
+    clearPrevRecord();
+    router.back();
+  }, [clearPrevRecord]);
+
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", clearPrevRecord);
+  }, [clearPrevRecord, navigation]);
 
   // TODO: 서버에 api 요청. 성공 시 기록장 페이지 내 기록 탭으로 이동
   const handleCreateVote = () => {
@@ -56,6 +68,7 @@ export default function CreateVoteScreen() {
     <View style={styles.page}>
       <CreateVoteHeader
         disabled={disabled}
+        handleGoBack={handleGoBack}
         handleCreateVote={handleCreateVote}
       />
       <KeyboardAvoidingView
