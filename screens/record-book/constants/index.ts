@@ -256,3 +256,10 @@ export const DUMMY_RECORD_COMMENT_LIST: CommentListType[] = [
     replyList: [],
   },
 ];
+
+export const DUMMY_RECORD_PIN_BOOK_INFO = {
+  bookTitle: "소년이 온다",
+  authorName: "한강",
+  bookImageUrl: "https://placehold.co/45x60/png",
+  isbn: "9788936434267",
+};

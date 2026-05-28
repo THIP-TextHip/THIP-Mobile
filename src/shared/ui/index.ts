@@ -2,7 +2,7 @@ export { default as AppText } from "./app-text";
 export { default as BookInfoBar } from "./book-info-bar";
 export {
   default as BookSearchBottomSheet,
-  BottomSheetBookItemType,
+  type FeedBookItemType,
 } from "./book-search-bottom-sheet";
 export { default as BookSelectSection } from "./book-select-section";
 export { ButtonHeader, CustomButton, SelectChip, TagButton } from "./button";

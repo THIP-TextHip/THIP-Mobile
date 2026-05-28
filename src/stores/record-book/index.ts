@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import type { RecordBookVoteItemType } from "@screens/record-book/types";
 
-export interface PrevRecord {
+interface PrevRecord {
   postId: number;
   page: number;
   isOverview: boolean;
@@ -20,4 +20,26 @@ export const usePrevRecordStore = create<PrevRecordStore>((set) => ({
   prevRecord: null,
   setPrevRecord: (prevRecord) => set({ prevRecord }),
   clearPrevRecord: () => set({ prevRecord: null }),
+}));
+
+interface RecordBookPinInfo {
+  bookInfo: {
+    bookTitle: string;
+    authorName: string;
+    bookImageUrl: string;
+    isbn: string;
+  };
+  content: string;
+}
+
+interface RecordBookPinStore {
+  pinInfo: RecordBookPinInfo | null;
+  setPinInfo: (pinInfo: RecordBookPinInfo) => void;
+  clearPinInfo: () => void;
+}
+
+export const useRecordBookPinStore = create<RecordBookPinStore>((set) => ({
+  pinInfo: null,
+  setPinInfo: (pinInfo) => set({ pinInfo }),
+  clearPinInfo: () => set({ pinInfo: null }),
 }));

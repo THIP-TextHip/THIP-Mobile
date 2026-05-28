@@ -1,5 +1,3 @@
-import { router } from "expo-router";
-import { useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { IcArrowLeft } from "@images/icons";
@@ -8,16 +6,15 @@ import { colors } from "@theme/token";
 
 interface FeedWriteHeaderProps {
   disabled: boolean;
+  handleGoBack: () => void;
   handleConfirm: () => void;
 }
 
 export default function FeedWriteHeader({
   disabled,
+  handleGoBack,
   handleConfirm,
 }: FeedWriteHeaderProps) {
-  const handleGoBack = useCallback(() => {
-    router.back();
-  }, []);
   return (
     <CustomHeader
       left={

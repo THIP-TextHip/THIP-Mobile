@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
-import { usePrevRecordStore } from "@stores/record-book";
+import { usePrevRecordStore, useRecordBookPinStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
+import { DUMMY_RECORD_PIN_BOOK_INFO } from "../../constants";
 import { RecordBookPostType } from "../../types";
 import RecordComment from "../record-comment";
 import RecordModal from "../record-modal";
@@ -24,6 +25,7 @@ export default function RecordBookPostItem({
   post,
 }: RecordBookPostItemProps) {
   const { setPrevRecord } = usePrevRecordStore();
+  const { setPinInfo } = useRecordBookPinStore();
 
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
@@ -91,9 +93,10 @@ export default function RecordBookPostItem({
     setIsModalOpen(false);
   };
 
-  // TODO: 전역 상태로 진행
+  // TODO: 추후 서버 api를 통해 핀을 위한 책 정보 조회
   const handleToPin = () => {
-    console.log(post.postId, "번 핀하러 가기");
+    setPinInfo({ bookInfo: DUMMY_RECORD_PIN_BOOK_INFO, content: post.content });
+    router.push("/feed-write");
     setIsModalOpen(false);
   };
 
