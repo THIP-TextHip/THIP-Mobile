@@ -18,18 +18,16 @@ import {
 } from "./constants";
 
 // TODO: 서버 제공 타입으로 변경
-export interface BottomSheetBookItemType {
-  bookId: number;
+export interface FeedBookItemType {
   bookTitle: string;
   authorName: string;
-  publisher: string;
   bookImageUrl: string;
   isbn: string;
 }
 
 interface BookSearchBottomSheetProps {
   isVisible: boolean;
-  handleSelectBook: (bookItem: BottomSheetBookItemType) => void;
+  handleSelectBook: (bookItem: FeedBookItemType) => void;
   handleClose: () => void;
 }
 
@@ -58,7 +56,7 @@ export default function BookSearchBottomSheet({
   }, [searchText]);
 
   const handlePressBook = useCallback(
-    (bookItem: BottomSheetBookItemType) => {
+    (bookItem: FeedBookItemType) => {
       handleSelectBook(bookItem);
       handleClose();
     },

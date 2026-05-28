@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { router, useNavigation } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -11,9 +12,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   BookSearchBottomSheet,
   BookSelectSection,
+  type FeedBookItemType,
   VisibilitySection,
-  type BottomSheetBookItemType,
 } from "@shared/ui";
+import { useRecordBookPinStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
 import {
@@ -26,14 +28,26 @@ import { FEED_TAG_MAX } from "./constants";
 
 export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const { pinInfo, clearPinInfo } = useRecordBookPinStore();
+
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-  const [feedBook, setFeedBook] = useState<BottomSheetBookItemType | null>(
-    null,
+  const [feedBook, setFeedBook] = useState<FeedBookItemType | null>(
+    pinInfo?.bookInfo ?? null,
   );
-  const [contentBody, setContentBody] = useState("");
+  const [contentBody, setContentBody] = useState(pinInfo?.content ?? "");
   const [isPublic, setIsPublic] = useState(true);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [selectedTagList, setSelectedTagList] = useState<string[]>([]);
+
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", clearPinInfo);
+  }, [clearPinInfo, navigation]);
+
+  const handleGoBack = useCallback(() => {
+    clearPinInfo();
+    router.back();
+  }, [clearPinInfo]);
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -66,6 +80,8 @@ export default function FeedWriteScreen() {
     alert(
       `책 : ${feedBook?.bookTitle}\n글 : ${contentBody}\n사진 : ${imageUrls}\n공개 설정 : ${isPublic}\n태그 : ${selectedTagList}`,
     );
+    clearPinInfo();
+    router.back();
   };
 
   const Separator = () => {
@@ -78,6 +94,7 @@ export default function FeedWriteScreen() {
     <View style={styles.page}>
       <FeedWriteHeader
         disabled={confirmDisable}
+        handleGoBack={handleGoBack}
         handleConfirm={handleConfirmFeedWrite}
       />
       <KeyboardAvoidingView
@@ -92,6 +109,7 @@ export default function FeedWriteScreen() {
           ]}
         >
           <BookSelectSection
+            isPin={pinInfo !== null}
             book={feedBook}
             handleOpenBottomSheet={handleOpenBottomSheet}
           />

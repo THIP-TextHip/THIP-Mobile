@@ -4,15 +4,17 @@ import { IcSearch } from "@images/icons";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
-import { type BottomSheetBookItemType } from "../book-search-bottom-sheet";
+import { FeedBookItemType } from "../book-search-bottom-sheet";
 import { CustomButton } from "../button";
 
 interface BookSelectSectionProps {
-  book: BottomSheetBookItemType | null;
+  isPin?: boolean;
+  book: FeedBookItemType | null;
   handleOpenBottomSheet: () => void;
 }
 
 export default function BookSelectSection({
+  isPin = false,
   book,
   handleOpenBottomSheet,
 }: BookSelectSectionProps) {
@@ -42,14 +44,16 @@ export default function BookSelectSection({
               {book.authorName} 저
             </AppText>
           </View>
-          <Pressable
-            style={styles.changeButton}
-            onPress={handleOpenBottomSheet}
-          >
-            <AppText weight="medium" size="sm" color={colors.grey[100]}>
-              변경
-            </AppText>
-          </Pressable>
+          {!isPin && (
+            <Pressable
+              style={styles.changeButton}
+              onPress={handleOpenBottomSheet}
+            >
+              <AppText weight="medium" size="sm" color={colors.grey[100]}>
+                변경
+              </AppText>
+            </Pressable>
+          )}
         </View>
       ) : (
         <CustomButton
