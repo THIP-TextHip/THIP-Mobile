@@ -1,5 +1,13 @@
 import { AxiosError, create, type AxiosRequestConfig } from "axios";
 
+import { getAuthToken } from "./token-storage";
+
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuth?: boolean;
+  }
+}
+
 export type ApiSuccessResponse<T> = {
   isSuccess: true;
   code: number;
@@ -16,6 +24,14 @@ export type ApiErrorResponse = {
 };
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+
+export type ApiClientResponse<T> = {
+  data: T;
+  code: number;
+  message: string;
+  requestId: string;
+  status: number;
+};
 
 export class ApiError extends Error {
   code: number;
@@ -42,6 +58,20 @@ const axiosInstance = create({
   timeout: 10000,
 });
 
+axiosInstance.interceptors.request.use(async (config) => {
+  if (config.skipAuth) {
+    return config;
+  }
+
+  const token = await getAuthToken();
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 const isApiErrorResponse = (data: unknown): data is ApiErrorResponse => {
   if (!data || typeof data !== "object") {
     return false;
@@ -57,7 +87,9 @@ const isApiErrorResponse = (data: unknown): data is ApiErrorResponse => {
   );
 };
 
-const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
+const request = async <T>(
+  config: AxiosRequestConfig,
+): Promise<ApiClientResponse<T>> => {
   try {
     const response = await axiosInstance.request<ApiResponse<T>>(config);
     const responseData = response.data;
@@ -66,7 +98,13 @@ const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
       throw new ApiError(responseData, response.status);
     }
 
-    return responseData.data;
+    return {
+      data: responseData.data,
+      code: responseData.code,
+      message: responseData.message,
+      requestId: responseData.requestId,
+      status: response.status,
+    };
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

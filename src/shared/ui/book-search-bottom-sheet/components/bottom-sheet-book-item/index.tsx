@@ -2,12 +2,12 @@ import { Image, Pressable, StyleSheet } from "react-native";
 
 import { colors } from "@theme/token";
 
-import { BottomSheetBookItemType } from "../..";
+import { FeedBookItemType } from "../..";
 import AppText from "../../../app-text";
 
 interface BottomSheetBookItemProps {
-  bookItem: BottomSheetBookItemType;
-  handleSelectBook: (isbn: BottomSheetBookItemType) => void;
+  bookItem: FeedBookItemType;
+  handleSelectBook: (isbn: FeedBookItemType) => void;
 }
 
 export default function BottomSheetBookItem({
