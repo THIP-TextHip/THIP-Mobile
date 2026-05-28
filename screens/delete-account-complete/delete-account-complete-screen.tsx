@@ -5,7 +5,7 @@ import {
   GenreHumanity,
   GenreScience,
   GenreSocialScience,
-} from "@images/thip/genre";
+} from "@images/thip";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 

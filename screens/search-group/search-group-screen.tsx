@@ -1,4 +1,3 @@
-import { useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   Keyboard,
@@ -10,6 +9,7 @@ import {
 
 import { IcRightRight } from "@images/icons";
 import { AppText, RecentSearch, SearchBar } from "@shared/ui";
+import { useSearchGroupInitialCategory } from "@stores/search-group";
 import { colors } from "@theme/token";
 
 import { SearchGroupResult } from "./components";
@@ -17,12 +17,15 @@ import { RECENT_SEARCH_GROUP } from "./constants";
 import { SearchGroupCategoryType } from "./types";
 
 export default function SearchGroupScreen() {
-  const { roomCategory: initialRoomCategory } = useLocalSearchParams<{
-    roomCategory?: SearchGroupCategoryType;
-  }>();
+  const {
+    searchGroupInitialCategory,
+    setSearchGroupInitialCategory,
+    clearSearchGroupInitialCategory,
+  } = useSearchGroupInitialCategory();
+
   const [searchText, setSearchText] = useState("");
   const [roomCategory, setRoomCategory] =
-    useState<SearchGroupCategoryType | null>(initialRoomCategory ?? null);
+    useState<SearchGroupCategoryType | null>(searchGroupInitialCategory);
 
   const handleChangeText = useCallback((text: string) => {
     setSearchText(text);
@@ -52,11 +55,17 @@ export default function SearchGroupScreen() {
       if (roomCategory === nextCategory) {
         setSearchText("");
         setRoomCategory(null);
+        clearSearchGroupInitialCategory();
         return;
       }
       setRoomCategory(nextCategory);
+      setSearchGroupInitialCategory(nextCategory);
     },
-    [roomCategory],
+    [
+      roomCategory,
+      clearSearchGroupInitialCategory,
+      setSearchGroupInitialCategory,
+    ],
   );
 
   return (
@@ -66,7 +75,7 @@ export default function SearchGroupScreen() {
           <SearchBar
             value={searchText}
             placeholder="방제목, 책제목을 검색해보세요."
-            autoFocus={initialRoomCategory ? false : true}
+            autoFocus={searchGroupInitialCategory ? false : true}
             setValue={handleChangeText}
             handleSearch={handleSearch}
           />

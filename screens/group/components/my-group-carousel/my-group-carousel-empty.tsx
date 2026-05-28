@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View } from "react-native";
 
-import { CharacterSearch } from "@images/thip/character";
+import { CharacterSearch } from "@images/thip";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 

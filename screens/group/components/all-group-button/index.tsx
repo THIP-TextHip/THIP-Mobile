@@ -1,18 +1,18 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 
-import { CharacterSearch } from "@images/thip/character";
+import { CharacterSearch } from "@images/thip";
 import { AppText } from "@shared/ui";
+import { useSearchGroupInitialCategory } from "@stores/search-group";
 import { colors } from "@theme/token";
 
 export default function AllGroupButton() {
+  const { setSearchGroupInitialCategory } = useSearchGroupInitialCategory();
   // TODO: 모임 검색 페이지 이동 및 전체 칩 클릭된 상태
   const handleToAllGroup = () => {
+    setSearchGroupInitialCategory("전체");
     router.push({
       pathname: "/search-group",
-      params: {
-        roomCategory: "전체",
-      },
     });
   };
   return (

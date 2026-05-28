@@ -4,7 +4,7 @@ import {
   GenreLiterature,
   GenreScience,
   GenreSocialScience,
-} from "@images/thip/genre";
+} from "@images/thip";
 import { colors } from "@theme/token";
 
 import { GenreItem } from "../types";
