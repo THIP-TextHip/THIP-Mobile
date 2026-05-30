@@ -1,3 +1,7 @@
+import {
+  GoogleSignin,
+  isSuccessResponse,
+} from "@react-native-google-signin/google-signin";
 import { Pressable, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -9,18 +13,26 @@ import { colors } from "@theme/token";
 export default function GoogleLoginButton() {
   const { login, isPendingLogin } = useLoginMutation();
 
-  const handleLogin = () => {
-    const oauth2Id = process.env.EXPO_PUBLIC_DEV_GOOGLE_OAUTH2_ID;
+  const handleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      GoogleSignin.configure({
+        webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
+      });
 
-    if (!oauth2Id) {
+      const response = await GoogleSignin.signIn();
+
+      if (!isSuccessResponse(response)) {
+        return;
+      }
+
+      login({ oauth2Id: `google_${response.data.user.id}` });
+    } catch {
       Toast.show({
         type: "error",
-        text1: "구글 로그인 SDK 연동 후 다시 시도해주세요.",
+        text1: "구글 로그인에 실패했어요.",
       });
-      return;
     }
-
-    login({ oauth2Id });
   };
   return (
     <Pressable

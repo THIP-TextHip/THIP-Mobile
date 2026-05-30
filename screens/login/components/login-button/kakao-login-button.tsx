@@ -1,7 +1,11 @@
+import {
+  me as getKakaoUser,
+  login as kakaoLogin,
+} from "@react-native-kakao/user";
 import { Pressable, StyleSheet } from "react-native";
 import Toast from "react-native-toast-message";
 
-import { useLoginMutation } from "@apis/auth";
+import { initializeKakao, useLoginMutation } from "@apis/auth";
 import { IcKakaotalk } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -9,18 +13,21 @@ import { colors } from "@theme/token";
 export default function KakaoLoginButton() {
   const { login, isPendingLogin } = useLoginMutation();
 
-  const handleLogin = () => {
-    const oauth2Id = process.env.EXPO_PUBLIC_DEV_KAKAO_OAUTH2_ID;
+  const handleLogin = async () => {
+    try {
+      await initializeKakao();
+      await kakaoLogin();
+      const kakaoUser = await getKakaoUser();
 
-    if (!oauth2Id) {
+      login({ oauth2Id: `kakao_${kakaoUser.id}` });
+    } catch (error) {
+      console.error("[KakaoLoginButton] Kakao login failed", error);
+
       Toast.show({
         type: "error",
-        text1: "카카오 로그인 SDK 연동 후 다시 시도해주세요.",
+        text1: "카카오 로그인에 실패했어요.",
       });
-      return;
     }
-
-    login({ oauth2Id });
   };
 
   return (
