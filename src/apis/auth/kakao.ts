@@ -9,7 +9,10 @@ export const initializeKakao = () => {
     throw new Error("EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY is not defined.");
   }
 
-  initializePromise ??= initializeKakaoSDK(kakaoNativeAppKey);
+  initializePromise ??= initializeKakaoSDK(kakaoNativeAppKey).catch((error) => {
+    initializePromise = null;
+    throw error;
+  });
 
   return initializePromise;
 };

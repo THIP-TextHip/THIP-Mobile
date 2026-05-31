@@ -25,9 +25,10 @@ export const useLoginMutation = () => {
       });
     },
     onError: (error) => {
+      console.error("[useLoginMutation] login failed", error);
       Toast.show({
         type: "error",
-        text1: error.message,
+        text1: "로그인에 실패했어요. 잠시 후 다시 시도해주세요.",
       });
     },
   });

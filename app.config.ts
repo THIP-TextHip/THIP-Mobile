@@ -2,9 +2,7 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 const appJson = require("./app.json");
 
-const kakaoNativeAppKey =
-  process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY ??
-  process.env.KAKAO_NATIVE_APP_KEY;
+const kakaoNativeAppKey = process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY;
 
 const plugins: ExpoConfig["plugins"] = [
   "expo-router",
