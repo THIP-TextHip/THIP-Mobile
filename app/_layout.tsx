@@ -1,6 +1,8 @@
 ﻿import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import {
   SafeAreaView,
@@ -19,14 +21,16 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   useLoadFonts();
   const insets = useSafeAreaInsets();
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <SafeAreaView
-          style={{ flex: 1, backgroundColor: colors.black.main }}
-          edges={["top", "left", "right"]}
-        >
+      <QueryClientProvider client={queryClient}>
+        <BottomSheetModalProvider>
+          <SafeAreaView
+            style={{ flex: 1, backgroundColor: colors.black.main }}
+            edges={["top", "left", "right"]}
+          >
           <Stack>
             <Stack.Screen
               name="(tabs)"
@@ -107,8 +111,9 @@ export default function RootLayout() {
             topOffset={insets.top + 16}
           />
           {/* <Toast position="top" topOffset={60} /> */}
-        </SafeAreaView>
-      </BottomSheetModalProvider>
+          </SafeAreaView>
+        </BottomSheetModalProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }
