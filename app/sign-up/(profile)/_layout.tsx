@@ -17,6 +17,8 @@ export default function NicknameGenreLayout() {
     disabledNickname,
     handleCheckNickname,
     handleSignupAndToOnboarding,
+    isPendingCheckNickname,
+    isPendingSignup,
   } = useSignUpProfile();
 
   return (
@@ -34,7 +36,7 @@ export default function NicknameGenreLayout() {
             header: () => (
               <SignUpHeader
                 step={1}
-                disabled={disabledNickname}
+                disabled={disabledNickname || isPendingCheckNickname}
                 handleClickNext={handleCheckNickname}
               />
             ),
@@ -46,7 +48,7 @@ export default function NicknameGenreLayout() {
             header: () => (
               <SignUpHeader
                 step={2}
-                disabled={!genre}
+                disabled={!genre || isPendingSignup}
                 handleClickNext={handleSignupAndToOnboarding}
               />
             ),

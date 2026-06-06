@@ -6,7 +6,7 @@ export {
   useSignupMutation,
 } from "./user.queries";
 
-export {
+export type {
   AliasChoiceType,
   CheckNicknameRequest,
   CheckNicknameResponse,

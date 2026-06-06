@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
+import Toast from "react-native-toast-message";
 
 import { setAuthToken } from "../token-storage";
 import { checkNicknameApi, getAliasListApi, signupApi } from "./user.api";
@@ -63,12 +64,24 @@ export const useSignupMutation = () => {
   } = useMutation<SignupResponse, Error, SignupRequest>({
     mutationFn: signupApi,
     onSuccess: async (data) => {
-      await setAuthToken(data.accessToken);
-      router.replace("/sign-up/onboarding");
+      try {
+        await setAuthToken(data.accessToken);
+        router.replace("/sign-up/onboarding");
+      } catch {
+        console.error("[useSignupMutation] token persist failed");
+        Toast.show({
+          type: "error",
+          text1: "인증 토큰 저장에 실패했어요. 다시 시도해주세요.",
+        });
+      }
     },
     // TODO: 예외처리 UI 추가
     onError: (error) => {
       console.error("[useSignupMutation] signup failed", error);
+      Toast.show({
+        type: "error",
+        text1: "회원 가입에 실패했어요. 다시 시도해주세요.",
+      });
     },
   });
 
