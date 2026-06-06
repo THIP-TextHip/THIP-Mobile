@@ -5,7 +5,7 @@ export const AUTH_URL = {
 export const USER_URL = {
   DEFAULT: "/users",
   NICKNAME: "/users/nickname",
-  ALIAS: "/users/alias",
+  ALIAS_LIST: "/users/alias",
   SIGNUP: "/users/signup",
 } as const;
 

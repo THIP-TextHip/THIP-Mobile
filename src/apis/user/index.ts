@@ -15,4 +15,4 @@ export {
   SignupResponse,
 } from "./user.types";
 
-export {} from "./user.query-key";
+export { USER_QUERY_KEY } from "./user.query-key";

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CheckNicknameResponse, useCheckNicknameMutation } from "@apis/user";
 
 export const useSignUpProfile = () => {
-  // TODO: isPendingCheckNickname은 추후 로딩 페이지 및 로딩 관련 처리 적용 시 추가
+  // TODO: isPendingCheckNickname, isErrorCheckNickname, checkNicknameError는 추후 로딩 및 에러 처리 추가
   const { checkNickname } = useCheckNicknameMutation();
 
   const [nickname, setNickname] = useState("");
