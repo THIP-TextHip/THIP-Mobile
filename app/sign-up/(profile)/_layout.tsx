@@ -12,7 +12,7 @@ export default function NicknameGenreLayout() {
     genre,
     setGenre,
     disabledNickname,
-    handleToSelectGenre,
+    handleCheckNickname,
     handleToOnboarding,
   } = useSignUpProfile();
 
@@ -32,7 +32,7 @@ export default function NicknameGenreLayout() {
               <SignUpHeader
                 step={1}
                 disabled={disabledNickname}
-                handleClickNext={handleToSelectGenre}
+                handleClickNext={handleCheckNickname}
               />
             ),
           }}
