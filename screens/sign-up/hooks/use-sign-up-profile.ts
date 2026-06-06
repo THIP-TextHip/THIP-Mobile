@@ -1,11 +1,17 @@
 import { router } from "expo-router";
 import { useState } from "react";
 
-import { CheckNicknameResponse, useCheckNicknameMutation } from "@apis/user";
+import {
+  CheckNicknameResponse,
+  useCheckNicknameMutation,
+  useSignupMutation,
+} from "@apis/user";
 
 export const useSignUpProfile = () => {
   // TODO: isPendingCheckNickname, isErrorCheckNickname, checkNicknameError는 추후 로딩 및 에러 처리 추가
   const { checkNickname } = useCheckNicknameMutation();
+  // TODO: isPendingSignup, isErrorSignup, signupError 추후 추가
+  const { signup } = useSignupMutation();
 
   const [nickname, setNickname] = useState("");
   const [isNicknameDuplicated, setIsNicknameDuplicated] = useState(false);
@@ -30,10 +36,9 @@ export const useSignUpProfile = () => {
     );
   };
 
-  // TODO: 서버에 회원가입 요청
-  const handleToOnboarding = () => {
-    alert(`닉네임: ${nickname} / 장르: ${genre}`);
-    router.replace("/sign-up/onboarding");
+  const handleSignupAndToOnboarding = () => {
+    if (!genre) return null;
+    signup({ aliasName: genre, nickname });
   };
 
   return {
@@ -44,6 +49,6 @@ export const useSignUpProfile = () => {
     setGenre,
     disabledNickname,
     handleCheckNickname,
-    handleToOnboarding,
+    handleSignupAndToOnboarding,
   };
 };

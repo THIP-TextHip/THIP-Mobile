@@ -1,11 +1,15 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 
-import { checkNicknameApi, getAliasListApi } from "./user.api";
+import { setAuthToken } from "../token-storage";
+import { checkNicknameApi, getAliasListApi, signupApi } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
 import type {
   CheckNicknameRequest,
   CheckNicknameResponse,
   GetAliasListResponse,
+  SignupRequest,
+  SignupResponse,
 } from "./user.types";
 
 export const useCheckNicknameMutation = () => {
@@ -16,6 +20,7 @@ export const useCheckNicknameMutation = () => {
     error: checkNicknameError,
   } = useMutation<CheckNicknameResponse, Error, CheckNicknameRequest>({
     mutationFn: checkNicknameApi,
+    // TODO: 예외처리 UI 추가
     onError: (error) => {
       console.error("[useCheckNicknameMutation] check nickname failed", error);
     },
@@ -49,4 +54,28 @@ export const useGetAliasListQuery = () => {
   };
 };
 
-export const useSignupMutation = () => {};
+export const useSignupMutation = () => {
+  const {
+    mutate: signup,
+    isPending: isPendingSignup,
+    isError: isErrorSignup,
+    error: signupError,
+  } = useMutation<SignupResponse, Error, SignupRequest>({
+    mutationFn: signupApi,
+    onSuccess: async (data) => {
+      await setAuthToken(data.accessToken);
+      router.replace("/sign-up/onboarding");
+    },
+    // TODO: 예외처리 UI 추가
+    onError: (error) => {
+      console.error("[useSignupMutation] signup failed", error);
+    },
+  });
+
+  return {
+    signup,
+    isPendingSignup,
+    isErrorSignup,
+    signupError,
+  };
+};

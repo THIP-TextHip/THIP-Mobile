@@ -1,7 +1,10 @@
 import { Stack } from "expo-router";
 
-import { SignUpHeader } from "@screens/sign-up/components";
-import { NicknameGenreContext, useSignUpProfile } from "@screens/sign-up/hooks";
+import {
+  NicknameGenreContext,
+  SignUpHeader,
+  useSignUpProfile,
+} from "@screens/sign-up";
 import { colors } from "@theme/token";
 
 export default function NicknameGenreLayout() {
@@ -13,7 +16,7 @@ export default function NicknameGenreLayout() {
     setGenre,
     disabledNickname,
     handleCheckNickname,
-    handleToOnboarding,
+    handleSignupAndToOnboarding,
   } = useSignUpProfile();
 
   return (
@@ -44,7 +47,7 @@ export default function NicknameGenreLayout() {
               <SignUpHeader
                 step={2}
                 disabled={!genre}
-                handleClickNext={handleToOnboarding}
+                handleClickNext={handleSignupAndToOnboarding}
               />
             ),
           }}
