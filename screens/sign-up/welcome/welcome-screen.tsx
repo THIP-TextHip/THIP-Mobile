@@ -1,19 +1,15 @@
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
+import { useGetUserInfoQuery } from "@apis/user";
 import { IcArrowLeft } from "@images/icons";
 import { AppText, CustomButton, CustomHeader } from "@shared/ui";
-import { GENRES } from "@shared/ui/genre-card-group/constants";
 import { colors } from "@theme/token";
 
-// TODO: 서버에서 사용자 닉네임, 장르 가져오기
-const nickname = "Username01";
-const genre = "철학자";
-const profileColor = colors.character.orange;
-
 export default function WelcomeScreen() {
-  const GenreImage = GENRES.find((item) => item.subTitle === genre)?.image;
+  // TODO: 추후 로딩 및 예외처리 isPendingUserInfo, isErrorUserInfo, userInfoError
+  const { userInfo } = useGetUserInfoQuery();
 
   const handleGoBack = useCallback(() => {
     router.back();
@@ -35,7 +31,7 @@ export default function WelcomeScreen() {
       <View style={styles.container}>
         <View style={styles.textWrapper}>
           <AppText weight="bold" size="xl" color={colors.white}>
-            안녕하세요, {nickname}님
+            안녕하세요, {userInfo?.nickname}님
           </AppText>
           <AppText weight="medium" size="sm" color={colors.white}>
             이제 Thip에서 활동할 준비를 모두 마쳤어요!
@@ -43,16 +39,18 @@ export default function WelcomeScreen() {
         </View>
         <View style={styles.content}>
           <View style={styles.profileContainer}>
-            {/* TODO: 이미지 관련 스타일링 디테일 확인 */}
-            <View style={styles.image}>
-              {GenreImage && <GenreImage width={43} height={43} />}
+            <View style={styles.imageContainer}>
+              <Image
+                style={styles.image}
+                source={{ uri: userInfo?.profileImageUrl }}
+              />
             </View>
             <View style={styles.profileWrapper}>
               <AppText weight="semibold" size="lg" color={colors.white}>
-                {nickname}
+                {userInfo?.nickname}
               </AppText>
-              <AppText weight="regular" size="sm" color={profileColor}>
-                {genre}
+              <AppText weight="regular" size="sm" color={userInfo?.aliasColor}>
+                {userInfo?.aliasName}
               </AppText>
             </View>
           </View>
@@ -87,7 +85,7 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
   },
-  image: {
+  imageContainer: {
     width: 54,
     height: 54,
     justifyContent: "flex-end",
@@ -96,6 +94,10 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: colors.grey[200],
     overflow: "hidden",
+  },
+  image: {
+    width: 54,
+    height: 54,
   },
   profileWrapper: {
     alignItems: "center",
