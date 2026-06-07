@@ -3,12 +3,18 @@ import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { setAuthToken } from "../token-storage";
-import { checkNicknameApi, getAliasListApi, signupApi } from "./user.api";
+import {
+  checkNicknameApi,
+  getAliasListApi,
+  getUserInfoApi,
+  signupApi,
+} from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
 import type {
   CheckNicknameRequest,
   CheckNicknameResponse,
   GetAliasListResponse,
+  GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
 } from "./user.types";
@@ -45,6 +51,8 @@ export const useGetAliasListQuery = () => {
   } = useQuery<GetAliasListResponse, Error>({
     queryKey: USER_QUERY_KEY.ALIAS_LIST,
     queryFn: getAliasListApi,
+    staleTime: 1000 * 60 * 60,
+    gcTime: 1000 * 60 * 90,
   });
 
   return {
@@ -90,5 +98,26 @@ export const useSignupMutation = () => {
     isPendingSignup,
     isErrorSignup,
     signupError,
+  };
+};
+
+export const useGetUserInfoQuery = () => {
+  const {
+    data: userInfo,
+    isPending: isPendingUserInfo,
+    isError: isErrorUserInfo,
+    error: userInfoError,
+  } = useQuery<GetUserInfoResponse, Error>({
+    queryKey: USER_QUERY_KEY.USER_INFO,
+    queryFn: getUserInfoApi,
+    staleTime: 1000 * 60 * 60,
+    gcTime: 1000 * 60 * 60,
+  });
+
+  return {
+    userInfo,
+    isPendingUserInfo,
+    isErrorUserInfo,
+    userInfoError,
   };
 };

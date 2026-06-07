@@ -1,8 +1,14 @@
-export { checkNicknameApi, getAliasListApi, signupApi } from "./user.api";
+export {
+  checkNicknameApi,
+  getAliasListApi,
+  getUserInfoApi,
+  signupApi,
+} from "./user.api";
 
 export {
   useCheckNicknameMutation,
   useGetAliasListQuery,
+  useGetUserInfoQuery,
   useSignupMutation,
 } from "./user.queries";
 
@@ -11,6 +17,7 @@ export type {
   CheckNicknameRequest,
   CheckNicknameResponse,
   GetAliasListResponse,
+  GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
 } from "./user.types";

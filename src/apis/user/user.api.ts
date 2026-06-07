@@ -5,6 +5,7 @@ import type {
   CheckNicknameRequest,
   CheckNicknameResponse,
   GetAliasListResponse,
+  GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
 } from "./user.types";
@@ -31,6 +32,12 @@ export const signupApi = async (body: SignupRequest) => {
     USER_URL.SIGNUP,
     body,
   );
+
+  return response.data;
+};
+
+export const getUserInfoApi = async () => {
+  const response = await apiClient.get<GetUserInfoResponse>(USER_URL.USER_INFO);
 
   return response.data;
 };

@@ -26,3 +26,10 @@ export interface SignupResponse {
   userId: number;
   accessToken: string;
 }
+
+export interface GetUserInfoResponse {
+  profileImageUrl: string;
+  nickname: string;
+  aliasName: string;
+  aliasColor: string;
+}
