@@ -10,4 +10,6 @@ export const USER_URL = {
   USER_INFO: "/users/my-page",
 } as const;
 
-export const FEED_URL = {} as const;
+export const FEED_URL = {
+  DEFAULT: "/feeds",
+} as const;
