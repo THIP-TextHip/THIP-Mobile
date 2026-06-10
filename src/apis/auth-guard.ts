@@ -14,8 +14,7 @@ export class AuthRequiredError extends Error {
   }
 }
 
-// TODO: 백엔드 인증 에러코드가 확정되면 여기에 추가합니다.
-export const AUTH_ERROR_CODES: number[] = [];
+export const AUTH_ERROR_CODES = [40100, 40101];
 export const AUTH_ERROR_HTTP_STATUSES = [401];
 
 let isRedirectingToLogin = false;
