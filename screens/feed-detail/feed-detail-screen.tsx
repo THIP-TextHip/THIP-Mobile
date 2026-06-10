@@ -10,6 +10,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { useGetCommentListQuery } from "@apis/comment";
 import { useGetFeedDetailQuery } from "@apis/feed";
 import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -19,7 +20,6 @@ import {
   FeedDetailBottomSheet,
   FeedDetailHeader,
 } from "./components";
-import { DUMMY_COMMENT_LIST } from "./constants";
 
 export default function FeedDetailScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -34,6 +34,16 @@ export default function FeedDetailScreen() {
     refetchFeedDetail,
     isRefetchingFeedDetail,
   } = useGetFeedDetailQuery(feedId);
+  const {
+    commentList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingCommentList,
+    isErrorCommentList,
+    refetchCommentList,
+    isRefetchingCommentList,
+  } = useGetCommentListQuery(feedId, "FEED");
 
   const [comment, setComment] = useState("");
   const [replyCommentId, setReplyCommentId] = useState<number | null>(null);
@@ -103,6 +113,47 @@ export default function FeedDetailScreen() {
     });
   };
 
+  const handleRefresh = async () => {
+    await Promise.all([refetchFeedDetail(), refetchCommentList()]);
+  };
+
+  const handleLoadMoreComments = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  const renderCommentEmpty = () => {
+    if (isPendingCommentList) {
+      return (
+        <View style={styles.empty}>
+          <ActivityIndicator color={colors.white} />
+        </View>
+      );
+    }
+
+    if (isErrorCommentList) {
+      return (
+        <View style={styles.empty}>
+          <AppText weight="medium" size="sm" color={colors.grey[200]}>
+            댓글을 불러오지 못했어요.
+          </AppText>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.empty}>
+        <AppText weight="semibold" size="lg" color={colors.white}>
+          아직 댓글이 없어요
+        </AppText>
+        <AppText weight="regular" size="sm" color={colors.grey[100]}>
+          첫번째 댓글을 남겨보세요
+        </AppText>
+      </View>
+    );
+  };
+
   useEffect(() => {
     if (!feedId) {
       Toast.show({
@@ -149,7 +200,7 @@ export default function FeedDetailScreen() {
       <FlatList
         ListHeaderComponent={() => <FeedPostDetail feedDetail={feedDetail} />}
         contentContainerStyle={[styles.list, { paddingBottom: inputBarHeight }]}
-        data={DUMMY_COMMENT_LIST}
+        data={commentList}
         keyExtractor={(item) => String(item.commentId)}
         renderItem={({ item, index }) => (
           <CommentRoot
@@ -158,20 +209,21 @@ export default function FeedDetailScreen() {
             handlePressReply={handlePressReply}
           />
         )}
-        ListEmptyComponent={() => (
-          <View style={styles.empty}>
-            <AppText weight="semibold" size="lg" color={colors.white}>
-              아직 댓글이 없어요
-            </AppText>
-            <AppText weight="regular" size="sm" color={colors.grey[100]}>
-              첫번째 댓글을 남겨보세요
-            </AppText>
-          </View>
-        )}
+        ListEmptyComponent={renderCommentEmpty}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ActivityIndicator
+              style={styles.commentFooter}
+              color={colors.white}
+            />
+          ) : null
+        }
+        onEndReached={handleLoadMoreComments}
+        onEndReachedThreshold={0.5}
         refreshControl={
           <RefreshControl
-            refreshing={isRefetchingFeedDetail}
-            onRefresh={refetchFeedDetail}
+            refreshing={isRefetchingFeedDetail || isRefetchingCommentList}
+            onRefresh={handleRefresh}
             tintColor={colors.white}
             colors={[colors.white]}
           />
@@ -225,5 +277,8 @@ const styles = StyleSheet.create({
     minHeight: 300,
     alignItems: "center",
     justifyContent: "center",
+  },
+  commentFooter: {
+    marginVertical: 24,
   },
 });

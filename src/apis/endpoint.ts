@@ -14,3 +14,7 @@ export const FEED_URL = {
   DEFAULT: "/feeds",
   DETAIL: (feedId: number | string) => `/feeds/${feedId}`,
 } as const;
+
+export const COMMENT_URL = {
+  DEFAULT: (postId: number | string) => `/comments/${postId}`,
+} as const;
