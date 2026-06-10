@@ -1,10 +1,25 @@
-import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  InfiniteData,
+  useInfiniteQuery,
+  useQuery,
+} from "@tanstack/react-query";
 
-import { getAllFeedListApi } from "./feed.api";
+import { getAllFeedListApi, getFeedDetailApi } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
-import type { GetAllFeedListResponse } from "./feed.types";
+import type {
+  GetAllFeedListResponse,
+  GetFeedDetailResponse,
+} from "./feed.types";
 
 type FeedCursor = string | null;
+
+const FEED_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 2,
+  GC: 1000 * 60 * 10,
+} as const;
+
+const hasFeedId = (feedId?: number | string): feedId is number | string =>
+  feedId != null && feedId !== "";
 
 export const useGetAllFeedListQuery = () => {
   const {
@@ -29,6 +44,8 @@ export const useGetAllFeedListQuery = () => {
     initialPageParam: null,
     getNextPageParam: (lastPage) =>
       lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
   });
 
   return {
@@ -41,5 +58,37 @@ export const useGetAllFeedListQuery = () => {
     feedListError,
     refetchFeedList,
     isRefetchingFeedList,
+  };
+};
+
+export const useGetFeedDetailQuery = (feedId?: number | string) => {
+  const {
+    data: feedDetail,
+    isPending: isPendingFeedDetail,
+    isError: isErrorFeedDetail,
+    error: feedDetailError,
+    refetch: refetchFeedDetail,
+    isRefetching: isRefetchingFeedDetail,
+  } = useQuery<GetFeedDetailResponse, Error>({
+    queryKey: FEED_QUERY_KEY.DETAIL(feedId),
+    queryFn: () => {
+      if (!hasFeedId(feedId)) {
+        throw new Error("feedId is required.");
+      }
+
+      return getFeedDetailApi(feedId);
+    },
+    enabled: hasFeedId(feedId),
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    feedDetail,
+    isPendingFeedDetail,
+    isErrorFeedDetail,
+    feedDetailError,
+    refetchFeedDetail,
+    isRefetchingFeedDetail,
   };
 };

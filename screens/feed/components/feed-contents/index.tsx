@@ -40,6 +40,7 @@ export default function FeedContents() {
       );
     }
 
+    // TODO: 에러 발생 시 보여줄 처리 필요. ex) 토스트 메시지 띄우기
     if (isErrorFeedList) {
       return (
         <View style={styles.status}>
@@ -78,6 +79,7 @@ export default function FeedContents() {
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
+      // TODO: 새로고침 디자인 확인
       refreshControl={
         <RefreshControl
           refreshing={isRefetchingFeedList}

@@ -1,9 +1,16 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { useGetFeedDetailQuery } from "@apis/feed";
 import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -12,15 +19,23 @@ import {
   FeedDetailBottomSheet,
   FeedDetailHeader,
 } from "./components";
-import { DUMMY_COMMENT_LIST, DUMMY_FEED_DETAIL } from "./constants";
+import { DUMMY_COMMENT_LIST } from "./constants";
 
 export default function FeedDetailScreen() {
   const { bottom } = useSafeAreaInsets();
   const [inputBarHeight, setInputBarHeight] = useState(0);
   const { feedId } = useLocalSearchParams<{ feedId: string }>();
 
-  const [comment, setComment] = useState("");
+  // TODO: 로딩 시 인디케이터 대신 스켈레톤 보여주기
+  const {
+    feedDetail,
+    isPendingFeedDetail,
+    isErrorFeedDetail,
+    refetchFeedDetail,
+    isRefetchingFeedDetail,
+  } = useGetFeedDetailQuery(feedId);
 
+  const [comment, setComment] = useState("");
   const [replyCommentId, setReplyCommentId] = useState<number | null>(null);
   const [replyNickname, setReplyNickname] = useState("");
 
@@ -54,6 +69,8 @@ export default function FeedDetailScreen() {
   };
 
   const handlePressMore = () => {
+    if (!feedDetail) return;
+
     setIsBottomSheetVisible(true);
   };
 
@@ -102,13 +119,35 @@ export default function FeedDetailScreen() {
 
   if (!feedId) return null;
 
+  if (isPendingFeedDetail) {
+    return (
+      <View style={[styles.page, { paddingBottom: bottom }]}>
+        <FeedDetailHeader handlePressMore={handlePressMore} />
+        <View style={styles.status}>
+          <ActivityIndicator color={colors.white} />
+        </View>
+      </View>
+    );
+  }
+
+  if (isErrorFeedDetail || !feedDetail) {
+    return (
+      <View style={[styles.page, { paddingBottom: bottom }]}>
+        <FeedDetailHeader handlePressMore={handlePressMore} />
+        <View style={styles.status}>
+          <AppText weight="medium" size="sm" color={colors.grey[200]}>
+            피드를 불러오지 못했어요.
+          </AppText>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.page, { paddingBottom: bottom }]}>
       <FeedDetailHeader handlePressMore={handlePressMore} />
       <FlatList
-        ListHeaderComponent={() => (
-          <FeedPostDetail feedDetail={DUMMY_FEED_DETAIL} />
-        )}
+        ListHeaderComponent={() => <FeedPostDetail feedDetail={feedDetail} />}
         contentContainerStyle={[styles.list, { paddingBottom: inputBarHeight }]}
         data={DUMMY_COMMENT_LIST}
         keyExtractor={(item) => String(item.commentId)}
@@ -129,6 +168,14 @@ export default function FeedDetailScreen() {
             </AppText>
           </View>
         )}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingFeedDetail}
+            onRefresh={refetchFeedDetail}
+            tintColor={colors.white}
+            colors={[colors.white]}
+          />
+        }
       />
 
       <ChatInputBar
@@ -144,8 +191,7 @@ export default function FeedDetailScreen() {
       />
 
       <FeedDetailBottomSheet
-        // TODO: 서버에서 받아온 데이터로 수정 예정
-        isWriter={DUMMY_FEED_DETAIL.isWriter}
+        isWriter={feedDetail.isWriter}
         isVisible={isBottomSheetVisible}
         handleCloseBottomSheet={handleCloseBottomSheet}
         handleReport={handleReport}
@@ -167,6 +213,11 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: 24,
+  },
+  status: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   empty: {
     flex: 1,

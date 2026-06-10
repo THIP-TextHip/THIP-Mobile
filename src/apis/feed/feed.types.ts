@@ -23,3 +23,9 @@ export interface GetAllFeedListResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export type GetFeedDetailResponse = FeedType & {
+  bookImageUrl: string;
+  tagList: string[];
+  isPublic: boolean;
+};

@@ -12,4 +12,5 @@ export const USER_URL = {
 
 export const FEED_URL = {
   DEFAULT: "/feeds",
+  DETAIL: (feedId: number | string) => `/feeds/${feedId}`,
 } as const;
