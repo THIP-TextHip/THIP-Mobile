@@ -29,3 +29,12 @@ export type GetFeedDetailResponse = FeedType & {
   tagList: string[];
   isPublic: boolean;
 };
+
+export interface CategoryListType {
+  category: string;
+  tagList: string[];
+}
+
+export interface GetFeedTagListResponse {
+  categoryList: CategoryListType[];
+}

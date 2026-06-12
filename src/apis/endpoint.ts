@@ -13,6 +13,7 @@ export const USER_URL = {
 export const FEED_URL = {
   DEFAULT: "/feeds",
   DETAIL: (feedId: number | string) => `/feeds/${feedId}`,
+  TAG_LIST: "/feeds/write-info",
 } as const;
 
 export const COMMENT_URL = {
