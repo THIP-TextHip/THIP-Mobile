@@ -1,5 +1,10 @@
 import { AxiosError, create, type AxiosRequestConfig } from "axios";
 
+import {
+  AuthRequiredError,
+  clearAuthAndRedirectToLogin,
+  isAuthError,
+} from "./auth-guard";
 import { getAuthToken } from "./token-storage";
 
 declare module "axios" {
@@ -65,9 +70,11 @@ axiosInstance.interceptors.request.use(async (config) => {
 
   const token = await getAuthToken();
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (!token) {
+    throw new AuthRequiredError();
   }
+
+  config.headers.Authorization = `Bearer ${token}`;
 
   return config;
 });
@@ -90,6 +97,8 @@ const isApiErrorResponse = (data: unknown): data is ApiErrorResponse => {
 const request = async <T>(
   config: AxiosRequestConfig,
 ): Promise<ApiClientResponse<T>> => {
+  const shouldHandleAuthError = !config.skipAuth;
+
   try {
     const response = await axiosInstance.request<ApiResponse<T>>(config);
     const responseData = response.data;
@@ -106,7 +115,19 @@ const request = async <T>(
       status: response.status,
     };
   } catch (error) {
+    if (error instanceof AuthRequiredError) {
+      await clearAuthAndRedirectToLogin();
+      throw error;
+    }
+
     if (error instanceof ApiError) {
+      if (
+        shouldHandleAuthError &&
+        isAuthError({ code: error.code, status: error.status })
+      ) {
+        await clearAuthAndRedirectToLogin();
+      }
+
       throw error;
     }
 
@@ -114,7 +135,24 @@ const request = async <T>(
       error instanceof AxiosError &&
       isApiErrorResponse(error.response?.data)
     ) {
-      throw new ApiError(error.response.data, error.response.status);
+      const apiError = new ApiError(error.response.data, error.response.status);
+
+      if (
+        shouldHandleAuthError &&
+        isAuthError({ code: apiError.code, status: apiError.status })
+      ) {
+        await clearAuthAndRedirectToLogin();
+      }
+
+      throw apiError;
+    }
+
+    if (
+      error instanceof AxiosError &&
+      shouldHandleAuthError &&
+      isAuthError({ status: error.response?.status })
+    ) {
+      await clearAuthAndRedirectToLogin();
     }
 
     throw error;

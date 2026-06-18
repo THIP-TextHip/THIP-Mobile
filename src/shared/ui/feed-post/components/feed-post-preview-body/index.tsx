@@ -109,20 +109,22 @@ export default function FeedPostPreviewBody({
           </LinearGradient>
         )}
       </View>
-      <View style={styles.imageWrapper}>
-        {imageSize > 0 &&
-          contentUrls
-            .slice(0, 3)
-            .map((image, index) => (
-              <Image
-                key={`${image}-${index}`}
-                source={{ uri: image }}
-                width={imageSize}
-                height={imageSize}
-                style={{ width: imageSize, height: imageSize }}
-              />
-            ))}
-      </View>
+      {feedPreview.contentUrls.length > 0 && (
+        <View style={styles.imageWrapper}>
+          {imageSize > 0 &&
+            contentUrls
+              .slice(0, 3)
+              .map((image, index) => (
+                <Image
+                  key={`${image}-${index}`}
+                  source={{ uri: image }}
+                  width={imageSize}
+                  height={imageSize}
+                  style={{ width: imageSize, height: imageSize }}
+                />
+              ))}
+        </View>
+      )}
     </Pressable>
   );
 }

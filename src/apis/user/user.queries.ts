@@ -19,6 +19,17 @@ import type {
   SignupResponse,
 } from "./user.types";
 
+const USER_QUERY_CACHE_TIME = {
+  ALIAS_LIST: {
+    STALE: 1000 * 60 * 60,
+    GC: 1000 * 60 * 90,
+  },
+  USER_INFO: {
+    STALE: 1000 * 60 * 60,
+    GC: 1000 * 60 * 60,
+  },
+} as const;
+
 export const useCheckNicknameMutation = () => {
   const {
     mutate: checkNickname,
@@ -51,8 +62,8 @@ export const useGetAliasListQuery = () => {
   } = useQuery<GetAliasListResponse, Error>({
     queryKey: USER_QUERY_KEY.ALIAS_LIST,
     queryFn: getAliasListApi,
-    staleTime: 1000 * 60 * 60,
-    gcTime: 1000 * 60 * 90,
+    staleTime: USER_QUERY_CACHE_TIME.ALIAS_LIST.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.ALIAS_LIST.GC,
   });
 
   return {
@@ -110,8 +121,8 @@ export const useGetUserInfoQuery = () => {
   } = useQuery<GetUserInfoResponse, Error>({
     queryKey: USER_QUERY_KEY.USER_INFO,
     queryFn: getUserInfoApi,
-    staleTime: 1000 * 60 * 60,
-    gcTime: 1000 * 60 * 60,
+    staleTime: USER_QUERY_CACHE_TIME.USER_INFO.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.USER_INFO.GC,
   });
 
   return {
