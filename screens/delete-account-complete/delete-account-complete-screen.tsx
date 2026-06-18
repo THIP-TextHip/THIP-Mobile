@@ -1,3 +1,5 @@
+import { router } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 import {
@@ -12,6 +14,14 @@ import { colors } from "@theme/token";
 export default function DeleteAccountCompleteScreen() {
   const { width } = useWindowDimensions();
   const imageWidth = (width - 45) / 4;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.replace("/login");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <View style={styles.page}>

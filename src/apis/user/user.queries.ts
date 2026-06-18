@@ -2,9 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import { setAuthToken } from "../token-storage";
+import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
   checkNicknameApi,
+  deleteUserAccountApi,
   getAliasListApi,
   getUserInfoApi,
   signupApi,
@@ -94,7 +95,6 @@ export const useSignupMutation = () => {
         });
       }
     },
-    // TODO: 예외처리 UI 추가
     onError: (error) => {
       console.error("[useSignupMutation] signup failed", error);
       Toast.show({
@@ -130,5 +130,32 @@ export const useGetUserInfoQuery = () => {
     isPendingUserInfo,
     isErrorUserInfo,
     userInfoError,
+  };
+};
+
+export const useDeleteUserAccountMutation = () => {
+  const { mutate: deleteUserAccount, isPending: isPendingDeleteUserAccount } =
+    useMutation<void, Error>({
+      mutationFn: deleteUserAccountApi,
+      onSuccess: async () => {
+        try {
+          await deleteAuthToken();
+        } catch (error) {
+          console.error("[auth] token delete failed", error);
+        } finally {
+          router.replace("/delete-account-complete");
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `회원탈퇴에 실패했습니다. ${error.message}`,
+        });
+      },
+    });
+
+  return {
+    deleteUserAccount,
+    isPendingDeleteUserAccount,
   };
 };

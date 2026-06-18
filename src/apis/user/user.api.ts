@@ -41,3 +41,7 @@ export const getUserInfoApi = async () => {
 
   return response.data;
 };
+
+export const deleteUserAccountApi = async () => {
+  await apiClient.delete<string>(USER_URL.DEFAULT);
+};

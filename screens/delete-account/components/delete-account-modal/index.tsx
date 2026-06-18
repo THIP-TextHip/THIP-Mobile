@@ -1,6 +1,6 @@
-import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
+import { useDeleteUserAccountMutation } from "@apis/user";
 import { AppText, CustomButton, CustomModal } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -13,10 +13,11 @@ export default function DeleteAccountModal({
   isVisible,
   handleCloseModal,
 }: DeleteAccountModalProps) {
-  // TODO: 회원탈퇴 api 연동
+  // TODO: isPendingDeleteUserAccount 이용히여 추후 로딩 처리
+  const { deleteUserAccount } = useDeleteUserAccountMutation();
   const handleDeleteAccount = () => {
     handleCloseModal();
-    router.replace("/delete-account-complete");
+    deleteUserAccount();
   };
 
   return (
