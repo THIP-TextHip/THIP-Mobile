@@ -12,10 +12,12 @@ export const USER_URL = {
 
 export const FEED_URL = {
   DEFAULT: "/feeds",
-  DETAIL: (feedId: number | string) => `/feeds/${feedId}`,
+  DETAIL: (feedId: number | string) =>
+    `/feeds/${encodeURIComponent(String(feedId))}`,
   TAG_LIST: "/feeds/write-info",
 } as const;
 
 export const COMMENT_URL = {
-  DEFAULT: (postId: number | string) => `/comments/${postId}`,
+  DEFAULT: (postId: number | string) =>
+    `/comments/${encodeURIComponent(String(postId))}`,
 } as const;
