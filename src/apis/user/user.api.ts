@@ -4,6 +4,7 @@ import { USER_URL } from "@apis/endpoint";
 import type {
   CheckNicknameRequest,
   CheckNicknameResponse,
+  EditUserProfileRequest,
   GetAliasListResponse,
   GetUserInfoResponse,
   SignupRequest,
@@ -44,4 +45,8 @@ export const getUserInfoApi = async () => {
 
 export const deleteUserAccountApi = async () => {
   await apiClient.delete<string>(USER_URL.DEFAULT);
+};
+
+export const editUserProfileApi = async (body: EditUserProfileRequest) => {
+  await apiClient.patch<string, EditUserProfileRequest>(USER_URL.DEFAULT, body);
 };

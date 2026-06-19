@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
@@ -6,6 +6,7 @@ import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
   checkNicknameApi,
   deleteUserAccountApi,
+  editUserProfileApi,
   getAliasListApi,
   getUserInfoApi,
   signupApi,
@@ -14,6 +15,7 @@ import { USER_QUERY_KEY } from "./user.query-key";
 import type {
   CheckNicknameRequest,
   CheckNicknameResponse,
+  EditUserProfileRequest,
   GetAliasListResponse,
   GetUserInfoResponse,
   SignupRequest,
@@ -130,6 +132,37 @@ export const useGetUserInfoQuery = () => {
     isPendingUserInfo,
     isErrorUserInfo,
     userInfoError,
+  };
+};
+
+export const useEditUserProfileMutation = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: editUserProfile,
+    isPending: isPendingEditUserProfile,
+    isError: isErrorEditUserProfile,
+    error: editUserProfileError,
+  } = useMutation<void, Error, EditUserProfileRequest>({
+    mutationFn: editUserProfileApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEY.USER_INFO,
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    editUserProfile,
+    isPendingEditUserProfile,
+    isErrorEditUserProfile,
+    editUserProfileError,
   };
 };
 

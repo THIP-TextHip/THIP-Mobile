@@ -33,3 +33,8 @@ export interface GetUserInfoResponse {
   aliasName: string;
   aliasColor: string;
 }
+
+export interface EditUserProfileRequest {
+  aliasName?: string;
+  nickname?: string;
+}
