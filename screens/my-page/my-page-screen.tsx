@@ -2,18 +2,15 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
+import { useGetUserInfoQuery } from "@apis/user";
 import { AppText, UserProfileBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { LogoutModal, SettingsListItem } from "./components";
 import { SETTINGS_MY_ACTIVITY, SETTINGS_OTHER } from "./constants";
 
-// TODO: 서버에서 받아오기
-const nickname = "ThipUser01";
-const genre = "문학가";
-const profileColor = colors.character.mint;
-
 export default function MyPageScreen() {
+  const { userInfo } = useGetUserInfoQuery();
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const handleToEdit = () => {
@@ -35,7 +32,11 @@ export default function MyPageScreen() {
     <ScrollView contentContainerStyle={styles.page}>
       <UserProfileBar
         type="edit-profile"
-        userProfile={{ nickname, genre, profileColor }}
+        userProfile={{
+          nickname: userInfo?.nickname ?? "",
+          genre: userInfo?.aliasName ?? "",
+          profileColor: userInfo?.aliasColor ?? colors.grey[300],
+        }}
         handleToEdit={handleToEdit}
       />
       <View style={styles.section}>

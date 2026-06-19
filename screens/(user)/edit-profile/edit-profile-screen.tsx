@@ -1,36 +1,56 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
+import {
+  useEditUserProfileMutation,
+  useGetUserInfoQuery,
+} from "@apis/user";
 import { AppText, GenreCardGroup, InputNickname } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { EditProfileHeader } from "./components";
-import {
-  DUMMY_GENRE,
-  DUMMY_NICKNAME,
-  EDIT_PROFILE_NICKNAME_ERROR,
-} from "./constants";
+import { EDIT_PROFILE_NICKNAME_ERROR } from "./constants";
 
 export default function EditProfileScreen() {
-  const [inputNickname, setInputNickname] = useState(DUMMY_NICKNAME);
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(
-    DUMMY_GENRE,
-  );
+  const { userInfo } = useGetUserInfoQuery();
+  const { editUserProfile, isPendingEditUserProfile } =
+    useEditUserProfileMutation();
+  const [inputNickname, setInputNickname] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   const handleUpdateProfile = () => {
-    // TODO: 서버 api 연동
-    console.log(inputNickname, selectedGenre, "로 프로필 업데이트 요청");
+    if (!userInfo || selectedGenre === null) return;
+
+    const body = {
+      ...(inputNickname !== userInfo.nickname && { nickname: inputNickname }),
+      ...(selectedGenre !== userInfo.aliasName && { aliasName: selectedGenre }),
+    };
+
+    if (Object.keys(body).length === 0) return;
+
+    editUserProfile(body);
   };
 
   const handleDismissKeyboard = useCallback(() => {
     Keyboard.dismiss();
   }, []);
 
-  // TODO: 변경사항이 있을 경우
+  useEffect(() => {
+    if (!userInfo) return;
+
+    setInputNickname(userInfo.nickname);
+    setSelectedGenre(userInfo.aliasName);
+  }, [userInfo]);
+
   const isChanged =
-    inputNickname !== DUMMY_NICKNAME || selectedGenre !== DUMMY_GENRE;
+    !!userInfo &&
+    (inputNickname !== userInfo.nickname ||
+      selectedGenre !== userInfo.aliasName);
   const ableToChange =
-    isChanged && inputNickname.length > 1 && selectedGenre !== null;
+    isChanged &&
+    inputNickname.length > 1 &&
+    selectedGenre !== null &&
+    !isPendingEditUserProfile;
 
   return (
     <Pressable onPress={handleDismissKeyboard}>
