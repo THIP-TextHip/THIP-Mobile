@@ -1,5 +1,7 @@
 export {
   checkNicknameApi,
+  deleteUserAccountApi,
+  editUserProfileApi,
   getAliasListApi,
   getUserInfoApi,
   signupApi,
@@ -7,6 +9,8 @@ export {
 
 export {
   useCheckNicknameMutation,
+  useDeleteUserAccountMutation,
+  useEditUserProfileMutation,
   useGetAliasListQuery,
   useGetUserInfoQuery,
   useSignupMutation,
@@ -16,6 +20,7 @@ export type {
   AliasChoiceType,
   CheckNicknameRequest,
   CheckNicknameResponse,
+  EditUserProfileRequest,
   GetAliasListResponse,
   GetUserInfoResponse,
   SignupRequest,

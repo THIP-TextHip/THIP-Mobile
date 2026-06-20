@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
+import { clearAuthAndRedirectToLogin } from "../auth-guard";
 import { setAuthToken } from "../token-storage";
+import { USER_QUERY_KEY } from "../user";
 import { loginApi } from "./auth.api";
 import type { LoginRequest, LoginResponse } from "./auth.types";
 
@@ -37,4 +39,16 @@ export const useLoginMutation = () => {
     login,
     isPendingLogin, // TODO: 추후 로딩 애니메이션 보여주기
   };
+};
+
+export const useLogout = () => {
+  const queryClient = useQueryClient();
+  const logout = async () => {
+    await clearAuthAndRedirectToLogin();
+    queryClient.invalidateQueries({
+      queryKey: USER_QUERY_KEY.USER_INFO,
+    });
+  };
+
+  return { logout };
 };

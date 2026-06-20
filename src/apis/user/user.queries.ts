@@ -1,10 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import { setAuthToken } from "../token-storage";
+import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
   checkNicknameApi,
+  deleteUserAccountApi,
+  editUserProfileApi,
   getAliasListApi,
   getUserInfoApi,
   signupApi,
@@ -13,6 +15,7 @@ import { USER_QUERY_KEY } from "./user.query-key";
 import type {
   CheckNicknameRequest,
   CheckNicknameResponse,
+  EditUserProfileRequest,
   GetAliasListResponse,
   GetUserInfoResponse,
   SignupRequest,
@@ -94,7 +97,6 @@ export const useSignupMutation = () => {
         });
       }
     },
-    // TODO: 예외처리 UI 추가
     onError: (error) => {
       console.error("[useSignupMutation] signup failed", error);
       Toast.show({
@@ -130,5 +132,72 @@ export const useGetUserInfoQuery = () => {
     isPendingUserInfo,
     isErrorUserInfo,
     userInfoError,
+  };
+};
+
+export const useEditUserProfileMutation = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: editUserProfile,
+    isPending: isPendingEditUserProfile,
+    isError: isErrorEditUserProfile,
+    error: editUserProfileError,
+  } = useMutation<void, Error, EditUserProfileRequest>({
+    mutationFn: editUserProfileApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEY.USER_INFO,
+      });
+      router.back();
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    editUserProfile,
+    isPendingEditUserProfile,
+    isErrorEditUserProfile,
+    editUserProfileError,
+  };
+};
+
+export const useDeleteUserAccountMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteUserAccount, isPending: isPendingDeleteUserAccount } =
+    useMutation<void, Error>({
+      mutationFn: deleteUserAccountApi,
+      onSuccess: async () => {
+        try {
+          await deleteAuthToken();
+          queryClient.invalidateQueries({
+            queryKey: USER_QUERY_KEY.USER_INFO,
+          });
+          router.replace("/delete-account-complete");
+        } catch (error) {
+          console.error("[auth] token delete failed", error);
+          Toast.show({
+            type: "error",
+            text1: "토큰 삭제에 실패했습니다. 앱 종료 후 다시 시도해주세요.",
+          });
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `회원탈퇴에 실패했습니다. ${error.message}`,
+        });
+      },
+    });
+
+  return {
+    deleteUserAccount,
+    isPendingDeleteUserAccount,
   };
 };

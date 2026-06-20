@@ -1,6 +1,6 @@
-import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
+import { useLogout } from "@apis/auth";
 import { AppText, CustomButton, CustomModal } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -13,10 +13,10 @@ export default function LogoutModal({
   isVisible,
   handleCloseModal,
 }: LogoutModalProps) {
-  // TODO: 로그아웃 연동
+  const { logout } = useLogout();
   const handleLogout = () => {
     handleCloseModal();
-    router.push("/login");
+    logout();
   };
 
   return (
