@@ -1,12 +1,14 @@
 import { router } from "expo-router";
-import { useCallback } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { useCallback, useEffect } from "react";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
+import { useSearchBookQuery, type BookType } from "@apis/book";
+import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
 import { AppText, CustomButton, ListTotalCountHeader } from "@shared/ui";
+import { useQueryClient } from "@tanstack/react-query";
 import { colors } from "@theme/token";
 
 import SearchedBookItem from "../../components/searched-book-item";
-import { DUMMY_SEARCHED_BOOKS } from "../../constants";
 
 interface SearchResultProps {
   searchText: string;
@@ -17,25 +19,46 @@ export default function SearchResult({
   searchText,
   hasSearched,
 }: SearchResultProps) {
-  // TODO: searchText로 추후 서버 api 연동하여 검색된 책 리스트 조회
+  const queryClient = useQueryClient();
+  const {
+    searchBookList,
+    totalElements,
+    fetchNextPage,
+    hasNextPage,
+    isPendingSearchBook,
+    isFetchingSearchBook,
+    isFetchingNextPage,
+  } = useSearchBookQuery(searchText, 1, hasSearched);
+
+  useEffect(() => {
+    const normalizedSearchText = searchText.trim();
+
+    if (
+      !hasSearched ||
+      normalizedSearchText === "" ||
+      isPendingSearchBook ||
+      isFetchingSearchBook
+    ) {
+      return;
+    }
+
+    void queryClient.invalidateQueries({
+      queryKey: RECENT_SEARCH_QUERY_KEY.LIST("BOOK"),
+    });
+  }, [
+    hasSearched,
+    isFetchingSearchBook,
+    isPendingSearchBook,
+    queryClient,
+    searchText,
+  ]);
 
   const handleToBookRequestPage = useCallback(() => {
     router.push("/book-request");
   }, []);
 
-  // TODO: 추후 타입 만들어서 수정
   const listItem = useCallback(
-    ({
-      item,
-    }: {
-      item: {
-        title: string;
-        imageUrl: string;
-        authorName: string;
-        publisher: string;
-        isbn: string;
-      };
-    }) => (
+    ({ item }: { item: BookType }) => (
       <SearchedBookItem
         title={item.title}
         imageUrl={item.imageUrl}
@@ -49,12 +72,26 @@ export default function SearchResult({
 
   const Separator = () => <View style={styles.separator} />;
 
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  if (isPendingSearchBook) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {hasSearched && DUMMY_SEARCHED_BOOKS.length !== 0 && (
-        <ListTotalCountHeader length={DUMMY_SEARCHED_BOOKS.length} />
+      {hasSearched && searchBookList.length !== 0 && (
+        <ListTotalCountHeader length={totalElements} />
       )}
-      {DUMMY_SEARCHED_BOOKS.length === 0 ? (
+      {searchBookList.length === 0 ? (
         <View style={styles.emptyContainer}>
           <View style={styles.emptyText}>
             <AppText weight="semibold" size="lg" color={colors.white}>
@@ -77,11 +114,21 @@ export default function SearchResult({
         </View>
       ) : (
         <FlatList
-          contentContainerStyle={styles.booksWrapper}
-          data={DUMMY_SEARCHED_BOOKS}
+          contentContainerStyle={[
+            styles.booksWrapper,
+            isFetchingNextPage && { paddingBottom: 40 },
+          ]}
+          data={searchBookList}
           keyExtractor={(item) => item.isbn}
           renderItem={listItem}
           ItemSeparatorComponent={Separator}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <ActivityIndicator style={styles.footer} color={colors.white} />
+            ) : null
+          }
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
         />
       )}
     </View>
@@ -117,5 +164,13 @@ const styles = StyleSheet.create({
   emptyText: {
     gap: 8,
     alignItems: "center",
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  footer: {
+    marginTop: 20,
   },
 });

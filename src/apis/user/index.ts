@@ -24,6 +24,7 @@ export type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetSearchUserRequest,
   GetSearchUserResponse,
   GetUserInfoResponse,
   SignupRequest,

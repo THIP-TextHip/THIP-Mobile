@@ -18,12 +18,8 @@ export default function SearchUserResult({
   hasSearched,
 }: SearchUserResultProps) {
   const queryClient = useQueryClient();
-  const {
-    searchUserList,
-    isPendingSearchUser,
-    isFetchingSearchUser,
-    dataUpdatedAtSearchUser,
-  } = useSearchUserQuery(searchText, hasSearched, 30);
+  const { searchUserList, isPendingSearchUser, isFetchingSearchUser } =
+    useSearchUserQuery(searchText, hasSearched, 30);
 
   useEffect(() => {
     const normalizedSearchText = searchText.trim();
@@ -32,8 +28,7 @@ export default function SearchUserResult({
       !hasSearched ||
       normalizedSearchText === "" ||
       isPendingSearchUser ||
-      isFetchingSearchUser ||
-      dataUpdatedAtSearchUser === 0
+      isFetchingSearchUser
     ) {
       return;
     }
@@ -42,7 +37,6 @@ export default function SearchUserResult({
       queryKey: RECENT_SEARCH_QUERY_KEY.LIST("USER"),
     });
   }, [
-    dataUpdatedAtSearchUser,
     hasSearched,
     isFetchingSearchUser,
     isPendingSearchUser,
@@ -60,7 +54,7 @@ export default function SearchUserResult({
   if (isPendingSearchUser) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.neongreen} />
+        <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
   }

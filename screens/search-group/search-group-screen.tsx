@@ -30,26 +30,31 @@ export default function SearchGroupScreen() {
   const { deleteRecentSearch } = useDeleteRecentSearchMutation("ROOM");
 
   const [searchText, setSearchText] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
   const [roomCategory, setRoomCategory] =
     useState<SearchGroupCategoryType | null>(searchGroupInitialCategory);
 
   const handleChangeText = useCallback((text: string) => {
     setSearchText(text);
+    setHasSearched(false);
     setRoomCategory(null);
   }, []);
 
   const handleSearch = useCallback(() => {
     if (searchText.trim() === "") return;
-    console.log(searchText, " 검색");
+    setHasSearched(true);
     setRoomCategory("전체");
   }, [searchText]);
 
   const handleClickKeyword = useCallback((keyword: string) => {
-    console.log(keyword, " 검색");
+    setSearchText(keyword);
+    setHasSearched(true);
+    setRoomCategory("전체");
   }, []);
 
   const handleChangeCategoryToEntire = useCallback(() => {
     Keyboard.dismiss();
+    setHasSearched(false);
     setRoomCategory("전체");
   }, []);
 
@@ -57,10 +62,12 @@ export default function SearchGroupScreen() {
     (nextCategory: SearchGroupCategoryType) => {
       if (roomCategory === nextCategory) {
         setSearchText("");
+        setHasSearched(false);
         setRoomCategory(null);
         clearSearchGroupInitialCategory();
         return;
       }
+      setHasSearched(false);
       setRoomCategory(nextCategory);
       setSearchGroupInitialCategory(nextCategory);
     },
@@ -87,6 +94,7 @@ export default function SearchGroupScreen() {
           {searchText.trim() !== "" || roomCategory !== null ? (
             <SearchGroupResult
               searchText={searchText}
+              hasSearched={hasSearched}
               roomCategory={roomCategory}
               handleChangeCategory={handleChangeCategory}
             />

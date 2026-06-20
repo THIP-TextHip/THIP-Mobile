@@ -43,8 +43,8 @@ export const useLoginMutation = () => {
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const logout = async () => {
-    await clearAuthAndRedirectToLogin();
     queryClient.clear();
+    await clearAuthAndRedirectToLogin();
   };
 
   return { logout };
