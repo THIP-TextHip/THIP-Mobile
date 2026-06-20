@@ -21,3 +21,9 @@ export const COMMENT_URL = {
   DEFAULT: (postId: number | string) =>
     `/comments/${encodeURIComponent(String(postId))}`,
 } as const;
+
+export const RECENT_SEARCH_URL = {
+  DEFAULT: "/recent-searches",
+  DELETE: (recentSearchId: number | string) =>
+    `/recent-searches/${encodeURIComponent(String(recentSearchId))}`,
+};

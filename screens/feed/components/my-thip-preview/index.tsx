@@ -36,7 +36,7 @@ export default function MyThipPreview() {
       <View style={styles.header}>
         <IcGroupWhite />
         <AppText weight="semibold" size="2xs" color={colors.white}>
-          내 띱
+          내띱
         </AppText>
       </View>
       <View style={styles.content} onLayout={handleItemAreaLayout}>

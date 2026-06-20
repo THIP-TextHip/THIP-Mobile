@@ -6,12 +6,18 @@ import {
   View,
 } from "react-native";
 
+import {
+  useDeleteRecentSearchMutation,
+  useGetRecentSearchQuery,
+} from "@apis/recent-search";
 import { RecentSearch, SearchBar } from "@shared/ui";
 
 import { SearchUserResult } from "./components";
-import { RECENT_SEARCH_USER } from "./constants";
 
 export default function SearchUserScreen() {
+  const { recentSearchList } = useGetRecentSearchQuery("USER");
+  const { deleteRecentSearch } = useDeleteRecentSearchMutation("USER");
+
   const [searchText, setSearchText] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -28,9 +34,6 @@ export default function SearchUserScreen() {
   const handleClickKeyword = useCallback((keyword: string) => {
     console.log(keyword, " 검색");
   }, []);
-  const handleRemoveKeyword = useCallback((keyword: string) => {
-    console.log(keyword, " 삭제");
-  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -46,13 +49,16 @@ export default function SearchUserScreen() {
         </View>
         <View style={styles.content}>
           {!!searchText.trim() ? (
-            <SearchUserResult searchText={searchText} hasSearched={hasSearched} />
+            <SearchUserResult
+              searchText={searchText}
+              hasSearched={hasSearched}
+            />
           ) : (
             <View style={styles.recentSearch}>
               <RecentSearch
-                recentSearchedKeywords={RECENT_SEARCH_USER}
+                recentSearchedKeywords={recentSearchList}
                 handleClickKeyword={handleClickKeyword}
-                handleRemoveKeyword={handleRemoveKeyword}
+                handleRemoveKeyword={deleteRecentSearch}
               />
             </View>
           )}

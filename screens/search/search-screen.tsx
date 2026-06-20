@@ -7,12 +7,19 @@ import {
   View,
 } from "react-native";
 
+import {
+  useDeleteRecentSearchMutation,
+  useGetRecentSearchQuery,
+} from "@apis/recent-search";
 import { RecentSearch, SearchBar } from "@shared/ui";
 
 import { MostSearched, SearchResult } from "./components";
-import { DUMMY_MOST_DATA, DUMMY_RECENT_DATA } from "./constants";
+import { DUMMY_MOST_DATA } from "./constants";
 
 export default function SearchScreen() {
+  const { recentSearchList } = useGetRecentSearchQuery("BOOK");
+  const { deleteRecentSearch } = useDeleteRecentSearchMutation("BOOK");
+
   const [searchText, setSearchText] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -27,9 +34,6 @@ export default function SearchScreen() {
 
   const handleClickKeyword = useCallback((keyword: string) => {
     console.log(keyword, " 검색");
-  }, []);
-  const handleRemoveKeyword = useCallback((keyword: string) => {
-    console.log(keyword, " 삭제");
   }, []);
 
   return (
@@ -48,9 +52,9 @@ export default function SearchScreen() {
         ) : (
           <ScrollView contentContainerStyle={styles.content}>
             <RecentSearch
-              recentSearchedKeywords={DUMMY_RECENT_DATA}
+              recentSearchedKeywords={recentSearchList}
               handleClickKeyword={handleClickKeyword}
-              handleRemoveKeyword={handleRemoveKeyword}
+              handleRemoveKeyword={deleteRecentSearch}
             />
             <MostSearched mostSearchedBooks={DUMMY_MOST_DATA} />
           </ScrollView>

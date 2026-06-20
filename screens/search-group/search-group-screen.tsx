@@ -7,13 +7,16 @@ import {
   View,
 } from "react-native";
 
+import {
+  useDeleteRecentSearchMutation,
+  useGetRecentSearchQuery,
+} from "@apis/recent-search";
 import { IcRightRight } from "@images/icons";
 import { AppText, RecentSearch, SearchBar } from "@shared/ui";
 import { useSearchGroupInitialCategory } from "@stores/search-group";
 import { colors } from "@theme/token";
 
 import { SearchGroupResult } from "./components";
-import { RECENT_SEARCH_GROUP } from "./constants";
 import { SearchGroupCategoryType } from "./types";
 
 export default function SearchGroupScreen() {
@@ -22,6 +25,9 @@ export default function SearchGroupScreen() {
     setSearchGroupInitialCategory,
     clearSearchGroupInitialCategory,
   } = useSearchGroupInitialCategory();
+
+  const { recentSearchList } = useGetRecentSearchQuery("ROOM");
+  const { deleteRecentSearch } = useDeleteRecentSearchMutation("ROOM");
 
   const [searchText, setSearchText] = useState("");
   const [roomCategory, setRoomCategory] =
@@ -40,9 +46,6 @@ export default function SearchGroupScreen() {
 
   const handleClickKeyword = useCallback((keyword: string) => {
     console.log(keyword, " 검색");
-  }, []);
-  const handleRemoveKeyword = useCallback((keyword: string) => {
-    console.log(keyword, " 삭제");
   }, []);
 
   const handleChangeCategoryToEntire = useCallback(() => {
@@ -91,9 +94,9 @@ export default function SearchGroupScreen() {
             <>
               <View style={styles.recentSection}>
                 <RecentSearch
-                  recentSearchedKeywords={RECENT_SEARCH_GROUP}
+                  recentSearchedKeywords={recentSearchList}
                   handleClickKeyword={handleClickKeyword}
-                  handleRemoveKeyword={handleRemoveKeyword}
+                  handleRemoveKeyword={deleteRecentSearch}
                 />
               </View>
               <Pressable

@@ -1,14 +1,15 @@
 import { StyleSheet, View } from "react-native";
 
+import { RecentSearchContentType } from "@apis/recent-search";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 import RemovableChip from "../removable-chip";
 
 interface RecentSearchProps {
-  recentSearchedKeywords: string[];
+  recentSearchedKeywords: RecentSearchContentType[];
   handleClickKeyword: (keyword: string) => void;
-  handleRemoveKeyword: (keyword: string) => void;
+  handleRemoveKeyword: (recentSearchId: number) => void;
 }
 
 export default function RecentSearch({
@@ -27,12 +28,16 @@ export default function RecentSearch({
         </AppText>
       ) : (
         <View style={styles.recentSearchWrapper}>
-          {recentSearchedKeywords.map((keyword, idx) => (
+          {recentSearchedKeywords.map((recentSearch, idx) => (
             <RemovableChip
-              key={`${keyword}-${idx}`}
-              text={keyword}
-              handleClickChip={() => handleClickKeyword(keyword)}
-              handleRemove={() => handleRemoveKeyword(keyword)}
+              key={`${recentSearch.searchTerm}-${idx}`}
+              text={recentSearch.searchTerm}
+              handleClickChip={() =>
+                handleClickKeyword(recentSearch.searchTerm)
+              }
+              handleRemove={() =>
+                handleRemoveKeyword(recentSearch.recentSearchId)
+              }
             />
           ))}
         </View>
