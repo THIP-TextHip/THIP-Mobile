@@ -3,6 +3,7 @@ export {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getSearchUserApi,
   getUserInfoApi,
   signupApi,
 } from "./user.api";
@@ -13,6 +14,7 @@ export {
   useEditUserProfileMutation,
   useGetAliasListQuery,
   useGetUserInfoQuery,
+  useSearchUserQuery,
   useSignupMutation,
 } from "./user.queries";
 
@@ -22,9 +24,11 @@ export type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetSearchUserResponse,
   GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
+  UserType,
 } from "./user.types";
 
 export { USER_QUERY_KEY } from "./user.query-key";

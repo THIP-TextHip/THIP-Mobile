@@ -1,11 +1,12 @@
-import { useCallback } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { useCallback, useEffect } from "react";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
+import { useQueryClient } from "@tanstack/react-query";
+
+import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
+import { useSearchUserQuery, type UserType } from "@apis/user";
 import { AppText, ListTotalCountHeader, UserListItem } from "@shared/ui";
 import { colors } from "@theme/token";
-
-import { DUMMY_SEARCHED_USER } from "../../constants";
-import { SearchUserResponse } from "../../types";
 
 interface SearchUserResultProps {
   searchText: string;
@@ -16,23 +17,60 @@ export default function SearchUserResult({
   searchText,
   hasSearched,
 }: SearchUserResultProps) {
-  // TODO: searchText로 추후 서버 api 연동하여 검색된 유저 리스트 조회
+  const queryClient = useQueryClient();
+  const {
+    searchUserList,
+    isPendingSearchUser,
+    isFetchingSearchUser,
+    dataUpdatedAtSearchUser,
+  } = useSearchUserQuery(searchText, hasSearched, 30);
+
+  useEffect(() => {
+    const normalizedSearchText = searchText.trim();
+
+    if (
+      !hasSearched ||
+      normalizedSearchText === "" ||
+      isPendingSearchUser ||
+      isFetchingSearchUser ||
+      dataUpdatedAtSearchUser === 0
+    ) {
+      return;
+    }
+
+    queryClient.invalidateQueries({
+      queryKey: RECENT_SEARCH_QUERY_KEY.LIST("USER"),
+    });
+  }, [
+    dataUpdatedAtSearchUser,
+    hasSearched,
+    isFetchingSearchUser,
+    isPendingSearchUser,
+    queryClient,
+    searchText,
+  ]);
 
   const listItem = useCallback(
-    ({ item }: { item: SearchUserResponse }) => (
-      <UserListItem userData={item} />
-    ),
+    ({ item }: { item: UserType }) => <UserListItem userData={item} />,
     [],
   );
 
   const Separator = () => <View style={styles.separator} />;
 
+  if (isPendingSearchUser) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={colors.neongreen} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {hasSearched && DUMMY_SEARCHED_USER.length !== 0 && (
-        <ListTotalCountHeader length={DUMMY_SEARCHED_USER.length} />
+      {hasSearched && searchUserList.length !== 0 && (
+        <ListTotalCountHeader length={searchUserList.length} />
       )}
-      {DUMMY_SEARCHED_USER.length === 0 ? (
+      {searchUserList.length === 0 ? (
         <View style={styles.empty}>
           <AppText weight="medium" size="lg" color={colors.white}>
             찾는 사용자가 없어요
@@ -41,7 +79,7 @@ export default function SearchUserResult({
       ) : (
         <FlatList
           contentContainerStyle={styles.resultWrapper}
-          data={DUMMY_SEARCHED_USER}
+          data={searchUserList}
           keyExtractor={(item) => String(item.userId)}
           renderItem={listItem}
           ItemSeparatorComponent={Separator}
@@ -60,6 +98,11 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.darkgrey.dark,
   },
   empty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

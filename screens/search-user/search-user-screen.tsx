@@ -25,14 +25,15 @@ export default function SearchUserScreen() {
     setSearchText(text);
     setHasSearched(false);
   }, []);
+
   const handleSearch = useCallback(() => {
     if (searchText.trim() === "") return;
-    console.log(searchText, " 검색");
     setHasSearched(true);
   }, [searchText]);
 
   const handleClickKeyword = useCallback((keyword: string) => {
-    console.log(keyword, " 검색");
+    setSearchText(keyword);
+    setHasSearched(true);
   }, []);
 
   return (

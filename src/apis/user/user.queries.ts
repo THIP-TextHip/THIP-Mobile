@@ -8,6 +8,7 @@ import {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getSearchUserApi,
   getUserInfoApi,
   signupApi,
 } from "./user.api";
@@ -17,6 +18,7 @@ import type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetSearchUserResponse,
   GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
@@ -199,5 +201,40 @@ export const useDeleteUserAccountMutation = () => {
   return {
     deleteUserAccount,
     isPendingDeleteUserAccount,
+  };
+};
+
+export const useSearchUserQuery = (
+  keyword: string,
+  isFinalized: boolean,
+  size = 30,
+) => {
+  const normalizedKeyword = keyword.trim();
+
+  const {
+    data,
+    isPending: isPendingSearchUser,
+    isFetching: isFetchingSearchUser,
+    dataUpdatedAt: dataUpdatedAtSearchUser,
+    isError,
+    error,
+  } = useQuery<GetSearchUserResponse, Error>({
+    queryKey: USER_QUERY_KEY.SEARCH(normalizedKeyword, isFinalized, size),
+    queryFn: () => getSearchUserApi(normalizedKeyword, isFinalized, size),
+    enabled: normalizedKeyword.length > 0,
+  });
+
+  if (isError) {
+    Toast.show({
+      type: "error",
+      text1: `${error.message}`,
+    });
+  }
+
+  return {
+    searchUserList: data?.userList ?? [],
+    isPendingSearchUser,
+    isFetchingSearchUser,
+    dataUpdatedAtSearchUser,
   };
 };

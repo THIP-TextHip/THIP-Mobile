@@ -38,3 +38,16 @@ export interface EditUserProfileRequest {
   aliasName?: string;
   nickname?: string;
 }
+
+export interface UserType {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+}
+
+export interface GetSearchUserResponse {
+  userList: UserType[];
+}
