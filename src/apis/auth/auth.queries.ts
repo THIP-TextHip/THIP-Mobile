@@ -43,8 +43,8 @@ export const useLoginMutation = () => {
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
-  const logout = () => {
-    clearAuthAndRedirectToLogin();
+  const logout = async () => {
+    await clearAuthAndRedirectToLogin();
     queryClient.invalidateQueries({
       queryKey: USER_QUERY_KEY.USER_INFO,
     });
