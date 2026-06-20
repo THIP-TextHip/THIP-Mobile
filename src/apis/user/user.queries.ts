@@ -149,6 +149,7 @@ export const useEditUserProfileMutation = () => {
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEY.USER_INFO,
       });
+      router.back();
     },
     onError: (error) => {
       Toast.show({
@@ -167,16 +168,24 @@ export const useEditUserProfileMutation = () => {
 };
 
 export const useDeleteUserAccountMutation = () => {
+  const queryClient = useQueryClient();
+
   const { mutate: deleteUserAccount, isPending: isPendingDeleteUserAccount } =
     useMutation<void, Error>({
       mutationFn: deleteUserAccountApi,
       onSuccess: async () => {
         try {
           await deleteAuthToken();
+          queryClient.invalidateQueries({
+            queryKey: USER_QUERY_KEY.USER_INFO,
+          });
+          router.replace("/delete-account-complete");
         } catch (error) {
           console.error("[auth] token delete failed", error);
-        } finally {
-          router.replace("/delete-account-complete");
+          Toast.show({
+            type: "error",
+            text1: "토큰 삭제에 실패했습니다. 앱 종료 후 다시 시도해주세요.",
+          });
         }
       },
       onError: (error) => {

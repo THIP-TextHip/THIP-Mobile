@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
-import {
-  useEditUserProfileMutation,
-  useGetUserInfoQuery,
-} from "@apis/user";
+import { useEditUserProfileMutation, useGetUserInfoQuery } from "@apis/user";
 import { AppText, GenreCardGroup, InputNickname } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -23,7 +20,7 @@ export default function EditProfileScreen() {
 
     const body = {
       ...(inputNickname !== userInfo.nickname && { nickname: inputNickname }),
-      ...(selectedGenre !== userInfo.aliasName && { aliasName: selectedGenre }),
+      ...{ aliasName: selectedGenre },
     };
 
     if (Object.keys(body).length === 0) return;

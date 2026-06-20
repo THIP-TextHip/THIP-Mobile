@@ -14,9 +14,11 @@ export default function DeleteAccountModal({
   handleCloseModal,
 }: DeleteAccountModalProps) {
   // TODO: isPendingDeleteUserAccount 이용히여 추후 로딩 처리
-  const { deleteUserAccount } = useDeleteUserAccountMutation();
+  const { deleteUserAccount, isPendingDeleteUserAccount } =
+    useDeleteUserAccountMutation();
   const handleDeleteAccount = () => {
     handleCloseModal();
+    if (isPendingDeleteUserAccount) return;
     deleteUserAccount();
   };
 
@@ -44,7 +46,11 @@ export default function DeleteAccountModal({
               아니오
             </AppText>
           </CustomButton>
-          <CustomButton size="fill" handlePress={handleDeleteAccount}>
+          <CustomButton
+            size="fill"
+            handlePress={handleDeleteAccount}
+            disabled={isPendingDeleteUserAccount}
+          >
             <AppText
               weight="semibold"
               size="base"

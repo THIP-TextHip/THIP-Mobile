@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 
-import { clearAuthAndRedirectToLogin } from "@apis/auth-guard";
+import { useLogout } from "@apis/auth";
 import { AppText, CustomButton, CustomModal } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -13,9 +13,10 @@ export default function LogoutModal({
   isVisible,
   handleCloseModal,
 }: LogoutModalProps) {
+  const { logout } = useLogout();
   const handleLogout = () => {
     handleCloseModal();
-    clearAuthAndRedirectToLogin();
+    logout();
   };
 
   return (
