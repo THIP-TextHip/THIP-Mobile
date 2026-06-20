@@ -4,7 +4,6 @@ import Toast from "react-native-toast-message";
 
 import { clearAuthAndRedirectToLogin } from "../auth-guard";
 import { setAuthToken } from "../token-storage";
-import { USER_QUERY_KEY } from "../user";
 import { loginApi } from "./auth.api";
 import type { LoginRequest, LoginResponse } from "./auth.types";
 
@@ -45,9 +44,7 @@ export const useLogout = () => {
   const queryClient = useQueryClient();
   const logout = async () => {
     await clearAuthAndRedirectToLogin();
-    queryClient.invalidateQueries({
-      queryKey: USER_QUERY_KEY.USER_INFO,
-    });
+    queryClient.clear();
   };
 
   return { logout };

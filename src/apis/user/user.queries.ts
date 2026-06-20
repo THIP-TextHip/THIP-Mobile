@@ -178,9 +178,7 @@ export const useDeleteUserAccountMutation = () => {
       onSuccess: async () => {
         try {
           await deleteAuthToken();
-          queryClient.invalidateQueries({
-            queryKey: USER_QUERY_KEY.USER_INFO,
-          });
+          queryClient.clear();
           router.replace("/delete-account-complete");
         } catch (error) {
           console.error("[auth] token delete failed", error);

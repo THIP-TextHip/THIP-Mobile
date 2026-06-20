@@ -23,6 +23,7 @@ export default function FeedContents() {
     isErrorFeedList,
     refetchFeedList,
     isRefetchingFeedList,
+    feedListError,
   } = useGetAllFeedListQuery();
 
   const handleLoadMore = () => {
@@ -42,6 +43,7 @@ export default function FeedContents() {
 
     // TODO: 에러 발생 시 보여줄 처리 필요. ex) 토스트 메시지 띄우기
     if (isErrorFeedList) {
+      console.log("피드 전체 조회 에러 : ", feedListError);
       return (
         <View style={styles.status}>
           <AppText weight="medium" size="sm" color={colors.grey[200]}>

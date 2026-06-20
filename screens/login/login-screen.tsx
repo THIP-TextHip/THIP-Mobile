@@ -1,3 +1,5 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { Image, StyleSheet, useWindowDimensions, View } from "react-native";
 
 import { ThipSplash } from "@images/thip";
@@ -6,9 +8,14 @@ import { GoogleLoginButton, KakaoLoginButton } from "./components";
 
 export default function LoginScreen() {
   const { width } = useWindowDimensions();
+  const queryClient = useQueryClient();
 
   const splashWidth = width * 0.64;
   const splashHeight = splashWidth * 0.43;
+
+  useEffect(() => {
+    queryClient.clear();
+  }, [queryClient]);
 
   return (
     <View style={styles.pageContainer}>
