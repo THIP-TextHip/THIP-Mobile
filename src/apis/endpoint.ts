@@ -33,6 +33,7 @@ export const RECENT_SEARCH_URL = {
 export const BOOK_URL = {
   DEFAULT: "/books",
   DETAIL: (isbn: string) => `/books/${encodeURIComponent(isbn)}`,
+  MOST: "/books/most-searched",
 } as const;
 
 export const ROOM_URL = {

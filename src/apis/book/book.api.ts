@@ -2,6 +2,7 @@ import { apiClient } from "../api-client";
 import { BOOK_URL } from "../endpoint";
 import type {
   GetBookDetailResponse,
+  GetMostSearchedBookResponse,
   GetSearchBookRequest,
   GetSearchBookResponse,
 } from "./book.types";
@@ -20,6 +21,14 @@ export const getSearchBookApi = async (params: GetSearchBookRequest) => {
 export const getBookDetailApi = async (isbn: string) => {
   const response = await apiClient.get<GetBookDetailResponse>(
     BOOK_URL.DETAIL(isbn),
+  );
+
+  return response.data;
+};
+
+export const getMostSearchedBookApi = async () => {
+  const response = await apiClient.get<GetMostSearchedBookResponse>(
+    BOOK_URL.MOST,
   );
 
   return response.data;

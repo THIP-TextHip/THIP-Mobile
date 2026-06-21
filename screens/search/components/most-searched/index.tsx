@@ -1,23 +1,16 @@
 import { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
+import { useMostSearchedBookQuery } from "@apis/book";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import MostSearchedBookItem from "../most-searched-book-item";
 
-interface MostSearchedBook {
-  isbn: string;
-  ranking: number;
-  photo: string;
-  title: string;
-}
+export default function MostSearched() {
+  const { mostSearchedBookData, isPendingMostSearchedBook } =
+    useMostSearchedBookQuery();
 
-interface MostSearchedProps {
-  mostSearchedBooks: MostSearchedBook[];
-}
-
-export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
   const dateString = useMemo(() => {
     const today = new Date();
     const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -36,7 +29,11 @@ export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
           {dateString} 기준
         </AppText>
       </View>
-      {mostSearchedBooks.length === 0 ? (
+      {isPendingMostSearchedBook ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      ) : mostSearchedBookData?.bookList.length === 0 ? (
         <View style={styles.emptyContainer}>
           <AppText weight="semibold" size="lg" color={colors.white}>
             아직 순위가 집계되지 않았어요
@@ -46,14 +43,14 @@ export default function MostSearched({ mostSearchedBooks }: MostSearchedProps) {
           </AppText>
         </View>
       ) : (
-        mostSearchedBooks.map((item, index) => (
+        mostSearchedBookData?.bookList.map((item, index) => (
           <MostSearchedBookItem
             key={item.isbn}
             isbn={item.isbn}
-            ranking={item.ranking}
-            photo={item.photo}
+            ranking={item.rank}
+            photo={item.imageUrl}
             title={item.title}
-            isLast={index === mostSearchedBooks.length - 1}
+            isLast={index === mostSearchedBookData?.bookList.length - 1}
           />
         ))
       )}
@@ -76,5 +73,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.black.main,
   },
 });

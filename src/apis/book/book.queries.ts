@@ -3,12 +3,22 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { getBookDetailApi, getSearchBookApi } from "./book.api";
+import {
+  getBookDetailApi,
+  getMostSearchedBookApi,
+  getSearchBookApi,
+} from "./book.api";
 import { BOOK_QUERY_KEY } from "./book.query-key";
 import {
   GetBookDetailResponse,
+  GetMostSearchedBookResponse,
   type GetSearchBookResponse,
 } from "./book.types";
+
+const MOST_SEARCHED_BOOK_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 10,
+  GC: 1000 * 60 * 15,
+};
 
 type BookSearchPage = number;
 
@@ -105,5 +115,24 @@ export const useBookDetailQuery = (isbn: string) => {
     isPendingBookDetail,
     refetchBookDetail,
     isRefetchingBookDetail,
+  };
+};
+
+export const useMostSearchedBookQuery = () => {
+  const {
+    data: mostSearchedBookData,
+    isPending: isPendingMostSearchedBook,
+    isError: isErrorMostSearchedBook,
+  } = useQuery<GetMostSearchedBookResponse, Error>({
+    queryKey: BOOK_QUERY_KEY.MOST,
+    queryFn: getMostSearchedBookApi,
+    staleTime: MOST_SEARCHED_BOOK_QUERY_CACHE_TIME.STALE,
+    gcTime: MOST_SEARCHED_BOOK_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    mostSearchedBookData,
+    isPendingMostSearchedBook,
+    isErrorMostSearchedBook,
   };
 };

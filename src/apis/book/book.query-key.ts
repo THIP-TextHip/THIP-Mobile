@@ -7,4 +7,5 @@ export const BOOK_QUERY_KEY = {
     isFinalized,
   ],
   DETAIL: (isbn: string) => ["books", isbn],
+  MOST: ["books", "most-searched"],
 } as const;

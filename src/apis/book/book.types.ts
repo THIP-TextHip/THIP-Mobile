@@ -33,3 +33,14 @@ export interface GetBookDetailResponse {
   readCount: number;
   isSaved: boolean;
 }
+
+export interface MostSearchedBook {
+  rank: number;
+  title: string;
+  imageUrl: string;
+  isbn: string;
+}
+
+export interface GetMostSearchedBookResponse {
+  bookList: MostSearchedBook[];
+}
