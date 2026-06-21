@@ -1,11 +1,14 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { getSearchBookApi } from "./book.api";
+import { getBookDetailApi, getSearchBookApi } from "./book.api";
 import { BOOK_QUERY_KEY } from "./book.query-key";
-import type { GetSearchBookResponse } from "./book.types";
+import {
+  GetBookDetailResponse,
+  type GetSearchBookResponse,
+} from "./book.types";
 
 type BookSearchPage = number;
 
@@ -70,5 +73,37 @@ export const useSearchBookQuery = (
     isPendingSearchBook,
     isFetchingSearchBook,
     isFetchingNextPage,
+  };
+};
+
+export const useBookDetailQuery = (isbn: string) => {
+  const {
+    data: bookDetailData,
+    isPending: isPendingBookDetail,
+    isError,
+    error,
+    refetch: refetchBookDetail,
+    isRefetching: isRefetchingBookDetail,
+  } = useQuery<GetBookDetailResponse, Error>({
+    queryKey: BOOK_QUERY_KEY.DETAIL(isbn),
+    queryFn: () => getBookDetailApi(isbn),
+    enabled: !!isbn,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      console.log(error);
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+    }
+  }, [isError, error]);
+
+  return {
+    bookDetailData,
+    isPendingBookDetail,
+    refetchBookDetail,
+    isRefetchingBookDetail,
   };
 };

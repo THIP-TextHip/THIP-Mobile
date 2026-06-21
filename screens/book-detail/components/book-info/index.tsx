@@ -2,23 +2,14 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
+import { GetBookDetailResponse } from "@apis/book";
 import { IcPlus, IcRight, IcSave, IcSaveFilled } from "@images/icons";
 import { AppText, CustomButton } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface BookInfoProps {
   // TODO: 서버 api 응답 타입으로 수정
-  bookInfo: {
-    title: string;
-    imageUrl: string;
-    authorName: string;
-    publisher: string;
-    isbn: string;
-    description: string;
-    recruitingRoomCount: number;
-    readCount: number;
-    isSaved: boolean;
-  };
+  bookInfo: GetBookDetailResponse | undefined;
   handleOpenModal: () => void;
 }
 
@@ -32,6 +23,11 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
   const handlePressSaveButton = () => {
     console.log("책 저장 및 저장 취소");
   };
+
+  if (!bookInfo) {
+    return;
+  }
+
   return (
     <ImageBackground source={{ uri: bookInfo.imageUrl }}>
       <LinearGradient

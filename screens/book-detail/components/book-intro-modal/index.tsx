@@ -14,7 +14,7 @@ import { colors } from "@theme/token";
 
 interface BookIntroModalProps {
   isVisible: boolean;
-  description: string;
+  description: string | undefined;
   handleCloseModal: () => void;
 }
 
@@ -57,7 +57,7 @@ export default function BookIntroModal({
               color={colors.grey[100]}
               lineHeight={20}
             >
-              {description}
+              {description ?? "불러오는 중..."}
             </AppText>
           </ScrollView>
         </View>

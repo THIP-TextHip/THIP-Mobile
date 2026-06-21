@@ -1,9 +1,10 @@
-export { getSearchBookApi } from "./book.api";
+export { getBookDetailApi, getSearchBookApi } from "./book.api";
 
-export { useSearchBookQuery } from "./book.queries";
+export { useBookDetailQuery, useSearchBookQuery } from "./book.queries";
 
 export type {
   BookType,
+  GetBookDetailResponse,
   GetSearchBookRequest,
   GetSearchBookResponse,
 } from "./book.types";

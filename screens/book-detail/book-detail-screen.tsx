@@ -1,8 +1,17 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { useBookDetailQuery } from "@apis/book";
 import { IcDownmoreGrey } from "@images/icons";
 import {
   AppText,
@@ -20,13 +29,19 @@ import {
 } from "./components";
 import {
   BOOK_DETAIL_FEED_SORT,
-  DUMMY_BOOK_DETAIL,
   DUMMY_BOOK_FEED_PREVIEW_LIST,
 } from "./constants";
 
 export default function BookDetailScreen() {
-  // TODO: 추후 서버에서 해당 isbn 으로 조회 예정
+  const { bottom } = useSafeAreaInsets();
   const { isbn } = useLocalSearchParams<{ isbn: string }>();
+  const {
+    bookDetailData,
+    isPendingBookDetail,
+    refetchBookDetail,
+    isRefetchingBookDetail,
+  } = useBookDetailQuery(isbn);
+
   const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -77,13 +92,18 @@ export default function BookDetailScreen() {
     return () => clearTimeout(timer);
   }, [isbn]);
 
+  if (isPendingBookDetail) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
   const BookDetailTopContents = () => {
     return (
       <View style={styles.topContents}>
-        <BookInfo
-          bookInfo={DUMMY_BOOK_DETAIL}
-          handleOpenModal={handleOpenModal}
-        />
+        <BookInfo bookInfo={bookDetailData} handleOpenModal={handleOpenModal} />
         <View style={styles.feedHeader}>
           <AppText
             weight="semibold"
@@ -121,24 +141,33 @@ export default function BookDetailScreen() {
     );
   };
 
+  // TODO: 중요!!!! 특정 책으로 올라온 피드 조회 필요!!
   return (
     <View style={styles.page}>
       <BookDetailHeader />
       {isVisibleReadCount && (
-        <ReadCountBar readCount={DUMMY_BOOK_DETAIL.readCount} />
+        <ReadCountBar readCount={bookDetailData?.readCount} />
       )}
       <FlatList
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
         ListHeaderComponentStyle={styles.listHeader}
         ListHeaderComponent={BookDetailTopContents}
         data={DUMMY_BOOK_FEED_PREVIEW_LIST}
         keyExtractor={(item) => String(item.feedId)}
         renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingBookDetail}
+            onRefresh={refetchBookDetail}
+            tintColor={colors.white}
+            colors={[colors.white]}
+          />
+        }
       />
       <BookIntroModal
         isVisible={isModalVisible}
-        description={DUMMY_BOOK_DETAIL.description}
+        description={bookDetailData?.description}
         handleCloseModal={handleCloseModal}
       />
     </View>
@@ -178,5 +207,11 @@ const styles = StyleSheet.create({
     marginTop: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.black.main,
   },
 });

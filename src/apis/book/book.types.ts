@@ -21,3 +21,15 @@ export interface GetSearchBookResponse {
   last: boolean;
   first: boolean;
 }
+
+export interface GetBookDetailResponse {
+  title: string;
+  imageUrl: string;
+  authorName: string;
+  publisher: string;
+  isbn: string;
+  description: string;
+  recruitingRoomCount: number;
+  readCount: number;
+  isSaved: boolean;
+}

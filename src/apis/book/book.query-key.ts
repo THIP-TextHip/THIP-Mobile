@@ -6,4 +6,5 @@ export const BOOK_QUERY_KEY = {
     page,
     isFinalized,
   ],
+  DETAIL: (isbn: string) => ["books", isbn],
 } as const;
