@@ -178,9 +178,7 @@ export const useDeleteUserAccountMutation = () => {
       onSuccess: async () => {
         try {
           await deleteAuthToken();
-          queryClient.invalidateQueries({
-            queryKey: USER_QUERY_KEY.USER_INFO,
-          });
+          queryClient.clear();
           router.replace("/delete-account-complete");
         } catch (error) {
           console.error("[auth] token delete failed", error);
@@ -215,12 +213,16 @@ export const useSearchUserQuery = (
     data,
     isPending: isPendingSearchUser,
     isFetching: isFetchingSearchUser,
-    dataUpdatedAt: dataUpdatedAtSearchUser,
     isError,
     error,
   } = useQuery<GetSearchUserResponse, Error>({
     queryKey: USER_QUERY_KEY.SEARCH(normalizedKeyword, isFinalized, size),
-    queryFn: () => getSearchUserApi(normalizedKeyword, isFinalized, size),
+    queryFn: () =>
+      getSearchUserApi({
+        keyword: normalizedKeyword,
+        isFinalized: isFinalized,
+        size,
+      }),
     enabled: normalizedKeyword.length > 0,
   });
 
@@ -235,6 +237,5 @@ export const useSearchUserQuery = (
     searchUserList: data?.userList ?? [],
     isPendingSearchUser,
     isFetchingSearchUser,
-    dataUpdatedAtSearchUser,
   };
 };

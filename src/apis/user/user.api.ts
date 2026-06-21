@@ -6,6 +6,7 @@ import type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetSearchUserRequest,
   GetSearchUserResponse,
   GetUserInfoResponse,
   SignupRequest,
@@ -52,19 +53,11 @@ export const editUserProfileApi = async (body: EditUserProfileRequest) => {
   await apiClient.patch<string, EditUserProfileRequest>(USER_URL.DEFAULT, body);
 };
 
-export const getSearchUserApi = async (
-  keyword: string,
-  isFinalized: boolean,
-  size?: number,
-) => {
+export const getSearchUserApi = async (params: GetSearchUserRequest) => {
   const response = await apiClient.get<GetSearchUserResponse>(
     USER_URL.DEFAULT,
     {
-      params: {
-        keyword,
-        isFinalized,
-        size: size ?? 30,
-      },
+      params,
     },
   );
 

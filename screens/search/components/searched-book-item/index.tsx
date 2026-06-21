@@ -30,18 +30,35 @@ export default function SearchedBookItem({
     <Pressable style={styles.container} onPress={handleToBookDetail}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <View style={styles.textWrapper}>
-        <AppText weight="semibold" size="base" color={colors.white}>
+        <AppText
+          weight="semibold"
+          size="base"
+          color={colors.white}
+          style={styles.title}
+        >
           {title}
         </AppText>
         <View style={styles.meta}>
-          <AppText weight="medium" size="xs" color={colors.grey[200]}>
+          <AppText
+            weight="medium"
+            size="xs"
+            color={colors.grey[200]}
+            numberOfLines={1}
+            style={styles.metaText}
+          >
             {authorName}
           </AppText>
           <AppText weight="medium" size="xs" color={colors.grey[200]}>
             저
           </AppText>
           <View style={styles.dot} />
-          <AppText weight="medium" size="xs" color={colors.grey[200]}>
+          <AppText
+            weight="medium"
+            size="xs"
+            color={colors.grey[200]}
+            numberOfLines={1}
+            style={styles.metaText}
+          >
             {publisher}
           </AppText>
         </View>
@@ -54,18 +71,28 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     gap: 12,
+    width: "100%",
   },
   image: {
     width: 80,
     height: 107,
   },
   textWrapper: {
+    flex: 1,
+    minWidth: 0,
     gap: 8,
+  },
+  title: {
+    flexShrink: 1,
   },
   meta: {
     flexDirection: "row",
     gap: 2,
     alignItems: "center",
+    minWidth: 0,
+  },
+  metaText: {
+    flexShrink: 1,
   },
   dot: {
     width: 2,

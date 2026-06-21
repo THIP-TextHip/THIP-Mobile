@@ -1,13 +1,14 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
+import { useSearchRoomQuery } from "@apis/room";
 import { AppText, ListTotalCountHeader, SelectChip } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import {
-  DUMMY_SEARCH_GROUP_LIST,
-  SEARCH_GROUP_CATEGORY,
-} from "../../constants";
+import { SEARCH_GROUP_CATEGORY } from "../../constants";
 import { SearchGroupCategoryType } from "../../types";
 import SearchedGroupItem from "../searched-group-item";
 
@@ -28,17 +29,78 @@ const EmptyView = () => {
 
 interface SearchGroupResultProps {
   searchText: string;
+  hasSearched: boolean;
   roomCategory: SearchGroupCategoryType | null;
   handleChangeCategory: (roomCategory: SearchGroupCategoryType) => void;
 }
 
 export default function SearchGroupResult({
   searchText,
+  hasSearched,
   roomCategory,
   handleChangeCategory,
 }: SearchGroupResultProps) {
+  const queryClient = useQueryClient();
   const { bottom } = useSafeAreaInsets();
-  // TODO: 서버에 searchText와 roomCategory로 검색 요청
+  const isAllCategory = roomCategory === null || roomCategory === "전체";
+  const category = isAllCategory ? undefined : roomCategory;
+
+  const {
+    searchRoomList,
+    fetchNextPage,
+    hasNextPage,
+    isPendingSearchRoom,
+    isFetchingSearchRoom,
+    isFetchingNextPage,
+  } = useSearchRoomQuery({
+    keyword: searchText,
+    category,
+    isAllCategory,
+    sort: "deadline",
+    isFinalized: hasSearched,
+  });
+
+  useEffect(() => {
+    const normalizedSearchText = searchText.trim();
+
+    if (
+      !hasSearched ||
+      normalizedSearchText === "" ||
+      isPendingSearchRoom ||
+      isFetchingSearchRoom
+    ) {
+      return;
+    }
+
+    queryClient.invalidateQueries({
+      queryKey: RECENT_SEARCH_QUERY_KEY.LIST("ROOM"),
+      refetchType: "all",
+    });
+  }, [
+    hasSearched,
+    isFetchingSearchRoom,
+    isPendingSearchRoom,
+    queryClient,
+    searchText,
+  ]);
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  const renderEmpty = () => {
+    if (isPendingSearchRoom) {
+      return (
+        <View style={styles.empty}>
+          <ActivityIndicator color={colors.white} />
+        </View>
+      );
+    }
+
+    return <EmptyView />;
+  };
 
   return (
     <View style={styles.container}>
@@ -59,21 +121,28 @@ export default function SearchGroupResult({
             horizontal
             showsHorizontalScrollIndicator={false}
           />
-          <ListTotalCountHeader length={DUMMY_SEARCH_GROUP_LIST.length} />
+          <ListTotalCountHeader length={searchRoomList.length} />
         </View>
       )}
       <FlatList
         contentContainerStyle={[
           styles.list,
-          DUMMY_SEARCH_GROUP_LIST.length === 0 && { flex: 1 },
+          searchRoomList.length === 0 && { flex: 1 },
           { paddingBottom: bottom },
           roomCategory && { paddingTop: 8 },
         ]}
-        data={DUMMY_SEARCH_GROUP_LIST}
+        data={searchRoomList}
         keyExtractor={(item) => String(item.roomId)}
         renderItem={({ item }) => <SearchedGroupItem searchedGroup={item} />}
         ItemSeparatorComponent={Separator}
-        ListEmptyComponent={EmptyView}
+        ListEmptyComponent={renderEmpty}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ActivityIndicator style={styles.footer} color={colors.white} />
+          ) : null
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
       />
     </View>
   );
@@ -103,5 +172,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
+  },
+  footer: {
+    marginTop: 20,
   },
 });

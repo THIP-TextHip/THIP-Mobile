@@ -26,4 +26,13 @@ export const RECENT_SEARCH_URL = {
   DEFAULT: "/recent-searches",
   DELETE: (recentSearchId: number | string) =>
     `/recent-searches/${encodeURIComponent(String(recentSearchId))}`,
-};
+} as const;
+
+export const BOOK_URL = {
+  DEFAULT: "/books",
+} as const;
+
+export const ROOM_URL = {
+  DEFAULT: "/rooms",
+  SEARCH: "/rooms/search",
+} as const;

@@ -48,6 +48,12 @@ export interface UserType {
   followerCount: number;
 }
 
+export interface GetSearchUserRequest {
+  keyword: string;
+  isFinalized: boolean;
+  size?: number;
+}
+
 export interface GetSearchUserResponse {
   userList: UserType[];
 }
