@@ -34,6 +34,7 @@ export const BOOK_URL = {
   DEFAULT: "/books",
   DETAIL: (isbn: string) => `/books/${encodeURIComponent(isbn)}`,
   MOST: "/books/most-searched",
+  SAVE_STATUS: (isbn: string) => `/books/${encodeURIComponent(isbn)}/saved`,
 } as const;
 
 export const ROOM_URL = {

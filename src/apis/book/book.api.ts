@@ -1,6 +1,8 @@
 import { apiClient } from "../api-client";
 import { BOOK_URL } from "../endpoint";
 import type {
+  ChangeBookSaveStatusRequest,
+  ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
   GetMostSearchedBookResponse,
   GetSearchBookRequest,
@@ -29,6 +31,20 @@ export const getBookDetailApi = async (isbn: string) => {
 export const getMostSearchedBookApi = async () => {
   const response = await apiClient.get<GetMostSearchedBookResponse>(
     BOOK_URL.MOST,
+  );
+
+  return response.data;
+};
+
+export const changeBookSaveStatusApi = async ({
+  isbn,
+  status,
+}: ChangeBookSaveStatusRequest) => {
+  const response = await apiClient.post<ChangeBookSaveStatusResponse>(
+    BOOK_URL.SAVE_STATUS(isbn),
+    {
+      type: status,
+    },
   );
 
   return response.data;

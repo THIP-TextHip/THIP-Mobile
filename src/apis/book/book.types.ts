@@ -44,3 +44,13 @@ export interface MostSearchedBook {
 export interface GetMostSearchedBookResponse {
   bookList: MostSearchedBook[];
 }
+
+export interface ChangeBookSaveStatusRequest {
+  isbn: string;
+  status: boolean;
+}
+
+export interface ChangeBookSaveStatusResponse {
+  isbn: string;
+  isSaved: boolean;
+}

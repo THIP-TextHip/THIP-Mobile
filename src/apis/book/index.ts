@@ -1,4 +1,5 @@
 export {
+  changeBookSaveStatusApi,
   getBookDetailApi,
   getMostSearchedBookApi,
   getSearchBookApi,
@@ -6,12 +7,15 @@ export {
 
 export {
   useBookDetailQuery,
+  useChangeBookSaveStatusMutation,
   useMostSearchedBookQuery,
   useSearchBookQuery,
 } from "./book.queries";
 
 export type {
   BookType,
+  ChangeBookSaveStatusRequest,
+  ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
   GetMostSearchedBookResponse,
   GetSearchBookRequest,

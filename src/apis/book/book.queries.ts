@@ -1,15 +1,23 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import {
+  changeBookSaveStatusApi,
   getBookDetailApi,
   getMostSearchedBookApi,
   getSearchBookApi,
 } from "./book.api";
 import { BOOK_QUERY_KEY } from "./book.query-key";
 import {
+  ChangeBookSaveStatusRequest,
+  ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
   GetMostSearchedBookResponse,
   type GetSearchBookResponse,
@@ -135,4 +143,30 @@ export const useMostSearchedBookQuery = () => {
     isPendingMostSearchedBook,
     isErrorMostSearchedBook,
   };
+};
+
+// TODO: 추후 책 저장 가능한 곳에서 모두 사용
+export const useChangeBookSaveStatusMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: changeBookSaveStatus } = useMutation<
+    ChangeBookSaveStatusResponse,
+    Error,
+    ChangeBookSaveStatusRequest
+  >({
+    mutationFn: changeBookSaveStatusApi,
+    // TODO: 책 저장상태가 보이는 모든 곳에서 캐시 초기화
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: BOOK_QUERY_KEY.DETAIL(data.isbn),
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeBookSaveStatus };
 };

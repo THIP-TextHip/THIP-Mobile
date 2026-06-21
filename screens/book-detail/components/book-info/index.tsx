@@ -2,7 +2,10 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
-import { GetBookDetailResponse } from "@apis/book";
+import {
+  GetBookDetailResponse,
+  useChangeBookSaveStatusMutation,
+} from "@apis/book";
 import { IcPlus, IcRight, IcSave, IcSaveFilled } from "@images/icons";
 import { AppText, CustomButton } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -13,6 +16,12 @@ interface BookInfoProps {
 }
 
 export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
+  const { changeBookSaveStatus } = useChangeBookSaveStatusMutation();
+
+  if (!bookInfo) {
+    return;
+  }
+
   const handleToGroupList = () => {
     console.log("모집중인 모임방 리스트 페이지로 이동");
   };
@@ -20,12 +29,8 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
     console.log("피드 글쓰기 페이지로 이동");
   };
   const handlePressSaveButton = () => {
-    console.log("책 저장 및 저장 취소");
+    changeBookSaveStatus({ isbn: bookInfo.isbn, status: !bookInfo.isSaved });
   };
-
-  if (!bookInfo) {
-    return;
-  }
 
   return (
     <ImageBackground source={{ uri: bookInfo.imageUrl }}>

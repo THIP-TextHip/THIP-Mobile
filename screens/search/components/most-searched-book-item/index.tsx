@@ -41,7 +41,12 @@ export default function MostSearchedBookItem({
       </AppText>
       <View style={styles.content}>
         <Image source={{ uri: photo }} style={styles.photo} />
-        <AppText weight="regular" size="sm" color={colors.white}>
+        <AppText
+          style={styles.title}
+          weight="regular"
+          size="sm"
+          color={colors.white}
+        >
           {title}
         </AppText>
       </View>
@@ -58,6 +63,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.darkgrey.dark,
     gap: 4,
+    width: "100%",
   },
   lastItem: {
     borderBottomWidth: 0,
@@ -69,6 +75,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+  },
+  title: {
+    flexShrink: 1,
   },
   photo: {
     width: 45,
