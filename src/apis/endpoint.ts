@@ -15,6 +15,8 @@ export const FEED_URL = {
   DETAIL: (feedId: number | string) =>
     `/feeds/${encodeURIComponent(String(feedId))}`,
   TAG_LIST: "/feeds/write-info",
+  RELATED_BOOK: (isbn: string) =>
+    `/feeds/related-books/${encodeURIComponent(isbn)}`,
 } as const;
 
 export const COMMENT_URL = {

@@ -18,7 +18,7 @@ export interface FeedType {
   isWriter: boolean;
 }
 
-export interface GetAllFeedListResponse {
+export interface GetFeedListResponse {
   feedList: FeedType[];
   nextCursor: string;
   isLast: boolean;
@@ -37,4 +37,18 @@ export interface CategoryListType {
 
 export interface GetFeedTagListResponse {
   categoryList: CategoryListType[];
+}
+
+export type FeedRelatedBookSort = "like" | "latest";
+
+export interface GetFeedRelatedBookRequest {
+  isbn: string;
+  sort?: FeedRelatedBookSort;
+  cursor?: string | null;
+}
+
+export interface GetFeedRelatedBookResponse {
+  feeds: FeedType[];
+  nextCursor: string;
+  isLast: boolean;
 }

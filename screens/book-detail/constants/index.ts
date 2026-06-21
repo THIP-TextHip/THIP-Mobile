@@ -1,6 +1,7 @@
+import { FilterType } from "@shared/ui";
 import { colors } from "@theme/token";
 
-export const BOOK_DETAIL_FEED_SORT = [
+export const BOOK_DETAIL_FEED_SORT: FilterType[] = [
   {
     label: "인기순",
     type: "like",

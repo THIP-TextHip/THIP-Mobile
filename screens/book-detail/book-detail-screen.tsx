@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Pressable,
   RefreshControl,
   StyleSheet,
   View,
@@ -12,43 +11,55 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { useBookDetailQuery } from "@apis/book";
-import { IcDownmoreGrey } from "@images/icons";
-import {
-  AppText,
-  DropdownFilter,
-  FeedPostPreview,
-  FilterType,
-} from "@shared/ui";
+import { useGetFeedRelatedBookQuery } from "@apis/feed";
+import { AppText, FeedPostPreview, type FilterType } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
   BookDetailHeader,
-  BookInfo,
+  BookDetailTopContents,
   BookIntroModal,
   ReadCountBar,
 } from "./components";
-import {
-  BOOK_DETAIL_FEED_SORT,
-  DUMMY_BOOK_FEED_PREVIEW_LIST,
-} from "./constants";
+import { BOOK_DETAIL_FEED_SORT } from "./constants";
 
 export default function BookDetailScreen() {
   const { bottom } = useSafeAreaInsets();
   const { isbn } = useLocalSearchParams<{ isbn: string }>();
+  const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [sortType, setSortType] = useState<FilterType>(
+    BOOK_DETAIL_FEED_SORT[0],
+  );
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
   const {
     bookDetailData,
     isPendingBookDetail,
     refetchBookDetail,
     isRefetchingBookDetail,
   } = useBookDetailQuery(isbn);
+  const {
+    feedRelatedBookList,
+    isPendingFeedRelatedBookList,
+    isErrorFeedRelatedBookList,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetchFeedRelatedBookList,
+    isRefetchingFeedRelatedBookList,
+  } = useGetFeedRelatedBookQuery(isbn, sortType.type);
 
-  const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const refetchPage = () => {
+    refetchBookDetail();
+    refetchFeedRelatedBookList();
+  };
 
-  const [sortType, setSortType] = useState<FilterType>(
-    BOOK_DETAIL_FEED_SORT[0],
-  );
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
 
   const handleOpenModal = () => {
     setIsModalVisible(true);
@@ -83,7 +94,6 @@ export default function BookDetailScreen() {
 
   useEffect(() => {
     setIsVisibleReadCount(true);
-    console.log(isbn);
 
     const timer = setTimeout(() => {
       setIsVisibleReadCount(false);
@@ -100,48 +110,52 @@ export default function BookDetailScreen() {
     );
   }
 
-  const BookDetailTopContents = () => {
-    return (
-      <View style={styles.topContents}>
-        <BookInfo bookInfo={bookDetailData} handleOpenModal={handleOpenModal} />
-        <View style={styles.feedHeader}>
+  const renderEmpty = () => {
+    if (isPendingFeedRelatedBookList) {
+      return (
+        <View style={styles.status}>
+          <ActivityIndicator color={colors.white} />
+        </View>
+      );
+    }
+
+    if (isErrorFeedRelatedBookList) {
+      return (
+        <View style={styles.status}>
           <AppText
             weight="semibold"
             size="lg"
             color={colors.grey[100]}
             lineHeight={24}
           >
-            피드 글 둘러보기
+            피드를 불러오지 못했어요.
           </AppText>
-          <View style={styles.sort}>
-            <Pressable
-              style={styles.dropdownWrapper}
-              onPress={handlePressDropdown}
-              hitSlop={5}
-            >
-              <AppText
-                weight="medium"
-                size="sm"
-                color={colors.grey[100]}
-                lineHeight={24}
-              >
-                {sortType.label}
-              </AppText>
-              <IcDownmoreGrey />
-            </Pressable>
-            <DropdownFilter
-              isVisible={isDropdownVisible}
-              currentType={sortType}
-              typeList={BOOK_DETAIL_FEED_SORT}
-              handleSelectType={handleSelectType}
-            />
-          </View>
         </View>
+      );
+    }
+
+    return (
+      <View style={styles.status}>
+        <AppText
+          weight="semibold"
+          size="lg"
+          color={colors.white}
+          lineHeight={24}
+        >
+          이 책으로 작성된 피드가 없어요
+        </AppText>
+        <AppText
+          weight="regular"
+          size="sm"
+          color={colors.grey[100]}
+          lineHeight={20}
+        >
+          첫번째 피드를 작성해보세요!
+        </AppText>
       </View>
     );
   };
 
-  // TODO: 중요!!!! 특정 책으로 올라온 피드 조회 필요!!
   return (
     <View style={styles.page}>
       <BookDetailHeader />
@@ -151,15 +165,34 @@ export default function BookDetailScreen() {
       <FlatList
         contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
         ListHeaderComponentStyle={styles.listHeader}
-        ListHeaderComponent={BookDetailTopContents}
-        data={DUMMY_BOOK_FEED_PREVIEW_LIST}
+        ListHeaderComponent={() => (
+          <BookDetailTopContents
+            bookDetailData={bookDetailData}
+            sortType={sortType}
+            isDropdownVisible={isDropdownVisible}
+            handleOpenModal={handleOpenModal}
+            handlePressDropdown={handlePressDropdown}
+            handleSelectType={handleSelectType}
+          />
+        )}
+        data={feedRelatedBookList}
         keyExtractor={(item) => String(item.feedId)}
         renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={renderEmpty}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ActivityIndicator style={styles.footer} color={colors.white} />
+          ) : null
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
         refreshControl={
           <RefreshControl
-            refreshing={isRefetchingBookDetail}
-            onRefresh={refetchBookDetail}
+            refreshing={
+              isRefetchingBookDetail || isRefetchingFeedRelatedBookList
+            }
+            onRefresh={refetchPage}
             tintColor={colors.white}
             colors={[colors.white]}
           />
@@ -178,25 +211,6 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  topContents: {
-    gap: 20,
-  },
-  feedHeader: {
-    marginHorizontal: 20,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.darkgrey.dark,
-  },
-  sort: {
-    alignItems: "flex-end",
-    marginBottom: 4,
-    zIndex: 10,
-    elevation: 10,
-  },
-  dropdownWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   list: {
     gap: 40,
   },
@@ -213,5 +227,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.black.main,
+  },
+  status: {
+    paddingVertical: 80,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  footer: {
+    marginTop: 40,
   },
 });

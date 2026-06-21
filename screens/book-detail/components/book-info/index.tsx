@@ -8,7 +8,6 @@ import { AppText, CustomButton } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface BookInfoProps {
-  // TODO: 서버 api 응답 타입으로 수정
   bookInfo: GetBookDetailResponse | undefined;
   handleOpenModal: () => void;
 }

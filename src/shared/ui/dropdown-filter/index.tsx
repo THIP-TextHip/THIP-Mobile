@@ -1,13 +1,14 @@
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { FeedRelatedBookSort } from "@apis/feed";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 
 export interface FilterType {
   label: string;
-  type: string;
+  type: FeedRelatedBookSort;
 }
 
 interface DropdownFilterProps {
