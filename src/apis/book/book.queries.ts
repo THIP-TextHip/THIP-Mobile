@@ -1,5 +1,6 @@
 import type { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import { getSearchBookApi } from "./book.api";
@@ -47,12 +48,14 @@ export const useSearchBookQuery = (
     enabled: normalizedKeyword.length > 0,
   });
 
-  if (isErrorSearchBook) {
-    Toast.show({
-      type: "error",
-      text1: searchBookError.message,
-    });
-  }
+  useEffect(() => {
+    if (isErrorSearchBook && searchBookError) {
+      Toast.show({
+        type: "error",
+        text1: searchBookError.message,
+      });
+    }
+  }, [isErrorSearchBook, searchBookError]);
 
   const searchPages = data?.pages ?? [];
   const firstPage = searchPages[0];

@@ -1,5 +1,6 @@
 import type { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import { getSearchRoomApi } from "./room.api";
@@ -48,12 +49,14 @@ export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
       lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
   });
 
-  if (isErrorSearchRoom) {
-    Toast.show({
-      type: "error",
-      text1: searchRoomError.message,
-    });
-  }
+  useEffect(() => {
+    if (isErrorSearchRoom && searchRoomError) {
+      Toast.show({
+        type: "error",
+        text1: searchRoomError.message,
+      });
+    }
+  }, [isErrorSearchRoom, searchRoomError]);
 
   const searchPages = data?.pages ?? [];
   const lastPage = searchPages[searchPages.length - 1];
