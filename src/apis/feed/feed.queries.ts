@@ -4,12 +4,15 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getAllFeedListApi,
   getFeedDetailApi,
+  getFeedRelatedBookApi,
   getFeedTagListApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
-  GetAllFeedListResponse,
+  FeedRelatedBookSort,
   GetFeedDetailResponse,
+  GetFeedListResponse,
+  GetFeedRelatedBookResponse,
   GetFeedTagListResponse,
 } from "./feed.types";
 
@@ -28,6 +31,8 @@ const FEED_TAG_QUERY_CACHE_TIME = {
 const hasFeedId = (feedId?: number | string): feedId is number | string =>
   feedId != null && feedId !== "";
 
+const hasIsbn = (isbn?: string): isbn is string => isbn != null && isbn !== "";
+
 export const useGetAllFeedListQuery = () => {
   const {
     data,
@@ -40,9 +45,9 @@ export const useGetAllFeedListQuery = () => {
     refetch: refetchFeedList,
     isRefetching: isRefetchingFeedList,
   } = useInfiniteQuery<
-    GetAllFeedListResponse,
+    GetFeedListResponse,
     Error,
-    InfiniteData<GetAllFeedListResponse, FeedCursor>,
+    InfiniteData<GetFeedListResponse, FeedCursor>,
     typeof FEED_QUERY_KEY.ALL,
     FeedCursor
   >({
@@ -122,5 +127,61 @@ export const useGetFeedTagListQuery = () => {
     feedTagListError,
     refetchFeedTagList,
     isRefetchingFeedTagList,
+  };
+};
+
+export const useGetFeedRelatedBookQuery = (
+  isbn?: string,
+  sort: FeedRelatedBookSort = "like",
+) => {
+  const normalizedIsbn = isbn?.trim() ?? "";
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingFeedRelatedBookList,
+    isError: isErrorFeedRelatedBookList,
+    error: feedRelatedBookListError,
+    refetch: refetchFeedRelatedBookList,
+    isRefetching: isRefetchingFeedRelatedBookList,
+  } = useInfiniteQuery<
+    GetFeedRelatedBookResponse,
+    Error,
+    InfiniteData<GetFeedRelatedBookResponse, FeedCursor>,
+    ReturnType<typeof FEED_QUERY_KEY.RELATED_BOOK>,
+    FeedCursor
+  >({
+    queryKey: FEED_QUERY_KEY.RELATED_BOOK(normalizedIsbn, sort),
+    queryFn: ({ pageParam }) => {
+      if (!hasIsbn(normalizedIsbn)) {
+        throw new Error("isbn is required.");
+      }
+
+      return getFeedRelatedBookApi({
+        isbn: normalizedIsbn,
+        sort,
+        cursor: pageParam,
+      });
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: hasIsbn(normalizedIsbn),
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    feedRelatedBookList: data?.pages.flatMap((page) => page.feeds) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingFeedRelatedBookList,
+    isErrorFeedRelatedBookList,
+    feedRelatedBookListError,
+    refetchFeedRelatedBookList,
+    isRefetchingFeedRelatedBookList,
   };
 };

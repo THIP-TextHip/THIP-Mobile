@@ -4,7 +4,7 @@ import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface ReadCountBarProps {
-  readCount: number;
+  readCount: number | undefined;
 }
 
 export default function ReadCountBar({ readCount }: ReadCountBarProps) {
@@ -18,7 +18,7 @@ export default function ReadCountBar({ readCount }: ReadCountBarProps) {
           color={colors.neongreen}
           lineHeight={24}
         >
-          {readCount}명이 읽기에 참여중이에요!
+          {readCount ?? 0}명이 읽기에 참여중이에요!
         </AppText>
         <AppText size="sm">🔥</AppText>
       </View>

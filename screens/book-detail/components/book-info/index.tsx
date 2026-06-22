@@ -1,37 +1,40 @@
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
+import {
+  GetBookDetailResponse,
+  useChangeBookSaveStatusMutation,
+} from "@apis/book";
 import { IcPlus, IcRight, IcSave, IcSaveFilled } from "@images/icons";
 import { AppText, CustomButton } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface BookInfoProps {
-  // TODO: 서버 api 응답 타입으로 수정
-  bookInfo: {
-    title: string;
-    imageUrl: string;
-    authorName: string;
-    publisher: string;
-    isbn: string;
-    description: string;
-    recruitingRoomCount: number;
-    readCount: number;
-    isSaved: boolean;
-  };
+  bookInfo: GetBookDetailResponse | undefined;
   handleOpenModal: () => void;
 }
 
 export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
+  const { changeBookSaveStatus } = useChangeBookSaveStatusMutation();
+
+  if (!bookInfo) {
+    return;
+  }
+
+  // TODO: 해당 책으로 모집 중인 모임방 리스트 페이지 UI 구현
   const handleToGroupList = () => {
     console.log("모집중인 모임방 리스트 페이지로 이동");
   };
+  // TODO: 해당 책이 선택되고 편집 불가한 상태로 되도록
   const handleToFeedWrite = () => {
-    console.log("피드 글쓰기 페이지로 이동");
+    router.push("/feed-write");
   };
   const handlePressSaveButton = () => {
-    console.log("책 저장 및 저장 취소");
+    changeBookSaveStatus({ isbn: bookInfo.isbn, type: !bookInfo.isSaved });
   };
+
   return (
     <ImageBackground source={{ uri: bookInfo.imageUrl }}>
       <LinearGradient

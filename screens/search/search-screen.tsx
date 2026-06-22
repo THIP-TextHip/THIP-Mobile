@@ -14,7 +14,6 @@ import {
 import { RecentSearch, SearchBar } from "@shared/ui";
 
 import { MostSearched, SearchResult } from "./components";
-import { DUMMY_MOST_DATA } from "./constants";
 
 export default function SearchScreen() {
   const { recentSearchList } = useGetRecentSearchQuery("BOOK");
@@ -58,7 +57,7 @@ export default function SearchScreen() {
               handleClickKeyword={handleClickKeyword}
               handleRemoveKeyword={deleteRecentSearch}
             />
-            <MostSearched mostSearchedBooks={DUMMY_MOST_DATA} />
+            <MostSearched />
           </ScrollView>
         )}
       </View>

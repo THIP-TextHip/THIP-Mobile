@@ -15,6 +15,8 @@ export const FEED_URL = {
   DETAIL: (feedId: number | string) =>
     `/feeds/${encodeURIComponent(String(feedId))}`,
   TAG_LIST: "/feeds/write-info",
+  RELATED_BOOK: (isbn: string) =>
+    `/feeds/related-books/${encodeURIComponent(isbn)}`,
 } as const;
 
 export const COMMENT_URL = {
@@ -30,6 +32,10 @@ export const RECENT_SEARCH_URL = {
 
 export const BOOK_URL = {
   DEFAULT: "/books",
+  DETAIL: (isbn: string) => `/books/${encodeURIComponent(isbn)}`,
+  MOST: "/books/most-searched",
+  SAVED: "/books/saved",
+  SAVE_STATUS: (isbn: string) => `/books/${encodeURIComponent(isbn)}/saved`,
 } as const;
 
 export const ROOM_URL = {
