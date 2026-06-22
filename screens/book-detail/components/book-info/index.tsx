@@ -25,9 +25,11 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
     return;
   }
 
-  // TODO: 해당 책으로 모집 중인 모임방 리스트 페이지 UI 구현
   const handleToGroupList = () => {
-    console.log("모집중인 모임방 리스트 페이지로 이동");
+    router.push({
+      pathname: "/book-recruiting-group/[isbn]",
+      params: { isbn: bookInfo.isbn },
+    });
   };
   const handleToFeedWrite = () => {
     setSelectedBookInfo({

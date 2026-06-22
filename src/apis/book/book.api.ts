@@ -39,12 +39,12 @@ export const getMostSearchedBookApi = async () => {
 
 export const changeBookSaveStatusApi = async ({
   isbn,
-  status,
+  type,
 }: ChangeBookSaveStatusRequest) => {
   const response = await apiClient.post<ChangeBookSaveStatusResponse>(
     BOOK_URL.SAVE_STATUS(isbn),
     {
-      type: status,
+      type,
     },
   );
 

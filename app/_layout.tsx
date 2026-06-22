@@ -31,86 +31,111 @@ export default function RootLayout() {
             style={{ flex: 1, backgroundColor: colors.black.main }}
             edges={["top", "left", "right"]}
           >
-          <Stack>
-            <Stack.Screen
-              name="(tabs)"
-              options={{ headerShown: false, gestureEnabled: false }}
+            <Stack>
+              <Stack.Screen
+                name="(tabs)"
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+              <Stack.Screen
+                name="login"
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+              <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+              <Stack.Screen name="alarm" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="book-request"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="my-thip-list"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="(user)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="feed-detail"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="search-group"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="create-group"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="join-group"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="group-detail"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="my-group-list"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="expired-group-list"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="reading-mate"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="daily-greeting"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="record-book"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="record-write"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="create-vote"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="user-profile"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="thip-list" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="book-detail"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="book-recruiting-group"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="search-user"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="feed-write"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="saved" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="delete-account"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="delete-account-complete"
+                options={{ headerShown: false, gestureEnabled: false }}
+              />
+            </Stack>
+            <Toast
+              config={toastConfig}
+              position="top"
+              topOffset={insets.top + 16}
             />
-            <Stack.Screen
-              name="login"
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
-            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-            <Stack.Screen name="alarm" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="book-request"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="my-thip-list"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="(user)" options={{ headerShown: false }} />
-            <Stack.Screen name="feed-detail" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="search-group"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="create-group"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="join-group" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="group-detail"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="my-group-list"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="expired-group-list"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="reading-mate"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="daily-greeting"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="record-book" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="record-write"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="create-vote" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="user-profile"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name="thip-list" options={{ headerShown: false }} />
-            <Stack.Screen name="book-detail" options={{ headerShown: false }} />
-            <Stack.Screen name="search-user" options={{ headerShown: false }} />
-            <Stack.Screen name="feed-write" options={{ headerShown: false }} />
-            <Stack.Screen name="saved" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="delete-account"
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="delete-account-complete"
-              options={{ headerShown: false, gestureEnabled: false }}
-            />
-          </Stack>
-          <Toast
-            config={toastConfig}
-            position="top"
-            topOffset={insets.top + 16}
-          />
-          {/* <Toast position="top" topOffset={60} /> */}
+            {/* <Toast position="top" topOffset={60} /> */}
           </SafeAreaView>
         </BottomSheetModalProvider>
       </QueryClientProvider>
