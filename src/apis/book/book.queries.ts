@@ -12,6 +12,7 @@ import {
   changeBookSaveStatusApi,
   getBookDetailApi,
   getMostSearchedBookApi,
+  getSavedBookApi,
   getSearchBookApi,
 } from "./book.api";
 import { BOOK_QUERY_KEY } from "./book.query-key";
@@ -20,6 +21,7 @@ import {
   ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
   GetMostSearchedBookResponse,
+  GetSavedBookResponse,
   type GetSearchBookResponse,
 } from "./book.types";
 
@@ -29,6 +31,7 @@ const MOST_SEARCHED_BOOK_QUERY_CACHE_TIME = {
 };
 
 type BookSearchPage = number;
+type SavedBookCursor = string | null;
 
 export const useSearchBookQuery = (
   keyword: string,
@@ -145,7 +148,6 @@ export const useMostSearchedBookQuery = () => {
   };
 };
 
-// TODO: 추후 책 저장 가능한 곳에서 모두 사용
 export const useChangeBookSaveStatusMutation = () => {
   const queryClient = useQueryClient();
   const { mutate: changeBookSaveStatus } = useMutation<
@@ -154,10 +156,9 @@ export const useChangeBookSaveStatusMutation = () => {
     ChangeBookSaveStatusRequest
   >({
     mutationFn: changeBookSaveStatusApi,
-    // TODO: 책 저장상태가 보이는 모든 곳에서 캐시 초기화
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: BOOK_QUERY_KEY.DETAIL(data.isbn),
+        queryKey: BOOK_QUERY_KEY.ALL,
       });
     },
     onError: (error) => {
@@ -169,4 +170,49 @@ export const useChangeBookSaveStatusMutation = () => {
   });
 
   return { changeBookSaveStatus };
+};
+
+export const useSavedBookQuery = () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingSavedBook,
+    isError: isErrorSavedBook,
+    error: savedBookError,
+    refetch: refetchSavedBook,
+    isRefetching: isRefetchingSavedBook,
+  } = useInfiniteQuery<
+    GetSavedBookResponse,
+    Error,
+    InfiniteData<GetSavedBookResponse, SavedBookCursor>,
+    typeof BOOK_QUERY_KEY.SAVED,
+    SavedBookCursor
+  >({
+    queryKey: BOOK_QUERY_KEY.SAVED,
+    queryFn: ({ pageParam }) => getSavedBookApi(pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+  });
+
+  useEffect(() => {
+    if (isErrorSavedBook && savedBookError) {
+      Toast.show({
+        type: "error",
+        text1: savedBookError.message,
+      });
+    }
+  }, [isErrorSavedBook, savedBookError]);
+
+  return {
+    savedBookList: data?.pages.flatMap((page) => page.bookList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingSavedBook,
+    refetchSavedBook,
+    isRefetchingSavedBook,
+  };
 };

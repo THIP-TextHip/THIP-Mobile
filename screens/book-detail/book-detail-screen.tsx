@@ -11,7 +11,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { useBookDetailQuery } from "@apis/book";
-import { useGetFeedRelatedBookQuery } from "@apis/feed";
+import {
+  useGetFeedRelatedBookQuery,
+  type FeedRelatedBookSort,
+} from "@apis/feed";
 import { AppText, FeedPostPreview, type FilterType } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -28,7 +31,7 @@ export default function BookDetailScreen() {
   const { isbn } = useLocalSearchParams<{ isbn: string }>();
   const [isVisibleReadCount, setIsVisibleReadCount] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [sortType, setSortType] = useState<FilterType>(
+  const [sortType, setSortType] = useState<FilterType<FeedRelatedBookSort>>(
     BOOK_DETAIL_FEED_SORT[0],
   );
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -73,7 +76,7 @@ export default function BookDetailScreen() {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
-  const handleSelectType = (type: FilterType) => {
+  const handleSelectType = (type: FilterType<FeedRelatedBookSort>) => {
     setSortType(type);
     setIsDropdownVisible(false);
   };

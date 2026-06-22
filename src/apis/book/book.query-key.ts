@@ -1,4 +1,5 @@
 export const BOOK_QUERY_KEY = {
+  ALL: ["books"],
   SEARCH: (keyword: string, page: number, isFinalized: boolean) => [
     "books",
     "search",
@@ -8,4 +9,5 @@ export const BOOK_QUERY_KEY = {
   ],
   DETAIL: (isbn: string) => ["books", isbn],
   MOST: ["books", "most-searched"],
+  SAVED: ["books", "saved"],
 } as const;

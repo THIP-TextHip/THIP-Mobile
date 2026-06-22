@@ -1,29 +1,28 @@
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { FeedRelatedBookSort } from "@apis/feed";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 
-export interface FilterType {
+export interface FilterType<T extends string = string> {
   label: string;
-  type: FeedRelatedBookSort;
+  type: T;
 }
 
-interface DropdownFilterProps {
+interface DropdownFilterProps<T extends string = string> {
   isVisible: boolean;
-  currentType: FilterType;
-  typeList: FilterType[];
-  handleSelectType: (type: FilterType) => void;
+  currentType: FilterType<T>;
+  typeList: FilterType<T>[];
+  handleSelectType: (type: FilterType<T>) => void;
 }
 
-export default function DropdownFilter({
+export default function DropdownFilter<T extends string = string>({
   isVisible,
   currentType,
   typeList,
   handleSelectType,
-}: DropdownFilterProps) {
+}: DropdownFilterProps<T>) {
   return (
     isVisible && (
       <View style={styles.container}>

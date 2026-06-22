@@ -1,12 +1,13 @@
 import { apiClient } from "../api-client";
 import { BOOK_URL } from "../endpoint";
-import type {
-  ChangeBookSaveStatusRequest,
-  ChangeBookSaveStatusResponse,
-  GetBookDetailResponse,
-  GetMostSearchedBookResponse,
-  GetSearchBookRequest,
-  GetSearchBookResponse,
+import {
+  GetSavedBookResponse,
+  type ChangeBookSaveStatusRequest,
+  type ChangeBookSaveStatusResponse,
+  type GetBookDetailResponse,
+  type GetMostSearchedBookResponse,
+  type GetSearchBookRequest,
+  type GetSearchBookResponse,
 } from "./book.types";
 
 export const getSearchBookApi = async (params: GetSearchBookRequest) => {
@@ -46,6 +47,14 @@ export const changeBookSaveStatusApi = async ({
       type: status,
     },
   );
+
+  return response.data;
+};
+
+export const getSavedBookApi = async (cursor?: string | null) => {
+  const response = await apiClient.get<GetSavedBookResponse>(BOOK_URL.SAVED, {
+    params: cursor == null ? undefined : { cursor },
+  });
 
   return response.data;
 };

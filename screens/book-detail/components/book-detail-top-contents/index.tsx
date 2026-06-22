@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { GetBookDetailResponse } from "@apis/book";
+import type { FeedRelatedBookSort } from "@apis/feed";
 import { IcDownmoreGrey } from "@images/icons";
 import { AppText, DropdownFilter, type FilterType } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -10,11 +11,11 @@ import BookInfo from "../book-info";
 
 interface BookDetailTopContentsProps {
   bookDetailData: GetBookDetailResponse | undefined;
-  sortType: FilterType;
+  sortType: FilterType<FeedRelatedBookSort>;
   isDropdownVisible: boolean;
   handleOpenModal: () => void;
   handlePressDropdown: () => void;
-  handleSelectType: (type: FilterType) => void;
+  handleSelectType: (type: FilterType<FeedRelatedBookSort>) => void;
 }
 
 export default function BookDetailTopContents({

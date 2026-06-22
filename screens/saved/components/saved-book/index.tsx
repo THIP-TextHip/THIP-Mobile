@@ -1,37 +1,46 @@
 import { router } from "expo-router";
 import React from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
+  RefreshControl,
   StyleSheet,
   useWindowDimensions,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { IcSaveFilled } from "@images/icons";
+import {
+  SavedBookType,
+  useChangeBookSaveStatusMutation,
+  useSavedBookQuery,
+} from "@apis/book";
+import { IcSave, IcSaveFilled } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
-
-import { DUMMY_SAVED_BOOK_LIST } from "../../constants";
-
-// TODO: 추후 이걸 쓰지 않고 서버에서 주는 타입으로 교체.
-interface SavedBookItemProps {
-  book: {
-    bookId: number;
-    bookTitle: string;
-    authorName: string;
-    publisher: string;
-    bookImageUrl: string;
-    isbn: string;
-    isSaved: boolean;
-  };
-}
 
 export default function SavedBook() {
   const { height } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
+
+  const {
+    savedBookList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingSavedBook,
+    refetchSavedBook,
+    isRefetchingSavedBook,
+  } = useSavedBookQuery();
+  const { changeBookSaveStatus } = useChangeBookSaveStatusMutation();
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
 
   const handleToBookDetail = (isbn: string) => {
     router.push({
@@ -40,12 +49,19 @@ export default function SavedBook() {
     });
   };
 
-  // TODO: 서버에 저장 취소 요청
-  const handlePressSaveButton = (isbn: string) => {
-    console.log(isbn, "번 책 저장 취소");
+  const handlePressSaveButton = (isbn: string, isSaved: boolean) => {
+    changeBookSaveStatus({ isbn, status: !isSaved });
   };
 
-  const SavedBookItem = ({ book }: SavedBookItemProps) => {
+  if (isPendingSavedBook) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
+  const SavedBookItem = (book: SavedBookType) => {
     return (
       <View style={styles.item}>
         <Pressable
@@ -91,10 +107,10 @@ export default function SavedBook() {
         </Pressable>
         <Pressable
           style={{ alignSelf: "flex-start" }}
-          onPress={() => handlePressSaveButton(book.isbn)}
+          onPress={() => handlePressSaveButton(book.isbn, book.isSaved)}
           hitSlop={10}
         >
-          <IcSaveFilled />
+          {book.isSaved ? <IcSaveFilled /> : <IcSave />}
         </Pressable>
       </View>
     );
@@ -125,12 +141,32 @@ export default function SavedBook() {
 
   return (
     <FlatList
-      contentContainerStyle={[styles.list, { paddingBottom: bottom + 32 }]}
-      data={DUMMY_SAVED_BOOK_LIST}
+      contentContainerStyle={[
+        styles.list,
+        { paddingBottom: bottom + 20 },
+        isFetchingNextPage && { paddingBottom: 40 },
+      ]}
+      data={savedBookList}
       keyExtractor={(item) => String(item.bookId)}
-      renderItem={({ item }) => <SavedBookItem book={item} />}
+      renderItem={({ item }) => <SavedBookItem {...item} />}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListEmptyComponent={SavedBookEmpty}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <ActivityIndicator style={styles.footer} color={colors.white} />
+        ) : null
+      }
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      // TODO: 새로고침 디자인 확인
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetchingSavedBook}
+          onRefresh={refetchSavedBook}
+          tintColor={colors.white}
+          colors={[colors.white]}
+        />
+      }
     />
   );
 }
@@ -187,5 +223,13 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  footer: {
+    marginTop: 40,
   },
 });
