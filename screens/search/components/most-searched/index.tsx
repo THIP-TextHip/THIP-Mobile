@@ -8,8 +8,11 @@ import { colors } from "@theme/token";
 import MostSearchedBookItem from "../most-searched-book-item";
 
 export default function MostSearched() {
-  const { mostSearchedBookData, isPendingMostSearchedBook } =
-    useMostSearchedBookQuery();
+  const {
+    mostSearchedBookData,
+    isPendingMostSearchedBook,
+    isErrorMostSearchedBook,
+  } = useMostSearchedBookQuery();
 
   const dateString = useMemo(() => {
     const today = new Date();
@@ -32,6 +35,12 @@ export default function MostSearched() {
       {isPendingMostSearchedBook ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      ) : isErrorMostSearchedBook ? (
+        <View style={styles.emptyContainer}>
+          <AppText weight="semibold" size="lg" color={colors.white}>
+            데이터를 불러오지 못했어요
+          </AppText>
         </View>
       ) : mostSearchedBookData?.bookList.length === 0 ? (
         <View style={styles.emptyContainer}>

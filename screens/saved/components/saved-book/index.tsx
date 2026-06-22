@@ -31,6 +31,7 @@ export default function SavedBook() {
     hasNextPage,
     isFetchingNextPage,
     isPendingSavedBook,
+    isErrorSavedBook,
     refetchSavedBook,
     isRefetchingSavedBook,
   } = useSavedBookQuery();
@@ -50,7 +51,7 @@ export default function SavedBook() {
   };
 
   const handlePressSaveButton = (isbn: string, isSaved: boolean) => {
-    changeBookSaveStatus({ isbn, status: !isSaved });
+    changeBookSaveStatus({ isbn, type: !isSaved });
   };
 
   if (isPendingSavedBook) {
@@ -60,6 +61,54 @@ export default function SavedBook() {
       </View>
     );
   }
+
+  if (isErrorSavedBook && savedBookList.length === 0) {
+    return (
+      <View style={styles.empty}>
+        <AppText
+          weight="semibold"
+          size="lg"
+          color={colors.white}
+          lineHeight={24}
+        >
+          데이터를 불러오지 못했어요
+        </AppText>
+        <Pressable onPress={() => void refetchSavedBook()}>
+          <AppText
+            weight="regular"
+            size="sm"
+            color={colors.grey[100]}
+            lineHeight={20}
+          >
+            다시 시도하기
+          </AppText>
+        </Pressable>
+      </View>
+    );
+  }
+
+  const SavedBookEmpty = () => {
+    return (
+      <View style={[styles.empty, { height: height - 300 }]}>
+        <AppText
+          weight="semibold"
+          size="lg"
+          color={colors.white}
+          lineHeight={24}
+        >
+          아직 저장한 책이 없어요
+        </AppText>
+        <AppText
+          weight="regular"
+          size="sm"
+          color={colors.grey[100]}
+          lineHeight={20}
+        >
+          마음에 드는 책을 THIP 해보세요!
+        </AppText>
+      </View>
+    );
+  };
 
   const SavedBookItem = (book: SavedBookType) => {
     return (
@@ -112,29 +161,6 @@ export default function SavedBook() {
         >
           {book.isSaved ? <IcSaveFilled /> : <IcSave />}
         </Pressable>
-      </View>
-    );
-  };
-
-  const SavedBookEmpty = () => {
-    return (
-      <View style={[styles.empty, { height: height - 300 }]}>
-        <AppText
-          weight="semibold"
-          size="lg"
-          color={colors.white}
-          lineHeight={24}
-        >
-          아직 저장한 책이 없어요
-        </AppText>
-        <AppText
-          weight="regular"
-          size="sm"
-          color={colors.grey[100]}
-          lineHeight={20}
-        >
-          마음에 드는 책을 THIP 해보세요!
-        </AppText>
       </View>
     );
   };

@@ -1,5 +1,6 @@
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
 import {
@@ -22,14 +23,16 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
     return;
   }
 
+  // TODO: 해당 책으로 모집 중인 모임방 리스트 페이지 UI 구현
   const handleToGroupList = () => {
     console.log("모집중인 모임방 리스트 페이지로 이동");
   };
+  // TODO: 해당 책이 선택되고 편집 불가한 상태로 되도록
   const handleToFeedWrite = () => {
-    console.log("피드 글쓰기 페이지로 이동");
+    router.push("/feed-write");
   };
   const handlePressSaveButton = () => {
-    changeBookSaveStatus({ isbn: bookInfo.isbn, status: !bookInfo.isSaved });
+    changeBookSaveStatus({ isbn: bookInfo.isbn, type: !bookInfo.isSaved });
   };
 
   return (

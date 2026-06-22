@@ -47,7 +47,7 @@ export interface GetMostSearchedBookResponse {
 
 export interface ChangeBookSaveStatusRequest {
   isbn: string;
-  status: boolean;
+  type: boolean;
 }
 
 export interface ChangeBookSaveStatusResponse {

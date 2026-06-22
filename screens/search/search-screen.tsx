@@ -79,10 +79,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
-  status: {
-    paddingVertical: 80,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
 });

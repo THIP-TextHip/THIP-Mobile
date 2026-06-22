@@ -8,6 +8,7 @@ import {
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { router } from "expo-router";
 import {
   changeBookSaveStatusApi,
   getBookDetailApi,
@@ -118,6 +119,11 @@ export const useBookDetailQuery = (isbn: string) => {
         type: "error",
         text1: error.message,
       });
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace("/feed");
+      }
     }
   }, [isError, error]);
 
@@ -212,6 +218,7 @@ export const useSavedBookQuery = () => {
     hasNextPage,
     isFetchingNextPage,
     isPendingSavedBook,
+    isErrorSavedBook,
     refetchSavedBook,
     isRefetchingSavedBook,
   };
