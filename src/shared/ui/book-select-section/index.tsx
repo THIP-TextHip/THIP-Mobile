@@ -8,13 +8,13 @@ import { FeedBookItemType } from "../book-search-bottom-sheet";
 import { CustomButton } from "../button";
 
 interface BookSelectSectionProps {
-  isPin?: boolean;
+  isAlreadySelected?: boolean;
   book: FeedBookItemType | null;
   handleOpenBottomSheet: () => void;
 }
 
 export default function BookSelectSection({
-  isPin = false,
+  isAlreadySelected = false,
   book,
   handleOpenBottomSheet,
 }: BookSelectSectionProps) {
@@ -28,6 +28,7 @@ export default function BookSelectSection({
           <Image source={{ uri: book.bookImageUrl }} style={styles.bookImage} />
           <View style={styles.textWrapper}>
             <AppText
+              style={styles.title}
               weight="semibold"
               size="sm"
               color={colors.white}
@@ -44,7 +45,7 @@ export default function BookSelectSection({
               {book.authorName} 저
             </AppText>
           </View>
-          {!isPin && (
+          {!isAlreadySelected && (
             <Pressable
               style={styles.changeButton}
               onPress={handleOpenBottomSheet}
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
   section: {
     gap: 12,
     paddingHorizontal: 20,
+    flex: 1,
   },
   bookSearchButtonContent: {
     flexDirection: "row",
@@ -94,8 +96,12 @@ const styles = StyleSheet.create({
     width: 60,
     height: 80,
   },
+  title: {
+    flexShrink: 1,
+  },
   textWrapper: {
     gap: 8,
+    flex: 1,
   },
   changeButton: {
     position: "absolute",

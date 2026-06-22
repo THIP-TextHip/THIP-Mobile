@@ -9,6 +9,7 @@ import {
 } from "@apis/book";
 import { IcPlus, IcRight, IcSave, IcSaveFilled } from "@images/icons";
 import { AppText, CustomButton } from "@shared/ui";
+import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
 interface BookInfoProps {
@@ -18,6 +19,7 @@ interface BookInfoProps {
 
 export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
   const { changeBookSaveStatus } = useChangeBookSaveStatusMutation();
+  const { setSelectedBookInfo } = useSelectedBookStore();
 
   if (!bookInfo) {
     return;
@@ -27,8 +29,13 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
   const handleToGroupList = () => {
     console.log("모집중인 모임방 리스트 페이지로 이동");
   };
-  // TODO: 해당 책이 선택되고 편집 불가한 상태로 되도록
   const handleToFeedWrite = () => {
+    setSelectedBookInfo({
+      bookTitle: bookInfo.title,
+      authorName: bookInfo.authorName,
+      bookImageUrl: bookInfo.imageUrl,
+      isbn: bookInfo.isbn,
+    });
     router.push("/feed-write");
   };
   const handlePressSaveButton = () => {
