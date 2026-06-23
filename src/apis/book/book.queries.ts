@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import {
   changeBookSaveStatusApi,
   getBookDetailApi,
+  getBookRecruitingRoomsApi,
   getMostSearchedBookApi,
   getSavedBookApi,
   getSearchBookApi,
@@ -21,6 +22,7 @@ import {
   ChangeBookSaveStatusRequest,
   ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
+  GetBookRecruitingRoomsResponse,
   GetMostSearchedBookResponse,
   GetSavedBookResponse,
   type GetSearchBookResponse,
@@ -33,6 +35,7 @@ const MOST_SEARCHED_BOOK_QUERY_CACHE_TIME = {
 
 type BookSearchPage = number;
 type SavedBookCursor = string | null;
+type BookRecruitingRoomCursor = string | null;
 
 export const useSearchBookQuery = (
   keyword: string,
@@ -221,5 +224,61 @@ export const useSavedBookQuery = () => {
     isErrorSavedBook,
     refetchSavedBook,
     isRefetchingSavedBook,
+  };
+};
+
+export const useBookRecruitingRoomsQuery = (isbn: string) => {
+  const normalizedIsbn = isbn.trim() ?? "";
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingBookRecruitingRooms,
+    isError: isErrorBookRecruitingRooms,
+    error: bookRecruitingRoomsError,
+    refetch: refetchBookRecruitingRooms,
+    isRefetching: isRefetchingBookRecruitingRooms,
+  } = useInfiniteQuery<
+    GetBookRecruitingRoomsResponse,
+    Error,
+    InfiniteData<GetBookRecruitingRoomsResponse, BookRecruitingRoomCursor>,
+    ReturnType<typeof BOOK_QUERY_KEY.RECRUITING>,
+    BookRecruitingRoomCursor
+  >({
+    queryKey: BOOK_QUERY_KEY.RECRUITING(normalizedIsbn),
+    queryFn: ({ pageParam }) =>
+      getBookRecruitingRoomsApi(normalizedIsbn, pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: normalizedIsbn.length > 0,
+  });
+
+  useEffect(() => {
+    if (isErrorBookRecruitingRooms && bookRecruitingRoomsError) {
+      Toast.show({
+        type: "error",
+        text1: bookRecruitingRoomsError.message,
+      });
+    }
+  }, [isErrorBookRecruitingRooms, bookRecruitingRoomsError]);
+
+  const recruitingRoomPages = data?.pages ?? [];
+  const firstPage = recruitingRoomPages[0];
+
+  return {
+    recruitingRoomList: recruitingRoomPages.flatMap(
+      (page) => page.recruitingRoomList,
+    ),
+    totalRoomCount: firstPage?.totalRoomCount ?? 0,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingBookRecruitingRooms,
+    isErrorBookRecruitingRooms,
+    refetchBookRecruitingRooms,
+    isRefetchingBookRecruitingRooms,
   };
 };

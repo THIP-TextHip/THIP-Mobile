@@ -1,6 +1,7 @@
 import { apiClient } from "../api-client";
 import { BOOK_URL } from "../endpoint";
 import {
+  GetBookRecruitingRoomsResponse,
   GetSavedBookResponse,
   type ChangeBookSaveStatusRequest,
   type ChangeBookSaveStatusResponse,
@@ -55,6 +56,20 @@ export const getSavedBookApi = async (cursor?: string | null) => {
   const response = await apiClient.get<GetSavedBookResponse>(BOOK_URL.SAVED, {
     params: cursor == null ? undefined : { cursor },
   });
+
+  return response.data;
+};
+
+export const getBookRecruitingRoomsApi = async (
+  isbn: string,
+  cursor?: string | null,
+) => {
+  const response = await apiClient.get<GetBookRecruitingRoomsResponse>(
+    BOOK_URL.RECRUITING(isbn),
+    {
+      params: cursor == null ? undefined : { cursor },
+    },
+  );
 
   return response.data;
 };

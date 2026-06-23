@@ -1,6 +1,7 @@
 export {
   changeBookSaveStatusApi,
   getBookDetailApi,
+  getBookRecruitingRoomsApi,
   getMostSearchedBookApi,
   getSavedBookApi,
   getSearchBookApi,
@@ -8,6 +9,7 @@ export {
 
 export {
   useBookDetailQuery,
+  useBookRecruitingRoomsQuery,
   useChangeBookSaveStatusMutation,
   useMostSearchedBookQuery,
   useSavedBookQuery,
@@ -19,11 +21,13 @@ export type {
   ChangeBookSaveStatusRequest,
   ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
+  GetBookRecruitingRoomsResponse,
   GetMostSearchedBookResponse,
   GetSavedBookResponse,
   GetSearchBookRequest,
   GetSearchBookResponse,
   MostSearchedBook,
+  RecruitingRoomType,
   SavedBookType,
 } from "./book.types";
 

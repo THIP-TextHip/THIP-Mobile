@@ -36,6 +36,8 @@ export const BOOK_URL = {
   MOST: "/books/most-searched",
   SAVED: "/books/saved",
   SAVE_STATUS: (isbn: string) => `/books/${encodeURIComponent(isbn)}/saved`,
+  RECRUITING: (isbn: string) =>
+    `/books/${encodeURIComponent(isbn)}/recruiting-rooms`,
 } as const;
 
 export const ROOM_URL = {
