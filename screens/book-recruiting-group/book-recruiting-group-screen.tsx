@@ -36,35 +36,7 @@ export default function BookRecruitingGroupScreen() {
   } = useBookDetailQuery(isbn);
   const { setSelectedBookInfo } = useSelectedBookStore();
 
-  if (!bookDetailData) {
-    return;
-  }
-
-  const handleLoadMore = () => {
-    if (!hasNextPage || isFetchingNextPage) return;
-
-    fetchNextPage();
-  };
-
-  const handleToCreateGroup = () => {
-    setSelectedBookInfo({
-      bookTitle: bookDetailData.title,
-      authorName: bookDetailData.authorName,
-      bookImageUrl: bookDetailData.imageUrl,
-      isbn: bookDetailData.isbn,
-    });
-    router.push("/create-group");
-  };
-
-  if (isPendingBookRecruitingRooms || isPendingBookDetail) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
-
-  if (isErrorBookRecruitingRooms) {
+  if (isErrorBookRecruitingRooms || !bookDetailData) {
     return (
       <View style={styles.status}>
         <AppText
@@ -85,6 +57,14 @@ export default function BookRecruitingGroupScreen() {
             다시 시도하기
           </AppText>
         </Pressable>
+      </View>
+    );
+  }
+
+  if (isPendingBookRecruitingRooms || isPendingBookDetail) {
+    return (
+      <View style={styles.status}>
+        <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
   }
@@ -110,6 +90,22 @@ export default function BookRecruitingGroupScreen() {
         </AppText>
       </View>
     );
+  };
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  const handleToCreateGroup = () => {
+    setSelectedBookInfo({
+      bookTitle: bookDetailData.title,
+      authorName: bookDetailData.authorName,
+      bookImageUrl: bookDetailData.imageUrl,
+      isbn: bookDetailData.isbn,
+    });
+    router.push("/create-group");
   };
 
   return (

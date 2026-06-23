@@ -22,7 +22,7 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
   const { setSelectedBookInfo } = useSelectedBookStore();
 
   if (!bookInfo) {
-    return;
+    return null;
   }
 
   const handleToGroupList = () => {
