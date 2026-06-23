@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -18,6 +18,7 @@ import {
   VisibilitySection,
 } from "@shared/ui";
 import { getKoreaDate, parseStringToDate } from "@shared/utils";
+import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
 import {
@@ -32,8 +33,13 @@ import { DAY_IN_MS } from "./constants";
 
 export default function CreateGroupScreen() {
   const { bottom } = useSafeAreaInsets();
+  const navigation = useNavigation();
+  const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
+
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-  const [groupBook, setGroupBook] = useState<FeedBookItemType | null>(null);
+  const [groupBook, setGroupBook] = useState<FeedBookItemType | null>(
+    selectedBookInfo ?? null,
+  );
   const [selectedCategory, setSelectedCategory] =
     useState<GroupCategoryType | null>(null);
   const [groupTitle, setGroupTitle] = useState("");
@@ -51,6 +57,12 @@ export default function CreateGroupScreen() {
     groupTitle.trim() === "" ||
     groupDesc.trim() === "" ||
     durationErrorMessage !== "";
+
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", () => {
+      clearSelectedBookInfo();
+    });
+  }, [clearSelectedBookInfo, navigation]);
 
   useEffect(() => {
     const today = getKoreaDate();
@@ -112,6 +124,7 @@ export default function CreateGroupScreen() {
       isPublic,
     );
     // TODO: 모임방 생성 성공 응답의 roomId 사용. 성공 시 토스트도 띄워야 함!
+    clearSelectedBookInfo();
     Toast.show({
       type: "default",
       text1: "모임방 생성이 완료되었습니다.",
@@ -145,6 +158,7 @@ export default function CreateGroupScreen() {
           ]}
         >
           <BookSelectSection
+            isAlreadySelected={selectedBookInfo !== null}
             book={groupBook}
             handleOpenBottomSheet={handleOpenBottomSheet}
           />

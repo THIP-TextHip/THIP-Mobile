@@ -16,6 +16,7 @@ import {
   VisibilitySection,
 } from "@shared/ui";
 import { useRecordBookPinStore } from "@stores/record-book";
+import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
 import {
@@ -30,10 +31,11 @@ export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
   const { pinInfo, clearPinInfo } = useRecordBookPinStore();
+  const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [feedBook, setFeedBook] = useState<FeedBookItemType | null>(
-    pinInfo?.bookInfo ?? null,
+    pinInfo?.bookInfo ?? selectedBookInfo ?? null,
   );
   const [contentBody, setContentBody] = useState(pinInfo?.content ?? "");
   const [isPublic, setIsPublic] = useState(true);
@@ -41,13 +43,17 @@ export default function FeedWriteScreen() {
   const [selectedTagList, setSelectedTagList] = useState<string[]>([]);
 
   useEffect(() => {
-    return navigation.addListener("beforeRemove", clearPinInfo);
-  }, [clearPinInfo, navigation]);
+    return navigation.addListener("beforeRemove", () => {
+      clearPinInfo();
+      clearSelectedBookInfo();
+    });
+  }, [clearPinInfo, clearSelectedBookInfo, navigation]);
 
   const handleGoBack = useCallback(() => {
     clearPinInfo();
+    clearSelectedBookInfo();
     router.back();
-  }, [clearPinInfo]);
+  }, [clearPinInfo, clearSelectedBookInfo]);
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -81,6 +87,7 @@ export default function FeedWriteScreen() {
       `책 : ${feedBook?.bookTitle}\n글 : ${contentBody}\n사진 : ${imageUrls}\n공개 설정 : ${isPublic}\n태그 : ${selectedTagList}`,
     );
     clearPinInfo();
+    clearSelectedBookInfo();
     router.back();
   };
 
@@ -109,7 +116,7 @@ export default function FeedWriteScreen() {
           ]}
         >
           <BookSelectSection
-            isPin={pinInfo !== null}
+            isAlreadySelected={pinInfo !== null || selectedBookInfo !== null}
             book={feedBook}
             handleOpenBottomSheet={handleOpenBottomSheet}
           />

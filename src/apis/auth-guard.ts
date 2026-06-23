@@ -14,7 +14,7 @@ export class AuthRequiredError extends Error {
   }
 }
 
-export const AUTH_ERROR_CODES = [40100, 40101];
+export const AUTH_ERROR_CODES = [40100, 40101, 40108];
 export const AUTH_ERROR_HTTP_STATUSES = [401];
 
 let isRedirectingToLogin = false;

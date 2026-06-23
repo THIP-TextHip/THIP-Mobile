@@ -70,3 +70,20 @@ export interface GetSavedBookResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface RecruitingRoomType {
+  roomId: number;
+  bookImageUrl: string;
+  roomName: string;
+  memberCount: number;
+  recruitCount: number;
+  deadlineEndDate: string;
+  isPublic: boolean;
+}
+
+export interface GetBookRecruitingRoomsResponse {
+  recruitingRoomList: RecruitingRoomType[];
+  totalRoomCount: number;
+  nextCursor: string;
+  isLast: boolean;
+}

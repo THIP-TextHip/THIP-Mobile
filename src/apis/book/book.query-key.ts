@@ -10,4 +10,5 @@ export const BOOK_QUERY_KEY = {
   DETAIL: (isbn: string) => ["books", isbn],
   MOST: ["books", "most-searched"],
   SAVED: ["books", "saved"],
+  RECRUITING: (isbn?: string) => ["books", "recruiting", isbn],
 } as const;
