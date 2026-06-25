@@ -26,6 +26,7 @@ interface RecordCommentBottomSheetProps {
 }
 
 export default function RecordCommentBottomSheet({
+  // TODO: 서버 api 연동 시 postId로 댓글 목록 조회/전송
   postId,
   isVisible,
   handleClose,

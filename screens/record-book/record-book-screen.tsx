@@ -153,7 +153,7 @@ export default function RecordBookScreen() {
         )}
         ListHeaderComponent={RecordListHeader}
       />
-      {postIdForComment && (
+      {postIdForComment !== null && (
         <RecordCommentBottomSheet
           postId={postIdForComment}
           isVisible={isCommentOpen}
