@@ -93,6 +93,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: TAB_GAP,
+    marginTop: 10,
+    marginBottom: 20,
   },
   tab: {
     width: TAB_WIDTH,

@@ -10,16 +10,18 @@ import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface RecordPostActionsProps {
+  postId: number;
   isLiked: boolean;
   isWriter: boolean;
   likeCount: number;
   commentCount: number;
   handlePressLike: () => void;
-  handleOpenComment: () => void;
+  handleOpenComment: (postId: number) => void;
   handleOpenPinModal: () => void;
 }
 
 export default function RecordPostActions({
+  postId,
   isLiked,
   isWriter,
   likeCount,
@@ -42,7 +44,7 @@ export default function RecordPostActions({
       </Pressable>
       <Pressable
         style={styles.likeComment}
-        onPress={handleOpenComment}
+        onPress={() => handleOpenComment(postId)}
         hitSlop={5}
       >
         <IcComment />

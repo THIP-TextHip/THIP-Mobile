@@ -1,10 +1,15 @@
-import { useCallback, useState } from "react";
-import { FlatList, StyleSheet, useWindowDimensions, View } from "react-native";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetFlatList,
+} from "@gorhom/bottom-sheet";
+import { BlurView } from "expo-blur";
+import React, { useCallback, useRef, useState } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@theme/token";
 
-import CustomBottomSheet from "../custom-bottom-sheet";
 import SearchBar from "../search-bar";
 import {
   BookSearchEmpty,
@@ -19,6 +24,7 @@ import {
 
 // TODO: 서버 제공 타입으로 변경
 export interface FeedBookItemType {
+  bookId: number;
   bookTitle: string;
   authorName: string;
   bookImageUrl: string;
@@ -36,8 +42,8 @@ export default function BookSearchBottomSheet({
   handleSelectBook,
   handleClose,
 }: BookSearchBottomSheetProps) {
-  const { height } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
+  const sheetRef = useRef<BottomSheet>(null);
 
   const [bookType, setBookType] = useState<"SAVED" | "JOINING">("SAVED");
   const [searchText, setSearchText] = useState("");
@@ -72,52 +78,90 @@ export default function BookSearchBottomSheet({
         : DUMMY_GROUP_BOOK_LIST_BOTTOM_SHEET;
 
   return (
-    <CustomBottomSheet
-      isVisible={isVisible}
-      handleClose={handleClose}
-      containerPaddingBottom={0}
-    >
-      <View style={[styles.container, { height: height * 0.65 }]}>
-        <SearchBar
-          value={searchText}
-          placeholder="책 제목을 검색해보세요."
-          setValue={handleChangeText}
-          handleSearch={handleSearch}
-          containerStyle={{ backgroundColor: colors.darkgrey.dark }}
-        />
-        {searchText.trim() === "" && (
-          <BottomSheetTopTabBar
-            bookType={bookType}
-            handleSetBookType={handleSetBookType}
+    isVisible && (
+      <GestureHandlerRootView style={styles.backdrop}>
+        <BottomSheet
+          onClose={handleClose}
+          ref={sheetRef}
+          snapPoints={["65%"]}
+          enableDynamicSizing={false}
+          enablePanDownToClose
+          backdropComponent={(props) => (
+            <>
+              <BlurView
+                intensity={15}
+                tint="dark"
+                style={[styles.backdrop, !isVisible && { display: "none" }]}
+                pointerEvents="none"
+              />
+              <BottomSheetBackdrop
+                {...props}
+                appearsOnIndex={0}
+                disappearsOnIndex={-1}
+                pressBehavior="close"
+              />
+            </>
+          )}
+          style={styles.container}
+          backgroundStyle={styles.sheetBackground}
+          handleComponent={null}
+        >
+          <SearchBar
+            value={searchText}
+            placeholder="책 제목을 검색해보세요."
+            setValue={handleChangeText}
+            handleSearch={handleSearch}
+            containerStyle={{ backgroundColor: colors.darkgrey.dark }}
           />
-        )}
-        <FlatList
-          contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
-          data={searchedBookList}
-          keyExtractor={(item) => String(item.bookId)}
-          renderItem={({ item }) => (
-            <BottomSheetBookItem
-              bookItem={item}
-              handleSelectBook={handlePressBook}
-            />
-          )}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          ListEmptyComponent={() => (
-            <BookSearchEmpty
-              searchText={searchText.trim()}
+          {searchText.trim() === "" && (
+            <BottomSheetTopTabBar
               bookType={bookType}
-              handleClose={handleClose}
+              handleSetBookType={handleSetBookType}
             />
           )}
-        />
-      </View>
-    </CustomBottomSheet>
+          <BottomSheetFlatList
+            contentContainerStyle={[
+              styles.list,
+              {
+                paddingBottom:
+                  Platform.OS === "ios" ? bottom + 20 : bottom + 30,
+              },
+            ]}
+            data={searchedBookList}
+            keyExtractor={(item: FeedBookItemType) => String(item.bookId)}
+            renderItem={({ item }: { item: FeedBookItemType }) => (
+              <BottomSheetBookItem
+                bookItem={item}
+                handleSelectBook={handlePressBook}
+              />
+            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            ListEmptyComponent={() => (
+              <BookSearchEmpty
+                searchText={searchText.trim()}
+                bookType={bookType}
+                handleClose={handleClose}
+              />
+            )}
+          />
+        </BottomSheet>
+      </GestureHandlerRootView>
+    )
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    padding: 20,
+  },
+  sheetBackground: {
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    backgroundColor: colors.darkgrey.main,
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(18, 18, 18, 0.30)",
   },
   list: {
     gap: 12,

@@ -1,18 +1,19 @@
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { IcAlertGrey } from "@images/icons";
 import { AppText, FilterType } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   RecordBookFilter,
   RecordBookFloating,
   RecordBookHeader,
   RecordBookPostItem,
   RecordBookTopTabBar,
+  RecordCommentBottomSheet,
 } from "./components";
 import { DUMMY_RECORD_BOOK_RESPONSE, GROUP_RECORD_SORT } from "./constants";
 
@@ -31,6 +32,8 @@ export default function RecordBookScreen() {
 
   const [sortType, setSortType] = useState<FilterType>(GROUP_RECORD_SORT[0]);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [postIdForComment, setPostIdForComment] = useState<number | null>(null);
 
   const handleGroupRecord = () => {
     setIsMyRecord(false);
@@ -77,6 +80,16 @@ export default function RecordBookScreen() {
   const handleSelectType = (type: FilterType) => {
     setSortType(type);
     setIsDropdownVisible(false);
+  };
+
+  const handleOpenComment = (postId: number) => {
+    setPostIdForComment(postId);
+    setIsCommentOpen(true);
+  };
+
+  const handleCloseComment = () => {
+    setPostIdForComment(null);
+    setIsCommentOpen(false);
   };
 
   // TODO: 추후 에러 화면 표시
@@ -132,10 +145,21 @@ export default function RecordBookScreen() {
         data={recordBookPostList}
         keyExtractor={(item) => String(item.postId)}
         renderItem={({ item }) => (
-          <RecordBookPostItem roomId={Number(roomId)} post={item} />
+          <RecordBookPostItem
+            roomId={Number(roomId)}
+            post={item}
+            handleOpenComment={handleOpenComment}
+          />
         )}
         ListHeaderComponent={RecordListHeader}
       />
+      {postIdForComment !== null && (
+        <RecordCommentBottomSheet
+          postId={postIdForComment}
+          isVisible={isCommentOpen}
+          handleClose={handleCloseComment}
+        />
+      )}
       <RecordBookFloating roomId={roomId} />
     </View>
   );
