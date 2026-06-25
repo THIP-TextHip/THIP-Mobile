@@ -16,6 +16,7 @@ export default function DailyGreetingScreen() {
   const [comment, setComment] = useState("");
 
   const [inputBarHeight, setInputBarHeight] = useState(0);
+  const [isInputFocus, setIsInputFocus] = useState(false);
 
   // TODO: 추후 하루에 최대 5개까지 작성할 수 있다는 에러 메시지 토스트로 알림. 서버에서 주는 에러메시지 활용
   const handleSendText = () => {
@@ -80,6 +81,8 @@ export default function DailyGreetingScreen() {
         onLayout={(event) => {
           setInputBarHeight(event.nativeEvent.layout.height);
         }}
+        isFocus={isInputFocus}
+        handleIsFocus={setIsInputFocus}
       />
     </View>
   );

@@ -25,7 +25,8 @@ interface ChatInputBarProps {
   handleResetReply?: () => void;
   onLayout?: (event: LayoutChangeEvent) => void;
   verticalAdditionalOffset?: number;
-  handleIsFocus?: (value: boolean) => void;
+  isFocus: boolean;
+  handleIsFocus: (value: boolean) => void;
 }
 
 export default function ChatInputBar({
@@ -36,7 +37,7 @@ export default function ChatInputBar({
   targetName,
   handleResetReply,
   onLayout,
-  verticalAdditionalOffset = 0,
+  isFocus,
   handleIsFocus,
 }: ChatInputBarProps) {
   const { bottom } = useSafeAreaInsets();
@@ -65,11 +66,7 @@ export default function ChatInputBar({
   return (
     <KeyboardAvoidingView
       behavior={"padding"}
-      keyboardVerticalOffset={
-        Platform.OS === "ios"
-          ? bottom + verticalAdditionalOffset
-          : bottom + verticalAdditionalOffset + 10
-      }
+      keyboardVerticalOffset={isFocus ? bottom : 0}
       style={styles.container}
       onLayout={onLayout}
     >
@@ -133,6 +130,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: colors.darkgrey.dark,
     gap: 12,
+    zIndex: 999,
   },
   inputContainer: {
     flexDirection: "row",

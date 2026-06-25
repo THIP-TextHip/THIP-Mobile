@@ -48,6 +48,7 @@ export default function FeedDetailScreen() {
   const [comment, setComment] = useState("");
   const [replyCommentId, setReplyCommentId] = useState<number | null>(null);
   const [replyNickname, setReplyNickname] = useState("");
+  const [isInputFocus, setIsInputFocus] = useState(false);
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -202,12 +203,8 @@ export default function FeedDetailScreen() {
         contentContainerStyle={[styles.list, { paddingBottom: inputBarHeight }]}
         data={commentList}
         keyExtractor={(item) => String(item.commentId)}
-        renderItem={({ item, index }) => (
-          <CommentRoot
-            comment={item}
-            isFirst={index === 0}
-            handlePressReply={handlePressReply}
-          />
+        renderItem={({ item }) => (
+          <CommentRoot comment={item} handlePressReply={handlePressReply} />
         )}
         ListEmptyComponent={renderCommentEmpty}
         ListFooterComponent={
@@ -240,6 +237,8 @@ export default function FeedDetailScreen() {
         onLayout={(event) => {
           setInputBarHeight(event.nativeEvent.layout.height);
         }}
+        isFocus={isInputFocus}
+        handleIsFocus={setIsInputFocus}
       />
 
       <FeedDetailBottomSheet

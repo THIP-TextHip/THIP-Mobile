@@ -8,7 +8,6 @@ import { colors } from "@theme/token";
 
 import { DUMMY_RECORD_PIN_BOOK_INFO } from "../../constants";
 import { RecordBookPostType } from "../../types";
-import RecordComment from "../record-comment";
 import RecordModal from "../record-modal";
 import RecordOptionBottomSheet from "../record-option-bottom-sheet";
 import RecordPostActions from "./record-post-actions";
@@ -17,17 +16,18 @@ import RecordVoteList from "./record-vote-list";
 interface RecordBookPostItemProps {
   roomId: number;
   post: RecordBookPostType;
+  handleOpenComment: (postId: number) => void;
 }
 
 // TODO: 서버 연결하면서 이벤트 핸들러 구현
 export default function RecordBookPostItem({
   roomId,
   post,
+  handleOpenComment,
 }: RecordBookPostItemProps) {
   const { setPrevRecord } = usePrevRecordStore();
   const { setPinInfo } = useRecordBookPinStore();
 
-  const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"delete" | "pin" | null>(null);
@@ -45,13 +45,6 @@ export default function RecordBookPostItem({
 
   const handlePressLike = () => {
     console.log(post.postId, "번 기록 좋아요 클릭");
-  };
-
-  const handleOpenComment = () => {
-    setIsCommentOpen(true);
-  };
-  const handleCloseComment = () => {
-    setIsCommentOpen(false);
   };
 
   const handleOpenOption = () => {
@@ -148,6 +141,7 @@ export default function RecordBookPostItem({
         </AppText>
         <RecordVoteList voteItems={post.voteItems} handleVote={handleVote} />
         <RecordPostActions
+          postId={post.postId}
           isLiked={post.isLiked}
           isWriter={post.isWriter}
           likeCount={post.likeCount}
@@ -157,10 +151,6 @@ export default function RecordBookPostItem({
           handleOpenPinModal={handleOpenPinModal}
         />
       </Pressable>
-      <RecordComment
-        isVisible={isCommentOpen}
-        handleClose={handleCloseComment}
-      />
       <RecordOptionBottomSheet
         isWriter={post.isWriter}
         isVisible={isOptionOpen}
