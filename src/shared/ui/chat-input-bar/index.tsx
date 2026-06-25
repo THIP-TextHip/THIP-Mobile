@@ -24,7 +24,6 @@ interface ChatInputBarProps {
   targetName?: string;
   handleResetReply?: () => void;
   onLayout?: (event: LayoutChangeEvent) => void;
-  verticalAdditionalOffset?: number;
   isFocus: boolean;
   handleIsFocus: (value: boolean) => void;
 }
