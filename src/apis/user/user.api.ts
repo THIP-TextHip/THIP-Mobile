@@ -39,7 +39,7 @@ export const signupApi = async (body: SignupRequest) => {
   return response.data;
 };
 
-export const getUserInfoApi = async () => {
+export const getMyInfoApi = async () => {
   const response = await apiClient.get<GetUserInfoResponse>(USER_URL.USER_INFO);
 
   return response.data;
@@ -63,3 +63,5 @@ export const getSearchUserApi = async (params: GetSearchUserRequest) => {
 
   return response.data;
 };
+
+export const getUserFollowerApi = async () => {};

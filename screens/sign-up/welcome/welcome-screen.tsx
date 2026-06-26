@@ -2,14 +2,14 @@ import { router } from "expo-router";
 import { useCallback } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import { useGetUserInfoQuery } from "@apis/user";
+import { useGetMyInfoQuery } from "@apis/user";
 import { IcArrowLeft } from "@images/icons";
 import { AppText, CustomButton, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function WelcomeScreen() {
   // TODO: 추후 로딩 및 예외처리 isPendingUserInfo, isErrorUserInfo, userInfoError
-  const { userInfo } = useGetUserInfoQuery();
+  const { userInfo } = useGetMyInfoQuery();
 
   const handleGoBack = useCallback(() => {
     router.back();

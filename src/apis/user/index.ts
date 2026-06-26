@@ -3,8 +3,8 @@ export {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getMyInfoApi,
   getSearchUserApi,
-  getUserInfoApi,
   signupApi,
 } from "./user.api";
 
@@ -13,7 +13,7 @@ export {
   useDeleteUserAccountMutation,
   useEditUserProfileMutation,
   useGetAliasListQuery,
-  useGetUserInfoQuery,
+  useGetMyInfoQuery,
   useSearchUserQuery,
   useSignupMutation,
 } from "./user.queries";

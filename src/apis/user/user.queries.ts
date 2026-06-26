@@ -8,8 +8,8 @@ import {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getMyInfoApi,
   getSearchUserApi,
-  getUserInfoApi,
   signupApi,
 } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
@@ -29,7 +29,7 @@ const USER_QUERY_CACHE_TIME = {
     STALE: 1000 * 60 * 60,
     GC: 1000 * 60 * 90,
   },
-  USER_INFO: {
+  MY_INFO: {
     STALE: 1000 * 60 * 60,
     GC: 1000 * 60 * 60,
   },
@@ -116,24 +116,24 @@ export const useSignupMutation = () => {
   };
 };
 
-export const useGetUserInfoQuery = () => {
+export const useGetMyInfoQuery = () => {
   const {
-    data: userInfo,
-    isPending: isPendingUserInfo,
-    isError: isErrorUserInfo,
-    error: userInfoError,
+    data: myInfo,
+    isPending: isPendingMyInfo,
+    isError: isErrorMyInfo,
+    error: myInfoError,
   } = useQuery<GetUserInfoResponse, Error>({
-    queryKey: USER_QUERY_KEY.USER_INFO,
-    queryFn: getUserInfoApi,
-    staleTime: USER_QUERY_CACHE_TIME.USER_INFO.STALE,
-    gcTime: USER_QUERY_CACHE_TIME.USER_INFO.GC,
+    queryKey: USER_QUERY_KEY.MY_INFO,
+    queryFn: getMyInfoApi,
+    staleTime: USER_QUERY_CACHE_TIME.MY_INFO.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_INFO.GC,
   });
 
   return {
-    userInfo,
-    isPendingUserInfo,
-    isErrorUserInfo,
-    userInfoError,
+    myInfo,
+    isPendingMyInfo,
+    isErrorMyInfo,
+    myInfoError,
   };
 };
 
@@ -149,7 +149,7 @@ export const useEditUserProfileMutation = () => {
     mutationFn: editUserProfileApi,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: USER_QUERY_KEY.USER_INFO,
+        queryKey: USER_QUERY_KEY.MY_INFO,
       });
       router.back();
     },
