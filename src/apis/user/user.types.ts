@@ -57,3 +57,26 @@ export interface GetSearchUserRequest {
 export interface GetSearchUserResponse {
   userList: UserType[];
 }
+
+export interface GetUserFollowersRequest {
+  userId: number;
+  cursor?: string | null;
+  size?: number;
+}
+
+export interface FollowerType {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  isMyself: boolean;
+}
+
+export interface GetUserFollowersResponse {
+  followers: FollowerType[];
+  totalFollowerCount: number;
+  nextCursor: string;
+  isLast: boolean;
+}

@@ -8,6 +8,8 @@ import type {
   GetAliasListResponse,
   GetSearchUserRequest,
   GetSearchUserResponse,
+  GetUserFollowersRequest,
+  GetUserFollowersResponse,
   GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
@@ -40,7 +42,13 @@ export const signupApi = async (body: SignupRequest) => {
 };
 
 export const getMyInfoApi = async () => {
-  const response = await apiClient.get<GetUserInfoResponse>(USER_URL.USER_INFO);
+  const response = await apiClient.get<GetUserInfoResponse>(USER_URL.MY_INFO);
+
+  return response.data;
+};
+
+export const getMyIdApi = async () => {
+  const response = await apiClient.get<number>(USER_URL.MY_ID);
 
   return response.data;
 };
@@ -64,4 +72,20 @@ export const getSearchUserApi = async (params: GetSearchUserRequest) => {
   return response.data;
 };
 
-export const getUserFollowerApi = async () => {};
+export const getUserFollowersApi = async ({
+  userId,
+  cursor,
+  size,
+}: GetUserFollowersRequest) => {
+  const response = await apiClient.get<GetUserFollowersResponse>(
+    USER_URL.FOLLOWERS(userId),
+    {
+      params: {
+        ...(cursor == null ? {} : { cursor }),
+        ...(size == null ? {} : { size }),
+      },
+    },
+  );
+
+  return response.data;
+};

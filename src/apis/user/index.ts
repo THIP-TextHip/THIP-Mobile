@@ -3,8 +3,10 @@ export {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getMyIdApi,
   getMyInfoApi,
   getSearchUserApi,
+  getUserFollowersApi,
   signupApi,
 } from "./user.api";
 
@@ -13,7 +15,9 @@ export {
   useDeleteUserAccountMutation,
   useEditUserProfileMutation,
   useGetAliasListQuery,
+  useGetMyIdQuery,
   useGetMyInfoQuery,
+  useGetUserFollowersQuery,
   useSearchUserQuery,
   useSignupMutation,
 } from "./user.queries";
@@ -23,9 +27,12 @@ export type {
   CheckNicknameRequest,
   CheckNicknameResponse,
   EditUserProfileRequest,
+  FollowerType,
   GetAliasListResponse,
   GetSearchUserRequest,
   GetSearchUserResponse,
+  GetUserFollowersRequest,
+  GetUserFollowersResponse,
   GetUserInfoResponse,
   SignupRequest,
   SignupResponse,

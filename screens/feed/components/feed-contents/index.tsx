@@ -35,7 +35,7 @@ export default function FeedContents() {
     if (isPendingFeedList) {
       return (
         <View style={styles.status}>
-          <ActivityIndicator color={colors.white} />
+          <ActivityIndicator size="large" color={colors.white} />
         </View>
       );
     }
@@ -104,8 +104,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkgrey.divider,
   },
   status: {
-    paddingVertical: 40,
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
+    paddingVertical: 40,
   },
   footer: {
     marginTop: 40,

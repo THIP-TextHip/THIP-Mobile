@@ -7,7 +7,10 @@ export const USER_URL = {
   NICKNAME: "/users/nickname",
   ALIAS_LIST: "/users/alias",
   SIGNUP: "/users/signup",
-  USER_INFO: "/users/my-page",
+  MY_INFO: "/users/my-page",
+  MY_ID: "/users/my-id",
+  FOLLOWERS: (userId: number | string) =>
+    `/users/${encodeURIComponent(String(userId))}/followers`,
 } as const;
 
 export const FEED_URL = {

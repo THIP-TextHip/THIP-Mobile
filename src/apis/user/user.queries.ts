@@ -1,5 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { router } from "expo-router";
+import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import { deleteAuthToken, setAuthToken } from "../token-storage";
@@ -8,8 +15,10 @@ import {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getMyIdApi,
   getMyInfoApi,
   getSearchUserApi,
+  getUserFollowersApi,
   signupApi,
 } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
@@ -19,10 +28,13 @@ import type {
   EditUserProfileRequest,
   GetAliasListResponse,
   GetSearchUserResponse,
+  GetUserFollowersResponse,
   GetUserInfoResponse,
   SignupRequest,
   SignupResponse,
 } from "./user.types";
+
+type UserFollowersCursor = string | null;
 
 const USER_QUERY_CACHE_TIME = {
   ALIAS_LIST: {
@@ -32,6 +44,10 @@ const USER_QUERY_CACHE_TIME = {
   MY_INFO: {
     STALE: 1000 * 60 * 60,
     GC: 1000 * 60 * 60,
+  },
+  MY_ID: {
+    STALE: 1000 * 60 * 60,
+    GC: 1000 * 60 * 90,
   },
 } as const;
 
@@ -137,6 +153,37 @@ export const useGetMyInfoQuery = () => {
   };
 };
 
+export const useGetMyIdQuery = () => {
+  const {
+    data: myId,
+    isPending: isPendingMyId,
+    isError,
+    error,
+  } = useQuery<number, Error>({
+    queryKey: USER_QUERY_KEY.MY_ID,
+    queryFn: getMyIdApi,
+    staleTime: USER_QUERY_CACHE_TIME.MY_INFO.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_INFO.GC,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    myId,
+    isPendingMyId,
+  };
+};
+
 export const useEditUserProfileMutation = () => {
   const queryClient = useQueryClient();
 
@@ -237,5 +284,63 @@ export const useSearchUserQuery = (
     searchUserList: data?.userList ?? [],
     isPendingSearchUser,
     isFetchingSearchUser,
+  };
+};
+
+export const useGetUserFollowersQuery = (userId: number, size = 10) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingUserFollowers,
+    isError,
+    error,
+    refetch: refetchUserFollowers,
+    isRefetching: isRefetchingUserFollowers,
+  } = useInfiniteQuery<
+    GetUserFollowersResponse,
+    Error,
+    InfiniteData<GetUserFollowersResponse, UserFollowersCursor>,
+    ReturnType<typeof USER_QUERY_KEY.FOLLOWERS>,
+    UserFollowersCursor
+  >({
+    queryKey: USER_QUERY_KEY.FOLLOWERS(userId, size),
+    queryFn: ({ pageParam }) =>
+      getUserFollowersApi({
+        userId,
+        cursor: pageParam,
+        size,
+      }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: !!userId,
+  });
+
+  const userFollowerPages = data?.pages ?? [];
+  const firstPage = userFollowerPages[0];
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    followerList: userFollowerPages.flatMap((page) => page.followers),
+    totalFollowerCount: firstPage?.totalFollowerCount ?? 0,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingUserFollowers,
+    refetchUserFollowers,
+    isRefetchingUserFollowers,
   };
 };
