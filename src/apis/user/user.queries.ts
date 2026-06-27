@@ -15,6 +15,7 @@ import {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getMyFollowingsApi,
   getMyIdApi,
   getMyInfoApi,
   getSearchUserApi,
@@ -27,6 +28,7 @@ import type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetMyFollowingsResponse,
   GetSearchUserResponse,
   GetUserFollowersResponse,
   GetUserInfoResponse,
@@ -34,7 +36,7 @@ import type {
   SignupResponse,
 } from "./user.types";
 
-type UserFollowersCursor = string | null;
+type Cursor = string | null;
 
 const USER_QUERY_CACHE_TIME = {
   ALIAS_LIST: {
@@ -48,6 +50,10 @@ const USER_QUERY_CACHE_TIME = {
   MY_ID: {
     STALE: 1000 * 60 * 60,
     GC: 1000 * 60 * 90,
+  },
+  MY_FOLLOWINGS: {
+    STALE: 1000 * 60 * 10,
+    GC: 1000 * 60 * 15,
   },
 } as const;
 
@@ -301,9 +307,9 @@ export const useGetUserFollowersQuery = (userId: number, size = 10) => {
   } = useInfiniteQuery<
     GetUserFollowersResponse,
     Error,
-    InfiniteData<GetUserFollowersResponse, UserFollowersCursor>,
+    InfiniteData<GetUserFollowersResponse, Cursor>,
     ReturnType<typeof USER_QUERY_KEY.FOLLOWERS>,
-    UserFollowersCursor
+    Cursor
   >({
     queryKey: USER_QUERY_KEY.FOLLOWERS(userId, size),
     queryFn: ({ pageParam }) =>
@@ -342,5 +348,61 @@ export const useGetUserFollowersQuery = (userId: number, size = 10) => {
     isPendingUserFollowers,
     refetchUserFollowers,
     isRefetchingUserFollowers,
+  };
+};
+
+export const useGetMyFollowingsQuery = (size = 10) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingMyFollowings,
+    isError,
+    error,
+    refetch: refetchMyFollowings,
+    isRefetching: isRefetchingMyFollowings,
+  } = useInfiniteQuery<
+    GetMyFollowingsResponse,
+    Error,
+    InfiniteData<GetMyFollowingsResponse, Cursor>,
+    ReturnType<typeof USER_QUERY_KEY.MY_FOLLOWINGS>,
+    Cursor
+  >({
+    queryKey: USER_QUERY_KEY.MY_FOLLOWINGS(size),
+    queryFn: ({ pageParam }) =>
+      getMyFollowingsApi({
+        cursor: pageParam,
+        size,
+      }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+  });
+
+  const myfollowingsPages = data?.pages ?? [];
+  const firstPage = myfollowingsPages[0];
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    myFollowingList: myfollowingsPages.flatMap((page) => page.followings),
+    totalFollowingCount: firstPage?.totalFollowingCount ?? 0,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingMyFollowings,
+    refetchMyFollowings,
+    isRefetchingMyFollowings,
   };
 };

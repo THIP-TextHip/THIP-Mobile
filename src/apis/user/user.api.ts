@@ -6,6 +6,8 @@ import type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetMyFollowingsResponse,
+  GetMyFollowingsResquest,
   GetSearchUserRequest,
   GetSearchUserResponse,
   GetUserFollowersRequest,
@@ -79,6 +81,23 @@ export const getUserFollowersApi = async ({
 }: GetUserFollowersRequest) => {
   const response = await apiClient.get<GetUserFollowersResponse>(
     USER_URL.FOLLOWERS(userId),
+    {
+      params: {
+        ...(cursor == null ? {} : { cursor }),
+        ...(size == null ? {} : { size }),
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const getMyFollowingsApi = async ({
+  cursor,
+  size,
+}: GetMyFollowingsResquest) => {
+  const response = await apiClient.get<GetMyFollowingsResponse>(
+    USER_URL.MY_FOLLOWINGS,
     {
       params: {
         ...(cursor == null ? {} : { cursor }),

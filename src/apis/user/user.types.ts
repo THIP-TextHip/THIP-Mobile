@@ -80,3 +80,26 @@ export interface GetUserFollowersResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface FollowingType {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  isFollowing: boolean;
+}
+
+export interface GetMyFollowingsResquest {
+  cursor?: string | null;
+  size?: number;
+}
+
+export interface GetMyFollowingsResponse {
+  followings: FollowingType[];
+  totalFollowingCount: number;
+  nextCursor: string;
+  isLast: boolean;
+}
+
+// TODO: 피드 페이지 상단 내 팔로잉 프리뷰 조회 api 연동

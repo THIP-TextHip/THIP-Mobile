@@ -15,4 +15,5 @@ export const USER_QUERY_KEY = {
     userId,
     size,
   ],
+  MY_FOLLOWINGS: (size: number) => ["users", "my-followings", size],
 } as const;

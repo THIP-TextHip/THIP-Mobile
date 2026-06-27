@@ -11,6 +11,7 @@ export const USER_URL = {
   MY_ID: "/users/my-id",
   FOLLOWERS: (userId: number | string) =>
     `/users/${encodeURIComponent(String(userId))}/followers`,
+  MY_FOLLOWINGS: "/users/my-followings",
 } as const;
 
 export const FEED_URL = {
