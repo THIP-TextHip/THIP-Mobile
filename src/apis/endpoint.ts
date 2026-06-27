@@ -12,6 +12,7 @@ export const USER_URL = {
   FOLLOWERS: (userId: number | string) =>
     `/users/${encodeURIComponent(String(userId))}/followers`,
   MY_FOLLOWINGS: "/users/my-followings",
+  MY_FOLLOWINGS_PREVIEW: "/users/my-followings/recent-feeds",
 } as const;
 
 export const FEED_URL = {

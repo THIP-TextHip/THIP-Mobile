@@ -16,4 +16,5 @@ export const USER_QUERY_KEY = {
     size,
   ],
   MY_FOLLOWINGS: (size: number) => ["users", "my-followings", size],
+  MY_FOLLOWINGS_PREVIEW: ["/users", "my-followings", "preview"],
 } as const;

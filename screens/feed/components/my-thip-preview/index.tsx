@@ -1,16 +1,26 @@
 import { router } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
-import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  LayoutChangeEvent,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 
+import { useGetMyFollowingsPreviewQuery } from "@apis/user";
 import { IcGroupWhite, IcRightRight } from "@images/icons";
+import { CharacterSearch } from "@images/thip";
 import { AppText, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
 
-// TODO: 서버에서 내 띱 리스트 가져오기
-// TODO: 내 띱 리스트 없는 경우 엠티뷰 추가
-import { DUMMY_MY_THIP_LIST } from "../../constants";
-
 export default function MyThipPreview() {
+  // TODO: 추후에 로딩 처리는 스켈레톤, 에러 처리도 추가 필요
+  const {
+    myFollowingListPreview,
+    isPendingMyFollowingsPreview,
+    // isErrorMyFollowingsPreview,
+  } = useGetMyFollowingsPreviewQuery();
   const [visibleCount, setVisibleCount] = useState(0);
 
   const handleItemAreaLayout = useCallback((e: LayoutChangeEvent) => {
@@ -23,13 +33,25 @@ export default function MyThipPreview() {
   }, []);
 
   const visibleItems = useMemo(
-    () => DUMMY_MY_THIP_LIST.slice(0, visibleCount),
-    [visibleCount],
+    () => myFollowingListPreview?.myFollowingUsers.slice(0, visibleCount),
+    [myFollowingListPreview?.myFollowingUsers, visibleCount],
   );
 
   const handleToMyThipList = () => {
     router.push("/my-thip-list");
   };
+
+  const handleToSearchUser = () => {
+    router.push("/search-user");
+  };
+
+  if (isPendingMyFollowingsPreview) {
+    return (
+      <View style={styles.status}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -39,27 +61,41 @@ export default function MyThipPreview() {
           내띱
         </AppText>
       </View>
-      <View style={styles.content} onLayout={handleItemAreaLayout}>
-        <View style={styles.itemWrapper}>
-          {visibleItems.map((item) => (
-            <View key={item.userId} style={styles.item}>
-              <ProfileImage image={item.profileImage} />
-              <AppText
-                weight="regular"
-                size="2xs"
-                color={colors.white}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {item.nickname}
-              </AppText>
-            </View>
-          ))}
-        </View>
-        <Pressable onPress={handleToMyThipList}>
-          <IcRightRight />
+      {myFollowingListPreview?.myFollowingUsers.length === 0 ? (
+        <Pressable style={styles.empty} onPress={handleToSearchUser}>
+          <AppText
+            weight="medium"
+            size="sm"
+            color={colors.white}
+            lineHeight={20}
+          >
+            관심있는 독서메이트를 찾아보세요!
+          </AppText>
+          <CharacterSearch style={styles.character} width={32} height={33} />
         </Pressable>
-      </View>
+      ) : (
+        <View style={styles.content} onLayout={handleItemAreaLayout}>
+          <View style={styles.itemWrapper}>
+            {visibleItems?.map((item) => (
+              <View key={item.userId} style={styles.item}>
+                <ProfileImage image={item.profileImageUrl} />
+                <AppText
+                  weight="regular"
+                  size="2xs"
+                  color={colors.white}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {item.nickname}
+                </AppText>
+              </View>
+            ))}
+          </View>
+          <Pressable onPress={handleToMyThipList}>
+            <IcRightRight />
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
@@ -87,5 +123,22 @@ const styles = StyleSheet.create({
     gap: 7,
     alignItems: "center",
     width: 36,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  empty: {
+    marginVertical: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: colors.darkgrey.main,
+  },
+  character: {
+    position: "absolute",
+    bottom: 0,
+    right: 12,
   },
 });

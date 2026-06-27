@@ -36,7 +36,7 @@ export default function MyThipListScreen() {
     return (
       <View style={styles.status}>
         <AppText weight="medium" size="sm" color={colors.grey[200]}>
-          아직 띱한 사용자가 없어요.
+          아직 팔로잉한 사용자가 없어요.
         </AppText>
       </View>
     );

@@ -102,4 +102,10 @@ export interface GetMyFollowingsResponse {
   isLast: boolean;
 }
 
-// TODO: 피드 페이지 상단 내 팔로잉 프리뷰 조회 api 연동
+export interface GetMyFollowingsPreviewResponse {
+  myFollowingUsers: {
+    userId: number;
+    nickname: string;
+    profileImageUrl: string;
+  }[];
+}

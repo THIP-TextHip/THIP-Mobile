@@ -16,6 +16,7 @@ import {
   editUserProfileApi,
   getAliasListApi,
   getMyFollowingsApi,
+  getMyFollowingsPreviewApi,
   getMyIdApi,
   getMyInfoApi,
   getSearchUserApi,
@@ -23,17 +24,18 @@ import {
   signupApi,
 } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
-import type {
-  CheckNicknameRequest,
-  CheckNicknameResponse,
-  EditUserProfileRequest,
-  GetAliasListResponse,
-  GetMyFollowingsResponse,
-  GetSearchUserResponse,
-  GetUserFollowersResponse,
-  GetUserInfoResponse,
-  SignupRequest,
-  SignupResponse,
+import {
+  GetMyFollowingsPreviewResponse,
+  type CheckNicknameRequest,
+  type CheckNicknameResponse,
+  type EditUserProfileRequest,
+  type GetAliasListResponse,
+  type GetMyFollowingsResponse,
+  type GetSearchUserResponse,
+  type GetUserFollowersResponse,
+  type GetUserInfoResponse,
+  type SignupRequest,
+  type SignupResponse,
 } from "./user.types";
 
 type Cursor = string | null;
@@ -378,6 +380,8 @@ export const useGetMyFollowingsQuery = (size = 10) => {
     initialPageParam: null,
     getNextPageParam: (lastPage) =>
       lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.GC,
   });
 
   const myfollowingsPages = data?.pages ?? [];
@@ -404,5 +408,24 @@ export const useGetMyFollowingsQuery = (size = 10) => {
     isPendingMyFollowings,
     refetchMyFollowings,
     isRefetchingMyFollowings,
+  };
+};
+
+export const useGetMyFollowingsPreviewQuery = () => {
+  const {
+    data: myFollowingListPreview,
+    isPending: isPendingMyFollowingsPreview,
+    isError: isErrorMyFollowingsPreview,
+  } = useQuery<GetMyFollowingsPreviewResponse, Error>({
+    queryKey: USER_QUERY_KEY.MY_FOLLOWINGS_PREVIEW,
+    queryFn: getMyFollowingsPreviewApi,
+    staleTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.GC,
+  });
+
+  return {
+    myFollowingListPreview,
+    isPendingMyFollowingsPreview,
+    isErrorMyFollowingsPreview,
   };
 };

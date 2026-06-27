@@ -1,20 +1,21 @@
 import { apiClient } from "@apis/api-client";
 import { USER_URL } from "@apis/endpoint";
 
-import type {
-  CheckNicknameRequest,
-  CheckNicknameResponse,
-  EditUserProfileRequest,
-  GetAliasListResponse,
-  GetMyFollowingsResponse,
-  GetMyFollowingsResquest,
-  GetSearchUserRequest,
-  GetSearchUserResponse,
-  GetUserFollowersRequest,
-  GetUserFollowersResponse,
-  GetUserInfoResponse,
-  SignupRequest,
-  SignupResponse,
+import {
+  GetMyFollowingsPreviewResponse,
+  type CheckNicknameRequest,
+  type CheckNicknameResponse,
+  type EditUserProfileRequest,
+  type GetAliasListResponse,
+  type GetMyFollowingsResponse,
+  type GetMyFollowingsResquest,
+  type GetSearchUserRequest,
+  type GetSearchUserResponse,
+  type GetUserFollowersRequest,
+  type GetUserFollowersResponse,
+  type GetUserInfoResponse,
+  type SignupRequest,
+  type SignupResponse,
 } from "./user.types";
 
 export const checkNicknameApi = async (body: CheckNicknameRequest) => {
@@ -104,6 +105,14 @@ export const getMyFollowingsApi = async ({
         ...(size == null ? {} : { size }),
       },
     },
+  );
+
+  return response.data;
+};
+
+export const getMyFollowingsPreviewApi = async () => {
+  const response = await apiClient.get<GetMyFollowingsPreviewResponse>(
+    USER_URL.MY_FOLLOWINGS_PREVIEW,
   );
 
   return response.data;
