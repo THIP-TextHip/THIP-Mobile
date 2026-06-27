@@ -1,12 +1,6 @@
 import { router } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  LayoutChangeEvent,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
 
 import { useGetMyFollowingsPreviewQuery } from "@apis/user";
 import { IcGroupWhite, IcRightRight } from "@images/icons";
@@ -18,7 +12,7 @@ export default function MyThipPreview() {
   // TODO: 추후에 로딩 처리는 스켈레톤, 에러 처리도 추가 필요
   const {
     myFollowingListPreview,
-    isPendingMyFollowingsPreview,
+    // isPendingMyFollowingsPreview,
     // isErrorMyFollowingsPreview,
   } = useGetMyFollowingsPreviewQuery();
   const [visibleCount, setVisibleCount] = useState(0);
@@ -45,13 +39,13 @@ export default function MyThipPreview() {
     router.push("/search-user");
   };
 
-  if (isPendingMyFollowingsPreview) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
+  // if (isPendingMyFollowingsPreview) {
+  //   return (
+  //     <View style={styles.status}>
+  //       <ActivityIndicator size="large" color={colors.white} />
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={styles.container}>
