@@ -1,21 +1,23 @@
 import { apiClient } from "@apis/api-client";
 import { USER_URL } from "@apis/endpoint";
 
-import {
+import type {
+  ChangeFollowingStateRequest,
+  ChangeFollowingStateResponse,
+  CheckNicknameRequest,
+  CheckNicknameResponse,
+  EditUserProfileRequest,
+  GetAliasListResponse,
   GetMyFollowingsPreviewResponse,
-  type CheckNicknameRequest,
-  type CheckNicknameResponse,
-  type EditUserProfileRequest,
-  type GetAliasListResponse,
-  type GetMyFollowingsResponse,
-  type GetMyFollowingsResquest,
-  type GetSearchUserRequest,
-  type GetSearchUserResponse,
-  type GetUserFollowersRequest,
-  type GetUserFollowersResponse,
-  type GetUserInfoResponse,
-  type SignupRequest,
-  type SignupResponse,
+  GetMyFollowingsResponse,
+  GetMyFollowingsResquest,
+  GetSearchUserRequest,
+  GetSearchUserResponse,
+  GetUserFollowersRequest,
+  GetUserFollowersResponse,
+  GetUserInfoResponse,
+  SignupRequest,
+  SignupResponse,
 } from "./user.types";
 
 export const checkNicknameApi = async (body: CheckNicknameRequest) => {
@@ -113,6 +115,20 @@ export const getMyFollowingsApi = async ({
 export const getMyFollowingsPreviewApi = async () => {
   const response = await apiClient.get<GetMyFollowingsPreviewResponse>(
     USER_URL.MY_FOLLOWINGS_PREVIEW,
+  );
+
+  return response.data;
+};
+
+export const changeFollowingStateApi = async ({
+  followingUserId,
+  type,
+}: ChangeFollowingStateRequest) => {
+  const response = await apiClient.post<ChangeFollowingStateResponse>(
+    USER_URL.CHANGE_FOLLOWING_STATE(followingUserId),
+    {
+      type,
+    },
   );
 
   return response.data;

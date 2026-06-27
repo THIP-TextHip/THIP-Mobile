@@ -24,7 +24,7 @@ import {
 
 // TODO: 서버 제공 타입으로 변경
 export interface FeedBookItemType {
-  bookId: number;
+  bookId?: number;
   bookTitle: string;
   authorName: string;
   bookImageUrl: string;

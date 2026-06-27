@@ -5,7 +5,13 @@ export {
   type FeedBookItemType,
 } from "./book-search-bottom-sheet";
 export { default as BookSelectSection } from "./book-select-section";
-export { ButtonHeader, CustomButton, SelectChip, TagButton } from "./button";
+export {
+  ButtonHeader,
+  ButtonOutline,
+  CustomButton,
+  SelectChip,
+  TagButton,
+} from "./button";
 export { default as ChatInputBar } from "./chat-input-bar";
 export {
   CommentItem,

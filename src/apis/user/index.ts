@@ -1,4 +1,5 @@
 export {
+  changeFollowingStateApi,
   checkNicknameApi,
   deleteUserAccountApi,
   editUserProfileApi,
@@ -13,6 +14,7 @@ export {
 } from "./user.api";
 
 export {
+  useChangeFollowingStateMutation,
   useCheckNicknameMutation,
   useDeleteUserAccountMutation,
   useEditUserProfileMutation,
@@ -28,6 +30,8 @@ export {
 
 export type {
   AliasChoiceType,
+  ChangeFollowingStateRequest,
+  ChangeFollowingStateResponse,
   CheckNicknameRequest,
   CheckNicknameResponse,
   EditUserProfileRequest,

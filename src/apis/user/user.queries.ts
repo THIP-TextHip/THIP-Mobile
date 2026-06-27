@@ -11,6 +11,7 @@ import Toast from "react-native-toast-message";
 
 import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
+  changeFollowingStateApi,
   checkNicknameApi,
   deleteUserAccountApi,
   editUserProfileApi,
@@ -25,6 +26,8 @@ import {
 } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
 import {
+  ChangeFollowingStateRequest,
+  ChangeFollowingStateResponse,
   GetMyFollowingsPreviewResponse,
   type CheckNicknameRequest,
   type CheckNicknameResponse,
@@ -428,4 +431,25 @@ export const useGetMyFollowingsPreviewQuery = () => {
     isPendingMyFollowingsPreview,
     isErrorMyFollowingsPreview,
   };
+};
+
+export const useChangeFollowingStateMutation = () => {
+  const {
+    mutate: changeFollowingState,
+    isPending: isPendingChangeFollowingState,
+  } = useMutation<
+    ChangeFollowingStateResponse,
+    Error,
+    ChangeFollowingStateRequest
+  >({
+    mutationFn: changeFollowingStateApi,
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeFollowingState, isPendingChangeFollowingState };
 };

@@ -6,8 +6,12 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
-import { useGetMyFollowingsQuery } from "@apis/user";
+import {
+  useChangeFollowingStateMutation,
+  useGetMyFollowingsQuery,
+} from "@apis/user";
 import { AppText, ListTotalCountHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -25,11 +29,32 @@ export default function MyThipListScreen() {
     refetchMyFollowings,
     isRefetchingMyFollowings,
   } = useGetMyFollowingsQuery();
+  const { changeFollowingState, isPendingChangeFollowingState } =
+    useChangeFollowingStateMutation();
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
     fetchNextPage();
+  };
+
+  const handleChangeFollowingState = (
+    followingUserId: number,
+    nickname: string,
+    isFollowing: boolean,
+  ) => {
+    if (isPendingChangeFollowingState) return;
+    changeFollowingState(
+      { followingUserId, type: !isFollowing },
+      {
+        onSuccess: () => {
+          Toast.show({
+            type: "default",
+            text1: `${nickname} 님을 띱 취소했어요.`,
+          });
+        },
+      },
+    );
   };
 
   const renderEmpty = () => {
@@ -64,6 +89,14 @@ export default function MyThipListScreen() {
             nickname={item.nickname}
             aliasName={item.aliasName}
             aliasColor={item.aliasColor}
+            isFollowing={item.isFollowing}
+            handleChangeFollowingState={() =>
+              handleChangeFollowingState(
+                item.userId,
+                item.nickname,
+                item.isFollowing,
+              )
+            }
           />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

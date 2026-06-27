@@ -109,3 +109,12 @@ export interface GetMyFollowingsPreviewResponse {
     profileImageUrl: string;
   }[];
 }
+
+export interface ChangeFollowingStateRequest {
+  followingUserId: number;
+  type: boolean;
+}
+
+export interface ChangeFollowingStateResponse {
+  isFollowing: boolean;
+}
