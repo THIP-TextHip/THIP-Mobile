@@ -1,18 +1,22 @@
 export {
   getAllFeedListApi,
   getFeedDetailApi,
+  getFeedMyProfileApi,
   getFeedRelatedBookApi,
   getFeedTagListApi,
   getFeedUserProfileApi,
+  getMyProfileTopInfoApi,
   getUserProfileTopInfoApi,
 } from "./feed.api";
 
 export {
   useGetAllFeedListQuery,
   useGetFeedDetailQuery,
+  useGetFeedMyProfileQuery,
   useGetFeedRelatedBookQuery,
   useGetFeedTagListQuery,
   useGetFeedUserProfileQuery,
+  useGetMyProfileTopInfoQuery,
   useGetUserProfileTopInfoQuery,
 } from "./feed.queries";
 

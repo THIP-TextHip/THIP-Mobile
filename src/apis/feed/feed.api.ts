@@ -71,3 +71,22 @@ export const getUserProfileTopInfoApi = async (userId: number) => {
 
   return response.data;
 };
+
+export const getFeedMyProfileApi = async (cursor?: string | null) => {
+  const response = await apiClient.get<GetFeedUserProfileResponse>(
+    FEED_URL.MY_PROFILE,
+    {
+      params: cursor == null ? undefined : { cursor },
+    },
+  );
+
+  return response.data;
+};
+
+export const getMyProfileTopInfoApi = async () => {
+  const response = await apiClient.get<GetUserProfileTopInfoResponse>(
+    FEED_URL.MY_PROFILE_TOP_INFO,
+  );
+
+  return response.data;
+};

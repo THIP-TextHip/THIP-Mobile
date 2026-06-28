@@ -17,4 +17,6 @@ export const FEED_QUERY_KEY = {
     "top-info",
     userId,
   ],
+  MY_PROFILE: ["feeds", "user-profile", "mine"],
+  MY_PROFILE_TOP_INFO: ["feeds", "user-profile", "mine", "top-info"],
 } as const;
