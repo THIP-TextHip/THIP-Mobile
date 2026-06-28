@@ -1,9 +1,8 @@
+import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { AppText, ProfileImage } from "@shared/ui";
-import { ButtonOutline } from "@shared/ui/button";
+import { AppText, ButtonOutline, ProfileImage } from "@shared/ui";
 import { colors } from "@theme/token";
-import { router } from "expo-router";
 
 interface MyThipItemProps {
   userId: number;
@@ -11,6 +10,8 @@ interface MyThipItemProps {
   nickname: string;
   aliasName: string;
   aliasColor: string;
+  isFollowing: boolean;
+  handleChangeFollowingState: () => void;
 }
 
 export default function MyThipItem({
@@ -19,6 +20,8 @@ export default function MyThipItem({
   nickname,
   aliasName,
   aliasColor,
+  isFollowing,
+  handleChangeFollowingState,
 }: MyThipItemProps) {
   const handleToUserProfile = () => {
     router.push({
@@ -27,10 +30,6 @@ export default function MyThipItem({
     });
   };
 
-  // TODO: 서버에 띱 취소 요청
-  const handleCancelThip = () => {
-    console.log(nickname, "에 대하여 띱 취소");
-  };
   return (
     <View style={styles.container}>
       <Pressable style={styles.profile} onPress={handleToUserProfile}>
@@ -44,7 +43,9 @@ export default function MyThipItem({
           </AppText>
         </View>
       </Pressable>
-      <ButtonOutline handlePress={handleCancelThip}>띱 취소</ButtonOutline>
+      <ButtonOutline handlePress={handleChangeFollowingState}>
+        {isFollowing ? "띱 취소" : "띱 하기"}
+      </ButtonOutline>
     </View>
   );
 }

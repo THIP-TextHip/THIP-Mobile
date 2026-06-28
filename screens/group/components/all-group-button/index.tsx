@@ -8,7 +8,6 @@ import { colors } from "@theme/token";
 
 export default function AllGroupButton() {
   const { setSearchGroupInitialCategory } = useSearchGroupInitialCategory();
-  // TODO: 모임 검색 페이지 이동 및 전체 칩 클릭된 상태
   const handleToAllGroup = () => {
     setSearchGroupInitialCategory("전체");
     router.push({

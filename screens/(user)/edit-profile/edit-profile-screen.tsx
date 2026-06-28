@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
-import { useEditUserProfileMutation, useGetUserInfoQuery } from "@apis/user";
+import { useEditUserProfileMutation, useGetMyInfoQuery } from "@apis/user";
 import { AppText, GenreCardGroup, InputNickname } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -9,17 +9,17 @@ import { EditProfileHeader } from "./components";
 import { EDIT_PROFILE_NICKNAME_ERROR } from "./constants";
 
 export default function EditProfileScreen() {
-  const { userInfo } = useGetUserInfoQuery();
+  const { myInfo } = useGetMyInfoQuery();
   const { editUserProfile, isPendingEditUserProfile } =
     useEditUserProfileMutation();
   const [inputNickname, setInputNickname] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   const handleUpdateProfile = () => {
-    if (!userInfo || selectedGenre === null) return;
+    if (!myInfo || selectedGenre === null) return;
 
     const body = {
-      ...(inputNickname !== userInfo.nickname && { nickname: inputNickname }),
+      ...(inputNickname !== myInfo.nickname && { nickname: inputNickname }),
       ...{ aliasName: selectedGenre },
     };
 
@@ -33,16 +33,15 @@ export default function EditProfileScreen() {
   }, []);
 
   useEffect(() => {
-    if (!userInfo) return;
+    if (!myInfo) return;
 
-    setInputNickname(userInfo.nickname);
-    setSelectedGenre(userInfo.aliasName);
-  }, [userInfo]);
+    setInputNickname(myInfo.nickname);
+    setSelectedGenre(myInfo.aliasName);
+  }, [myInfo]);
 
   const isChanged =
-    !!userInfo &&
-    (inputNickname !== userInfo.nickname ||
-      selectedGenre !== userInfo.aliasName);
+    !!myInfo &&
+    (inputNickname !== myInfo.nickname || selectedGenre !== myInfo.aliasName);
   const ableToChange =
     isChanged &&
     inputNickname.length > 1 &&

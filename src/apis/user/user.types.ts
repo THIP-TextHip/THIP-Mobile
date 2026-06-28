@@ -57,3 +57,64 @@ export interface GetSearchUserRequest {
 export interface GetSearchUserResponse {
   userList: UserType[];
 }
+
+export interface GetUserFollowersRequest {
+  userId: number;
+  cursor?: string | null;
+  size?: number;
+}
+
+export interface FollowerType {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  isMyself: boolean;
+}
+
+export interface GetUserFollowersResponse {
+  followers: FollowerType[];
+  totalFollowerCount: number;
+  nextCursor: string;
+  isLast: boolean;
+}
+
+export interface FollowingType {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  isFollowing: boolean;
+}
+
+export interface GetMyFollowingsRequest {
+  cursor?: string | null;
+  size?: number;
+}
+
+export interface GetMyFollowingsResponse {
+  followings: FollowingType[];
+  totalFollowingCount: number;
+  nextCursor: string;
+  isLast: boolean;
+}
+
+export interface GetMyFollowingsPreviewResponse {
+  myFollowingUsers: {
+    userId: number;
+    nickname: string;
+    profileImageUrl: string;
+  }[];
+}
+
+export interface ChangeFollowingStateRequest {
+  followingUserId: number;
+  type: boolean;
+}
+
+export interface ChangeFollowingStateResponse {
+  isFollowing: boolean;
+}

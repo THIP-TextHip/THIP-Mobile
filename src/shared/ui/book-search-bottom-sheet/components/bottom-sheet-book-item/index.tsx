@@ -7,7 +7,7 @@ import AppText from "../../../app-text";
 
 interface BottomSheetBookItemProps {
   bookItem: FeedBookItemType;
-  handleSelectBook: (isbn: FeedBookItemType) => void;
+  handleSelectBook: (bookItem: FeedBookItemType) => void;
 }
 
 export default function BottomSheetBookItem({

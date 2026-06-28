@@ -1,37 +1,64 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { router } from "expo-router";
+import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
+  changeFollowingStateApi,
   checkNicknameApi,
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getMyFollowingsApi,
+  getMyFollowingsPreviewApi,
+  getMyIdApi,
+  getMyInfoApi,
   getSearchUserApi,
-  getUserInfoApi,
+  getUserFollowersApi,
   signupApi,
 } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
-import type {
-  CheckNicknameRequest,
-  CheckNicknameResponse,
-  EditUserProfileRequest,
-  GetAliasListResponse,
-  GetSearchUserResponse,
-  GetUserInfoResponse,
-  SignupRequest,
-  SignupResponse,
+import {
+  ChangeFollowingStateRequest,
+  ChangeFollowingStateResponse,
+  GetMyFollowingsPreviewResponse,
+  type CheckNicknameRequest,
+  type CheckNicknameResponse,
+  type EditUserProfileRequest,
+  type GetAliasListResponse,
+  type GetMyFollowingsResponse,
+  type GetSearchUserResponse,
+  type GetUserFollowersResponse,
+  type GetUserInfoResponse,
+  type SignupRequest,
+  type SignupResponse,
 } from "./user.types";
+
+type Cursor = string | null;
 
 const USER_QUERY_CACHE_TIME = {
   ALIAS_LIST: {
     STALE: 1000 * 60 * 60,
     GC: 1000 * 60 * 90,
   },
-  USER_INFO: {
+  MY_INFO: {
     STALE: 1000 * 60 * 60,
     GC: 1000 * 60 * 60,
+  },
+  MY_ID: {
+    STALE: 1000 * 60 * 60,
+    GC: 1000 * 60 * 90,
+  },
+  MY_FOLLOWINGS: {
+    STALE: 1000 * 60 * 10,
+    GC: 1000 * 60 * 15,
   },
 } as const;
 
@@ -116,24 +143,55 @@ export const useSignupMutation = () => {
   };
 };
 
-export const useGetUserInfoQuery = () => {
+export const useGetMyInfoQuery = () => {
   const {
-    data: userInfo,
-    isPending: isPendingUserInfo,
-    isError: isErrorUserInfo,
-    error: userInfoError,
+    data: myInfo,
+    isPending: isPendingMyInfo,
+    isError: isErrorMyInfo,
+    error: myInfoError,
   } = useQuery<GetUserInfoResponse, Error>({
-    queryKey: USER_QUERY_KEY.USER_INFO,
-    queryFn: getUserInfoApi,
-    staleTime: USER_QUERY_CACHE_TIME.USER_INFO.STALE,
-    gcTime: USER_QUERY_CACHE_TIME.USER_INFO.GC,
+    queryKey: USER_QUERY_KEY.MY_INFO,
+    queryFn: getMyInfoApi,
+    staleTime: USER_QUERY_CACHE_TIME.MY_INFO.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_INFO.GC,
   });
 
   return {
-    userInfo,
-    isPendingUserInfo,
-    isErrorUserInfo,
-    userInfoError,
+    myInfo,
+    isPendingMyInfo,
+    isErrorMyInfo,
+    myInfoError,
+  };
+};
+
+export const useGetMyIdQuery = () => {
+  const {
+    data: myId,
+    isPending: isPendingMyId,
+    isError,
+    error,
+  } = useQuery<number, Error>({
+    queryKey: USER_QUERY_KEY.MY_ID,
+    queryFn: getMyIdApi,
+    staleTime: USER_QUERY_CACHE_TIME.MY_ID.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_ID.GC,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    myId,
+    isPendingMyId,
   };
 };
 
@@ -149,7 +207,7 @@ export const useEditUserProfileMutation = () => {
     mutationFn: editUserProfileApi,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: USER_QUERY_KEY.USER_INFO,
+        queryKey: USER_QUERY_KEY.MY_INFO,
       });
       router.back();
     },
@@ -238,4 +296,160 @@ export const useSearchUserQuery = (
     isPendingSearchUser,
     isFetchingSearchUser,
   };
+};
+
+export const useGetUserFollowersQuery = (userId: number, size = 10) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingUserFollowers,
+    isError,
+    error,
+    refetch: refetchUserFollowers,
+    isRefetching: isRefetchingUserFollowers,
+  } = useInfiniteQuery<
+    GetUserFollowersResponse,
+    Error,
+    InfiniteData<GetUserFollowersResponse, Cursor>,
+    ReturnType<typeof USER_QUERY_KEY.FOLLOWERS>,
+    Cursor
+  >({
+    queryKey: USER_QUERY_KEY.FOLLOWERS(userId, size),
+    queryFn: ({ pageParam }) =>
+      getUserFollowersApi({
+        userId,
+        cursor: pageParam,
+        size,
+      }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: !!userId,
+  });
+
+  const userFollowerPages = data?.pages ?? [];
+  const firstPage = userFollowerPages[0];
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    followerList: userFollowerPages.flatMap((page) => page.followers),
+    totalFollowerCount: firstPage?.totalFollowerCount ?? 0,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingUserFollowers,
+    refetchUserFollowers,
+    isRefetchingUserFollowers,
+  };
+};
+
+export const useGetMyFollowingsQuery = (size = 10) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingMyFollowings,
+    isError,
+    error,
+    refetch: refetchMyFollowings,
+    isRefetching: isRefetchingMyFollowings,
+  } = useInfiniteQuery<
+    GetMyFollowingsResponse,
+    Error,
+    InfiniteData<GetMyFollowingsResponse, Cursor>,
+    ReturnType<typeof USER_QUERY_KEY.MY_FOLLOWINGS>,
+    Cursor
+  >({
+    queryKey: USER_QUERY_KEY.MY_FOLLOWINGS(size),
+    queryFn: ({ pageParam }) =>
+      getMyFollowingsApi({
+        cursor: pageParam,
+        size,
+      }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.GC,
+  });
+
+  const myfollowingsPages = data?.pages ?? [];
+  const firstPage = myfollowingsPages[0];
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    myFollowingList: myfollowingsPages.flatMap((page) => page.followings),
+    totalFollowingCount: firstPage?.totalFollowingCount ?? 0,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingMyFollowings,
+    refetchMyFollowings,
+    isRefetchingMyFollowings,
+  };
+};
+
+export const useGetMyFollowingsPreviewQuery = () => {
+  const {
+    data: myFollowingListPreview,
+    isPending: isPendingMyFollowingsPreview,
+    isError: isErrorMyFollowingsPreview,
+  } = useQuery<GetMyFollowingsPreviewResponse, Error>({
+    queryKey: USER_QUERY_KEY.MY_FOLLOWINGS_PREVIEW,
+    queryFn: getMyFollowingsPreviewApi,
+    staleTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_FOLLOWINGS.GC,
+  });
+
+  return {
+    myFollowingListPreview,
+    isPendingMyFollowingsPreview,
+    isErrorMyFollowingsPreview,
+  };
+};
+
+export const useChangeFollowingStateMutation = () => {
+  const {
+    mutate: changeFollowingState,
+    isPending: isPendingChangeFollowingState,
+  } = useMutation<
+    ChangeFollowingStateResponse,
+    Error,
+    ChangeFollowingStateRequest
+  >({
+    mutationFn: changeFollowingStateApi,
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeFollowingState, isPendingChangeFollowingState };
 };

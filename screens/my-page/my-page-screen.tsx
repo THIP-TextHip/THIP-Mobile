@@ -1,8 +1,14 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 
-import { useGetUserInfoQuery } from "@apis/user";
+import { useGetMyInfoQuery } from "@apis/user";
 import { AppText, UserProfileBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -10,7 +16,7 @@ import { LogoutModal, SettingsListItem } from "./components";
 import { SETTINGS_MY_ACTIVITY, SETTINGS_OTHER } from "./constants";
 
 export default function MyPageScreen() {
-  const { userInfo } = useGetUserInfoQuery();
+  const { myInfo, isPendingMyInfo } = useGetMyInfoQuery();
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const handleToEdit = () => {
@@ -30,15 +36,22 @@ export default function MyPageScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      <UserProfileBar
-        type="edit-profile"
-        userProfile={{
-          nickname: userInfo?.nickname ?? "",
-          genre: userInfo?.aliasName ?? "",
-          profileColor: userInfo?.aliasColor ?? colors.grey[300],
-        }}
-        handleToEdit={handleToEdit}
-      />
+      {isPendingMyInfo ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator color={colors.white} />
+        </View>
+      ) : (
+        <UserProfileBar
+          type="edit-profile"
+          userProfile={{
+            nickname: myInfo?.nickname ?? "",
+            genre: myInfo?.aliasName ?? "",
+            profileColor: myInfo?.aliasColor ?? colors.grey[300],
+          }}
+          handleToEdit={handleToEdit}
+        />
+      )}
+
       <View style={styles.section}>
         <AppText weight="semibold" size="lg" color={colors.white}>
           내 활동
@@ -106,5 +119,11 @@ const styles = StyleSheet.create({
     // paddingTop: 144,
     paddingTop: 100,
     paddingBottom: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.black.main,
   },
 });

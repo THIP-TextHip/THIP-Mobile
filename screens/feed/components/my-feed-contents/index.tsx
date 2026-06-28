@@ -1,5 +1,6 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
+import { useGetMyIdQuery } from "@apis/user";
 import {
   FeedPostPreview,
   ListTotalCountHeader,
@@ -16,6 +17,20 @@ import {
 import MyFeedEmpty from "../my-feed-empty";
 
 const MyFeedTopContents = () => {
+  const { myId, isPendingMyId } = useGetMyIdQuery();
+
+  if (isPendingMyId) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
+  if (!myId) {
+    return null;
+  }
+
   return (
     <View style={styles.topContents}>
       <View style={styles.profile}>
@@ -27,7 +42,7 @@ const MyFeedTopContents = () => {
           }}
         />
         <ThipPreview
-          userId={DUMMY_MY_FEED_TOP_VIEW.creatorId}
+          userId={myId}
           followerCount={DUMMY_MY_FEED_TOP_VIEW.followerCount}
           thipList={DUMMY_MY_FEED_TOP_VIEW.latestFollowerProfileImageUrls}
         />
@@ -68,5 +83,10 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
