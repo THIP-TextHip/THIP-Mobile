@@ -2,7 +2,8 @@ import { useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { UserListItem, type UserListItemData } from "@shared/ui";
+import { type FollowerType } from "@apis/user";
+import { UserListItem } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_READING_MATE } from "./constants";
@@ -13,7 +14,7 @@ export default function ReadingMateScreen() {
   // const { roomId } = useLocalSearchParams<{ roomId: string }>();
 
   const listItem = useCallback(
-    ({ item }: { item: UserListItemData }) => <UserListItem userData={item} />,
+    ({ item }: { item: FollowerType }) => <UserListItem userData={item} />,
     [],
   );
 

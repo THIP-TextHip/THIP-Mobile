@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -7,7 +7,8 @@ import { FloatingFeedWrite } from "@images/icons";
 import { FeedContents, FeedTopTabBar, MyFeedContents } from "./components";
 
 export default function FeedScreen() {
-  const [isMyFeed, setIsMyFeed] = useState(false);
+  const { tab } = useLocalSearchParams<{ tab?: string }>();
+  const [isMyFeed, setIsMyFeed] = useState(tab === "my-feed" ? true : false);
 
   const handleFeed = () => {
     setIsMyFeed(false);

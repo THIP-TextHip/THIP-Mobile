@@ -21,7 +21,7 @@ type UserProfileBarProps = (
     }
   | {
       type: "thip";
-      isThipped: boolean;
+      isFollowing: boolean;
       handlePressThip: () => void;
     }
 ) & { userProfile: UserProfileBarType };
@@ -43,7 +43,7 @@ export default function UserProfileBar(props: UserProfileBarProps) {
       break;
 
     case "thip":
-      buttonText = props.isThipped ? "띱 취소" : "띱 하기";
+      buttonText = props.isFollowing ? "띱 취소" : "띱 하기";
       handlePressButton = props.handlePressThip;
       break;
 

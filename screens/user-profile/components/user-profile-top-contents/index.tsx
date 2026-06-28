@@ -1,50 +1,49 @@
 import { StyleSheet, View } from "react-native";
 
+import { GetUserProfileTopInfoResponse } from "@apis/feed";
+import { useChangeFollowingStateMutation } from "@apis/user";
 import { ListTotalCountHeader, ThipPreview, UserProfileBar } from "@shared/ui";
 
 interface UserProfileTopContentsProps {
-  creatorId: number;
-  isThipped: boolean;
-  userProfile: {
-    nickname: string;
-    aliasName: string;
-    aliasColor: string;
-  };
-  followerCount: number;
-  thipList: string[];
-  totalFeedCount: number;
-  handlePressThip: () => void;
+  userProfileTopInfo: GetUserProfileTopInfoResponse | undefined;
 }
 
 export default function UserProfileTopContents({
-  creatorId,
-  isThipped,
-  userProfile,
-  followerCount,
-  thipList,
-  totalFeedCount,
-  handlePressThip,
+  userProfileTopInfo,
 }: UserProfileTopContentsProps) {
+  const { changeFollowingState, isPendingChangeFollowingState } =
+    useChangeFollowingStateMutation();
+
+  const handlePressThip = () => {
+    if (!userProfileTopInfo || isPendingChangeFollowingState) return null;
+    changeFollowingState({
+      followingUserId: userProfileTopInfo.creatorId,
+      type: !userProfileTopInfo.isFollowing,
+    });
+  };
+
+  if (!userProfileTopInfo) return null;
+
   return (
     <View style={styles.topContents}>
       <View style={styles.profile}>
         <UserProfileBar
           type="thip"
-          isThipped={isThipped}
+          isFollowing={userProfileTopInfo.isFollowing}
           userProfile={{
-            nickname: userProfile.nickname,
-            genre: userProfile.aliasName,
-            profileColor: userProfile.aliasColor,
+            nickname: userProfileTopInfo.nickname,
+            genre: userProfileTopInfo.aliasName,
+            profileColor: userProfileTopInfo.aliasColor,
           }}
           handlePressThip={handlePressThip}
         />
         <ThipPreview
-          userId={creatorId}
-          followerCount={followerCount}
-          thipList={thipList}
+          userId={userProfileTopInfo.creatorId}
+          followerCount={userProfileTopInfo.followerCount}
+          thipList={userProfileTopInfo.latestFollowerProfileImageUrls}
         />
       </View>
-      <ListTotalCountHeader length={totalFeedCount} />
+      <ListTotalCountHeader length={userProfileTopInfo.totalFeedCount} />
     </View>
   );
 }

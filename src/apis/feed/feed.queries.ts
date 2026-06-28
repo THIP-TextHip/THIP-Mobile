@@ -1,11 +1,18 @@
 import type { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
+import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 
 import {
   getAllFeedListApi,
   getFeedDetailApi,
+  getFeedMyProfileApi,
   getFeedRelatedBookApi,
   getFeedTagListApi,
+  getFeedUserProfileApi,
+  getMyProfileTopInfoApi,
+  getUserProfileTopInfoApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
@@ -14,6 +21,8 @@ import type {
   GetFeedListResponse,
   GetFeedRelatedBookResponse,
   GetFeedTagListResponse,
+  GetFeedUserProfileResponse,
+  GetUserProfileTopInfoResponse,
 } from "./feed.types";
 
 type FeedCursor = string | null;
@@ -23,15 +32,28 @@ const FEED_QUERY_CACHE_TIME = {
   GC: 1000 * 60 * 10,
 } as const;
 
+const USER_PROFILE_TOP_INFO_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 2,
+  GC: 1000 * 60 * 10,
+} as const;
+
+const MY_PROFILE_TOP_INFO_QUERY_CACHE_TIME = {
+  STALE: 1000 * 30,
+  GC: 1000 * 60,
+} as const;
+
 const FEED_TAG_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 60 * 3,
   GC: 1000 * 60 * 60 * 5,
-};
+} as const;
 
 const hasFeedId = (feedId?: number | string): feedId is number | string =>
   feedId != null && feedId !== "";
 
 const hasIsbn = (isbn?: string): isbn is string => isbn != null && isbn !== "";
+
+const hasUserId = (userId?: number): userId is number =>
+  typeof userId === "number" && Number.isFinite(userId);
 
 export const useGetAllFeedListQuery = () => {
   const {
@@ -183,5 +205,160 @@ export const useGetFeedRelatedBookQuery = (
     feedRelatedBookListError,
     refetchFeedRelatedBookList,
     isRefetchingFeedRelatedBookList,
+  };
+};
+
+export const useGetFeedUserProfileQuery = (userId: number) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingFeedUserProfile,
+    isError: isErrorFeedUserProfile,
+    error: feedUserProfileError,
+    refetch: refetchFeedUserProfile,
+    isRefetching: isRefetchingFeedUserProfile,
+  } = useInfiniteQuery<
+    GetFeedUserProfileResponse,
+    Error,
+    InfiniteData<GetFeedUserProfileResponse, FeedCursor>,
+    ReturnType<typeof FEED_QUERY_KEY.USER_PROFILE>,
+    FeedCursor
+  >({
+    queryKey: FEED_QUERY_KEY.USER_PROFILE(userId),
+    queryFn: ({ pageParam }) => {
+      if (!hasUserId(userId)) {
+        throw new Error("userId is required.");
+      }
+
+      return getFeedUserProfileApi({
+        userId,
+        cursor: pageParam,
+      });
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: hasUserId(userId),
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    feedUserProfileList: data?.pages.flatMap((page) => page.feedList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingFeedUserProfile,
+    isErrorFeedUserProfile,
+    feedUserProfileError,
+    refetchFeedUserProfile,
+    isRefetchingFeedUserProfile,
+  };
+};
+
+export const useGetUserProfileTopInfoQuery = (userId: number) => {
+  const {
+    data: userProfileTopInfo,
+    isPending: isPendingUserProfileTopInfo,
+    isError,
+    error,
+  } = useQuery<GetUserProfileTopInfoResponse, Error>({
+    queryKey: FEED_QUERY_KEY.USER_PROFILE_TOP_INFO(userId),
+    queryFn: () => getUserProfileTopInfoApi(userId),
+    enabled: hasUserId(userId),
+    staleTime: USER_PROFILE_TOP_INFO_QUERY_CACHE_TIME.STALE,
+    gcTime: USER_PROFILE_TOP_INFO_QUERY_CACHE_TIME.GC,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    userProfileTopInfo,
+    isPendingUserProfileTopInfo,
+  };
+};
+
+export const useGetFeedMyProfileQuery = () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingFeedMyProfile,
+    isError: isErrorFeedMyProfile,
+    error: feedMyProfileError,
+    refetch: refetchFeedMyProfile,
+    isRefetching: isRefetchingFeedMyProfile,
+  } = useInfiniteQuery<
+    GetFeedUserProfileResponse,
+    Error,
+    InfiniteData<GetFeedUserProfileResponse, FeedCursor>,
+    typeof FEED_QUERY_KEY.MY_PROFILE,
+    FeedCursor
+  >({
+    queryKey: FEED_QUERY_KEY.MY_PROFILE,
+    queryFn: ({ pageParam }) => {
+      return getFeedMyProfileApi(pageParam);
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    feedMyProfileList: data?.pages.flatMap((page) => page.feedList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingFeedMyProfile,
+    isErrorFeedMyProfile,
+    feedMyProfileError,
+    refetchFeedMyProfile,
+    isRefetchingFeedMyProfile,
+  };
+};
+
+export const useGetMyProfileTopInfoQuery = () => {
+  const {
+    data: myProfileTopInfo,
+    isPending: isPendingMyProfileTopInfo,
+    isError,
+    error,
+  } = useQuery<GetUserProfileTopInfoResponse, Error>({
+    queryKey: FEED_QUERY_KEY.MY_PROFILE_TOP_INFO,
+    queryFn: getMyProfileTopInfoApi,
+    staleTime: MY_PROFILE_TOP_INFO_QUERY_CACHE_TIME.STALE,
+    gcTime: MY_PROFILE_TOP_INFO_QUERY_CACHE_TIME.GC,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    myProfileTopInfo,
+    isPendingMyProfileTopInfo,
   };
 };

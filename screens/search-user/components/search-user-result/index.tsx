@@ -45,7 +45,9 @@ export default function SearchUserResult({
   ]);
 
   const listItem = useCallback(
-    ({ item }: { item: UserType }) => <UserListItem userData={item} />,
+    ({ item }: { item: UserType }) => (
+      <UserListItem userData={{ ...item, isMyself: false }} />
+    ),
     [],
   );
 

@@ -18,6 +18,22 @@ export interface FeedType {
   isWriter: boolean;
 }
 
+export interface FeedUserProfileType {
+  feedId: number;
+  postDate: string;
+  isbn: string;
+  bookTitle: string;
+  bookAuthor: string;
+  contentBody: string;
+  contentUrls: string[];
+  likeCount: number;
+  commentCount: number;
+  isPublic: boolean;
+  isSaved: boolean;
+  isLiked: boolean;
+  isWriter: boolean;
+}
+
 export interface GetFeedListResponse {
   feedList: FeedType[];
   nextCursor: string;
@@ -51,4 +67,27 @@ export interface GetFeedRelatedBookResponse {
   feeds: FeedType[];
   nextCursor: string;
   isLast: boolean;
+}
+
+export interface GetFeedUserProfileRequest {
+  userId: number;
+  cursor?: string | null;
+}
+
+export interface GetFeedUserProfileResponse {
+  feedList: FeedUserProfileType[];
+  nextCursor: string;
+  isLast: boolean;
+}
+
+export interface GetUserProfileTopInfoResponse {
+  creatorId: number;
+  profileImageUrl: string;
+  nickname: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  totalFeedCount: number;
+  isFollowing: boolean;
+  latestFollowerProfileImageUrls: string[];
 }
