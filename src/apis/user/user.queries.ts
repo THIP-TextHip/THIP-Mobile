@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { FEED_QUERY_KEY } from "../feed";
 import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
   changeFollowingStateApi,
@@ -434,6 +435,7 @@ export const useGetMyFollowingsPreviewQuery = () => {
 };
 
 export const useChangeFollowingStateMutation = () => {
+  const queryClient = useQueryClient();
   const {
     mutate: changeFollowingState,
     isPending: isPendingChangeFollowingState,
@@ -443,6 +445,24 @@ export const useChangeFollowingStateMutation = () => {
     ChangeFollowingStateRequest
   >({
     mutationFn: changeFollowingStateApi,
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: USER_QUERY_KEY.MY_FOLLOWINGS_ROOT,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: USER_QUERY_KEY.MY_FOLLOWINGS_PREVIEW,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: USER_QUERY_KEY.FOLLOWERS_ROOT(variables.followingUserId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.USER_PROFILE_TOP_INFO(
+            variables.followingUserId,
+          ),
+        }),
+      ]);
+    },
     onError: (error) => {
       Toast.show({
         type: "error",
