@@ -4,6 +4,7 @@ export {
   getFeedRelatedBookApi,
   getFeedTagListApi,
   getFeedUserProfileApi,
+  getUserProfileTopInfoApi,
 } from "./feed.api";
 
 export {
@@ -12,6 +13,7 @@ export {
   useGetFeedRelatedBookQuery,
   useGetFeedTagListQuery,
   useGetFeedUserProfileQuery,
+  useGetUserProfileTopInfoQuery,
 } from "./feed.queries";
 
 export { FEED_QUERY_KEY } from "./feed.query-key";
@@ -28,4 +30,5 @@ export type {
   GetFeedTagListResponse,
   GetFeedUserProfileRequest,
   GetFeedUserProfileResponse,
+  GetUserProfileTopInfoResponse,
 } from "./feed.types";

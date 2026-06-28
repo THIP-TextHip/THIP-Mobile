@@ -1,13 +1,14 @@
 import { apiClient } from "../api-client";
 import { FEED_URL } from "../endpoint";
-import type {
-  GetFeedDetailResponse,
-  GetFeedListResponse,
-  GetFeedRelatedBookRequest,
-  GetFeedRelatedBookResponse,
-  GetFeedTagListResponse,
-  GetFeedUserProfileRequest,
-  GetFeedUserProfileResponse,
+import {
+  GetUserProfileTopInfoResponse,
+  type GetFeedDetailResponse,
+  type GetFeedListResponse,
+  type GetFeedRelatedBookRequest,
+  type GetFeedRelatedBookResponse,
+  type GetFeedTagListResponse,
+  type GetFeedUserProfileRequest,
+  type GetFeedUserProfileResponse,
 } from "./feed.types";
 
 export const getAllFeedListApi = async (cursor?: string | null) => {
@@ -58,6 +59,14 @@ export const getFeedUserProfileApi = async ({
     {
       params: cursor == null ? undefined : { cursor },
     },
+  );
+
+  return response.data;
+};
+
+export const getUserProfileTopInfoApi = async (userId: number) => {
+  const response = await apiClient.get<GetUserProfileTopInfoResponse>(
+    FEED_URL.USER_PROFILE_TOP_INFO(userId),
   );
 
   return response.data;

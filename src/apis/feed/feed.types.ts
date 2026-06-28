@@ -79,3 +79,15 @@ export interface GetFeedUserProfileResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface GetUserProfileTopInfoResponse {
+  creatorId: number;
+  profileImageUrl: string;
+  nickname: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  totalFeedCount: number;
+  isFollowing: boolean;
+  latestFollowerProfileImageUrls: string[];
+}

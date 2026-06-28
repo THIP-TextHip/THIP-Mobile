@@ -1,50 +1,43 @@
 import { StyleSheet, View } from "react-native";
 
+import { GetUserProfileTopInfoResponse } from "@apis/feed";
 import { ListTotalCountHeader, ThipPreview, UserProfileBar } from "@shared/ui";
 
 interface UserProfileTopContentsProps {
-  creatorId: number;
-  isThipped: boolean;
-  userProfile: {
-    nickname: string;
-    aliasName: string;
-    aliasColor: string;
-  };
-  followerCount: number;
-  thipList: string[];
-  totalFeedCount: number;
-  handlePressThip: () => void;
+  userProfileTopInfo: GetUserProfileTopInfoResponse | undefined;
 }
 
 export default function UserProfileTopContents({
-  creatorId,
-  isThipped,
-  userProfile,
-  followerCount,
-  thipList,
-  totalFeedCount,
-  handlePressThip,
+  userProfileTopInfo,
 }: UserProfileTopContentsProps) {
+  // TODO: 팔로잉 상태 변경 api 연동
+
+  const handlePressThip = () => {
+    console.log(userProfileTopInfo?.creatorId, "번 유저 띱하기");
+  };
+
+  if (!userProfileTopInfo) return null;
+
   return (
     <View style={styles.topContents}>
       <View style={styles.profile}>
         <UserProfileBar
           type="thip"
-          isThipped={isThipped}
+          isThipped={userProfileTopInfo.isFollowing}
           userProfile={{
-            nickname: userProfile.nickname,
-            genre: userProfile.aliasName,
-            profileColor: userProfile.aliasColor,
+            nickname: userProfileTopInfo.nickname,
+            genre: userProfileTopInfo.aliasName,
+            profileColor: userProfileTopInfo.aliasColor,
           }}
           handlePressThip={handlePressThip}
         />
         <ThipPreview
-          userId={creatorId}
-          followerCount={followerCount}
-          thipList={thipList}
+          userId={userProfileTopInfo.creatorId}
+          followerCount={userProfileTopInfo.followerCount}
+          thipList={userProfileTopInfo.latestFollowerProfileImageUrls}
         />
       </View>
-      <ListTotalCountHeader length={totalFeedCount} />
+      <ListTotalCountHeader length={userProfileTopInfo.totalFeedCount} />
     </View>
   );
 }

@@ -10,13 +10,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { useGetFeedUserProfileQuery } from "@apis/feed";
+import {
+  useGetFeedUserProfileQuery,
+  useGetUserProfileTopInfoQuery,
+} from "@apis/feed";
 import { AppText, FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
-// TODO: 추후 서버에서 가져올 데이터
 import { UserProfileTopContents } from "./components";
-import { DUMMY_USER_PROFILE_TOP_VIEW } from "./constants";
 
 export default function UserProfileScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -31,6 +32,8 @@ export default function UserProfileScreen() {
     refetchFeedUserProfile,
     isRefetchingFeedUserProfile,
   } = useGetFeedUserProfileQuery(Number(userId));
+  const { userProfileTopInfo, isPendingUserProfileTopInfo } =
+    useGetUserProfileTopInfoQuery(Number(userId));
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -38,27 +41,9 @@ export default function UserProfileScreen() {
     fetchNextPage();
   };
 
-  const handlePressThip = useCallback(() => {
-    console.log(DUMMY_USER_PROFILE_TOP_VIEW.creatorId, "번 유저 띱하기");
-  }, []);
-
   const renderHeader = useCallback(
-    () => (
-      <UserProfileTopContents
-        creatorId={DUMMY_USER_PROFILE_TOP_VIEW.creatorId}
-        isThipped={DUMMY_USER_PROFILE_TOP_VIEW.isFollowing}
-        userProfile={{
-          nickname: DUMMY_USER_PROFILE_TOP_VIEW.nickname,
-          aliasName: DUMMY_USER_PROFILE_TOP_VIEW.aliasName,
-          aliasColor: DUMMY_USER_PROFILE_TOP_VIEW.aliasColor,
-        }}
-        followerCount={DUMMY_USER_PROFILE_TOP_VIEW.followerCount}
-        thipList={DUMMY_USER_PROFILE_TOP_VIEW.latestFollowerProfileImageUrls}
-        totalFeedCount={DUMMY_USER_PROFILE_TOP_VIEW.totalFeedCount}
-        handlePressThip={handlePressThip}
-      />
-    ),
-    [handlePressThip],
+    () => <UserProfileTopContents userProfileTopInfo={userProfileTopInfo} />,
+    [userProfileTopInfo],
   );
 
   const renderEmpty = () => {
@@ -103,6 +88,14 @@ export default function UserProfileScreen() {
     }
   }, [userId]);
 
+  if (isPendingUserProfileTopInfo) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
   return (
     <FlatList
       contentContainerStyle={{ paddingBottom: bottom + 60 }}
@@ -131,6 +124,11 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   status: {
     flex: 1,

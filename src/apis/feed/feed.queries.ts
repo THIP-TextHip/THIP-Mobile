@@ -1,5 +1,8 @@
 import type { InfiniteData } from "@tanstack/react-query";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
+import { useEffect } from "react";
+import Toast from "react-native-toast-message";
 
 import {
   getAllFeedListApi,
@@ -7,15 +10,17 @@ import {
   getFeedRelatedBookApi,
   getFeedTagListApi,
   getFeedUserProfileApi,
+  getUserProfileTopInfoApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
-import type {
-  FeedRelatedBookSort,
-  GetFeedDetailResponse,
-  GetFeedListResponse,
-  GetFeedRelatedBookResponse,
-  GetFeedTagListResponse,
-  GetFeedUserProfileResponse,
+import {
+  GetUserProfileTopInfoResponse,
+  type FeedRelatedBookSort,
+  type GetFeedDetailResponse,
+  type GetFeedListResponse,
+  type GetFeedRelatedBookResponse,
+  type GetFeedTagListResponse,
+  type GetFeedUserProfileResponse,
 } from "./feed.types";
 
 type FeedCursor = string | null;
@@ -25,10 +30,15 @@ const FEED_QUERY_CACHE_TIME = {
   GC: 1000 * 60 * 10,
 } as const;
 
+const USER_PROFILE_TOP_INFO_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 2,
+  GC: 1000 * 60 * 10,
+} as const;
+
 const FEED_TAG_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 60 * 3,
   GC: 1000 * 60 * 60 * 5,
-};
+} as const;
 
 const hasFeedId = (feedId?: number | string): feedId is number | string =>
   feedId != null && feedId !== "";
@@ -238,5 +248,37 @@ export const useGetFeedUserProfileQuery = (userId: number) => {
     feedUserProfileError,
     refetchFeedUserProfile,
     isRefetchingFeedUserProfile,
+  };
+};
+
+export const useGetUserProfileTopInfoQuery = (userId: number) => {
+  const {
+    data: userProfileTopInfo,
+    isPending: isPendingUserProfileTopInfo,
+    isError,
+    error,
+  } = useQuery<GetUserProfileTopInfoResponse, Error>({
+    queryKey: FEED_QUERY_KEY.USER_PROFILE_TOP_INFO(userId),
+    queryFn: () => getUserProfileTopInfoApi(userId),
+    enabled: hasUserId(userId),
+    staleTime: USER_PROFILE_TOP_INFO_QUERY_CACHE_TIME.STALE,
+    gcTime: USER_PROFILE_TOP_INFO_QUERY_CACHE_TIME.GC,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
+      Toast.show({
+        type: "error",
+        text1: error.message,
+      });
+      if (router.canGoBack()) {
+        router.back();
+      }
+    }
+  }, [isError, error]);
+
+  return {
+    userProfileTopInfo,
+    isPendingUserProfileTopInfo,
   };
 };
