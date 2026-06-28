@@ -6,6 +6,8 @@ import type {
   GetFeedRelatedBookRequest,
   GetFeedRelatedBookResponse,
   GetFeedTagListResponse,
+  GetFeedUserProfileRequest,
+  GetFeedUserProfileResponse,
 } from "./feed.types";
 
 export const getAllFeedListApi = async (cursor?: string | null) => {
@@ -41,6 +43,20 @@ export const getFeedRelatedBookApi = async ({
     FEED_URL.RELATED_BOOK(isbn),
     {
       params: cursor == null ? { sort } : { sort, cursor },
+    },
+  );
+
+  return response.data;
+};
+
+export const getFeedUserProfileApi = async ({
+  userId,
+  cursor,
+}: GetFeedUserProfileRequest) => {
+  const response = await apiClient.get<GetFeedUserProfileResponse>(
+    FEED_URL.USER_PROFILE(userId),
+    {
+      params: cursor == null ? undefined : { cursor },
     },
   );
 

@@ -24,6 +24,12 @@ export const FEED_URL = {
   TAG_LIST: "/feeds/write-info",
   RELATED_BOOK: (isbn: string) =>
     `/feeds/related-books/${encodeURIComponent(isbn)}`,
+  USER_PROFILE: (userId: number) =>
+    `/feeds/users/${encodeURIComponent(userId)}`,
+  USER_PROFILE_TOP_INFO: (userId: number) =>
+    `/feeds/users/${encodeURIComponent(userId)}/info`,
+  MY_PROFILE: "/feeds/mine",
+  MY_PROFILE_TOP_INFO: "/feeds/mine/info",
 } as const;
 
 export const COMMENT_URL = {

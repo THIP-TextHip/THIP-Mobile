@@ -6,6 +6,7 @@ import {
   getFeedDetailApi,
   getFeedRelatedBookApi,
   getFeedTagListApi,
+  getFeedUserProfileApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
@@ -14,6 +15,7 @@ import type {
   GetFeedListResponse,
   GetFeedRelatedBookResponse,
   GetFeedTagListResponse,
+  GetFeedUserProfileResponse,
 } from "./feed.types";
 
 type FeedCursor = string | null;
@@ -32,6 +34,9 @@ const hasFeedId = (feedId?: number | string): feedId is number | string =>
   feedId != null && feedId !== "";
 
 const hasIsbn = (isbn?: string): isbn is string => isbn != null && isbn !== "";
+
+const hasUserId = (userId?: number): userId is number =>
+  typeof userId === "number" && Number.isFinite(userId);
 
 export const useGetAllFeedListQuery = () => {
   const {
@@ -183,5 +188,55 @@ export const useGetFeedRelatedBookQuery = (
     feedRelatedBookListError,
     refetchFeedRelatedBookList,
     isRefetchingFeedRelatedBookList,
+  };
+};
+
+export const useGetFeedUserProfileQuery = (userId: number) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingFeedUserProfile,
+    isError: isErrorFeedUserProfile,
+    error: feedUserProfileError,
+    refetch: refetchFeedUserProfile,
+    isRefetching: isRefetchingFeedUserProfile,
+  } = useInfiniteQuery<
+    GetFeedUserProfileResponse,
+    Error,
+    InfiniteData<GetFeedUserProfileResponse, FeedCursor>,
+    ReturnType<typeof FEED_QUERY_KEY.USER_PROFILE>,
+    FeedCursor
+  >({
+    queryKey: FEED_QUERY_KEY.USER_PROFILE(userId),
+    queryFn: ({ pageParam }) => {
+      if (!hasUserId(userId)) {
+        throw new Error("userId is required.");
+      }
+
+      return getFeedUserProfileApi({
+        userId,
+        cursor: pageParam,
+      });
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: hasUserId(userId),
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    feedUserProfileList: data?.pages.flatMap((page) => page.feedList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingFeedUserProfile,
+    isErrorFeedUserProfile,
+    feedUserProfileError,
+    refetchFeedUserProfile,
+    isRefetchingFeedUserProfile,
   };
 };

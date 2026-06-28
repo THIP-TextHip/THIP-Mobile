@@ -1,22 +1,42 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { FeedPostPreview } from "@shared/ui";
+import { useGetFeedUserProfileQuery } from "@apis/feed";
+import { AppText, FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
 // TODO: 추후 서버에서 가져올 데이터
-import { UserProfileFeedEmpty, UserProfileTopContents } from "./components";
-import {
-  DUMMY_USER_PROFILE_FEEDS,
-  DUMMY_USER_PROFILE_TOP_VIEW,
-} from "./constants";
+import { UserProfileTopContents } from "./components";
+import { DUMMY_USER_PROFILE_TOP_VIEW } from "./constants";
 
 export default function UserProfileScreen() {
   const { bottom } = useSafeAreaInsets();
   const { userId } = useLocalSearchParams<{ userId: string }>();
+  const {
+    feedUserProfileList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingFeedUserProfile,
+    isErrorFeedUserProfile,
+    refetchFeedUserProfile,
+    isRefetchingFeedUserProfile,
+  } = useGetFeedUserProfileQuery(Number(userId));
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
 
   const handlePressThip = useCallback(() => {
     console.log(DUMMY_USER_PROFILE_TOP_VIEW.creatorId, "번 유저 띱하기");
@@ -41,6 +61,34 @@ export default function UserProfileScreen() {
     [handlePressThip],
   );
 
+  const renderEmpty = () => {
+    if (isPendingFeedUserProfile) {
+      return (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      );
+    }
+
+    if (isErrorFeedUserProfile) {
+      return (
+        <View style={styles.status}>
+          <AppText weight="medium" size="sm" color={colors.grey[200]}>
+            피드를 불러오지 못했어요.
+          </AppText>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.status}>
+        <AppText weight="semibold" size="lg" color={colors.white}>
+          피드에 작성된 글이 없어요.
+        </AppText>
+      </View>
+    );
+  };
+
   useEffect(() => {
     if (!userId) {
       Toast.show({
@@ -59,11 +107,21 @@ export default function UserProfileScreen() {
     <FlatList
       contentContainerStyle={{ paddingBottom: bottom + 60 }}
       ListHeaderComponent={renderHeader}
-      data={DUMMY_USER_PROFILE_FEEDS}
+      data={feedUserProfileList}
       keyExtractor={(item) => String(item.feedId)}
       renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      ListEmptyComponent={() => <UserProfileFeedEmpty />}
+      ListEmptyComponent={renderEmpty}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetchingFeedUserProfile}
+          onRefresh={refetchFeedUserProfile}
+          tintColor={colors.white}
+          colors={[colors.white]}
+        />
+      }
     />
   );
 }
@@ -73,5 +131,11 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 100,
   },
 });

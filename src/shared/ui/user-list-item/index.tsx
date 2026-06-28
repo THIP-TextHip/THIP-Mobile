@@ -29,7 +29,7 @@ export default function UserListItem({ userData }: UserListItemProps) {
     });
   };
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={handleToUserProfile}>
       <View style={styles.profile}>
         <ProfileImage image={userData.profileImageUrl} />
         <View style={styles.profileText}>
@@ -41,13 +41,13 @@ export default function UserListItem({ userData }: UserListItemProps) {
           </AppText>
         </View>
       </View>
-      <Pressable style={styles.thipCount} onPress={handleToUserProfile}>
+      <View style={styles.thipCount}>
         <AppText weight="regular" size="2xs" color={colors.white}>
           {userData.followerCount} 명이 띱 하는중
         </AppText>
         <IcRightRight />
-      </Pressable>
-    </View>
+      </View>
+    </Pressable>
   );
 }
 
