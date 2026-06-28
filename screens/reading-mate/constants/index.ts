@@ -8,7 +8,7 @@ export const DUMMY_READING_MATE = [
     aliasName: "인플루언서",
     aliasColor: colors.character.lavender,
     followerCount: 3,
-    isMySelf: false,
+    isMyself: false,
   },
   {
     userId: 151,
@@ -17,7 +17,7 @@ export const DUMMY_READING_MATE = [
     aliasName: "칭호",
     aliasColor: colors.character.mint,
     followerCount: 3,
-    isMySelf: false,
+    isMyself: false,
   },
   {
     userId: 19,
@@ -26,7 +26,7 @@ export const DUMMY_READING_MATE = [
     aliasName: "작가",
     aliasColor: colors.character.orange,
     followerCount: 3,
-    isMySelf: false,
+    isMyself: false,
   },
   {
     userId: 113,
@@ -35,7 +35,7 @@ export const DUMMY_READING_MATE = [
     aliasName: "작가",
     aliasColor: colors.character.pink,
     followerCount: 3,
-    isMySelf: false,
+    isMyself: false,
   },
   {
     userId: 43,
@@ -44,7 +44,7 @@ export const DUMMY_READING_MATE = [
     aliasName: "운영진",
     aliasColor: colors.character.skyblue,
     followerCount: 3,
-    isMySelf: false,
+    isMyself: false,
   },
   {
     userId: 94,
@@ -53,6 +53,6 @@ export const DUMMY_READING_MATE = [
     aliasName: "칭호칭호",
     aliasColor: colors.character.lavender,
     followerCount: 3,
-    isMySelf: false,
+    isMyself: false,
   },
 ];

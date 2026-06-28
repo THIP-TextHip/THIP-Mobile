@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Animated, Easing, Pressable, StyleSheet, View } from "react-native";
 
 import { AppText } from "@shared/ui";
@@ -19,16 +19,22 @@ export default function FeedTopTabBar({
   handleFeed,
   handleMyFeed,
 }: FeedTopTabBarProps) {
-  const translateX = useRef(new Animated.Value(0)).current;
+  const translateX = useRef(
+    new Animated.Value(isMyFeed ? INDICATOR_MOVE_X : 0),
+  ).current;
 
-  const animateIndicator = (toValue: number) => {
+  const animateIndicator = useCallback((toValue: number) => {
     Animated.timing(translateX, {
       toValue,
       duration: 500,
       easing: Easing.bezier(0.4, 0, 0.2, 1),
       useNativeDriver: true,
     }).start();
-  };
+  }, [translateX]);
+
+  useEffect(() => {
+    animateIndicator(isMyFeed ? INDICATOR_MOVE_X : 0);
+  }, [animateIndicator, isMyFeed]);
 
   const handleClickFeed = () => {
     handleFeed();

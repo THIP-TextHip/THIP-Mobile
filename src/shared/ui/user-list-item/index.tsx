@@ -1,32 +1,32 @@
 import { router } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { FollowerType } from "@apis/user";
 import { IcRightRight } from "@images/icons";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 
-export interface UserListItemData {
-  userId: number;
-  nickname: string;
-  profileImageUrl: string;
-  aliasName: string;
-  aliasColor: string;
-  followerCount: number;
-  isMySelf?: boolean;
-}
-
 interface UserListItemProps {
-  userData: UserListItemData;
+  userData: FollowerType;
 }
 
 export default function UserListItem({ userData }: UserListItemProps) {
   const handleToUserProfile = () => {
-    router.push({
-      pathname: "/user-profile/[userId]",
-      params: { userId: String(userData.userId) },
-    });
+    if (userData.isMyself) {
+      router.push({
+        pathname: "/feed",
+        params: {
+          tab: "my-feed",
+        },
+      });
+    } else {
+      router.push({
+        pathname: "/user-profile/[userId]",
+        params: { userId: String(userData.userId) },
+      });
+    }
   };
   return (
     <Pressable style={styles.container} onPress={handleToUserProfile}>
