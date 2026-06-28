@@ -24,7 +24,6 @@ import {
 
 // TODO: 서버 제공 타입으로 변경
 export interface FeedBookItemType {
-  bookId?: number;
   bookTitle: string;
   authorName: string;
   bookImageUrl: string;
@@ -128,7 +127,7 @@ export default function BookSearchBottomSheet({
               },
             ]}
             data={searchedBookList}
-            keyExtractor={(item: FeedBookItemType) => String(item.bookId)}
+            keyExtractor={(item: FeedBookItemType) => String(item.isbn)}
             renderItem={({ item }: { item: FeedBookItemType }) => (
               <BottomSheetBookItem
                 bookItem={item}

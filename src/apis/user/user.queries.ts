@@ -173,8 +173,8 @@ export const useGetMyIdQuery = () => {
   } = useQuery<number, Error>({
     queryKey: USER_QUERY_KEY.MY_ID,
     queryFn: getMyIdApi,
-    staleTime: USER_QUERY_CACHE_TIME.MY_INFO.STALE,
-    gcTime: USER_QUERY_CACHE_TIME.MY_INFO.GC,
+    staleTime: USER_QUERY_CACHE_TIME.MY_ID.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.MY_ID.GC,
   });
 
   useEffect(() => {

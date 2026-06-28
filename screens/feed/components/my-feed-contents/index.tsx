@@ -19,16 +19,16 @@ import MyFeedEmpty from "../my-feed-empty";
 const MyFeedTopContents = () => {
   const { myId, isPendingMyId } = useGetMyIdQuery();
 
-  if (!myId) {
-    return null;
-  }
-
   if (isPendingMyId) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
+  }
+
+  if (!myId) {
+    return null;
   }
 
   return (

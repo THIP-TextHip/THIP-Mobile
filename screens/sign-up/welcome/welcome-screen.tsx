@@ -9,7 +9,7 @@ import { colors } from "@theme/token";
 
 export default function WelcomeScreen() {
   // TODO: 추후 로딩 및 예외처리 isPendingUserInfo, isErrorUserInfo, userInfoError
-  const { userInfo } = useGetMyInfoQuery();
+  const { myInfo } = useGetMyInfoQuery();
 
   const handleGoBack = useCallback(() => {
     router.back();
@@ -31,7 +31,7 @@ export default function WelcomeScreen() {
       <View style={styles.container}>
         <View style={styles.textWrapper}>
           <AppText weight="bold" size="xl" color={colors.white}>
-            안녕하세요, {userInfo?.nickname}님
+            안녕하세요, {myInfo?.nickname}님
           </AppText>
           <AppText weight="medium" size="sm" color={colors.white}>
             이제 Thip에서 활동할 준비를 모두 마쳤어요!
@@ -42,15 +42,15 @@ export default function WelcomeScreen() {
             <View style={styles.imageContainer}>
               <Image
                 style={styles.image}
-                source={{ uri: userInfo?.profileImageUrl }}
+                source={{ uri: myInfo?.profileImageUrl }}
               />
             </View>
             <View style={styles.profileWrapper}>
               <AppText weight="semibold" size="lg" color={colors.white}>
-                {userInfo?.nickname}
+                {myInfo?.nickname}
               </AppText>
-              <AppText weight="regular" size="sm" color={userInfo?.aliasColor}>
-                {userInfo?.aliasName}
+              <AppText weight="regular" size="sm" color={myInfo?.aliasColor}>
+                {myInfo?.aliasName}
               </AppText>
             </View>
           </View>

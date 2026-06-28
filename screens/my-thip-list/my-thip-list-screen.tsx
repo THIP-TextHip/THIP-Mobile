@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -31,6 +32,10 @@ export default function MyThipListScreen() {
   } = useGetMyFollowingsQuery();
   const { changeFollowingState, isPendingChangeFollowingState } =
     useChangeFollowingStateMutation();
+  // 각 데이터의 isFollowing을 저장하는 상태.
+  const [isFollowingOverrides, setIsFollowingOverrides] = useState<
+    Record<number, boolean>
+  >({});
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -38,6 +43,12 @@ export default function MyThipListScreen() {
     fetchNextPage();
   };
 
+  const handleRefresh = async () => {
+    setIsFollowingOverrides({});
+    await refetchMyFollowings();
+  };
+
+  // TODO: 화면에 잘 반영되는지 추후 띱 목록이 생긴 경우 테스트
   const handleChangeFollowingState = (
     followingUserId: number,
     nickname: string,
@@ -47,10 +58,17 @@ export default function MyThipListScreen() {
     changeFollowingState(
       { followingUserId, type: !isFollowing },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          setIsFollowingOverrides((prev) => ({
+            ...prev,
+            [followingUserId]: data.isFollowing,
+          }));
+
           Toast.show({
             type: "default",
-            text1: `${nickname} 님을 띱 취소했어요.`,
+            text1: data.isFollowing
+              ? `${nickname} 님을 띱했어요.`
+              : `${nickname} 님을 띱 취소했어요.`,
           });
         },
       },
@@ -82,23 +100,28 @@ export default function MyThipListScreen() {
         contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
         data={myFollowingList}
         keyExtractor={(item) => String(item.userId)}
-        renderItem={({ item }) => (
-          <MyThipItem
-            userId={item.userId}
-            profileImage={item.profileImageUrl}
-            nickname={item.nickname}
-            aliasName={item.aliasName}
-            aliasColor={item.aliasColor}
-            isFollowing={item.isFollowing}
-            handleChangeFollowingState={() =>
-              handleChangeFollowingState(
-                item.userId,
-                item.nickname,
-                item.isFollowing,
-              )
-            }
-          />
-        )}
+        renderItem={({ item }) => {
+          const isFollowing =
+            isFollowingOverrides[item.userId] ?? item.isFollowing;
+
+          return (
+            <MyThipItem
+              userId={item.userId}
+              profileImage={item.profileImageUrl}
+              nickname={item.nickname}
+              aliasName={item.aliasName}
+              aliasColor={item.aliasColor}
+              isFollowing={isFollowing}
+              handleChangeFollowingState={() =>
+                handleChangeFollowingState(
+                  item.userId,
+                  item.nickname,
+                  isFollowing,
+                )
+              }
+            />
+          );
+        }}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={renderEmpty}
         onEndReached={handleLoadMore}
@@ -106,7 +129,7 @@ export default function MyThipListScreen() {
         refreshControl={
           <RefreshControl
             refreshing={isRefetchingMyFollowings}
-            onRefresh={refetchMyFollowings}
+            onRefresh={handleRefresh}
             tintColor={colors.white}
             colors={[colors.white]}
           />

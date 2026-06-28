@@ -9,8 +9,8 @@ import type {
   EditUserProfileRequest,
   GetAliasListResponse,
   GetMyFollowingsPreviewResponse,
+  GetMyFollowingsRequest,
   GetMyFollowingsResponse,
-  GetMyFollowingsResquest,
   GetSearchUserRequest,
   GetSearchUserResponse,
   GetUserFollowersRequest,
@@ -98,7 +98,7 @@ export const getUserFollowersApi = async ({
 export const getMyFollowingsApi = async ({
   cursor,
   size,
-}: GetMyFollowingsResquest) => {
+}: GetMyFollowingsRequest) => {
   const response = await apiClient.get<GetMyFollowingsResponse>(
     USER_URL.MY_FOLLOWINGS,
     {

@@ -90,7 +90,7 @@ export interface FollowingType {
   isFollowing: boolean;
 }
 
-export interface GetMyFollowingsResquest {
+export interface GetMyFollowingsRequest {
   cursor?: string | null;
   size?: number;
 }
