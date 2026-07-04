@@ -92,7 +92,7 @@ export interface GetUserProfileTopInfoResponse {
   latestFollowerProfileImageUrls: string[];
 }
 
-export interface ChangeFeedSaveStatusRequest {
+export interface ChangeFeedStatusRequest {
   feedId: number;
   type: boolean;
 }
@@ -100,4 +100,9 @@ export interface ChangeFeedSaveStatusRequest {
 export interface ChangeFeedSaveStatusResponse {
   feedId: number;
   isSaved: boolean;
+}
+
+export interface ChangeFeedLikeStatusResponse {
+  feedId: number;
+  isLiked: boolean;
 }

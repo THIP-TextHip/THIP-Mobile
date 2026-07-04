@@ -176,7 +176,7 @@ export default function FeedDetailScreen() {
       <View style={[styles.page, { paddingBottom: bottom }]}>
         <FeedDetailHeader handlePressMore={handlePressMore} />
         <View style={styles.status}>
-          <ActivityIndicator color={colors.white} />
+          <ActivityIndicator size="large" color={colors.white} />
         </View>
       </View>
     );

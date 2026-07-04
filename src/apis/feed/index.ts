@@ -1,4 +1,5 @@
 export {
+  changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
   getAllFeedListApi,
   getFeedDetailApi,
@@ -12,6 +13,7 @@ export {
 } from "./feed.api";
 
 export {
+  useChangeFeedLikeStatusMutation,
   useChangeFeedSaveStatusMutation,
   useGetAllFeedListQuery,
   useGetFeedDetailQuery,
@@ -28,8 +30,9 @@ export { FEED_QUERY_KEY } from "./feed.query-key";
 
 export type {
   CategoryListType,
-  ChangeFeedSaveStatusRequest,
+  ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
+  ChangeFeedStatusRequest,
   FeedRelatedBookSort,
   FeedType,
   FeedUserProfileType,

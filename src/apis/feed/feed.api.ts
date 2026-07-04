@@ -1,8 +1,9 @@
 import { apiClient } from "../api-client";
 import { FEED_URL } from "../endpoint";
 import type {
-  ChangeFeedSaveStatusRequest,
+  ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
+  ChangeFeedStatusRequest,
   GetFeedDetailResponse,
   GetFeedListResponse,
   GetFeedRelatedBookRequest,
@@ -104,9 +105,23 @@ export const getSavedFeedApi = async (cursor?: string | null) => {
 export const changeFeedSaveStatusApi = async ({
   feedId,
   type,
-}: ChangeFeedSaveStatusRequest) => {
+}: ChangeFeedStatusRequest) => {
   const response = await apiClient.post<ChangeFeedSaveStatusResponse>(
     FEED_URL.SAVE_STATUS(feedId),
+    {
+      type,
+    },
+  );
+
+  return response.data;
+};
+
+export const changeFeedLikeStatusApi = async ({
+  feedId,
+  type,
+}: ChangeFeedStatusRequest) => {
+  const response = await apiClient.post<ChangeFeedLikeStatusResponse>(
+    FEED_URL.LIKE_STATUS(feedId),
     {
       type,
     },

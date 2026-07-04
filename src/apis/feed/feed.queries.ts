@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import {
+  changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
   getAllFeedListApi,
   getFeedDetailApi,
@@ -23,8 +24,9 @@ import {
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
-  ChangeFeedSaveStatusRequest,
+  ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
+  ChangeFeedStatusRequest,
   FeedRelatedBookSort,
   GetFeedDetailResponse,
   GetFeedListResponse,
@@ -427,32 +429,63 @@ export const useChangeFeedSaveStatusMutation = () => {
   const {
     mutate: changeFeedSaveStatus,
     isPending: isPendingChangeFeedSaveStatus,
-  } = useMutation<
-    ChangeFeedSaveStatusResponse,
-    Error,
-    ChangeFeedSaveStatusRequest
-  >({
-    mutationFn: changeFeedSaveStatusApi,
-    onSuccess: async (_, variables) => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.ALL,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
-        }),
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.SAVED,
-        }),
-      ]);
+  } = useMutation<ChangeFeedSaveStatusResponse, Error, ChangeFeedStatusRequest>(
+    {
+      mutationFn: changeFeedSaveStatusApi,
+      onSuccess: async (_, variables) => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.ALL,
+          }),
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.SAVED,
+          }),
+        ]);
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
     },
-    onError: (error) => {
-      Toast.show({
-        type: "error",
-        text1: `${error.message}`,
-      });
-    },
-  });
+  );
 
   return { changeFeedSaveStatus, isPendingChangeFeedSaveStatus };
+};
+
+export const useChangeFeedLikeStatusMutation = () => {
+  const queryClient = useQueryClient();
+  const {
+    mutate: changeFeedLikeStatus,
+    isPending: isPendingChangeFeedLikeStatus,
+  } = useMutation<ChangeFeedLikeStatusResponse, Error, ChangeFeedStatusRequest>(
+    {
+      mutationFn: changeFeedLikeStatusApi,
+      onSuccess: async (_, variables) => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.ALL,
+          }),
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.SAVED,
+          }),
+        ]);
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    },
+  );
+
+  return { changeFeedLikeStatus, isPendingChangeFeedLikeStatus };
 };

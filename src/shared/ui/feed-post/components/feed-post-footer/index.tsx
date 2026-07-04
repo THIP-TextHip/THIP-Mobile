@@ -2,7 +2,10 @@ import { router } from "expo-router";
 import { useRef } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { useChangeFeedSaveStatusMutation } from "@apis/feed";
+import {
+  useChangeFeedLikeStatusMutation,
+  useChangeFeedSaveStatusMutation,
+} from "@apis/feed";
 import {
   IcComment,
   IcHeartLeft,
@@ -34,17 +37,24 @@ export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
   const isChangingBookStatusRef = useRef(false);
   const { changeFeedSaveStatus, isPendingChangeFeedSaveStatus } =
     useChangeFeedSaveStatusMutation();
+  const { changeFeedLikeStatus, isPendingChangeFeedLikeStatus } =
+    useChangeFeedLikeStatusMutation();
 
-  // TODO: 게시글 상세 페이지로 이동
   const handleToFeedDetail = () => {
     router.push({
       pathname: "/feed-detail/[feedId]",
       params: { feedId: String(feedId) },
     });
   };
-  // TODO: 좋아요 누르기 api
   const handleClickHeart = () => {
-    console.log(feedId, "번 게시글 좋아요");
+    if (isPendingChangeFeedLikeStatus || isChangingBookStatusRef.current) {
+      return null;
+    }
+    isChangingBookStatusRef.current = true;
+    changeFeedLikeStatus(
+      { feedId, type: !isLiked },
+      { onSettled: () => (isChangingBookStatusRef.current = false) },
+    );
   };
 
   const handleSaveFeed = () => {
@@ -62,7 +72,11 @@ export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
     <View style={styles.footer}>
       <View style={styles.likeCommentWrapper}>
         <View style={styles.likeCommentStyle}>
-          <Pressable onPress={handleClickHeart} hitSlop={5}>
+          <Pressable
+            onPress={handleClickHeart}
+            hitSlop={5}
+            disabled={isPendingChangeFeedLikeStatus}
+          >
             {isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
