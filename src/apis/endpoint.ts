@@ -30,6 +30,8 @@ export const FEED_URL = {
     `/feeds/users/${encodeURIComponent(userId)}/info`,
   MY_PROFILE: "/feeds/mine",
   MY_PROFILE_TOP_INFO: "/feeds/mine/info",
+  SAVED: "/feeds/saved",
+  SAVE_STATUS: (feedId: number) => `/feeds/${encodeURIComponent(feedId)}/saved`,
 } as const;
 
 export const COMMENT_URL = {

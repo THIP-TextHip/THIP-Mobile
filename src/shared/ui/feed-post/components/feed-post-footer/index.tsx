@@ -1,6 +1,8 @@
 import { router } from "expo-router";
+import { useRef } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { useChangeFeedSaveStatusMutation } from "@apis/feed";
 import {
   IcComment,
   IcHeartLeft,
@@ -29,6 +31,10 @@ interface FeedPostFooterProps {
 
 export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
   const { feedId, likeCount, commentCount, isLiked, isSaved, isWriter } = feed;
+  const isChangingBookStatusRef = useRef(false);
+  const { changeFeedSaveStatus, isPendingChangeFeedSaveStatus } =
+    useChangeFeedSaveStatusMutation();
+
   // TODO: 게시글 상세 페이지로 이동
   const handleToFeedDetail = () => {
     router.push({
@@ -40,16 +46,23 @@ export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
   const handleClickHeart = () => {
     console.log(feedId, "번 게시글 좋아요");
   };
-  // TODO: 저장 api
+
   const handleSaveFeed = () => {
-    console.log(feedId, "번 게시글 저장");
+    if (isPendingChangeFeedSaveStatus || isChangingBookStatusRef.current) {
+      return null;
+    }
+    isChangingBookStatusRef.current = true;
+    changeFeedSaveStatus(
+      { feedId, type: !isSaved },
+      { onSettled: () => (isChangingBookStatusRef.current = false) },
+    );
   };
 
   return (
     <View style={styles.footer}>
       <View style={styles.likeCommentWrapper}>
         <View style={styles.likeCommentStyle}>
-          <Pressable onPress={handleClickHeart}>
+          <Pressable onPress={handleClickHeart} hitSlop={5}>
             {isLiked ? <IcHeartLeftFilled /> : <IcHeartLeft />}
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
@@ -57,7 +70,7 @@ export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
           </AppText>
         </View>
         <View style={styles.likeCommentStyle}>
-          <Pressable onPress={handleToFeedDetail}>
+          <Pressable onPress={handleToFeedDetail} hitSlop={5}>
             <IcComment />
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
@@ -68,7 +81,11 @@ export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
       {isWriter ? (
         "isPublic" in feed && !feed.isPublic && <IcLock />
       ) : (
-        <Pressable onPress={handleSaveFeed}>
+        <Pressable
+          onPress={handleSaveFeed}
+          disabled={isPendingChangeFeedSaveStatus}
+          hitSlop={5}
+        >
           {isSaved ? <IcSaveFilled /> : <IcSave />}
         </Pressable>
       )}

@@ -28,6 +28,11 @@ import {
   type GetSearchBookResponse,
 } from "./book.types";
 
+const BOOK_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 2,
+  GC: 1000 * 60 * 10,
+} as const;
+
 const MOST_SEARCHED_BOOK_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 10,
   GC: 1000 * 60 * 15,
@@ -207,6 +212,8 @@ export const useSavedBookQuery = () => {
     initialPageParam: null,
     getNextPageParam: (lastPage) =>
       lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: BOOK_QUERY_CACHE_TIME.STALE,
+    gcTime: BOOK_QUERY_CACHE_TIME.GC,
   });
 
   useEffect(() => {

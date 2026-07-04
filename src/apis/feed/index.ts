@@ -1,4 +1,5 @@
 export {
+  changeFeedSaveStatusApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -6,10 +7,12 @@ export {
   getFeedTagListApi,
   getFeedUserProfileApi,
   getMyProfileTopInfoApi,
+  getSavedFeedApi,
   getUserProfileTopInfoApi,
 } from "./feed.api";
 
 export {
+  useChangeFeedSaveStatusMutation,
   useGetAllFeedListQuery,
   useGetFeedDetailQuery,
   useGetFeedMyProfileQuery,
@@ -18,12 +21,15 @@ export {
   useGetFeedUserProfileQuery,
   useGetMyProfileTopInfoQuery,
   useGetUserProfileTopInfoQuery,
+  useSavedFeedQuery,
 } from "./feed.queries";
 
 export { FEED_QUERY_KEY } from "./feed.query-key";
 
 export type {
   CategoryListType,
+  ChangeFeedSaveStatusRequest,
+  ChangeFeedSaveStatusResponse,
   FeedRelatedBookSort,
   FeedType,
   FeedUserProfileType,

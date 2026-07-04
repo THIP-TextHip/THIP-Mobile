@@ -1,10 +1,16 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import {
+  changeFeedSaveStatusApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -12,10 +18,13 @@ import {
   getFeedTagListApi,
   getFeedUserProfileApi,
   getMyProfileTopInfoApi,
+  getSavedFeedApi,
   getUserProfileTopInfoApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
+  ChangeFeedSaveStatusRequest,
+  ChangeFeedSaveStatusResponse,
   FeedRelatedBookSort,
   GetFeedDetailResponse,
   GetFeedListResponse,
@@ -363,4 +372,87 @@ export const useGetMyProfileTopInfoQuery = () => {
     myProfileTopInfo,
     isPendingMyProfileTopInfo,
   };
+};
+
+export const useSavedFeedQuery = () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingSavedFeed,
+    isError: isErrorSavedFeed,
+    error: savedFeedError,
+    refetch: refetchSavedFeed,
+    isRefetching: isRefetchingSavedFeed,
+  } = useInfiniteQuery<
+    GetFeedListResponse,
+    Error,
+    InfiniteData<GetFeedListResponse, FeedCursor>,
+    typeof FEED_QUERY_KEY.SAVED,
+    FeedCursor
+  >({
+    queryKey: FEED_QUERY_KEY.SAVED,
+    queryFn: ({ pageParam }) => getSavedFeedApi(pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: FEED_QUERY_CACHE_TIME.STALE,
+    gcTime: FEED_QUERY_CACHE_TIME.GC,
+  });
+
+  useEffect(() => {
+    if (isErrorSavedFeed && savedFeedError) {
+      Toast.show({
+        type: "error",
+        text1: savedFeedError.message,
+      });
+    }
+  }, [isErrorSavedFeed, savedFeedError]);
+
+  return {
+    savedFeedList: data?.pages.flatMap((page) => page.feedList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingSavedFeed,
+    isErrorSavedFeed,
+    refetchSavedFeed,
+    isRefetchingSavedFeed,
+  };
+};
+
+export const useChangeFeedSaveStatusMutation = () => {
+  const queryClient = useQueryClient();
+  const {
+    mutate: changeFeedSaveStatus,
+    isPending: isPendingChangeFeedSaveStatus,
+  } = useMutation<
+    ChangeFeedSaveStatusResponse,
+    Error,
+    ChangeFeedSaveStatusRequest
+  >({
+    mutationFn: changeFeedSaveStatusApi,
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.ALL,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.SAVED,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeFeedSaveStatus, isPendingChangeFeedSaveStatus };
 };

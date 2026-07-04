@@ -91,3 +91,13 @@ export interface GetUserProfileTopInfoResponse {
   isFollowing: boolean;
   latestFollowerProfileImageUrls: string[];
 }
+
+export interface ChangeFeedSaveStatusRequest {
+  feedId: number;
+  type: boolean;
+}
+
+export interface ChangeFeedSaveStatusResponse {
+  feedId: number;
+  isSaved: boolean;
+}

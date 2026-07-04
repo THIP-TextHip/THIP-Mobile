@@ -119,7 +119,7 @@ export default function SearchResult({
             isFetchingNextPage && { paddingBottom: 40 },
           ]}
           data={searchBookList}
-          keyExtractor={(item) => item.isbn}
+          keyExtractor={(item, index) => `${item.isbn}-${index}`}
           renderItem={listItem}
           ItemSeparatorComponent={Separator}
           ListFooterComponent={

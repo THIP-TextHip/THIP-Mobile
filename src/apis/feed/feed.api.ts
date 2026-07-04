@@ -1,14 +1,16 @@
 import { apiClient } from "../api-client";
 import { FEED_URL } from "../endpoint";
-import {
+import type {
+  ChangeFeedSaveStatusRequest,
+  ChangeFeedSaveStatusResponse,
+  GetFeedDetailResponse,
+  GetFeedListResponse,
+  GetFeedRelatedBookRequest,
+  GetFeedRelatedBookResponse,
+  GetFeedTagListResponse,
+  GetFeedUserProfileRequest,
+  GetFeedUserProfileResponse,
   GetUserProfileTopInfoResponse,
-  type GetFeedDetailResponse,
-  type GetFeedListResponse,
-  type GetFeedRelatedBookRequest,
-  type GetFeedRelatedBookResponse,
-  type GetFeedTagListResponse,
-  type GetFeedUserProfileRequest,
-  type GetFeedUserProfileResponse,
 } from "./feed.types";
 
 export const getAllFeedListApi = async (cursor?: string | null) => {
@@ -86,6 +88,28 @@ export const getFeedMyProfileApi = async (cursor?: string | null) => {
 export const getMyProfileTopInfoApi = async () => {
   const response = await apiClient.get<GetUserProfileTopInfoResponse>(
     FEED_URL.MY_PROFILE_TOP_INFO,
+  );
+
+  return response.data;
+};
+
+export const getSavedFeedApi = async (cursor?: string | null) => {
+  const response = await apiClient.get<GetFeedListResponse>(FEED_URL.SAVED, {
+    params: cursor == null ? undefined : { cursor },
+  });
+
+  return response.data;
+};
+
+export const changeFeedSaveStatusApi = async ({
+  feedId,
+  type,
+}: ChangeFeedSaveStatusRequest) => {
+  const response = await apiClient.post<ChangeFeedSaveStatusResponse>(
+    FEED_URL.SAVE_STATUS(feedId),
+    {
+      type,
+    },
   );
 
   return response.data;
