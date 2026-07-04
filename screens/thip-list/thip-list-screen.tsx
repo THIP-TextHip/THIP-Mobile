@@ -9,13 +9,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useGetUserFollowersQuery } from "@apis/user";
-import {
-  AppText,
-  ListTotalCountHeader,
-  UserListItem,
-  type UserListItemData,
-} from "@shared/ui";
+import { FollowerType, useGetUserFollowersQuery } from "@apis/user";
+import { AppText, ListTotalCountHeader, UserListItem } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function ThipListScreen() {
@@ -39,7 +34,7 @@ export default function ThipListScreen() {
   };
 
   const listItem = useCallback(
-    ({ item }: { item: UserListItemData }) => <UserListItem userData={item} />,
+    ({ item }: { item: FollowerType }) => <UserListItem userData={item} />,
     [],
   );
 

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -32,10 +31,6 @@ export default function MyThipListScreen() {
   } = useGetMyFollowingsQuery();
   const { changeFollowingState, isPendingChangeFollowingState } =
     useChangeFollowingStateMutation();
-  // 각 데이터의 isFollowing을 저장하는 상태.
-  const [isFollowingOverrides, setIsFollowingOverrides] = useState<
-    Record<number, boolean>
-  >({});
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -43,12 +38,6 @@ export default function MyThipListScreen() {
     fetchNextPage();
   };
 
-  const handleRefresh = async () => {
-    setIsFollowingOverrides({});
-    await refetchMyFollowings();
-  };
-
-  // TODO: 화면에 잘 반영되는지 추후 띱 목록이 생긴 경우 테스트
   const handleChangeFollowingState = (
     followingUserId: number,
     nickname: string,
@@ -59,11 +48,6 @@ export default function MyThipListScreen() {
       { followingUserId, type: !isFollowing },
       {
         onSuccess: (data) => {
-          setIsFollowingOverrides((prev) => ({
-            ...prev,
-            [followingUserId]: data.isFollowing,
-          }));
-
           Toast.show({
             type: "default",
             text1: data.isFollowing
@@ -101,9 +85,6 @@ export default function MyThipListScreen() {
         data={myFollowingList}
         keyExtractor={(item) => String(item.userId)}
         renderItem={({ item }) => {
-          const isFollowing =
-            isFollowingOverrides[item.userId] ?? item.isFollowing;
-
           return (
             <MyThipItem
               userId={item.userId}
@@ -111,12 +92,12 @@ export default function MyThipListScreen() {
               nickname={item.nickname}
               aliasName={item.aliasName}
               aliasColor={item.aliasColor}
-              isFollowing={isFollowing}
+              isFollowing={item.isFollowing}
               handleChangeFollowingState={() =>
                 handleChangeFollowingState(
                   item.userId,
                   item.nickname,
-                  isFollowing,
+                  item.isFollowing,
                 )
               }
             />
@@ -129,7 +110,7 @@ export default function MyThipListScreen() {
         refreshControl={
           <RefreshControl
             refreshing={isRefetchingMyFollowings}
-            onRefresh={handleRefresh}
+            onRefresh={refetchMyFollowings}
             tintColor={colors.white}
             colors={[colors.white]}
           />

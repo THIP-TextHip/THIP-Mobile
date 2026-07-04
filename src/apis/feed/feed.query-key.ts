@@ -10,4 +10,13 @@ export const FEED_QUERY_KEY = {
     isbn,
     sort,
   ],
+  USER_PROFILE: (userId: number) => ["feeds", "user-profile", userId],
+  USER_PROFILE_TOP_INFO: (userId: number) => [
+    "feeds",
+    "user-profile",
+    "top-info",
+    userId,
+  ],
+  MY_PROFILE: ["feeds", "user-profile", "mine"],
+  MY_PROFILE_TOP_INFO: ["feeds", "user-profile", "mine", "top-info"],
 } as const;

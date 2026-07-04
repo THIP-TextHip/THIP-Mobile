@@ -1,7 +1,18 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 
+import {
+  useGetFeedMyProfileQuery,
+  useGetMyProfileTopInfoQuery,
+} from "@apis/feed";
 import { useGetMyIdQuery } from "@apis/user";
 import {
+  AppText,
   FeedPostPreview,
   ListTotalCountHeader,
   ThipPreview,
@@ -9,17 +20,12 @@ import {
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
-// TODO: 서버에서 가져오기
-import {
-  DUMMY_MY_FEED_PREVIEW_LIST,
-  DUMMY_MY_FEED_TOP_VIEW,
-} from "../../constants";
-import MyFeedEmpty from "../my-feed-empty";
-
 const MyFeedTopContents = () => {
   const { myId, isPendingMyId } = useGetMyIdQuery();
+  const { myProfileTopInfo, isPendingMyProfileTopInfo } =
+    useGetMyProfileTopInfoQuery();
 
-  if (isPendingMyId) {
+  if (isPendingMyId || isPendingMyProfileTopInfo) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.white} />
@@ -27,7 +33,7 @@ const MyFeedTopContents = () => {
     );
   }
 
-  if (!myId) {
+  if (!myId || !myProfileTopInfo) {
     return null;
   }
 
@@ -36,32 +42,87 @@ const MyFeedTopContents = () => {
       <View style={styles.profile}>
         <UserProfileBar
           userProfile={{
-            nickname: DUMMY_MY_FEED_TOP_VIEW.nickname,
-            genre: DUMMY_MY_FEED_TOP_VIEW.aliasName,
-            profileColor: DUMMY_MY_FEED_TOP_VIEW.aliasColor,
+            nickname: myProfileTopInfo.nickname,
+            genre: myProfileTopInfo.aliasName,
+            profileColor: myProfileTopInfo.aliasColor,
           }}
         />
         <ThipPreview
           userId={myId}
-          followerCount={DUMMY_MY_FEED_TOP_VIEW.followerCount}
-          thipList={DUMMY_MY_FEED_TOP_VIEW.latestFollowerProfileImageUrls}
+          followerCount={myProfileTopInfo.followerCount}
+          thipList={myProfileTopInfo.latestFollowerProfileImageUrls}
         />
       </View>
-      <ListTotalCountHeader length={DUMMY_MY_FEED_TOP_VIEW.totalFeedCount} />
+      <ListTotalCountHeader length={myProfileTopInfo.totalFeedCount} />
     </View>
   );
 };
 
 export default function MyFeedContents() {
+  const {
+    feedMyProfileList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingFeedMyProfile,
+    isErrorFeedMyProfile,
+    refetchFeedMyProfile,
+    isRefetchingFeedMyProfile,
+  } = useGetFeedMyProfileQuery();
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  const renderEmpty = () => {
+    if (isPendingFeedMyProfile) {
+      return (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      );
+    }
+
+    if (isErrorFeedMyProfile) {
+      return (
+        <View style={styles.status}>
+          <AppText weight="medium" size="sm" color={colors.grey[200]}>
+            피드를 불러오지 못했어요.
+          </AppText>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.status}>
+        <AppText weight="semibold" size="lg" color={colors.white}>
+          피드에 작성된 글이 없어요.
+        </AppText>
+      </View>
+    );
+  };
+
   return (
     <FlatList
       contentContainerStyle={styles.list}
       ListHeaderComponent={<MyFeedTopContents />}
-      data={DUMMY_MY_FEED_PREVIEW_LIST}
+      data={feedMyProfileList}
       keyExtractor={(item) => String(item.feedId)}
       renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
-      ListEmptyComponent={() => <MyFeedEmpty />}
+      ListEmptyComponent={renderEmpty}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetchingFeedMyProfile}
+          onRefresh={refetchFeedMyProfile}
+          tintColor={colors.white}
+          colors={[colors.white]}
+        />
+      }
     />
   );
 }
@@ -88,5 +149,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 100,
   },
 });

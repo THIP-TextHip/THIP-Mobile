@@ -53,7 +53,7 @@ export default function FeedContents() {
 
     return (
       <View style={styles.status}>
-        <AppText weight="medium" size="sm" color={colors.grey[200]}>
+        <AppText weight="semibold" size="lg" color={colors.white}>
           아직 피드가 없어요.
         </AppText>
       </View>
