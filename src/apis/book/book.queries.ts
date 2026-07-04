@@ -159,7 +159,10 @@ export const useMostSearchedBookQuery = () => {
 
 export const useChangeBookSaveStatusMutation = () => {
   const queryClient = useQueryClient();
-  const { mutate: changeBookSaveStatus } = useMutation<
+  const {
+    mutate: changeBookSaveStatus,
+    isPending: isPendingChangeBookSaveStatus,
+  } = useMutation<
     ChangeBookSaveStatusResponse,
     Error,
     ChangeBookSaveStatusRequest
@@ -178,7 +181,7 @@ export const useChangeBookSaveStatusMutation = () => {
     },
   });
 
-  return { changeBookSaveStatus };
+  return { changeBookSaveStatus, isPendingChangeBookSaveStatus };
 };
 
 export const useSavedBookQuery = () => {

@@ -1,6 +1,7 @@
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import { useRef } from "react";
 import { ImageBackground, Pressable, StyleSheet, View } from "react-native";
 
 import {
@@ -18,8 +19,10 @@ interface BookInfoProps {
 }
 
 export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
-  const { changeBookSaveStatus } = useChangeBookSaveStatusMutation();
+  const { changeBookSaveStatus, isPendingChangeBookSaveStatus } =
+    useChangeBookSaveStatusMutation();
   const { setSelectedBookInfo } = useSelectedBookStore();
+  const isChangingSaveStatusRef = useRef(false);
 
   if (!bookInfo) {
     return null;
@@ -41,7 +44,14 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
     router.push("/feed-write");
   };
   const handlePressSaveButton = () => {
-    changeBookSaveStatus({ isbn: bookInfo.isbn, type: !bookInfo.isSaved });
+    if (isPendingChangeBookSaveStatus || isChangingSaveStatusRef.current) {
+      return null;
+    }
+    isChangingSaveStatusRef.current = true;
+    changeBookSaveStatus(
+      { isbn: bookInfo.isbn, type: !bookInfo.isSaved },
+      { onSettled: () => (isChangingSaveStatusRef.current = false) },
+    );
   };
 
   return (
@@ -129,6 +139,7 @@ export default function BookInfo({ bookInfo, handleOpenModal }: BookInfoProps) {
             <Pressable
               style={styles.saveButton}
               onPress={handlePressSaveButton}
+              disabled={isPendingChangeBookSaveStatus}
             >
               {bookInfo.isSaved ? <IcSaveFilled /> : <IcSave />}
             </Pressable>

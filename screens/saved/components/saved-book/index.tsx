@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import React from "react";
+import { useRef } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -24,6 +24,7 @@ import { colors } from "@theme/token";
 export default function SavedBook() {
   const { height } = useWindowDimensions();
   const { bottom } = useSafeAreaInsets();
+  const isChangingSaveStatusRef = useRef(false);
 
   const {
     savedBookList,
@@ -35,7 +36,8 @@ export default function SavedBook() {
     refetchSavedBook,
     isRefetchingSavedBook,
   } = useSavedBookQuery();
-  const { changeBookSaveStatus } = useChangeBookSaveStatusMutation();
+  const { changeBookSaveStatus, isPendingChangeBookSaveStatus } =
+    useChangeBookSaveStatusMutation();
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -51,7 +53,14 @@ export default function SavedBook() {
   };
 
   const handlePressSaveButton = (isbn: string, isSaved: boolean) => {
-    changeBookSaveStatus({ isbn, type: !isSaved });
+    if (isPendingChangeBookSaveStatus || isChangingSaveStatusRef.current) {
+      return null;
+    }
+    isChangingSaveStatusRef.current = true;
+    changeBookSaveStatus(
+      { isbn, type: !isSaved },
+      { onSettled: () => (isChangingSaveStatusRef.current = false) },
+    );
   };
 
   if (isPendingSavedBook) {
@@ -157,6 +166,7 @@ export default function SavedBook() {
         <Pressable
           style={{ alignSelf: "flex-start" }}
           onPress={() => handlePressSaveButton(book.isbn, book.isSaved)}
+          disabled={isPendingChangeBookSaveStatus}
           hitSlop={10}
         >
           {book.isSaved ? <IcSaveFilled /> : <IcSave />}
