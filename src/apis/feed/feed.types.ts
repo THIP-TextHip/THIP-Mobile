@@ -106,3 +106,32 @@ export interface ChangeFeedLikeStatusResponse {
   feedId: number;
   isLiked: boolean;
 }
+
+export type IssuePresignedUrlRequest = {
+  extension: string;
+  size: number;
+}[];
+
+export interface IssuePresignedUrlResponse {
+  presignedUrls: {
+    presignedUrl: string;
+    fileUrl: string;
+  }[];
+}
+
+export interface WriteFeedRequest {
+  isbn: string;
+  contentBody: string;
+  isPublic: boolean;
+  tagList: string[];
+  imageUrls: string[];
+}
+
+export interface WriteFeedMutationRequest
+  extends Omit<WriteFeedRequest, "imageUrls"> {
+  imageUris: string[];
+}
+
+export interface WriteFeedResponse {
+  feedId: number;
+}

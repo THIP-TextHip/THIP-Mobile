@@ -21,6 +21,8 @@ import {
   getMyProfileTopInfoApi,
   getSavedFeedApi,
   getUserProfileTopInfoApi,
+  uploadFeedImagesApi,
+  writeFeedApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
@@ -34,6 +36,8 @@ import type {
   GetFeedTagListResponse,
   GetFeedUserProfileResponse,
   GetUserProfileTopInfoResponse,
+  WriteFeedMutationRequest,
+  WriteFeedResponse,
 } from "./feed.types";
 
 type FeedCursor = string | null;
@@ -183,10 +187,10 @@ export const useGetFeedRelatedBookQuery = (
     GetFeedRelatedBookResponse,
     Error,
     InfiniteData<GetFeedRelatedBookResponse, FeedCursor>,
-    ReturnType<typeof FEED_QUERY_KEY.RELATED_BOOK>,
+    ReturnType<typeof FEED_QUERY_KEY.RELATED_BOOKS>,
     FeedCursor
   >({
-    queryKey: FEED_QUERY_KEY.RELATED_BOOK(normalizedIsbn, sort),
+    queryKey: FEED_QUERY_KEY.RELATED_BOOKS(normalizedIsbn, sort),
     queryFn: ({ pageParam }) => {
       if (!hasIsbn(normalizedIsbn)) {
         throw new Error("isbn is required.");
@@ -488,4 +492,43 @@ export const useChangeFeedLikeStatusMutation = () => {
   );
 
   return { changeFeedLikeStatus, isPendingChangeFeedLikeStatus };
+};
+
+export const useWriteFeedMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: writeFeed, isPending: isPendingWriteFeed } = useMutation<
+    WriteFeedResponse,
+    Error,
+    WriteFeedMutationRequest
+  >({
+    mutationFn: async ({ imageUris, ...feed }) => {
+      const imageUrls = await uploadFeedImagesApi(imageUris);
+
+      return writeFeedApi({
+        ...feed,
+        imageUrls,
+      });
+    },
+    onSuccess: async (_, variables) => {
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.ALL,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.MY_PROFILE,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.RELATED_BOOKS(variables.isbn),
+        }),
+      ]);
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { writeFeed, isPendingWriteFeed };
 };

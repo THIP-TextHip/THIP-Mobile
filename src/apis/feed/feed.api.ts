@@ -12,7 +12,15 @@ import type {
   GetFeedUserProfileRequest,
   GetFeedUserProfileResponse,
   GetUserProfileTopInfoResponse,
+  IssuePresignedUrlRequest,
+  IssuePresignedUrlResponse,
+  WriteFeedRequest,
+  WriteFeedResponse,
 } from "./feed.types";
+import {
+  createPresignedImageRequests,
+  uploadImageToPresignedUrl,
+} from "./feed.utils";
 
 export const getAllFeedListApi = async (cursor?: string | null) => {
   const response = await apiClient.get<GetFeedListResponse>(FEED_URL.DEFAULT, {
@@ -44,7 +52,7 @@ export const getFeedRelatedBookApi = async ({
   cursor,
 }: GetFeedRelatedBookRequest) => {
   const response = await apiClient.get<GetFeedRelatedBookResponse>(
-    FEED_URL.RELATED_BOOK(isbn),
+    FEED_URL.RELATED_BOOKS(isbn),
     {
       params: cursor == null ? { sort } : { sort, cursor },
     },
@@ -125,6 +133,67 @@ export const changeFeedLikeStatusApi = async ({
     {
       type,
     },
+  );
+
+  return response.data;
+};
+
+export const issuePresignedUrlApi = async (
+  images: IssuePresignedUrlRequest,
+) => {
+  const response = await apiClient.post<IssuePresignedUrlResponse>(
+    FEED_URL.PRESIGNED_URL,
+    images,
+  );
+
+  return response.data;
+};
+
+const getFeedImageBlob = async (uri: string) => {
+  const response = await fetch(uri);
+
+  if (!response.ok) {
+    throw new Error(`Feed image load failed. status: ${response.status}`);
+  }
+
+  return response.blob();
+};
+
+export const uploadFeedImagesApi = async (imageUris: string[]) => {
+  if (imageUris.length === 0) {
+    return [];
+  }
+
+  const images = await Promise.all(
+    imageUris.map(async (uri) => ({
+      uri,
+      blob: await getFeedImageBlob(uri),
+    })),
+  );
+  const { presignedUrls } = await issuePresignedUrlApi(
+    createPresignedImageRequests(images),
+  );
+
+  if (presignedUrls.length !== images.length) {
+    throw new Error("Issued presigned URL count does not match image count.");
+  }
+
+  await Promise.all(
+    presignedUrls.map(({ presignedUrl }, index) =>
+      uploadImageToPresignedUrl({
+        presignedUrl,
+        blob: images[index].blob,
+      }),
+    ),
+  );
+
+  return presignedUrls.map(({ fileUrl }) => fileUrl);
+};
+
+export const writeFeedApi = async (body: WriteFeedRequest) => {
+  const response = await apiClient.post<WriteFeedResponse>(
+    FEED_URL.DEFAULT,
+    body,
   );
 
   return response.data;

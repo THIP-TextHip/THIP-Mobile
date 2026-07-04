@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useWriteFeedMutation } from "@apis/feed";
 import {
   BookSearchBottomSheet,
   BookSelectSection,
@@ -32,6 +33,7 @@ export default function FeedWriteScreen() {
   const navigation = useNavigation();
   const { pinInfo, clearPinInfo } = useRecordBookPinStore();
   const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
+  const { writeFeed, isPendingWriteFeed } = useWriteFeedMutation();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [feedBook, setFeedBook] = useState<FeedBookItemType | null>(
@@ -81,21 +83,35 @@ export default function FeedWriteScreen() {
     setSelectedTagList((prev) => prev.filter((item) => item !== tag));
   };
 
-  // TODO: 작성 정보 서버에 보내도록
   const handleConfirmFeedWrite = () => {
-    alert(
-      `책 : ${feedBook?.bookTitle}\n글 : ${contentBody}\n사진 : ${imageUrls}\n공개 설정 : ${isPublic}\n태그 : ${selectedTagList}`,
+    if (!feedBook) {
+      return;
+    }
+
+    writeFeed(
+      {
+        isbn: feedBook.isbn,
+        contentBody: contentBody.trim(),
+        isPublic,
+        tagList: selectedTagList,
+        imageUris: imageUrls,
+      },
+      {
+        onSuccess: () => {
+          clearPinInfo();
+          clearSelectedBookInfo();
+          router.back();
+        },
+      },
     );
-    clearPinInfo();
-    clearSelectedBookInfo();
-    router.back();
   };
 
   const Separator = () => {
     return <View style={styles.separator} />;
   };
 
-  const confirmDisable = !feedBook || contentBody.trim() === "";
+  const confirmDisable =
+    !feedBook || contentBody.trim() === "" || isPendingWriteFeed;
 
   return (
     <View style={styles.page}>

@@ -8,9 +8,9 @@ export const FEED_QUERY_KEY = {
     feedId == null || feedId === "" ? undefined : String(feedId),
   ],
   TAG_LIST: ["feeds", "tag-list"],
-  RELATED_BOOK: (isbn?: string, sort: FeedRelatedBookSort = "like") => [
+  RELATED_BOOKS: (isbn?: string, sort: FeedRelatedBookSort = "like") => [
     "feeds",
-    "related-book",
+    "related-books",
     isbn,
     sort,
   ],
