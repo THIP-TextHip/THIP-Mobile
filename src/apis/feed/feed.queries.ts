@@ -273,16 +273,17 @@ export const useGetUserProfileTopInfoQuery = (userId: number) => {
   });
 
   useEffect(() => {
-    if (isError && error) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-      if (router.canGoBack()) {
-        router.back();
-      }
+    if (!isError || !error) return;
+
+    Toast.show({
+      type: "error",
+      text1: error.message,
+    });
+
+    if (!userProfileTopInfo && router.canGoBack()) {
+      router.back();
     }
-  }, [isError, error]);
+  }, [isError, error, userProfileTopInfo]);
 
   return {
     userProfileTopInfo,
@@ -346,16 +347,17 @@ export const useGetMyProfileTopInfoQuery = () => {
   });
 
   useEffect(() => {
-    if (isError && error) {
-      Toast.show({
-        type: "error",
-        text1: error.message,
-      });
-      if (router.canGoBack()) {
-        router.back();
-      }
+    if (!isError || !error) return;
+
+    Toast.show({
+      type: "error",
+      text1: error.message,
+    });
+
+    if (!myProfileTopInfo && router.canGoBack()) {
+      router.back();
     }
-  }, [isError, error]);
+  }, [isError, error, myProfileTopInfo]);
 
   return {
     myProfileTopInfo,
