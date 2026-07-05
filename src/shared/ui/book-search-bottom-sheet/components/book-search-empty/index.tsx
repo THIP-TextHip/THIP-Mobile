@@ -1,19 +1,24 @@
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
+import { type BookSelectableListType } from "@apis/book";
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
 import { CustomButton } from "../../../button";
 
 interface BookSearchEmptyProps {
+  isPending: boolean;
+  isError: boolean;
   searchText: string;
-  bookType: "SAVED" | "JOINING";
+  bookType: BookSelectableListType;
   handleClose: () => void;
 }
 
 export default function BookSearchEmpty({
+  isPending,
+  isError,
   searchText,
   bookType,
   handleClose,
@@ -25,30 +30,38 @@ export default function BookSearchEmpty({
 
   return (
     <View style={styles.emptyContainer}>
-      <AppText
-        weight="regular"
-        size="sm"
-        color={colors.grey[50]}
-        lineHeight={20}
-        style={{ textAlign: "center" }}
-      >
-        {searchText !== ""
-          ? `현재 등록된 책이 아닙니다.\n원하시는 책을 신청해주세요.`
-          : bookType === "SAVED"
-            ? `아직 저장한 책이 없어요.\n마음에 드는 책을 THIP 해보세요!`
-            : `아직 소속된 모임방이 없어요.\n마음에 드는 모임방에 참여해보세요!`}
-      </AppText>
-      {searchText !== "" && (
-        <CustomButton handlePress={handleToBookRequestPage}>
+      {isPending ? (
+        <ActivityIndicator size="large" color={colors.white} />
+      ) : (
+        <>
           <AppText
-            weight="semibold"
-            size="base"
-            color={colors.white}
-            lineHeight={24}
+            weight="regular"
+            size="sm"
+            color={colors.grey[50]}
+            lineHeight={20}
+            style={{ textAlign: "center" }}
           >
-            책 신청하기
+            {isError
+              ? "데이터를 불러오지 못했어요"
+              : searchText !== ""
+                ? `현재 등록된 책이 아닙니다.\n원하시는 책을 신청해주세요.`
+                : bookType === "SAVED"
+                  ? `아직 저장한 책이 없어요.\n마음에 드는 책을 THIP 해보세요!`
+                  : `아직 소속된 모임방이 없어요.\n마음에 드는 모임방에 참여해보세요!`}
           </AppText>
-        </CustomButton>
+          {searchText !== "" && (
+            <CustomButton handlePress={handleToBookRequestPage}>
+              <AppText
+                weight="semibold"
+                size="base"
+                color={colors.white}
+                lineHeight={24}
+              >
+                책 신청하기
+              </AppText>
+            </CustomButton>
+          )}
+        </>
       )}
     </View>
   );

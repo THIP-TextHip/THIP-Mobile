@@ -4,12 +4,12 @@ import { IcSearch } from "@images/icons";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
-import { FeedBookItemType } from "../book-search-bottom-sheet";
+import { type BottomSheetBookItemType } from "../book-search-bottom-sheet";
 import { CustomButton } from "../button";
 
 interface BookSelectSectionProps {
   isAlreadySelected?: boolean;
-  book: FeedBookItemType | null;
+  book: BottomSheetBookItemType | null;
   handleOpenBottomSheet: () => void;
 }
 

@@ -2,12 +2,12 @@ import { Image, Pressable, StyleSheet } from "react-native";
 
 import { colors } from "@theme/token";
 
-import { FeedBookItemType } from "../..";
+import { type BottomSheetBookItemType } from "../..";
 import AppText from "../../../app-text";
 
 interface BottomSheetBookItemProps {
-  bookItem: FeedBookItemType;
-  handleSelectBook: (bookItem: FeedBookItemType) => void;
+  bookItem: BottomSheetBookItemType;
+  handleSelectBook: (bookItem: BottomSheetBookItemType) => void;
 }
 
 export default function BottomSheetBookItem({
@@ -20,7 +20,13 @@ export default function BottomSheetBookItem({
       onPress={() => handleSelectBook(bookItem)}
     >
       <Image source={{ uri: bookItem.bookImageUrl }} style={styles.bookImage} />
-      <AppText weight="regular" size="sm" color={colors.white} lineHeight={20}>
+      <AppText
+        style={styles.title}
+        weight="regular"
+        size="sm"
+        color={colors.white}
+        lineHeight={20}
+      >
         {bookItem.bookTitle}
       </AppText>
     </Pressable>
@@ -36,5 +42,8 @@ const styles = StyleSheet.create({
   bookImage: {
     width: 45,
     height: 60,
+  },
+  title: {
+    flexShrink: 1,
   },
 });

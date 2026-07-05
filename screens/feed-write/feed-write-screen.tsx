@@ -13,7 +13,7 @@ import { useWriteFeedMutation } from "@apis/feed";
 import {
   BookSearchBottomSheet,
   BookSelectSection,
-  type FeedBookItemType,
+  type BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
 import { useRecordBookPinStore } from "@stores/record-book";
@@ -36,7 +36,7 @@ export default function FeedWriteScreen() {
   const { writeFeed, isPendingWriteFeed } = useWriteFeedMutation();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-  const [feedBook, setFeedBook] = useState<FeedBookItemType | null>(
+  const [feedBook, setFeedBook] = useState<BottomSheetBookItemType | null>(
     pinInfo?.bookInfo ?? selectedBookInfo ?? null,
   );
   const [contentBody, setContentBody] = useState(pinInfo?.content ?? "");

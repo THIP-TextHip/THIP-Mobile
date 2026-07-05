@@ -1,7 +1,7 @@
 import type { FeedRelatedBookSort } from "./feed.types";
 
 export const FEED_QUERY_KEY = {
-  ALL: ["feeds", "all"],
+  ALL: ["feeds"],
   DETAIL: (feedId?: number | string) => [
     "feeds",
     "detail",

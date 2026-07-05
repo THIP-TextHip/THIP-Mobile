@@ -55,6 +55,7 @@ export const BOOK_URL = {
   SAVE_STATUS: (isbn: string) => `/books/${encodeURIComponent(isbn)}/saved`,
   RECRUITING: (isbn: string) =>
     `/books/${encodeURIComponent(isbn)}/recruiting-rooms`,
+  SELECTABLE_LIST: "/books/selectable-list",
 } as const;
 
 export const ROOM_URL = {

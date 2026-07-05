@@ -436,18 +436,10 @@ export const useChangeFeedSaveStatusMutation = () => {
   } = useMutation<ChangeFeedSaveStatusResponse, Error, ChangeFeedStatusRequest>(
     {
       mutationFn: changeFeedSaveStatusApi,
-      onSuccess: async (_, variables) => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.ALL,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.SAVED,
-          }),
-        ]);
+      onSuccess: async () => {
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.ALL,
+        });
       },
       onError: (error) => {
         Toast.show({
@@ -469,18 +461,10 @@ export const useChangeFeedLikeStatusMutation = () => {
   } = useMutation<ChangeFeedLikeStatusResponse, Error, ChangeFeedStatusRequest>(
     {
       mutationFn: changeFeedLikeStatusApi,
-      onSuccess: async (_, variables) => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.ALL,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.SAVED,
-          }),
-        ]);
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.ALL,
+        });
       },
       onError: (error) => {
         Toast.show({
@@ -509,18 +493,10 @@ export const useWriteFeedMutation = () => {
         imageUrls,
       });
     },
-    onSuccess: async (_, variables) => {
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.ALL,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.MY_PROFILE,
-        }),
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.RELATED_BOOKS(variables.isbn),
-        }),
-      ]);
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
     },
     onError: (error) => {
       Toast.show({

@@ -16,7 +16,7 @@ interface SearchBarProps {
   placeholder: string;
   autoFocus?: boolean;
   setValue: (value: string) => void;
-  handleSearch: () => void;
+  handleSearch?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
 }
 

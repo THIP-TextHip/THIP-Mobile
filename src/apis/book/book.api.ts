@@ -1,14 +1,16 @@
 import { apiClient } from "../api-client";
 import { BOOK_URL } from "../endpoint";
-import {
+import type {
+  BookSelectableListType,
+  ChangeBookSaveStatusRequest,
+  ChangeBookSaveStatusResponse,
+  GetBookDetailResponse,
   GetBookRecruitingRoomsResponse,
+  GetBookSelectableListResponse,
+  GetMostSearchedBookResponse,
   GetSavedBookResponse,
-  type ChangeBookSaveStatusRequest,
-  type ChangeBookSaveStatusResponse,
-  type GetBookDetailResponse,
-  type GetMostSearchedBookResponse,
-  type GetSearchBookRequest,
-  type GetSearchBookResponse,
+  GetSearchBookRequest,
+  GetSearchBookResponse,
 } from "./book.types";
 
 export const getSearchBookApi = async (params: GetSearchBookRequest) => {
@@ -68,6 +70,20 @@ export const getBookRecruitingRoomsApi = async (
     BOOK_URL.RECRUITING(isbn),
     {
       params: cursor == null ? undefined : { cursor },
+    },
+  );
+
+  return response.data;
+};
+
+export const getBookSelectableListApi = async (
+  type: BookSelectableListType,
+  cursor?: string | null,
+) => {
+  const response = await apiClient.get<GetBookSelectableListResponse>(
+    BOOK_URL.SELECTABLE_LIST,
+    {
+      params: cursor == null ? { type } : { type, cursor },
     },
   );
 
