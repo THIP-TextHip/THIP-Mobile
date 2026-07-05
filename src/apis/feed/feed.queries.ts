@@ -146,10 +146,8 @@ export const useGetFeedTagListQuery = () => {
   const {
     data: feedTagList,
     isPending: isPendingFeedTagList,
-    isError: isErrorFeedTagList,
-    error: feedTagListError,
-    refetch: refetchFeedTagList,
-    isRefetching: isRefetchingFeedTagList,
+    isError,
+    error,
   } = useQuery<GetFeedTagListResponse, Error>({
     queryKey: FEED_QUERY_KEY.TAG_LIST,
     queryFn: getFeedTagListApi,
@@ -157,13 +155,22 @@ export const useGetFeedTagListQuery = () => {
     gcTime: FEED_TAG_QUERY_CACHE_TIME.GC,
   });
 
+  useEffect(() => {
+    if (!isError || !error) return;
+
+    Toast.show({
+      type: "error",
+      text1: error.message,
+    });
+
+    if (!feedTagList && router.canGoBack()) {
+      router.back();
+    }
+  }, [isError, error, feedTagList]);
+
   return {
     categoryList: feedTagList?.categoryList ?? [],
     isPendingFeedTagList,
-    isErrorFeedTagList,
-    feedTagListError,
-    refetchFeedTagList,
-    isRefetchingFeedTagList,
   };
 };
 
