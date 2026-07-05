@@ -1,6 +1,7 @@
 export {
   changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
+  deleteFeedApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -18,6 +19,7 @@ export {
 export {
   useChangeFeedLikeStatusMutation,
   useChangeFeedSaveStatusMutation,
+  useDeleteFeedMutation,
   useGetAllFeedListQuery,
   useGetFeedDetailQuery,
   useGetFeedMyProfileQuery,

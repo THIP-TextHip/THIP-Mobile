@@ -1,6 +1,7 @@
 import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -84,9 +85,7 @@ export default function FeedWriteScreen() {
   };
 
   const handleConfirmFeedWrite = () => {
-    if (!feedBook) {
-      return;
-    }
+    if (!feedBook) return null;
 
     writeFeed(
       {
@@ -112,6 +111,14 @@ export default function FeedWriteScreen() {
 
   const confirmDisable =
     !feedBook || contentBody.trim() === "" || isPendingWriteFeed;
+
+  if (isPendingWriteFeed) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.page}>
@@ -183,5 +190,10 @@ const styles = StyleSheet.create({
     height: 1,
     marginHorizontal: 20,
     backgroundColor: colors.darkgrey.dark,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

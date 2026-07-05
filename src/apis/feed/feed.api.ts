@@ -198,3 +198,9 @@ export const writeFeedApi = async (body: WriteFeedRequest) => {
 
   return response.data;
 };
+
+export const deleteFeedApi = async (feedId: number) => {
+  const response = await apiClient.delete<string>(FEED_URL.DETAIL(feedId));
+
+  return response.data;
+};

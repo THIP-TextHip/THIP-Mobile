@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message";
 import {
   changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
+  deleteFeedApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -514,4 +515,40 @@ export const useWriteFeedMutation = () => {
   });
 
   return { writeFeed, isPendingWriteFeed };
+};
+
+export const useDeleteFeedMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: deleteFeed, isPending: isPendingDeleteFeed } = useMutation<
+    string,
+    Error,
+    number
+  >({
+    mutationFn: deleteFeedApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
+      Toast.show({
+        type: "default",
+        text1: "피드가 삭제되었어요.",
+      });
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.push("/feed");
+      }
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    deleteFeed,
+    isPendingDeleteFeed,
+  };
 };
