@@ -26,32 +26,20 @@ export default function SearchResult({
     fetchNextPage,
     hasNextPage,
     isPendingSearchBook,
-    isFetchingSearchBook,
     isFetchingNextPage,
   } = useSearchBookQuery(searchText, 1, hasSearched);
 
   useEffect(() => {
     const normalizedSearchText = searchText.trim();
 
-    if (
-      !hasSearched ||
-      normalizedSearchText === "" ||
-      isPendingSearchBook ||
-      isFetchingSearchBook
-    ) {
+    if (!hasSearched || normalizedSearchText === "" || isPendingSearchBook) {
       return;
     }
 
     void queryClient.invalidateQueries({
       queryKey: RECENT_SEARCH_QUERY_KEY.LIST("BOOK"),
     });
-  }, [
-    hasSearched,
-    isFetchingSearchBook,
-    isPendingSearchBook,
-    queryClient,
-    searchText,
-  ]);
+  }, [hasSearched, isPendingSearchBook, queryClient, searchText]);
 
   const handleToBookRequestPage = useCallback(() => {
     router.push("/book-request");

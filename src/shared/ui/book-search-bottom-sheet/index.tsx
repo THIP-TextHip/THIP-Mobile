@@ -63,7 +63,6 @@ export default function BookSearchBottomSheet({
     hasNextPage: hasNextPageSearchList,
     isFetchingNextPage: isFetchingNextPageSearchBook,
     isPendingSearchBook,
-    isFetchingSearchBook,
     isErrorSearchBook,
   } = useSearchBookQuery(searchText, 1, false);
 
@@ -86,7 +85,7 @@ export default function BookSearchBottomSheet({
     ? isErrorSearchBook
     : isErrorBookSelectableList;
   const isFetchingBookList = isSearchMode
-    ? isFetchingSearchBook
+    ? isFetchingNextPageSearchBook
     : isFetchingNextPageSelectableList;
 
   const handleLoadMoreBookList = () => {
@@ -190,10 +189,7 @@ export default function BookSearchBottomSheet({
             )}
             ListFooterComponent={
               isFetchingBookList ? (
-                <ActivityIndicator
-                  style={styles.footer}
-                  color={colors.white}
-                />
+                <ActivityIndicator style={styles.footer} color={colors.white} />
               ) : null
             }
             onEndReached={handleLoadMoreBookList}

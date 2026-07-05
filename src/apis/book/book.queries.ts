@@ -58,7 +58,6 @@ export const useSearchBookQuery = (
     fetchNextPage,
     hasNextPage,
     isPending: isPendingSearchBook,
-    isFetching: isFetchingSearchBook,
     isFetchingNextPage,
     isError: isErrorSearchBook,
     error: searchBookError,
@@ -105,7 +104,6 @@ export const useSearchBookQuery = (
     fetchNextPage,
     hasNextPage,
     isPendingSearchBook,
-    isFetchingSearchBook,
     isFetchingNextPage,
     isErrorSearchBook,
   };

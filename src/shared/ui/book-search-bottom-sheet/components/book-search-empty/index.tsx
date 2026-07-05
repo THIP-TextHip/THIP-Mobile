@@ -49,7 +49,7 @@ export default function BookSearchEmpty({
                   ? `아직 저장한 책이 없어요.\n마음에 드는 책을 THIP 해보세요!`
                   : `아직 소속된 모임방이 없어요.\n마음에 드는 모임방에 참여해보세요!`}
           </AppText>
-          {searchText !== "" && (
+          {!isError && searchText !== "" && (
             <CustomButton handlePress={handleToBookRequestPage}>
               <AppText
                 weight="semibold"
