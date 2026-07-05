@@ -87,3 +87,20 @@ export interface GetBookRecruitingRoomsResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export type BookSelectableListType = "SAVED" | "JOINING";
+
+export interface SelectableBookType {
+  bookId: number;
+  bookTitle: string;
+  authorName: string;
+  publisher: string;
+  bookImageUrl: string;
+  isbn: string;
+}
+
+export interface GetBookSelectableListResponse {
+  bookList: SelectableBookType[];
+  nextCursor: string;
+  isLast: boolean;
+}

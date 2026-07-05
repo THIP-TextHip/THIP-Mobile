@@ -22,7 +22,7 @@ export const FEED_URL = {
   DETAIL: (feedId: number | string) =>
     `/feeds/${encodeURIComponent(String(feedId))}`,
   TAG_LIST: "/feeds/write-info",
-  RELATED_BOOK: (isbn: string) =>
+  RELATED_BOOKS: (isbn: string) =>
     `/feeds/related-books/${encodeURIComponent(isbn)}`,
   USER_PROFILE: (userId: number) =>
     `/feeds/users/${encodeURIComponent(userId)}`,
@@ -33,6 +33,7 @@ export const FEED_URL = {
   SAVED: "/feeds/saved",
   SAVE_STATUS: (feedId: number) => `/feeds/${encodeURIComponent(feedId)}/saved`,
   LIKE_STATUS: (feedId: number) => `/feeds/${encodeURIComponent(feedId)}/likes`,
+  PRESIGNED_URL: "/feeds/images/presigned-url",
 } as const;
 
 export const COMMENT_URL = {
@@ -54,6 +55,7 @@ export const BOOK_URL = {
   SAVE_STATUS: (isbn: string) => `/books/${encodeURIComponent(isbn)}/saved`,
   RECRUITING: (isbn: string) =>
     `/books/${encodeURIComponent(isbn)}/recruiting-rooms`,
+  SELECTABLE_LIST: "/books/selectable-list",
 } as const;
 
 export const ROOM_URL = {

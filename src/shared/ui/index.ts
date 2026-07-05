@@ -2,7 +2,7 @@ export { default as AppText } from "./app-text";
 export { default as BookInfoBar } from "./book-info-bar";
 export {
   default as BookSearchBottomSheet,
-  type FeedBookItemType,
+  type BottomSheetBookItemType,
 } from "./book-search-bottom-sheet";
 export { default as BookSelectSection } from "./book-select-section";
 export {

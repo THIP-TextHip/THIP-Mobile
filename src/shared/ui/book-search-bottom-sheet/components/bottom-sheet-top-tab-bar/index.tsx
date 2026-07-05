@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { Animated, Easing, Pressable, StyleSheet, View } from "react-native";
 
+import { type BookSelectableListType } from "@apis/book";
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
@@ -10,8 +11,8 @@ const TAB_GAP = 20;
 const INDICATOR_MOVE_X = TAB_WIDTH + TAB_GAP;
 
 interface BottomSheetTopTabBarProps {
-  bookType: "SAVED" | "JOINING";
-  handleSetBookType: (type: "SAVED" | "JOINING") => void;
+  bookType: BookSelectableListType;
+  handleSetBookType: (type: BookSelectableListType) => void;
 }
 
 export default function BottomSheetTopTabBar({

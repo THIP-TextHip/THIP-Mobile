@@ -21,6 +21,8 @@ import {
   getMyProfileTopInfoApi,
   getSavedFeedApi,
   getUserProfileTopInfoApi,
+  uploadFeedImagesApi,
+  writeFeedApi,
 } from "./feed.api";
 import { FEED_QUERY_KEY } from "./feed.query-key";
 import type {
@@ -34,6 +36,8 @@ import type {
   GetFeedTagListResponse,
   GetFeedUserProfileResponse,
   GetUserProfileTopInfoResponse,
+  WriteFeedMutationRequest,
+  WriteFeedResponse,
 } from "./feed.types";
 
 type FeedCursor = string | null;
@@ -142,10 +146,8 @@ export const useGetFeedTagListQuery = () => {
   const {
     data: feedTagList,
     isPending: isPendingFeedTagList,
-    isError: isErrorFeedTagList,
-    error: feedTagListError,
-    refetch: refetchFeedTagList,
-    isRefetching: isRefetchingFeedTagList,
+    isError,
+    error,
   } = useQuery<GetFeedTagListResponse, Error>({
     queryKey: FEED_QUERY_KEY.TAG_LIST,
     queryFn: getFeedTagListApi,
@@ -153,13 +155,22 @@ export const useGetFeedTagListQuery = () => {
     gcTime: FEED_TAG_QUERY_CACHE_TIME.GC,
   });
 
+  useEffect(() => {
+    if (!isError || !error) return;
+
+    Toast.show({
+      type: "error",
+      text1: error.message,
+    });
+
+    if (!feedTagList && router.canGoBack()) {
+      router.back();
+    }
+  }, [isError, error, feedTagList]);
+
   return {
     categoryList: feedTagList?.categoryList ?? [],
     isPendingFeedTagList,
-    isErrorFeedTagList,
-    feedTagListError,
-    refetchFeedTagList,
-    isRefetchingFeedTagList,
   };
 };
 
@@ -183,10 +194,10 @@ export const useGetFeedRelatedBookQuery = (
     GetFeedRelatedBookResponse,
     Error,
     InfiniteData<GetFeedRelatedBookResponse, FeedCursor>,
-    ReturnType<typeof FEED_QUERY_KEY.RELATED_BOOK>,
+    ReturnType<typeof FEED_QUERY_KEY.RELATED_BOOKS>,
     FeedCursor
   >({
-    queryKey: FEED_QUERY_KEY.RELATED_BOOK(normalizedIsbn, sort),
+    queryKey: FEED_QUERY_KEY.RELATED_BOOKS(normalizedIsbn, sort),
     queryFn: ({ pageParam }) => {
       if (!hasIsbn(normalizedIsbn)) {
         throw new Error("isbn is required.");
@@ -432,18 +443,10 @@ export const useChangeFeedSaveStatusMutation = () => {
   } = useMutation<ChangeFeedSaveStatusResponse, Error, ChangeFeedStatusRequest>(
     {
       mutationFn: changeFeedSaveStatusApi,
-      onSuccess: async (_, variables) => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.ALL,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.SAVED,
-          }),
-        ]);
+      onSuccess: async () => {
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.ALL,
+        });
       },
       onError: (error) => {
         Toast.show({
@@ -465,18 +468,10 @@ export const useChangeFeedLikeStatusMutation = () => {
   } = useMutation<ChangeFeedLikeStatusResponse, Error, ChangeFeedStatusRequest>(
     {
       mutationFn: changeFeedLikeStatusApi,
-      onSuccess: async (_, variables) => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.ALL,
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.DETAIL(variables.feedId),
-          }),
-          queryClient.invalidateQueries({
-            queryKey: FEED_QUERY_KEY.SAVED,
-          }),
-        ]);
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.ALL,
+        });
       },
       onError: (error) => {
         Toast.show({
@@ -488,4 +483,35 @@ export const useChangeFeedLikeStatusMutation = () => {
   );
 
   return { changeFeedLikeStatus, isPendingChangeFeedLikeStatus };
+};
+
+export const useWriteFeedMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: writeFeed, isPending: isPendingWriteFeed } = useMutation<
+    WriteFeedResponse,
+    Error,
+    WriteFeedMutationRequest
+  >({
+    mutationFn: async ({ imageUris, ...feed }) => {
+      const imageUrls = await uploadFeedImagesApi(imageUris);
+
+      return writeFeedApi({
+        ...feed,
+        imageUrls,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { writeFeed, isPendingWriteFeed };
 };

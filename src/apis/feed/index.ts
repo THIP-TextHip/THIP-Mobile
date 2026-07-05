@@ -10,6 +10,9 @@ export {
   getMyProfileTopInfoApi,
   getSavedFeedApi,
   getUserProfileTopInfoApi,
+  issuePresignedUrlApi,
+  uploadFeedImagesApi,
+  writeFeedApi,
 } from "./feed.api";
 
 export {
@@ -24,6 +27,7 @@ export {
   useGetMyProfileTopInfoQuery,
   useGetUserProfileTopInfoQuery,
   useSavedFeedQuery,
+  useWriteFeedMutation,
 } from "./feed.queries";
 
 export { FEED_QUERY_KEY } from "./feed.query-key";
@@ -44,4 +48,9 @@ export type {
   GetFeedUserProfileRequest,
   GetFeedUserProfileResponse,
   GetUserProfileTopInfoResponse,
+  IssuePresignedUrlRequest,
+  IssuePresignedUrlResponse,
+  WriteFeedMutationRequest,
+  WriteFeedRequest,
+  WriteFeedResponse,
 } from "./feed.types";

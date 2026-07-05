@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
+import { useGetFeedTagListQuery } from "@apis/feed";
 import { IcX } from "@images/icons";
 import { AppText, SelectChip, TagButton } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { FEED_TAG_LIST, FEED_TAG_MAX } from "../../constants";
+import { FEED_TAG_MAX } from "../../constants";
 
 interface FeedTagSectionProps {
   selectedTagList: string[];
@@ -18,6 +19,8 @@ export default function FeedTagSection({
   handlePressTag,
   handleDeleteTag,
 }: FeedTagSectionProps) {
+  // TODO: isPendingFeedTagList에 대한 스켈레톤 처리
+  const { categoryList } = useGetFeedTagListQuery();
   const [selectedCategory, setSelectedCategory] = useState<string>();
 
   const handleSelectCategory = (label: string) => {
@@ -26,10 +29,10 @@ export default function FeedTagSection({
 
   const tagList = useMemo(() => {
     return (
-      FEED_TAG_LIST.find((item) => item.label === selectedCategory)?.tagList ??
-      []
+      categoryList.find((item) => item.category === selectedCategory)
+        ?.tagList ?? []
     );
-  }, [selectedCategory]);
+  }, [categoryList, selectedCategory]);
 
   const isMax = selectedTagList.length === FEED_TAG_MAX;
 
@@ -61,13 +64,13 @@ export default function FeedTagSection({
         contentContainerStyle={styles.horizontalList}
         horizontal
         showsHorizontalScrollIndicator={false}
-        data={FEED_TAG_LIST}
-        keyExtractor={(item) => String(item.type)}
+        data={categoryList}
+        keyExtractor={(item) => item.category}
         renderItem={({ item }) => (
           <SelectChip
-            label={item.label}
-            isSelected={item.label === selectedCategory}
-            handleSelect={() => handleSelectCategory(item.label)}
+            label={item.category}
+            isSelected={item.category === selectedCategory}
+            handleSelect={() => handleSelectCategory(item.category)}
             type="category"
           />
         )}

@@ -13,19 +13,22 @@ import {
   changeBookSaveStatusApi,
   getBookDetailApi,
   getBookRecruitingRoomsApi,
+  getBookSelectableListApi,
   getMostSearchedBookApi,
   getSavedBookApi,
   getSearchBookApi,
 } from "./book.api";
 import { BOOK_QUERY_KEY } from "./book.query-key";
-import {
+import type {
+  BookSelectableListType,
   ChangeBookSaveStatusRequest,
   ChangeBookSaveStatusResponse,
   GetBookDetailResponse,
   GetBookRecruitingRoomsResponse,
+  GetBookSelectableListResponse,
   GetMostSearchedBookResponse,
   GetSavedBookResponse,
-  type GetSearchBookResponse,
+  GetSearchBookResponse,
 } from "./book.types";
 
 const BOOK_QUERY_CACHE_TIME = {
@@ -41,6 +44,7 @@ const MOST_SEARCHED_BOOK_QUERY_CACHE_TIME = {
 type BookSearchPage = number;
 type SavedBookCursor = string | null;
 type BookRecruitingRoomCursor = string | null;
+type BookSelectableListCursor = string | null;
 
 export const useSearchBookQuery = (
   keyword: string,
@@ -54,7 +58,6 @@ export const useSearchBookQuery = (
     fetchNextPage,
     hasNextPage,
     isPending: isPendingSearchBook,
-    isFetching: isFetchingSearchBook,
     isFetchingNextPage,
     isError: isErrorSearchBook,
     error: searchBookError,
@@ -101,8 +104,8 @@ export const useSearchBookQuery = (
     fetchNextPage,
     hasNextPage,
     isPendingSearchBook,
-    isFetchingSearchBook,
     isFetchingNextPage,
+    isErrorSearchBook,
   };
 };
 
@@ -290,5 +293,39 @@ export const useBookRecruitingRoomsQuery = (isbn: string) => {
     isErrorBookRecruitingRooms,
     refetchBookRecruitingRooms,
     isRefetchingBookRecruitingRooms,
+  };
+};
+
+export const useBookSelectableListQuery = (type: BookSelectableListType) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingBookSelectableList,
+    isError: isErrorBookSelectableList,
+  } = useInfiniteQuery<
+    GetBookSelectableListResponse,
+    Error,
+    InfiniteData<GetBookSelectableListResponse, BookSelectableListCursor>,
+    ReturnType<typeof BOOK_QUERY_KEY.SELECTABLE_LIST>,
+    BookSelectableListCursor
+  >({
+    queryKey: BOOK_QUERY_KEY.SELECTABLE_LIST(type),
+    queryFn: ({ pageParam }) => getBookSelectableListApi(type, pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: BOOK_QUERY_CACHE_TIME.STALE,
+    gcTime: BOOK_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    bookSelectableList: data?.pages.flatMap((page) => page.bookList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingBookSelectableList,
+    isErrorBookSelectableList,
   };
 };

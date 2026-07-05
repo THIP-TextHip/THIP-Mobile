@@ -14,7 +14,7 @@ import type { GroupCategoryType } from "@shared/types";
 import {
   BookSearchBottomSheet,
   BookSelectSection,
-  type FeedBookItemType,
+  type BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
 import { getKoreaDate, parseStringToDate } from "@shared/utils";
@@ -37,7 +37,7 @@ export default function CreateGroupScreen() {
   const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-  const [groupBook, setGroupBook] = useState<FeedBookItemType | null>(
+  const [groupBook, setGroupBook] = useState<BottomSheetBookItemType | null>(
     selectedBookInfo ?? null,
   );
   const [selectedCategory, setSelectedCategory] =
