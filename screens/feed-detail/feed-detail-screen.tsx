@@ -124,9 +124,7 @@ export default function FeedDetailScreen() {
 
   const handleFeedDelete = () => {
     if (isPendingDeleteFeed || !feedDetail) return null;
-    deleteFeed(feedDetail?.feedId, {
-      onSuccess: () => setIsModalVisible(false),
-    });
+    deleteFeed(feedDetail?.feedId);
   };
 
   const handleRefresh = async () => {

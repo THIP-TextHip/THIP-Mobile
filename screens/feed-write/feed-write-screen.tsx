@@ -142,6 +142,7 @@ export default function FeedWriteScreen() {
     !feedBook || contentBody.trim() === "" || isPendingWriteFeed;
 
   const editConfirmDisable =
+    contentBody.trim() === "" ||
     isPendingEditFeed ||
     isSameFeedEditState(prevFeed, {
       contentBody,
