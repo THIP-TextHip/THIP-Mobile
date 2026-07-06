@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 import { useGetCommentListQuery } from "@apis/comment";
 import { useDeleteFeedMutation, useGetFeedDetailQuery } from "@apis/feed";
 import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
+import { usePrevFeedStore } from "@stores/feed-edit";
 import { colors } from "@theme/token";
 
 import {
@@ -45,6 +46,7 @@ export default function FeedDetailScreen() {
     isRefetchingCommentList,
   } = useGetCommentListQuery(feedId, "FEED");
   const { deleteFeed, isPendingDeleteFeed } = useDeleteFeedMutation();
+  const { setPrevFeed } = usePrevFeedStore();
 
   const [comment, setComment] = useState("");
   const [replyCommentId, setReplyCommentId] = useState<number | null>(null);
@@ -98,7 +100,22 @@ export default function FeedDetailScreen() {
     console.log("피드 신고하기");
   };
   const handleToEdit = () => {
-    console.log("피드 수정 페이지로 이동");
+    setIsBottomSheetVisible(false);
+    if (!feedDetail) return null;
+    setPrevFeed({
+      feedId: feedDetail.feedId,
+      feedBook: {
+        bookTitle: feedDetail.bookTitle,
+        authorName: feedDetail.bookAuthor,
+        bookImageUrl: feedDetail.bookImageUrl,
+        isbn: feedDetail.isbn,
+      },
+      contentBody: feedDetail.contentBody,
+      isPublic: feedDetail.isPublic,
+      imageUrls: feedDetail.contentUrls,
+      selectedTagList: feedDetail.tagList,
+    });
+    router.push("/feed-write");
   };
   const handleOpenDeleteModal = () => {
     setIsBottomSheetVisible(false);

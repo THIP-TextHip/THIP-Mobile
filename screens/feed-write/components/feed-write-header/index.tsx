@@ -5,12 +5,14 @@ import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface FeedWriteHeaderProps {
+  isEdit: boolean;
   disabled: boolean;
   handleGoBack: () => void;
   handleConfirm: () => void;
 }
 
 export default function FeedWriteHeader({
+  isEdit,
   disabled,
   handleGoBack,
   handleConfirm,
@@ -24,7 +26,7 @@ export default function FeedWriteHeader({
       }
       center={
         <AppText weight="bold" size="2xl" color={colors.white} lineHeight={24}>
-          새 글
+          {isEdit ? "글 수정" : "새 글"}
         </AppText>
       }
       right={

@@ -13,6 +13,7 @@ import {
   changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
   deleteFeedApi,
+  editFeedApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -30,6 +31,8 @@ import type {
   ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
   ChangeFeedStatusRequest,
+  EditFeedRequest,
+  EditFeedResponse,
   FeedRelatedBookSort,
   GetFeedDetailResponse,
   GetFeedListResponse,
@@ -550,5 +553,32 @@ export const useDeleteFeedMutation = () => {
   return {
     deleteFeed,
     isPendingDeleteFeed,
+  };
+};
+
+export const useEditFeedMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: editFeed, isPending: isPendingEditFeed } = useMutation<
+    EditFeedResponse,
+    Error,
+    EditFeedRequest
+  >({
+    mutationFn: editFeedApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    editFeed,
+    isPendingEditFeed,
   };
 };

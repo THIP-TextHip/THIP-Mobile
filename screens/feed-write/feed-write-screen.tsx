@@ -10,13 +10,14 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useWriteFeedMutation } from "@apis/feed";
+import { useEditFeedMutation, useWriteFeedMutation } from "@apis/feed";
 import {
   BookSearchBottomSheet,
   BookSelectSection,
   type BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
+import { usePrevFeedStore } from "@stores/feed-edit";
 import { useRecordBookPinStore } from "@stores/record-book";
 import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
@@ -28,29 +29,39 @@ import {
   FeedWriteHeader,
 } from "./components";
 import { FEED_TAG_MAX } from "./constants";
+import { isSameFeedEditState } from "./utils";
 
 export default function FeedWriteScreen() {
   const { bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
   const { pinInfo, clearPinInfo } = useRecordBookPinStore();
   const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
+  const { prevFeed, clearPrevFeed } = usePrevFeedStore();
   const { writeFeed, isPendingWriteFeed } = useWriteFeedMutation();
+  const { editFeed, isPendingEditFeed } = useEditFeedMutation();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [feedBook, setFeedBook] = useState<BottomSheetBookItemType | null>(
-    pinInfo?.bookInfo ?? selectedBookInfo ?? null,
+    prevFeed?.feedBook ?? pinInfo?.bookInfo ?? selectedBookInfo ?? null,
   );
-  const [contentBody, setContentBody] = useState(pinInfo?.content ?? "");
-  const [isPublic, setIsPublic] = useState(true);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [selectedTagList, setSelectedTagList] = useState<string[]>([]);
+  const [contentBody, setContentBody] = useState(
+    prevFeed?.contentBody ?? pinInfo?.content ?? "",
+  );
+  const [isPublic, setIsPublic] = useState(prevFeed?.isPublic ?? true);
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    prevFeed?.imageUrls ?? [],
+  );
+  const [selectedTagList, setSelectedTagList] = useState<string[]>(
+    prevFeed?.selectedTagList ?? [],
+  );
 
   useEffect(() => {
     return navigation.addListener("beforeRemove", () => {
       clearPinInfo();
       clearSelectedBookInfo();
+      clearPrevFeed();
     });
-  }, [clearPinInfo, clearSelectedBookInfo, navigation]);
+  }, [clearPinInfo, clearSelectedBookInfo, clearPrevFeed, navigation]);
 
   const handleGoBack = useCallback(() => {
     clearPinInfo();
@@ -86,33 +97,60 @@ export default function FeedWriteScreen() {
 
   const handleConfirmFeedWrite = () => {
     if (!feedBook) return null;
-
-    writeFeed(
-      {
-        isbn: feedBook.isbn,
-        contentBody: contentBody.trim(),
-        isPublic,
-        tagList: selectedTagList,
-        imageUris: imageUrls,
-      },
-      {
-        onSuccess: () => {
-          clearPinInfo();
-          clearSelectedBookInfo();
-          router.back();
+    if (prevFeed === null) {
+      writeFeed(
+        {
+          isbn: feedBook.isbn,
+          contentBody: contentBody.trim(),
+          isPublic,
+          tagList: selectedTagList,
+          imageUris: imageUrls,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            clearPinInfo();
+            clearSelectedBookInfo();
+            router.back();
+          },
+        },
+      );
+    } else {
+      editFeed(
+        {
+          feedId: prevFeed.feedId,
+          contentBody: contentBody.trim(),
+          isPublic,
+          tagList: selectedTagList,
+          remainImageUrls: imageUrls,
+        },
+        {
+          onSuccess: () => {
+            clearPrevFeed();
+
+            router.back();
+          },
+        },
+      );
+    }
   };
 
   const Separator = () => {
     return <View style={styles.separator} />;
   };
 
-  const confirmDisable =
+  const writeConfirmDisable =
     !feedBook || contentBody.trim() === "" || isPendingWriteFeed;
 
-  if (isPendingWriteFeed) {
+  const editConfirmDisable =
+    isPendingEditFeed ||
+    isSameFeedEditState(prevFeed, {
+      contentBody,
+      isPublic,
+      imageUrls,
+      selectedTagList,
+    });
+
+  if (isPendingWriteFeed || isPendingEditFeed) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={colors.white} />
@@ -123,7 +161,8 @@ export default function FeedWriteScreen() {
   return (
     <View style={styles.page}>
       <FeedWriteHeader
-        disabled={confirmDisable}
+        isEdit={prevFeed !== null}
+        disabled={prevFeed !== null ? editConfirmDisable : writeConfirmDisable}
         handleGoBack={handleGoBack}
         handleConfirm={handleConfirmFeedWrite}
       />
@@ -139,7 +178,9 @@ export default function FeedWriteScreen() {
           ]}
         >
           <BookSelectSection
-            isAlreadySelected={pinInfo !== null || selectedBookInfo !== null}
+            isAlreadySelected={
+              prevFeed !== null || pinInfo !== null || selectedBookInfo !== null
+            }
             book={feedBook}
             handleOpenBottomSheet={handleOpenBottomSheet}
           />
@@ -148,11 +189,16 @@ export default function FeedWriteScreen() {
             contentBody={contentBody}
             handleChangeContentBody={setContentBody}
           />
-          <Separator />
-          <FeedImageSection
-            imageUrls={imageUrls}
-            handleImageUrls={handleImageUrls}
-          />
+          {(prevFeed === null || imageUrls.length !== 0) && (
+            <>
+              <Separator />
+              <FeedImageSection
+                isEdit={prevFeed !== null}
+                imageUrls={imageUrls}
+                handleImageUrls={handleImageUrls}
+              />
+            </>
+          )}
           <Separator />
           <VisibilitySection
             isPublic={isPublic}
