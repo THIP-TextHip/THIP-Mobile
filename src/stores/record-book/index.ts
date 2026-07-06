@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { RecordBookVoteItemType } from "@screens/record-book/types";
+import { type RecordBookVoteItemType } from "@screens/record-book";
 
 interface PrevRecord {
   postId: number;

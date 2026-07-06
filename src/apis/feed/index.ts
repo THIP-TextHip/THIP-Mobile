@@ -1,6 +1,8 @@
 export {
   changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
+  deleteFeedApi,
+  editFeedApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -18,6 +20,8 @@ export {
 export {
   useChangeFeedLikeStatusMutation,
   useChangeFeedSaveStatusMutation,
+  useDeleteFeedMutation,
+  useEditFeedMutation,
   useGetAllFeedListQuery,
   useGetFeedDetailQuery,
   useGetFeedMyProfileQuery,
@@ -37,6 +41,8 @@ export type {
   ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
   ChangeFeedStatusRequest,
+  EditFeedRequest,
+  EditFeedResponse,
   FeedRelatedBookSort,
   FeedType,
   FeedUserProfileType,

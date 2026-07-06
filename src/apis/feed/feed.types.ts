@@ -127,11 +127,25 @@ export interface WriteFeedRequest {
   imageUrls: string[];
 }
 
-export interface WriteFeedMutationRequest
-  extends Omit<WriteFeedRequest, "imageUrls"> {
+export interface WriteFeedMutationRequest extends Omit<
+  WriteFeedRequest,
+  "imageUrls"
+> {
   imageUris: string[];
 }
 
 export interface WriteFeedResponse {
+  feedId: number;
+}
+
+export interface EditFeedRequest {
+  feedId: number;
+  contentBody: string;
+  isPublic: boolean;
+  tagList: string[];
+  remainImageUrls: string[];
+}
+
+export interface EditFeedResponse {
   feedId: number;
 }

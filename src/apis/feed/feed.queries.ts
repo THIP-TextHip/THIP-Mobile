@@ -12,6 +12,8 @@ import Toast from "react-native-toast-message";
 import {
   changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
+  deleteFeedApi,
+  editFeedApi,
   getAllFeedListApi,
   getFeedDetailApi,
   getFeedMyProfileApi,
@@ -29,6 +31,8 @@ import type {
   ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
   ChangeFeedStatusRequest,
+  EditFeedRequest,
+  EditFeedResponse,
   FeedRelatedBookSort,
   GetFeedDetailResponse,
   GetFeedListResponse,
@@ -514,4 +518,67 @@ export const useWriteFeedMutation = () => {
   });
 
   return { writeFeed, isPendingWriteFeed };
+};
+
+export const useDeleteFeedMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: deleteFeed, isPending: isPendingDeleteFeed } = useMutation<
+    string,
+    Error,
+    number
+  >({
+    mutationFn: deleteFeedApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
+      Toast.show({
+        type: "default",
+        text1: "피드가 삭제되었어요.",
+      });
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.push("/feed");
+      }
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    deleteFeed,
+    isPendingDeleteFeed,
+  };
+};
+
+export const useEditFeedMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: editFeed, isPending: isPendingEditFeed } = useMutation<
+    EditFeedResponse,
+    Error,
+    EditFeedRequest
+  >({
+    mutationFn: editFeedApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    editFeed,
+    isPendingEditFeed,
+  };
 };

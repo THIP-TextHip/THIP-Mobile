@@ -8,11 +8,13 @@ import { colors } from "@theme/token";
 import { FEED_IMAGE_MAX } from "../../constants";
 
 interface FeedImageSectionProps {
+  isEdit: boolean;
   imageUrls: string[];
   handleImageUrls: (imageUrls: string[]) => void;
 }
 
 export default function FeedImageSection({
+  isEdit,
   imageUrls,
   handleImageUrls,
 }: FeedImageSectionProps) {
@@ -53,23 +55,26 @@ export default function FeedImageSection({
         color={colors.white}
         lineHeight={24}
       >
-        사진 추가
+        {isEdit ? "사진 수정" : "사진 추가"}
       </AppText>
       <ScrollView
         contentContainerStyle={styles.imageWrapper}
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        <Pressable
-          style={[
-            styles.addImageButton,
-            disabled && { borderColor: colors.darkgrey.main },
-          ]}
-          disabled={disabled}
-          onPress={handlePickImages}
-        >
-          {disabled ? <IcPlusGrey /> : <IcPlus />}
-        </Pressable>
+        {!isEdit && (
+          <Pressable
+            style={[
+              styles.addImageButton,
+              disabled && { borderColor: colors.darkgrey.main },
+            ]}
+            disabled={disabled}
+            onPress={handlePickImages}
+          >
+            {disabled ? <IcPlusGrey /> : <IcPlus />}
+          </Pressable>
+        )}
+
         {imageUrls.map((image, index) => (
           <View key={index} style={styles.imageContainer}>
             <Image source={{ uri: image }} style={styles.image} />

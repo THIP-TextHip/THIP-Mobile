@@ -4,6 +4,8 @@ import type {
   ChangeFeedLikeStatusResponse,
   ChangeFeedSaveStatusResponse,
   ChangeFeedStatusRequest,
+  EditFeedRequest,
+  EditFeedResponse,
   GetFeedDetailResponse,
   GetFeedListResponse,
   GetFeedRelatedBookRequest,
@@ -195,6 +197,21 @@ export const writeFeedApi = async (body: WriteFeedRequest) => {
     FEED_URL.DEFAULT,
     body,
   );
+
+  return response.data;
+};
+
+export const deleteFeedApi = async (feedId: number) => {
+  const response = await apiClient.delete<string>(FEED_URL.DETAIL(feedId));
+
+  return response.data;
+};
+
+export const editFeedApi = async ({ feedId, ...body }: EditFeedRequest) => {
+  const response = await apiClient.patch<
+    EditFeedResponse,
+    Omit<EditFeedRequest, "feedId">
+  >(FEED_URL.DETAIL(feedId), body);
 
   return response.data;
 };
