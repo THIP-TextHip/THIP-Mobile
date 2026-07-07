@@ -26,6 +26,7 @@ interface ChatInputBarProps {
   onLayout?: (event: LayoutChangeEvent) => void;
   isFocus: boolean;
   handleIsFocus: (value: boolean) => void;
+  isPendingSend: boolean;
 }
 
 export default function ChatInputBar({
@@ -38,6 +39,7 @@ export default function ChatInputBar({
   onLayout,
   isFocus,
   handleIsFocus,
+  isPendingSend,
 }: ChatInputBarProps) {
   const { bottom } = useSafeAreaInsets();
   const inputRef = useRef<TextInput>(null);
@@ -60,7 +62,7 @@ export default function ChatInputBar({
     Keyboard.dismiss();
   };
 
-  const ableToSend = text.trim().length !== 0;
+  const ableToSend = text.trim().length !== 0 && !isPendingSend;
 
   return (
     <KeyboardAvoidingView

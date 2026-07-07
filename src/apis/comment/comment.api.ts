@@ -1,8 +1,10 @@
 import { apiClient } from "../api-client";
 import { COMMENT_URL } from "../endpoint";
 import type {
+  CommentType,
   GetCommentListRequest,
   GetCommentListResponse,
+  WriteCommentRequest,
 } from "./comment.types";
 
 export const getCommentListApi = async ({
@@ -18,6 +20,18 @@ export const getCommentListApi = async ({
         ...(cursor == null ? {} : { cursor }),
       },
     },
+  );
+
+  return response.data;
+};
+
+export const writeCommentApi = async ({
+  postId,
+  ...body
+}: WriteCommentRequest) => {
+  const response = await apiClient.post<CommentType>(
+    COMMENT_URL.DEFAULT(postId),
+    body,
   );
 
   return response.data;

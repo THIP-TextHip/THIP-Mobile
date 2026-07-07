@@ -39,6 +39,9 @@ export const FEED_URL = {
 export const COMMENT_URL = {
   DEFAULT: (postId: number | string) =>
     `/comments/${encodeURIComponent(String(postId))}`,
+  LIKE_STATUS: (commentId: number) =>
+    `/comments/${encodeURIComponent(commentId)}/likes`,
+  DELETE: (commentId: number) => `/comments/${encodeURIComponent(commentId)}`,
 } as const;
 
 export const RECENT_SEARCH_URL = {

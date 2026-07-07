@@ -154,6 +154,8 @@ export default function RecordCommentBottomSheet({
           handleResetReply={handleResetReply}
           isFocus={isInputFocus}
           handleIsFocus={setIsInputFocus}
+          // TODO: 추후 반영
+          isPendingSend={false}
         />
       </GestureHandlerRootView>
     )

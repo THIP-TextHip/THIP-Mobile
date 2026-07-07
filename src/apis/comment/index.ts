@@ -1,6 +1,9 @@
-export { getCommentListApi } from "./comment.api";
+export { getCommentListApi, writeCommentApi } from "./comment.api";
 
-export { useGetCommentListQuery } from "./comment.queries";
+export {
+  useGetCommentListQuery,
+  useWriteCommentMutation,
+} from "./comment.queries";
 
 export { COMMENT_QUERY_KEY } from "./comment.query-key";
 
@@ -10,4 +13,5 @@ export type {
   CommentType,
   GetCommentListRequest,
   GetCommentListResponse,
+  WriteCommentRequest,
 } from "./comment.types";

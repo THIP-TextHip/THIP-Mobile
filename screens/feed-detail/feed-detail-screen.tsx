@@ -10,7 +10,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { useGetCommentListQuery } from "@apis/comment";
+import { useGetCommentListQuery, useWriteCommentMutation } from "@apis/comment";
 import { useDeleteFeedMutation, useGetFeedDetailQuery } from "@apis/feed";
 import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
 import { usePrevFeedStore } from "@stores/feed-edit";
@@ -46,6 +46,7 @@ export default function FeedDetailScreen() {
     isRefetchingCommentList,
   } = useGetCommentListQuery(feedId, "FEED");
   const { deleteFeed, isPendingDeleteFeed } = useDeleteFeedMutation();
+  const { writeComment, isPendingWriteComment } = useWriteCommentMutation();
   const { setPrevFeed } = usePrevFeedStore();
 
   const [comment, setComment] = useState("");
@@ -57,19 +58,26 @@ export default function FeedDetailScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSendText = () => {
-    if (replyCommentId !== null) {
-      console.log(
-        replyNickname,
-        "에게 ",
-        replyCommentId,
-        "번에 대한 답글 ",
-        comment.trim(),
-        " 전송",
-      );
-    } else {
-      console.log(comment.trim(), " 전송");
-    }
-    setComment("");
+    const content = comment.trim();
+
+    if (isPendingWriteComment || !content) return;
+
+    writeComment(
+      {
+        postId: feedId,
+        content,
+        isReplyRequest: replyCommentId !== null,
+        parentId: replyCommentId,
+        postType: "FEED",
+      },
+      {
+        onSuccess: () => {
+          setComment("");
+          handleResetReply();
+          refetchFeedDetail();
+        },
+      },
+    );
   };
 
   const handlePressReply = (commentId: number, replyNickname: string) => {
@@ -99,6 +107,7 @@ export default function FeedDetailScreen() {
   const handleReport = () => {
     console.log("피드 신고하기");
   };
+
   const handleToEdit = () => {
     setIsBottomSheetVisible(false);
     if (!feedDetail) return null;
@@ -252,6 +261,7 @@ export default function FeedDetailScreen() {
         }}
         isFocus={isInputFocus}
         handleIsFocus={setIsInputFocus}
+        isPendingSend={isPendingWriteComment}
       />
 
       <FeedDetailBottomSheet

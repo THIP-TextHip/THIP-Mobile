@@ -42,3 +42,11 @@ export interface GetCommentListResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface WriteCommentRequest {
+  postId: number | string;
+  content: string;
+  isReplyRequest: boolean;
+  parentId: number | null;
+  postType: CommentPostType;
+}

@@ -1,11 +1,19 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
 import type { InfiniteData } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import Toast from "react-native-toast-message";
 
-import { getCommentListApi } from "./comment.api";
+import { FEED_QUERY_KEY } from "../feed";
+import { getCommentListApi, writeCommentApi } from "./comment.api";
 import { COMMENT_QUERY_KEY } from "./comment.query-key";
 import type {
   CommentPostType,
+  CommentType,
   GetCommentListResponse,
+  WriteCommentRequest,
 } from "./comment.types";
 
 type CommentCursor = string | null;
@@ -19,7 +27,7 @@ const hasPostId = (postId?: number | string): postId is number | string =>
   postId != null && postId !== "";
 
 export const useGetCommentListQuery = (
-  postId: number | string | undefined,
+  postId: number | string,
   postType: CommentPostType,
 ) => {
   const {
@@ -70,4 +78,31 @@ export const useGetCommentListQuery = (
     refetchCommentList,
     isRefetchingCommentList,
   };
+};
+
+export const useWriteCommentMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: writeComment, isPending: isPendingWriteComment } =
+    useMutation<CommentType, Error, WriteCommentRequest>({
+      mutationFn: writeCommentApi,
+      onSuccess: (_, { postId, postType }) => {
+        queryClient.invalidateQueries({
+          queryKey: COMMENT_QUERY_KEY.LIST(postId, postType),
+        });
+        // TODO: 추후 RECORD와 VOTE도 추가 예정
+        if (postType === "FEED") {
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.ALL,
+          });
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return { writeComment, isPendingWriteComment };
 };
