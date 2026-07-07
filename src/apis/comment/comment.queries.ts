@@ -9,6 +9,7 @@ import Toast from "react-native-toast-message";
 import { FEED_QUERY_KEY } from "../feed";
 import {
   changeCommentLikeStatusApi,
+  deleteCommentApi,
   getCommentListApi,
   writeCommentApi,
 } from "./comment.api";
@@ -18,6 +19,8 @@ import type {
   ChangeCommentLikeStatusResponse,
   CommentPostType,
   CommentType,
+  DeleteCommentMutationRequest,
+  DeleteCommentResponse,
   GetCommentListResponse,
   WriteCommentRequest,
 } from "./comment.types";
@@ -138,4 +141,26 @@ export const useChangeCommentLikeStatusMutation = () => {
   });
 
   return { changeCommentLikeStatus, isPendingChangeCommentLikeStatus };
+};
+
+export const useDeleteCommentMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteComment, isPending: isPendingDeleteComment } =
+    useMutation<DeleteCommentResponse, Error, DeleteCommentMutationRequest>({
+      mutationFn: deleteCommentApi,
+      onSuccess: (_, { postId, postType }) => {
+        queryClient.invalidateQueries({
+          queryKey: COMMENT_QUERY_KEY.LIST(postId, postType),
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return { deleteComment, isPendingDeleteComment };
 };

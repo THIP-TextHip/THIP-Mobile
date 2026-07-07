@@ -4,6 +4,8 @@ import type {
   ChangeCommentLikeStatusRequest,
   ChangeCommentLikeStatusResponse,
   CommentType,
+  DeleteCommentRequest,
+  DeleteCommentResponse,
   GetCommentListRequest,
   GetCommentListResponse,
   WriteCommentRequest,
@@ -48,6 +50,14 @@ export const changeCommentLikeStatusApi = async ({
     {
       type,
     },
+  );
+
+  return response.data;
+};
+
+export const deleteCommentApi = async ({ commentId }: DeleteCommentRequest) => {
+  const response = await apiClient.delete<DeleteCommentResponse>(
+    COMMENT_URL.DELETE(commentId),
   );
 
   return response.data;

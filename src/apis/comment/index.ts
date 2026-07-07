@@ -1,11 +1,13 @@
 export {
   changeCommentLikeStatusApi,
+  deleteCommentApi,
   getCommentListApi,
   writeCommentApi,
 } from "./comment.api";
 
 export {
   useChangeCommentLikeStatusMutation,
+  useDeleteCommentMutation,
   useGetCommentListQuery,
   useWriteCommentMutation,
 } from "./comment.queries";
@@ -19,6 +21,9 @@ export type {
   CommentPostType,
   CommentReplyType,
   CommentType,
+  DeleteCommentMutationRequest,
+  DeleteCommentRequest,
+  DeleteCommentResponse,
   GetCommentListRequest,
   GetCommentListResponse,
   WriteCommentRequest,

@@ -17,7 +17,7 @@ import CommentBottomSheet from "./comment-bottom-sheet";
 
 interface CommentItemProps {
   postId: number | string;
-  postType?: CommentPostType;
+  postType: CommentPostType;
   comment: CommentType | CommentReplyType;
   handlePressReply: (commentId: number, replyNickname: string) => void;
 }
@@ -129,6 +129,8 @@ export default function CommentItem({
           </View>
         </View>
         <CommentBottomSheet
+          postId={postId}
+          postType={postType}
           commentId={comment.commentId}
           isWriter={comment.isWriter}
           isVisible={isBottomSheetVisible}

@@ -1,11 +1,14 @@
 import { Pressable, StyleSheet } from "react-native";
 
+import { type CommentPostType, useDeleteCommentMutation } from "@apis/comment";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 import CustomBottomSheet from "../custom-bottom-sheet";
 
 interface CommentBottomSheetProps {
+  postId: number | string;
+  postType: CommentPostType;
   commentId: number;
   isWriter: boolean;
   isVisible: boolean;
@@ -13,15 +16,22 @@ interface CommentBottomSheetProps {
 }
 
 export default function CommentBottomSheet({
+  postId,
+  postType,
   commentId,
   isWriter,
   isVisible,
   handleCloseBottomSheet,
 }: CommentBottomSheetProps) {
+  const { deleteComment, isPendingDeleteComment } = useDeleteCommentMutation();
+
   const handlePressButton = () => {
     if (isWriter) {
-      console.log(commentId, "번 댓글 삭제");
-      handleCloseBottomSheet();
+      if (isPendingDeleteComment) return null;
+      deleteComment(
+        { postId, postType, commentId },
+        { onSettled: () => handleCloseBottomSheet() },
+      );
     } else {
       console.log(commentId, "번 댓글 신고");
       handleCloseBottomSheet();

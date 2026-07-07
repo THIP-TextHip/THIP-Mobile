@@ -64,3 +64,14 @@ export interface ChangeCommentLikeStatusResponse {
   commentId: number;
   isLiked: boolean;
 }
+
+export interface DeleteCommentRequest {
+  commentId: number;
+}
+
+export type DeleteCommentMutationRequest = DeleteCommentRequest &
+  Pick<GetCommentListRequest, "postId" | "postType">;
+
+export interface DeleteCommentResponse {
+  postId: number;
+}
