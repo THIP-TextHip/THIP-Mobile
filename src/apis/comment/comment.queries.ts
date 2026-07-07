@@ -153,6 +153,12 @@ export const useDeleteCommentMutation = () => {
         queryClient.invalidateQueries({
           queryKey: COMMENT_QUERY_KEY.LIST(postId, postType),
         });
+        // TODO: 추후 RECORD와 VOTE도 추가 예정
+        if (postType === "FEED") {
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.ALL,
+          });
+        }
       },
       onError: (error) => {
         Toast.show({
