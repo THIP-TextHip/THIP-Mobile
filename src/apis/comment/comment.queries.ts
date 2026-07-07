@@ -7,9 +7,15 @@ import {
 import Toast from "react-native-toast-message";
 
 import { FEED_QUERY_KEY } from "../feed";
-import { getCommentListApi, writeCommentApi } from "./comment.api";
+import {
+  changeCommentLikeStatusApi,
+  getCommentListApi,
+  writeCommentApi,
+} from "./comment.api";
 import { COMMENT_QUERY_KEY } from "./comment.query-key";
 import type {
+  ChangeCommentLikeStatusMutationRequest,
+  ChangeCommentLikeStatusResponse,
   CommentPostType,
   CommentType,
   GetCommentListResponse,
@@ -105,4 +111,31 @@ export const useWriteCommentMutation = () => {
     });
 
   return { writeComment, isPendingWriteComment };
+};
+
+export const useChangeCommentLikeStatusMutation = () => {
+  const queryClient = useQueryClient();
+  const {
+    mutate: changeCommentLikeStatus,
+    isPending: isPendingChangeCommentLikeStatus,
+  } = useMutation<
+    ChangeCommentLikeStatusResponse,
+    Error,
+    ChangeCommentLikeStatusMutationRequest
+  >({
+    mutationFn: changeCommentLikeStatusApi,
+    onSuccess: (_, { postId, postType }) => {
+      queryClient.invalidateQueries({
+        queryKey: COMMENT_QUERY_KEY.LIST(postId, postType),
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeCommentLikeStatus, isPendingChangeCommentLikeStatus };
 };

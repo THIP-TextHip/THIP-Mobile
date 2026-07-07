@@ -1,6 +1,11 @@
-export { getCommentListApi, writeCommentApi } from "./comment.api";
+export {
+  changeCommentLikeStatusApi,
+  getCommentListApi,
+  writeCommentApi,
+} from "./comment.api";
 
 export {
+  useChangeCommentLikeStatusMutation,
   useGetCommentListQuery,
   useWriteCommentMutation,
 } from "./comment.queries";
@@ -8,6 +13,9 @@ export {
 export { COMMENT_QUERY_KEY } from "./comment.query-key";
 
 export type {
+  ChangeCommentLikeStatusMutationRequest,
+  ChangeCommentLikeStatusRequest,
+  ChangeCommentLikeStatusResponse,
   CommentPostType,
   CommentReplyType,
   CommentType,

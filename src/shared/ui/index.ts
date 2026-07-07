@@ -13,12 +13,7 @@ export {
   TagButton,
 } from "./button";
 export { default as ChatInputBar } from "./chat-input-bar";
-export {
-  CommentItem,
-  CommentListType,
-  CommentReplyListType,
-  CommentRoot,
-} from "./comment-list";
+export { CommentItem, CommentRoot } from "./comment-list";
 export { default as CustomBottomSheet } from "./custom-bottom-sheet";
 export { default as CustomHeader } from "./custom-header";
 export { default as CustomModal } from "./custom-modal";

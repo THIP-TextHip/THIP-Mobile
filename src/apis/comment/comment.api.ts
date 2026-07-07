@@ -1,6 +1,8 @@
 import { apiClient } from "../api-client";
 import { COMMENT_URL } from "../endpoint";
 import type {
+  ChangeCommentLikeStatusRequest,
+  ChangeCommentLikeStatusResponse,
   CommentType,
   GetCommentListRequest,
   GetCommentListResponse,
@@ -32,6 +34,20 @@ export const writeCommentApi = async ({
   const response = await apiClient.post<CommentType>(
     COMMENT_URL.DEFAULT(postId),
     body,
+  );
+
+  return response.data;
+};
+
+export const changeCommentLikeStatusApi = async ({
+  commentId,
+  type,
+}: ChangeCommentLikeStatusRequest) => {
+  const response = await apiClient.post<ChangeCommentLikeStatusResponse>(
+    COMMENT_URL.LIKE_STATUS(commentId),
+    {
+      type,
+    },
   );
 
   return response.data;

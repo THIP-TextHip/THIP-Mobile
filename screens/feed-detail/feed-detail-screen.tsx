@@ -226,7 +226,12 @@ export default function FeedDetailScreen() {
         data={commentList}
         keyExtractor={(item) => String(item.commentId)}
         renderItem={({ item }) => (
-          <CommentRoot comment={item} handlePressReply={handlePressReply} />
+          <CommentRoot
+            postId={feedId}
+            postType="FEED"
+            comment={item}
+            handlePressReply={handlePressReply}
+          />
         )}
         ListEmptyComponent={renderCommentEmpty}
         ListFooterComponent={

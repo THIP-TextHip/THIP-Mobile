@@ -50,3 +50,17 @@ export interface WriteCommentRequest {
   parentId: number | null;
   postType: CommentPostType;
 }
+
+export interface ChangeCommentLikeStatusRequest {
+  commentId: number;
+  type: boolean;
+}
+
+export type ChangeCommentLikeStatusMutationRequest =
+  ChangeCommentLikeStatusRequest &
+    Pick<GetCommentListRequest, "postId" | "postType">;
+
+export interface ChangeCommentLikeStatusResponse {
+  commentId: number;
+  isLiked: boolean;
+}

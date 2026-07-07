@@ -8,13 +8,9 @@ import { Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { type CommentType } from "@apis/comment";
 import { useKeyboardHeight } from "@shared/hooks";
-import {
-  AppText,
-  ChatInputBar,
-  CommentListType,
-  CommentRoot,
-} from "@shared/ui";
+import { AppText, ChatInputBar, CommentRoot } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DUMMY_RECORD_COMMENT_LIST } from "../../constants";
@@ -125,10 +121,11 @@ export default function RecordCommentBottomSheet({
               },
             ]}
             data={DUMMY_RECORD_COMMENT_LIST}
-            keyExtractor={(item: CommentListType) => String(item.commentId)}
-            renderItem={({ item }: { item: CommentListType }) => (
+            keyExtractor={(item: CommentType) => String(item.commentId)}
+            renderItem={({ item }: { item: CommentType }) => (
               <CommentRoot
-                type="record"
+                postId={postId}
+                postType="RECORD"
                 comment={item}
                 handlePressReply={handlePressReply}
               />

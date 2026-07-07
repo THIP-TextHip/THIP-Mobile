@@ -1,28 +1,41 @@
 import { FlatList, StyleSheet, View } from "react-native";
 
+import { type CommentPostType, type CommentType } from "@apis/comment";
+
 import CommentItem from "./comment-item";
-import { CommentListType } from "./types";
 
 interface CommentRootProps {
-  type?: "feed" | "record";
-  comment: CommentListType;
+  postId: number | string;
+  postType?: CommentPostType;
+  comment: CommentType;
   handlePressReply: (commentId: number, replyNickname: string) => void;
 }
 
 export default function CommentRoot({
-  type = "feed",
+  postId,
+  postType = "FEED",
   comment,
   handlePressReply,
 }: CommentRootProps) {
   return (
-    <View style={[styles.container, { gap: type === "feed" ? 24 : 20 }]}>
-      <CommentItem comment={comment} handlePressReply={handlePressReply} />
+    <View style={[styles.container, { gap: postType === "FEED" ? 24 : 20 }]}>
+      <CommentItem
+        postId={postId}
+        postType={postType}
+        comment={comment}
+        handlePressReply={handlePressReply}
+      />
       {comment.replyList.length !== 0 && (
         <FlatList
           data={comment.replyList}
           style={styles.replyList}
           renderItem={({ item }) => (
-            <CommentItem comment={item} handlePressReply={handlePressReply} />
+            <CommentItem
+              postId={postId}
+              postType={postType}
+              comment={item}
+              handlePressReply={handlePressReply}
+            />
           )}
         />
       )}
