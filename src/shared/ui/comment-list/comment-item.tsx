@@ -2,25 +2,38 @@ import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import {
+  useChangeCommentLikeStatusMutation,
+  type CommentPostType,
+  type CommentReplyType,
+  type CommentType,
+} from "@apis/comment";
 import { IcHeart, IcHeartFilled, IcReply } from "@images/icons";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 import ProfileImage from "../profile-image";
 import CommentBottomSheet from "./comment-bottom-sheet";
-import { CommentListType, CommentReplyListType } from "./types";
 
 interface CommentItemProps {
-  comment: CommentListType | CommentReplyListType;
+  postId: number | string;
+  postType: CommentPostType;
+  comment: CommentType | CommentReplyType;
   handlePressReply: (commentId: number, replyNickname: string) => void;
 }
 
 export default function CommentItem({
+  postId,
+  postType = "FEED",
   comment,
   handlePressReply,
 }: CommentItemProps) {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const commentItemRef = useRef<View>(null);
+  const isChangingCommentLikeStatusRef = useRef(false);
+
+  const { changeCommentLikeStatus, isPendingChangeCommentLikeStatus } =
+    useChangeCommentLikeStatusMutation();
 
   const handleToUserProfile = () => {
     router.push({
@@ -32,7 +45,17 @@ export default function CommentItem({
     handlePressReply(comment.commentId, comment.creatorNickname);
   };
   const handlePressHeart = () => {
-    console.log(comment.commentId, "번 댓글 하트 누르기");
+    if (
+      isPendingChangeCommentLikeStatus ||
+      isChangingCommentLikeStatusRef.current
+    ) {
+      return null;
+    }
+    isChangingCommentLikeStatusRef.current = true;
+    changeCommentLikeStatus(
+      { postId, postType, commentId: comment.commentId, type: !comment.isLike },
+      { onSettled: () => (isChangingCommentLikeStatusRef.current = false) },
+    );
   };
 
   const handleLongPressComment = () => {
@@ -106,6 +129,8 @@ export default function CommentItem({
           </View>
         </View>
         <CommentBottomSheet
+          postId={postId}
+          postType={postType}
           commentId={comment.commentId}
           isWriter={comment.isWriter}
           isVisible={isBottomSheetVisible}

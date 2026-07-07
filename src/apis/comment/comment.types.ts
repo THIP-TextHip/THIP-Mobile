@@ -42,3 +42,36 @@ export interface GetCommentListResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface WriteCommentRequest {
+  postId: number | string;
+  content: string;
+  isReplyRequest: boolean;
+  parentId: number | null;
+  postType: CommentPostType;
+}
+
+export interface ChangeCommentLikeStatusRequest {
+  commentId: number;
+  type: boolean;
+}
+
+export type ChangeCommentLikeStatusMutationRequest =
+  ChangeCommentLikeStatusRequest &
+    Pick<GetCommentListRequest, "postId" | "postType">;
+
+export interface ChangeCommentLikeStatusResponse {
+  commentId: number;
+  isLiked: boolean;
+}
+
+export interface DeleteCommentRequest {
+  commentId: number;
+}
+
+export type DeleteCommentMutationRequest = DeleteCommentRequest &
+  Pick<GetCommentListRequest, "postId" | "postType">;
+
+export interface DeleteCommentResponse {
+  postId: number;
+}

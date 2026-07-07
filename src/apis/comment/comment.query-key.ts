@@ -1,9 +1,9 @@
 import type { CommentPostType } from "./comment.types";
 
 export const COMMENT_QUERY_KEY = {
-  LIST: (postId?: number | string, postType?: CommentPostType) => [
+  LIST: (postId: number | string, postType: CommentPostType) => [
     "comments",
     postType,
-    postId,
+    String(postId),
   ],
 } as const;
