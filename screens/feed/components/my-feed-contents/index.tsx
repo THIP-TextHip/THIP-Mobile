@@ -10,6 +10,7 @@ import {
   useGetFeedMyProfileQuery,
   useGetMyProfileTopInfoQuery,
 } from "@apis/feed";
+import { useGetUncheckedNotificationExistsQuery } from "@apis/notification";
 import { useGetMyIdQuery } from "@apis/user";
 import {
   AppText,
@@ -69,11 +70,18 @@ export default function MyFeedContents() {
     refetchFeedMyProfile,
     isRefetchingFeedMyProfile,
   } = useGetFeedMyProfileQuery();
+  const { refetchUncheckedNotificationExists } =
+    useGetUncheckedNotificationExistsQuery();
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
     fetchNextPage();
+  };
+
+  const handleRefetch = () => {
+    refetchFeedMyProfile();
+    refetchUncheckedNotificationExists();
   };
 
   const renderEmpty = () => {
@@ -118,7 +126,7 @@ export default function MyFeedContents() {
       refreshControl={
         <RefreshControl
           refreshing={isRefetchingFeedMyProfile}
-          onRefresh={refetchFeedMyProfile}
+          onRefresh={handleRefetch}
           tintColor={colors.white}
           colors={[colors.white]}
         />

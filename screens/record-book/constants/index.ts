@@ -1,4 +1,4 @@
-import { CommentListType, CommentReplyListType } from "@shared/ui";
+import type { CommentReplyType, CommentType } from "@apis/comment";
 import { colors } from "@theme/token";
 
 import { RecordBookPostType, RecordBookResponse } from "../types";
@@ -192,7 +192,7 @@ export const DUMMY_RECORD_BOOK_RESPONSE: RecordBookResponse = {
   isLast: false, // 이건 추후 무한스크롤에 사용. 현재는 신경 X
 };
 
-export const DUMMY_RECORD_COMMENT_REPLY_LIST: CommentReplyListType[] = [
+export const DUMMY_RECORD_COMMENT_REPLY_LIST: CommentReplyType[] = [
   {
     commentId: 8,
     parentCommentCreatorNickname: "user1",
@@ -224,7 +224,7 @@ export const DUMMY_RECORD_COMMENT_REPLY_LIST: CommentReplyListType[] = [
   },
 ];
 
-export const DUMMY_RECORD_COMMENT_LIST: CommentListType[] = [
+export const DUMMY_RECORD_COMMENT_LIST: CommentType[] = [
   {
     commentId: 3,
     creatorId: 5,

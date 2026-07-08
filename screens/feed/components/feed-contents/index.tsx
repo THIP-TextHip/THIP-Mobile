@@ -7,6 +7,7 @@ import {
 } from "react-native";
 
 import { useGetAllFeedListQuery } from "@apis/feed";
+import { useGetUncheckedNotificationExistsQuery } from "@apis/notification";
 import { AppText, FeedPostPreview } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -24,11 +25,18 @@ export default function FeedContents() {
     refetchFeedList,
     isRefetchingFeedList,
   } = useGetAllFeedListQuery();
+  const { refetchUncheckedNotificationExists } =
+    useGetUncheckedNotificationExistsQuery();
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
     fetchNextPage();
+  };
+
+  const handleRefetch = () => {
+    refetchFeedList();
+    refetchUncheckedNotificationExists();
   };
 
   const renderEmpty = () => {
@@ -83,7 +91,7 @@ export default function FeedContents() {
       refreshControl={
         <RefreshControl
           refreshing={isRefetchingFeedList}
-          onRefresh={refetchFeedList}
+          onRefresh={handleRefetch}
           tintColor={colors.white}
           colors={[colors.white]}
         />

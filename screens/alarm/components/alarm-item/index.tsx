@@ -1,18 +1,17 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { type NotificationItemType } from "@apis/notification";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { AlarmResponse } from "../../types";
-
 interface AlarmItemProps {
-  alarm: AlarmResponse;
+  alarm: NotificationItemType;
 }
 
 export default function AlarmItem({
   alarm: { title, content, isChecked, notificationType, postDate },
 }: AlarmItemProps) {
-  const alarmType = notificationType === "feed" ? "피드" : "모임";
+  const displayTitle = title.replace(/^\[(피드|모임)\]\s*/, "");
 
   // TODO: 추후 클릭 시 이동 및 읽음 처리 구현
   const handlePressAlarm = () => {
@@ -28,11 +27,11 @@ export default function AlarmItem({
         <View style={styles.headerLeft}>
           <View style={styles.alarmType}>
             <AppText weight="semibold" size="xs" color={colors.grey[100]}>
-              {alarmType}
+              {notificationType}
             </AppText>
           </View>
           <AppText weight="semibold" size="sm" color={colors.white}>
-            {title}
+            {displayTitle}
           </AppText>
         </View>
         <View style={styles.headerRight}>
