@@ -1,32 +1,95 @@
-import { FlatList, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { AlarmResponse, AlarmType } from "../../types";
-import AlarmEmptyView from "../alarm-empty-view";
+import {
+  type NotificationType,
+  useGetNotificationListQuery,
+} from "@apis/notification";
+import { AppText } from "@shared/ui";
+import { colors } from "@theme/token";
+
 import AlarmItem from "../alarm-item";
 
 interface AlarmListProps {
-  filter: AlarmType | null;
-  alarmData: AlarmResponse[];
+  filter: NotificationType | null;
 }
 
-export default function AlarmList({ filter, alarmData }: AlarmListProps) {
+export default function AlarmList({ filter }: AlarmListProps) {
   const { bottom } = useSafeAreaInsets();
 
-  const filteredAlarmList =
-    filter === null
-      ? alarmData
-      : alarmData.filter((item) => item.notificationType === filter);
+  const {
+    notificationList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingNotificationList,
+    isErrorNotificationList,
+    refetchNotificationList,
+    isRefetchingNotificationList,
+  } = useGetNotificationListQuery(filter);
 
-  return filteredAlarmList.length > 0 ? (
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  if (isPendingNotificationList) {
+    return (
+      <View style={styles.status}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
+  if (isErrorNotificationList) {
+    return (
+      <View style={styles.status}>
+        <AppText weight="semibold" size="lg" color={colors.white}>
+          {isErrorNotificationList
+            ? "데이터를 불러오지 못했어요"
+            : "새로운 알림이 없어요"}
+        </AppText>
+      </View>
+    );
+  }
+
+  return notificationList.length > 0 ? (
     <FlatList
-      contentContainerStyle={[styles.content, { paddingBottom: bottom }]}
-      data={filteredAlarmList}
+      contentContainerStyle={[styles.content, { paddingBottom: bottom + 20 }]}
+      data={notificationList}
       keyExtractor={(item) => String(item.notificationId)}
       renderItem={({ item }) => <AlarmItem alarm={item} />}
+      ListFooterComponent={
+        isFetchingNextPage ? (
+          <ActivityIndicator style={styles.footer} color={colors.white} />
+        ) : null
+      }
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefetchingNotificationList}
+          onRefresh={refetchNotificationList}
+          tintColor={colors.white}
+          colors={[colors.white]}
+        />
+      }
     />
   ) : (
-    <AlarmEmptyView />
+    <View style={styles.status}>
+      <AppText weight="semibold" size="lg" color={colors.white}>
+        {isErrorNotificationList
+          ? "데이터를 불러오지 못했어요"
+          : "새로운 알림이 없어요"}
+      </AppText>
+    </View>
   );
 }
 
@@ -35,5 +98,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 20,
     paddingBottom: 20,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 80,
+  },
+  footer: {
+    marginTop: 40,
   },
 });

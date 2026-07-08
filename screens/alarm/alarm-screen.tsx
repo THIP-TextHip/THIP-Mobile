@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { NotificationType } from "@apis/notification";
+
 import { AlarmList, AlarmTopFilter } from "./components";
-import { DUMMY_ALARMS } from "./constants";
-import { AlarmResponse, AlarmType } from "./types";
 
 export default function AlarmScreen() {
-  const [alarmData, setAlarmData] = useState<AlarmResponse[] | null>(null);
-  const [alarmType, setAlarmType] = useState<AlarmType | null>(null);
+  const [alarmType, setAlarmType] = useState<NotificationType | null>(null);
 
-  useEffect(() => {
-    // TODO: 서버 api로 받아오기
-    setAlarmData(DUMMY_ALARMS);
-  }, []);
-
-  const handleSelectType = (type: AlarmType) => {
+  const handleSelectType = (type: NotificationType) => {
     if (type === alarmType) {
       setAlarmType(null);
       return;
@@ -28,7 +22,7 @@ export default function AlarmScreen() {
         alarmType={alarmType}
         handleSelectType={handleSelectType}
       />
-      {alarmData && <AlarmList filter={alarmType} alarmData={alarmData} />}
+      <AlarmList filter={alarmType} />
     </View>
   );
 }

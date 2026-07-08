@@ -65,3 +65,9 @@ export const ROOM_URL = {
   DEFAULT: "/rooms",
   SEARCH: "/rooms/search",
 } as const;
+
+export const NOTIFICATION_URL = {
+  DEFAULT: "/notifications",
+  PUSH_NOTIFICATION: "/users/notification-settings",
+  UNCHECKED: "/notifications/exists-unchecked",
+} as const;

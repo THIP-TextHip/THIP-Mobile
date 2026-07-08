@@ -1,12 +1,11 @@
 import { StyleSheet, View } from "react-native";
 
+import { NotificationType } from "@apis/notification";
 import { SelectChip } from "@shared/ui";
 
-import { AlarmType } from "../../types";
-
 interface AlarmTopFilterProps {
-  alarmType: AlarmType | null;
-  handleSelectType: (type: AlarmType) => void;
+  alarmType: NotificationType | null;
+  handleSelectType: (type: NotificationType) => void;
 }
 
 const ALARM_FILTERS = [
