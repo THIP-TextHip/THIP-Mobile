@@ -19,3 +19,7 @@ export interface GetNotificationListResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface GetUncheckedNotificationExistsResponse {
+  exists: boolean;
+}

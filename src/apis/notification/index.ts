@@ -1,10 +1,17 @@
-export { getNotificationListApi } from "./notification.api";
+export {
+  getNotificationListApi,
+  getUncheckedNotificationExistsApi,
+} from "./notification.api";
 
-export { useGetNotificationListQuery } from "./notification.queries";
+export {
+  useGetNotificationListQuery,
+  useGetUncheckedNotificationExistsQuery,
+} from "./notification.queries";
 
 export type {
   GetNotificationListRequest,
   GetNotificationListResponse,
+  GetUncheckedNotificationExistsResponse,
   NotificationItemType,
   NotificationType,
 } from "./notification.types";

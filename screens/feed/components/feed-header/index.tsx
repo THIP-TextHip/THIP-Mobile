@@ -1,11 +1,14 @@
 import { router } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import { IcAlarm, IcPlusfriend } from "@images/icons";
+import { useGetUncheckedNotificationExistsQuery } from "@apis/notification";
+import { IcAlarm, IcNoAlarm, IcPlusfriend } from "@images/icons";
 import { ThipLogo } from "@images/thip";
 import { CustomHeader } from "@shared/ui";
 
 export default function FeedHeader() {
+  const { hasUncheckedNotification } = useGetUncheckedNotificationExistsQuery();
+
   const handleToSearchUser = () => {
     router.push("/search-user");
   };
@@ -21,9 +24,8 @@ export default function FeedHeader() {
           <Pressable onPress={handleToSearchUser}>
             <IcPlusfriend />
           </Pressable>
-          {/* TODO : 알림 없을 때는 => <IcNoAlarm /> */}
           <Pressable onPress={handleToAlarm}>
-            <IcAlarm />
+            {hasUncheckedNotification ? <IcAlarm /> : <IcNoAlarm />}
           </Pressable>
         </View>
       }

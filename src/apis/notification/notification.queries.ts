@@ -1,12 +1,16 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { getNotificationListApi } from "./notification.api";
+import {
+  getNotificationListApi,
+  getUncheckedNotificationExistsApi,
+} from "./notification.api";
 import { NOTIFICATION_QUERY_KEY } from "./notification.query-key";
 import type {
   GetNotificationListResponse,
+  GetUncheckedNotificationExistsResponse,
   NotificationType,
 } from "./notification.types";
 
@@ -59,5 +63,20 @@ export const useGetNotificationListQuery = (type: NotificationType | null) => {
     isErrorNotificationList,
     refetchNotificationList,
     isRefetchingNotificationList,
+  };
+};
+
+export const useGetUncheckedNotificationExistsQuery = () => {
+  const { data, refetch: refetchUncheckedNotificationExists } = useQuery<
+    GetUncheckedNotificationExistsResponse,
+    Error
+  >({
+    queryKey: NOTIFICATION_QUERY_KEY.UNCHECKED_EXISTS,
+    queryFn: getUncheckedNotificationExistsApi,
+  });
+
+  return {
+    hasUncheckedNotification: data?.exists ?? false,
+    refetchUncheckedNotificationExists,
   };
 };
