@@ -11,6 +11,8 @@ interface AlarmItemProps {
 export default function AlarmItem({
   alarm: { title, content, isChecked, notificationType, postDate },
 }: AlarmItemProps) {
+  const displayTitle = title.replace(/^\[(피드|모임)\]\s*/, "");
+
   // TODO: 추후 클릭 시 이동 및 읽음 처리 구현
   const handlePressAlarm = () => {
     console.log(title, " 클릭");
@@ -29,7 +31,7 @@ export default function AlarmItem({
             </AppText>
           </View>
           <AppText weight="semibold" size="sm" color={colors.white}>
-            {title}
+            {displayTitle}
           </AppText>
         </View>
         <View style={styles.headerRight}>
