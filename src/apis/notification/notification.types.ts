@@ -1,4 +1,4 @@
-import { RoomPostType } from "../room";
+import type { RoomPostType } from "../room";
 
 export type NotificationType = "feed" | "room";
 
@@ -38,35 +38,36 @@ export interface CheckNotificationRequest {
   notificationId: number;
 }
 
-export type NotificationRoute =
-  | "FEED_USER"
-  | "FEED_DETAIL"
-  | "ROOM_MAIN"
-  | "ROOM_DETAIL"
-  | "ROOM_POST_DETAIL";
-
-export type NotificationRouteParams =
-  | {
-      userId: number;
-    }
-  | {
-      feedId: number;
-    }
-  | {
-      roomId: number;
-    }
-  | {
-      roomId: number;
-      page: number;
-      postId: number;
-      postType: RoomPostType;
-      openComments: boolean; // true:댓글에 대한 알림, false:댓글이 아닌 부분에 대한 알림
-    };
-
-export interface CheckNotificationResponse {
-  route: NotificationRoute;
-  params: NotificationRouteParams;
+export interface NotificationRouteParamMap {
+  FEED_USER: {
+    userId: number;
+  };
+  FEED_DETAIL: {
+    feedId: number;
+  };
+  ROOM_MAIN: {
+    roomId: number;
+  };
+  ROOM_DETAIL: {
+    roomId: number;
+  };
+  ROOM_POST_DETAIL: {
+    roomId: number;
+    page: number;
+    postId: number;
+    postType: RoomPostType;
+    openComments: boolean; // true:댓글에 대한 알림, false:댓글이 아닌 부분에 대한 알림
+  };
 }
+
+export type NotificationRoute = keyof NotificationRouteParamMap;
+
+export type CheckNotificationResponse = {
+  [Route in NotificationRoute]: {
+    route: Route;
+    params: NotificationRouteParamMap[Route];
+  };
+}[NotificationRoute];
 
 export interface ChangePushNotificationStateRequest {
   enable: boolean;

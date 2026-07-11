@@ -221,7 +221,9 @@ export default function FeedDetailScreen() {
     <View style={[styles.page, { paddingBottom: bottom }]}>
       <FeedDetailHeader handlePressMore={handlePressMore} />
       <FlatList
-        ListHeaderComponent={() => <FeedPostDetail feedDetail={feedDetail} />}
+        ListHeaderComponent={() => (
+          <FeedPostDetail feedDetail={feedDetail} isDetailPage={true} />
+        )}
         contentContainerStyle={[styles.list, { paddingBottom: inputBarHeight }]}
         data={commentList}
         keyExtractor={(item) => String(item.commentId)}

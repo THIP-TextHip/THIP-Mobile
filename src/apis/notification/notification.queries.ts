@@ -11,6 +11,8 @@ import Toast from "react-native-toast-message";
 
 import { getFormattedCurrentDateTime } from "@shared/utils";
 
+import { COMMENT_QUERY_KEY } from "../comment";
+import { FEED_QUERY_KEY } from "../feed";
 import {
   changePushNotificationStateApi,
   checkNotificationApi,
@@ -150,15 +152,41 @@ export const useCheckNotification = () => {
     error,
   } = useMutation<CheckNotificationResponse, Error, CheckNotificationRequest>({
     mutationFn: checkNotificationApi,
-    // TODO: 읽은 알림 타입에 맞춰 알맞은 페이지로 이동시키기
     onSuccess(data) {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEY.ALL,
       });
       if (data.route === NOTIFICATION_ROUTE.FEED_USER) {
-        // router.push({
-        //     pathname:"/"
-        // })
+        router.push({
+          pathname: "/user-profile/[userId]",
+          params: { userId: data.params.userId },
+        });
+      } else if (data.route === NOTIFICATION_ROUTE.FEED_DETAIL) {
+        router.push({
+          pathname: "/feed-detail/[feedId]",
+          params: { feedId: data.params.feedId },
+        });
+        queryClient.invalidateQueries({
+          queryKey: FEED_QUERY_KEY.DETAIL(data.params.feedId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: COMMENT_QUERY_KEY.LIST(data.params.feedId, "FEED"),
+        });
+      } else if (
+        data.route === NOTIFICATION_ROUTE.ROOM_MAIN ||
+        data.route === NOTIFICATION_ROUTE.ROOM_DETAIL
+      ) {
+        // TODO: 추후 모임방 관련 시 쿼리 캐시 초기화 추가
+        router.push({
+          pathname: "/group-detail/[roomId]",
+          params: { roomId: data.params.roomId },
+        });
+      } else if (data.route === NOTIFICATION_ROUTE.ROOM_POST_DETAIL) {
+        // TODO: 이 경우에는 받은 params를 이용하여 해당 기록 위치를 보여주고, openComments 여부에 따라 댓글 바텀시트도 조작한다. 쿼리 캐시도 초기화
+        router.push({
+          pathname: "/group-detail/[roomId]",
+          params: { roomId: data.params.roomId },
+        });
       }
     },
   });
