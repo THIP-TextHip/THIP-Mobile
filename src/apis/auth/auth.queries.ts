@@ -3,8 +3,14 @@ import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { clearAuthAndRedirectToLogin } from "../auth-guard";
-import { useRegisterNotificationToken } from "../notification";
-import { tryRegisterCurrentDeviceNotificationToken } from "../notification-token";
+import {
+  useDeleteNotificationToken,
+  useRegisterNotificationToken,
+} from "../notification";
+import {
+  getSavedNotificationDeviceId,
+  tryRegisterCurrentDeviceNotificationToken,
+} from "../notification-token";
 import { setAuthToken } from "../token-storage";
 import { loginApi } from "./auth.api";
 import type { LoginRequest, LoginResponse } from "./auth.types";
@@ -51,7 +57,19 @@ export const useLoginMutation = () => {
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
+  const { deleteNotificationTokenAsync } = useDeleteNotificationToken();
+
   const logout = async () => {
+    const deviceId = await getSavedNotificationDeviceId();
+
+    if (deviceId) {
+      try {
+        await deleteNotificationTokenAsync();
+      } catch (error) {
+        console.error("[useLogout] notification token delete failed", error);
+      }
+    }
+
     queryClient.clear();
     await clearAuthAndRedirectToLogin();
   };

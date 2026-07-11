@@ -1,17 +1,19 @@
 import { apiClient } from "../api-client";
 import { NOTIFICATION_URL } from "../endpoint";
 import {
+  getNotificationDeviceId,
+  getSavedNotificationDeviceId,
+} from "../notification-token";
+import type {
   ChangePushNotificationStateRequest,
   ChangePushNotificationStateResponse,
+  CheckNotificationRequest,
   CheckNotificationResponse,
-  GetPushNotificationStateRequest,
+  GetNotificationListRequest,
+  GetNotificationListResponse,
   GetPushNotificationStateResponse,
-  type CheckNotificationRequest,
-  type DeleteNotificationTokenRequest,
-  type GetNotificationListRequest,
-  type GetNotificationListResponse,
-  type GetUncheckedNotificationExistsResponse,
-  type RegisterNotificationTokenRequest,
+  GetUncheckedNotificationExistsResponse,
+  RegisterNotificationTokenRequest,
 } from "./notification.types";
 
 export const getNotificationListApi = async ({
@@ -47,11 +49,17 @@ export const registerNotificationTokenApi = async (
   return response.data;
 };
 
-export const deleteNotificationTokenApi = async (
-  body: DeleteNotificationTokenRequest,
-) => {
+export const deleteNotificationTokenApi = async () => {
+  const deviceId = await getSavedNotificationDeviceId();
+
+  if (!deviceId) {
+    return null;
+  }
+
   const response = await apiClient.delete<string>(NOTIFICATION_URL.TOKEN, {
-    data: body,
+    data: {
+      deviceId,
+    },
   });
 
   return response.data;
@@ -68,20 +76,24 @@ export const checkNotificationApi = async ({
   return response.data;
 };
 
-export const changePushNotificationStateApi = async (
-  body: ChangePushNotificationStateRequest,
-) => {
-  const response = await apiClient.post<ChangePushNotificationStateResponse>(
+export const changePushNotificationStateApi = async ({
+  enable,
+}: ChangePushNotificationStateRequest) => {
+  const deviceId = await getNotificationDeviceId();
+
+  const response = await apiClient.patch<ChangePushNotificationStateResponse>(
     NOTIFICATION_URL.CHANGE_STATE,
-    body,
+    {
+      enable,
+      deviceId,
+    },
   );
 
   return response.data;
 };
 
-export const getPushNotificationStateApi = async ({
-  deviceId,
-}: GetPushNotificationStateRequest) => {
+export const getPushNotificationStateApi = async () => {
+  const deviceId = await getNotificationDeviceId();
   const response = await apiClient.get<GetPushNotificationStateResponse>(
     NOTIFICATION_URL.PUSH_NOTIFICATION,
     { params: { deviceId } },

@@ -9,6 +9,8 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { getFormattedCurrentDateTime } from "@shared/utils";
+
 import {
   changePushNotificationStateApi,
   checkNotificationApi,
@@ -26,7 +28,6 @@ import {
   GetPushNotificationStateResponse,
   type CheckNotificationRequest,
   type CheckNotificationResponse,
-  type DeleteNotificationTokenRequest,
   type GetNotificationListResponse,
   type GetUncheckedNotificationExistsResponse,
   type NotificationType,
@@ -121,16 +122,22 @@ export const useRegisterNotificationToken = () => {
 };
 
 export const useDeleteNotificationToken = () => {
-  const { mutate: deleteNotificationToken } = useMutation<
-    string,
-    Error,
-    DeleteNotificationTokenRequest
-  >({
+  const {
+    mutate: deleteNotificationToken,
+    mutateAsync: deleteNotificationTokenAsync,
+    isPending: isPendingDeleteNotificationToken,
+    isError: isErrorDeleteNotificationToken,
+    error: deleteNotificationTokenError,
+  } = useMutation<string | null, Error>({
     mutationFn: deleteNotificationTokenApi,
   });
 
   return {
     deleteNotificationToken,
+    deleteNotificationTokenAsync,
+    isPendingDeleteNotificationToken,
+    isErrorDeleteNotificationToken,
+    deleteNotificationTokenError,
   };
 };
 
@@ -173,15 +180,15 @@ export const useCheckNotification = () => {
   };
 };
 
-export const useGetPushNotificationState = (deviceId: string) => {
+export const useGetPushNotificationState = () => {
   const {
     data,
     isPending: isPendingPushNotificationData,
     isError: isErrorPushNotificationData,
     error,
   } = useQuery<GetPushNotificationStateResponse, Error>({
-    queryKey: NOTIFICATION_QUERY_KEY.NOTIFICATION_STATE(deviceId),
-    queryFn: () => getPushNotificationStateApi({ deviceId }),
+    queryKey: NOTIFICATION_QUERY_KEY.NOTIFICATION_STATE,
+    queryFn: getPushNotificationStateApi,
   });
 
   useEffect(() => {
@@ -216,10 +223,23 @@ export const useChangePushNotificationState = () => {
     ChangePushNotificationStateRequest
   >({
     mutationFn: changePushNotificationStateApi,
-    onSuccess: (_, variables) => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: NOTIFICATION_QUERY_KEY.NOTIFICATION_STATE(variables.deviceId),
+        queryKey: NOTIFICATION_QUERY_KEY.NOTIFICATION_STATE,
       });
+      if (data.isEnabled) {
+        Toast.show({
+          type: "alarm",
+          text1: "푸시 알림이 설정되었어요.",
+          text2: `${getFormattedCurrentDateTime()}`,
+        });
+      } else {
+        Toast.show({
+          type: "alarm",
+          text1: "푸시 알림이 해제되었어요.",
+          text2: `${getFormattedCurrentDateTime()}`,
+        });
+      }
     },
   });
 

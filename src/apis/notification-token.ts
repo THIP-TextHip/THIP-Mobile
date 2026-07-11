@@ -51,6 +51,9 @@ export const getNotificationDeviceId = async () => {
   return deviceId;
 };
 
+export const getSavedNotificationDeviceId = () =>
+  SecureStore.getItemAsync(NOTIFICATION_DEVICE_ID_KEY);
+
 const setAndroidNotificationChannel = async () => {
   if (Platform.OS !== "android") {
     return;

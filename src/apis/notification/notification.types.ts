@@ -34,10 +34,6 @@ export interface RegisterNotificationTokenRequest {
   platformType: PlatformType;
 }
 
-export interface DeleteNotificationTokenRequest {
-  deviceId: string;
-}
-
 export interface CheckNotificationRequest {
   notificationId: number;
 }
@@ -74,15 +70,10 @@ export interface CheckNotificationResponse {
 
 export interface ChangePushNotificationStateRequest {
   enable: boolean;
-  deviceId: string;
 }
 
 export interface ChangePushNotificationStateResponse {
   isEnabled: boolean;
-}
-
-export interface GetPushNotificationStateRequest {
-  deviceId: string;
 }
 
 export interface GetPushNotificationStateResponse {
