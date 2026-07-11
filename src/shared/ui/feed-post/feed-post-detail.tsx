@@ -12,9 +12,13 @@ import { FeedPostDetailType } from "./types";
 
 interface FeedPostDetailProps {
   feedDetail: FeedPostDetailType;
+  isDetailPage?: boolean;
 }
 
-export default function FeedPostDetail({ feedDetail }: FeedPostDetailProps) {
+export default function FeedPostDetail({
+  feedDetail,
+  isDetailPage = false,
+}: FeedPostDetailProps) {
   return (
     <View style={styles.container}>
       <FeedPostHeader feed={feedDetail} />
@@ -24,7 +28,7 @@ export default function FeedPostDetail({ feedDetail }: FeedPostDetailProps) {
         bookAuthor={feedDetail.bookAuthor}
       />
       <FeedPostDetailBody feedDetail={feedDetail} />
-      <FeedPostFooter feed={feedDetail} />
+      <FeedPostFooter feed={feedDetail} isDetailPage={isDetailPage} />
     </View>
   );
 }

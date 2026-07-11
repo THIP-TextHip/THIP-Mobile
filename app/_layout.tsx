@@ -12,7 +12,7 @@ import {
 import Toast from "react-native-toast-message";
 
 import { toastConfig } from "@config/toast.config";
-import { useLoadFonts } from "@shared/hooks";
+import { useLoadFonts, useNotificationHandler } from "@shared/hooks";
 import { colors } from "@theme/token";
 
 SplashScreen.preventAutoHideAsync();
@@ -26,6 +26,11 @@ Notifications.setNotificationHandler({
   }),
 });
 
+const NotificationHandler = () => {
+  useNotificationHandler();
+  return null;
+};
+
 // TODO: 추후 tabs 밖의 페이지들도 카테고리별로 묶기 / screens 폴더 내부도 카테고리별 묶기 필요
 
 export default function RootLayout() {
@@ -36,6 +41,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryClientProvider client={queryClient}>
+        <NotificationHandler />
         <BottomSheetModalProvider>
           <SafeAreaView
             style={{ flex: 1, backgroundColor: colors.black.main }}

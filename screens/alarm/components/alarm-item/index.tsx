@@ -1,6 +1,9 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { type NotificationItemType } from "@apis/notification";
+import {
+  useCheckNotification,
+  type NotificationItemType,
+} from "@apis/notification";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -9,14 +12,24 @@ interface AlarmItemProps {
 }
 
 export default function AlarmItem({
-  alarm: { title, content, isChecked, notificationType, postDate },
+  alarm: {
+    title,
+    content,
+    isChecked,
+    notificationType,
+    postDate,
+    notificationId,
+  },
 }: AlarmItemProps) {
-  const displayTitle = title.replace(/^\[(피드|모임)\]\s*/, "");
+  const { checkNotification, isPendingCheckNotification } =
+    useCheckNotification();
 
-  // TODO: 추후 클릭 시 이동 및 읽음 처리 구현
   const handlePressAlarm = () => {
-    console.log(title, " 클릭");
+    if (isPendingCheckNotification) return null;
+    checkNotification({ notificationId });
   };
+
+  const displayTitle = title.replace(/^\[(피드|모임)\]\s*/, "");
 
   return (
     <Pressable

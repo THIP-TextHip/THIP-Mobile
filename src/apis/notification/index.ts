@@ -29,7 +29,6 @@ export type {
   GetUncheckedNotificationExistsResponse,
   NotificationItemType,
   NotificationRoute,
-  NotificationRouteParams,
   NotificationType,
   RegisterNotificationTokenRequest,
 } from "./notification.types";

@@ -30,9 +30,13 @@ interface FeedPostFooterProps {
     | FeedMyPostPreviewType
     | FeedPostDetailType
     | FeedPostBase;
+  isDetailPage?: boolean;
 }
 
-export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
+export default function FeedPostFooter({
+  feed,
+  isDetailPage = false,
+}: FeedPostFooterProps) {
   const { feedId, likeCount, commentCount, isLiked, isSaved, isWriter } = feed;
   const isChangingBookStatusRef = useRef(false);
   const { changeFeedSaveStatus, isPendingChangeFeedSaveStatus } =
@@ -84,7 +88,11 @@ export default function FeedPostFooter({ feed }: FeedPostFooterProps) {
           </AppText>
         </View>
         <View style={styles.likeCommentStyle}>
-          <Pressable onPress={handleToFeedDetail} hitSlop={5}>
+          <Pressable
+            onPress={handleToFeedDetail}
+            disabled={isDetailPage}
+            hitSlop={5}
+          >
             <IcComment />
           </Pressable>
           <AppText weight="medium" size="xs" color={colors.white}>
