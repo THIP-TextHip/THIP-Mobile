@@ -32,9 +32,8 @@ export const useLoginMutation = () => {
         return;
       }
 
-      await tryRegisterCurrentDeviceNotificationToken(
-        registerNotificationTokenAsync,
-      );
+      // fire-and-forget: 등록 실패해도 로그인 플로우에 영향 없음
+      tryRegisterCurrentDeviceNotificationToken(registerNotificationTokenAsync);
 
       router.replace({
         pathname: "/",

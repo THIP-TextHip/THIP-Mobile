@@ -171,7 +171,7 @@ export const useCheckNotification = () => {
       text1: error.message,
     });
 
-    router.push("/feed");
+    router.push("/alarm");
   }, [isError, error]);
 
   return {
