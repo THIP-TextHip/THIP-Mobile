@@ -70,4 +70,7 @@ export const NOTIFICATION_URL = {
   DEFAULT: "/notifications",
   PUSH_NOTIFICATION: "/users/notification-settings",
   UNCHECKED: "/notifications/exists-unchecked",
+  TOKEN: "/notifications/fcm-tokens",
+  CHECK: "/notifications/check",
+  CHANGE_STATE: "/notifications/enable-state",
 } as const;

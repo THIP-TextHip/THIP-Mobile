@@ -1,7 +1,9 @@
 import { router } from "expo-router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
+import { useRegisterNotificationToken } from "@apis/notification";
+import { tryRegisterCurrentDeviceNotificationToken } from "@apis/notification-token";
 import { useGetMyInfoQuery } from "@apis/user";
 import { IcArrowLeft } from "@images/icons";
 import { AppText, CustomButton, CustomHeader } from "@shared/ui";
@@ -10,14 +12,27 @@ import { colors } from "@theme/token";
 export default function WelcomeScreen() {
   // TODO: 추후 로딩 및 예외처리 isPendingUserInfo, isErrorUserInfo, userInfoError
   const { myInfo } = useGetMyInfoQuery();
+  const [isRegisteringNotificationToken, setIsRegisteringNotificationToken] =
+    useState(false);
+  const {
+    registerNotificationTokenAsync,
+    isPendingRegisterNotificationToken,
+  } = useRegisterNotificationToken();
 
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
 
-  const handlePressStart = () => {
+  const handlePressStart = useCallback(async () => {
+    setIsRegisteringNotificationToken(true);
+
+    await tryRegisterCurrentDeviceNotificationToken(
+      registerNotificationTokenAsync,
+    );
+
+    setIsRegisteringNotificationToken(false);
     router.replace("/feed");
-  };
+  }, [registerNotificationTokenAsync]);
 
   return (
     <View style={styles.page}>
@@ -54,7 +69,13 @@ export default function WelcomeScreen() {
               </AppText>
             </View>
           </View>
-          <CustomButton handlePress={handlePressStart}>
+          <CustomButton
+            handlePress={handlePressStart}
+            disabled={
+              isRegisteringNotificationToken ||
+              isPendingRegisterNotificationToken
+            }
+          >
             <AppText weight="semibold" size="base" color={colors.white}>
               지금 바로 Thip 시작하기
             </AppText>

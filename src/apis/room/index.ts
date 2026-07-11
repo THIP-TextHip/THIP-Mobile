@@ -5,6 +5,7 @@ export { useSearchRoomQuery } from "./room.queries";
 export type {
   GetSearchRoomRequest,
   GetSearchRoomResponse,
+  RoomPostType,
   RoomType,
   SearchRoomQueryParams,
   SearchRoomSort,

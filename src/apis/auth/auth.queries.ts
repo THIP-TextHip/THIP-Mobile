@@ -3,11 +3,21 @@ import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { clearAuthAndRedirectToLogin } from "../auth-guard";
+import {
+  useDeleteNotificationToken,
+  useRegisterNotificationToken,
+} from "../notification";
+import {
+  getSavedNotificationDeviceId,
+  tryRegisterCurrentDeviceNotificationToken,
+} from "../notification-token";
 import { setAuthToken } from "../token-storage";
 import { loginApi } from "./auth.api";
 import type { LoginRequest, LoginResponse } from "./auth.types";
 
 export const useLoginMutation = () => {
+  const { registerNotificationTokenAsync } = useRegisterNotificationToken();
+
   const { mutate: login, isPending: isPendingLogin } = useMutation<
     LoginResponse,
     Error,
@@ -21,6 +31,10 @@ export const useLoginMutation = () => {
         router.replace("/sign-up");
         return;
       }
+
+      // fire-and-forget: 등록 실패해도 로그인 플로우에 영향 없음
+      tryRegisterCurrentDeviceNotificationToken(registerNotificationTokenAsync);
+
       router.replace({
         pathname: "/",
       });
@@ -42,7 +56,19 @@ export const useLoginMutation = () => {
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
+  const { deleteNotificationTokenAsync } = useDeleteNotificationToken();
+
   const logout = async () => {
+    const deviceId = await getSavedNotificationDeviceId();
+
+    if (deviceId) {
+      try {
+        await deleteNotificationTokenAsync();
+      } catch (error) {
+        console.error("[useLogout] notification token delete failed", error);
+      }
+    }
+
     queryClient.clear();
     await clearAuthAndRedirectToLogin();
   };

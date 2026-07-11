@@ -26,3 +26,5 @@ export interface GetSearchRoomResponse {
 }
 
 export type SearchRoomQueryParams = Omit<GetSearchRoomRequest, "cursor">;
+
+export type RoomPostType = "VOTE" | "RECORD";

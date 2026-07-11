@@ -1,5 +1,6 @@
 ﻿import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useState } from "react";
@@ -15,6 +16,15 @@ import { useLoadFonts } from "@shared/hooks";
 import { colors } from "@theme/token";
 
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 // TODO: 추후 tabs 밖의 페이지들도 카테고리별로 묶기 / screens 폴더 내부도 카테고리별 묶기 필요
 
