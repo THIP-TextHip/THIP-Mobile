@@ -3,11 +3,15 @@ import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { clearAuthAndRedirectToLogin } from "../auth-guard";
+import { useRegisterNotificationToken } from "../notification";
+import { tryRegisterCurrentDeviceNotificationToken } from "../notification-token";
 import { setAuthToken } from "../token-storage";
 import { loginApi } from "./auth.api";
 import type { LoginRequest, LoginResponse } from "./auth.types";
 
 export const useLoginMutation = () => {
+  const { registerNotificationTokenAsync } = useRegisterNotificationToken();
+
   const { mutate: login, isPending: isPendingLogin } = useMutation<
     LoginResponse,
     Error,
@@ -21,6 +25,11 @@ export const useLoginMutation = () => {
         router.replace("/sign-up");
         return;
       }
+
+      await tryRegisterCurrentDeviceNotificationToken(
+        registerNotificationTokenAsync,
+      );
+
       router.replace({
         pathname: "/",
       });

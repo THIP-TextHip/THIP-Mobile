@@ -1,8 +1,10 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
+import { existsSync } from "node:fs";
 
 const appJson = require("./app.json");
 
 const kakaoNativeAppKey = process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY;
+const googleServicesFile = "./google-services.json";
 
 const plugins: ExpoConfig["plugins"] = [
   "expo-router",
@@ -20,6 +22,12 @@ const plugins: ExpoConfig["plugins"] = [
   ],
   "expo-font",
   "expo-secure-store",
+  [
+    "expo-notifications",
+    {
+      defaultChannel: "default",
+    },
+  ],
   [
     "expo-build-properties",
     {
@@ -58,6 +66,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ...appJson.expo.android,
     ...config.android,
     package: "com.texthip.thip",
+    ...(existsSync(googleServicesFile) ? { googleServicesFile } : {}),
   },
   plugins,
 });

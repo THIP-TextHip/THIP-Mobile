@@ -101,16 +101,22 @@ export const useGetUncheckedNotificationExistsQuery = () => {
 };
 
 export const useRegisterNotificationToken = () => {
-  const { mutate: registerNotificationToken } = useMutation<
-    string,
-    Error,
-    RegisterNotificationTokenRequest
-  >({
+  const {
+    mutate: registerNotificationToken,
+    mutateAsync: registerNotificationTokenAsync,
+    isPending: isPendingRegisterNotificationToken,
+    isError: isErrorRegisterNotificationToken,
+    error: registerNotificationTokenError,
+  } = useMutation<string, Error, RegisterNotificationTokenRequest>({
     mutationFn: registerNotificationTokenApi,
   });
 
   return {
     registerNotificationToken,
+    registerNotificationTokenAsync,
+    isPendingRegisterNotificationToken,
+    isErrorRegisterNotificationToken,
+    registerNotificationTokenError,
   };
 };
 
