@@ -1,14 +1,13 @@
 import { router } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
+import { type RoomTypeWithIsPublic } from "@apis/room";
 import { IcGroupWhite } from "@images/icons";
 import { AppText, PrivateRoomImage } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { SearchGroupType } from "../../types";
-
 interface SearchedGroupItemProps {
-  searchedGroup: SearchGroupType;
+  searchedGroup: RoomTypeWithIsPublic;
 }
 
 export default function SearchedGroupItem({

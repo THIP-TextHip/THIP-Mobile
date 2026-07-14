@@ -1,12 +1,17 @@
-export { getSearchRoomApi } from "./room.api";
+export { getRoomListApi, getSearchRoomApi } from "./room.api";
 
-export { useSearchRoomQuery } from "./room.queries";
+export { useGetRoomListQuery, useSearchRoomQuery } from "./room.queries";
 
 export type {
+  GetRoomListRequest,
+  GetRoomListResponse,
   GetSearchRoomRequest,
   GetSearchRoomResponse,
+  RoomCategory,
   RoomPostType,
   RoomType,
+  RoomTypeWithIsPublic,
+  SearchRoomCategory,
   SearchRoomQueryParams,
   SearchRoomSort,
 } from "./room.types";

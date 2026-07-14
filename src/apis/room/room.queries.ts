@@ -1,11 +1,13 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { getSearchRoomApi } from "./room.api";
+import { getRoomListApi, getSearchRoomApi } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  GetRoomListRequest,
+  GetRoomListResponse,
   GetSearchRoomResponse,
   SearchRoomQueryParams,
 } from "./room.types";
@@ -15,7 +17,7 @@ type RoomCursor = string | null;
 export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
   const normalizedParams = {
     keyword: params.keyword?.trim() ?? "",
-    category: params.category?.trim() ?? "",
+    category: params.category,
     isAllCategory: params.isAllCategory ?? false,
     sort: params.sort,
     isFinalized: params.isFinalized,
@@ -70,4 +72,13 @@ export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
     isFetchingSearchRoom,
     isFetchingNextPage,
   };
+};
+
+export const useGetRoomListQuery = ({ category }: GetRoomListRequest) => {
+  const { data: mainRoomListData } = useQuery<GetRoomListResponse, Error>({
+    queryKey: ROOM_QUERY_KEY.MAIN(category),
+    queryFn: () => getRoomListApi({ category }),
+  });
+
+  return { mainRoomListData };
 };

@@ -33,6 +33,7 @@ export default function RecruitingGroupCarouselItem({
   const [selectedCategory, setSelectedCategory] =
     useState<GroupCategoryType>("문학");
   // TODO: 서버에서 가져오기. 여기에 selectedCategory도 추가로 필터링 해야함
+  // TODO: 이곳에 Room Query 이용하기
   const roomList = DUMMY_RECRUITING_GROUP_CAROUSEL[carouselType];
   const isGrid = width > GRID_WIDTH;
   const gridCardWidth = (width - 40) / 2 - 10;

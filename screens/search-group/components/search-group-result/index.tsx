@@ -4,12 +4,11 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
-import { useSearchRoomQuery } from "@apis/room";
+import { type SearchRoomCategory, useSearchRoomQuery } from "@apis/room";
 import { AppText, ListTotalCountHeader, SelectChip } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { SEARCH_GROUP_CATEGORY } from "../../constants";
-import { SearchGroupCategoryType } from "../../types";
 import SearchedGroupItem from "../searched-group-item";
 
 const Separator = () => <View style={styles.separator} />;
@@ -30,8 +29,8 @@ const EmptyView = () => {
 interface SearchGroupResultProps {
   searchText: string;
   hasSearched: boolean;
-  roomCategory: SearchGroupCategoryType | null;
-  handleChangeCategory: (roomCategory: SearchGroupCategoryType) => void;
+  roomCategory: SearchRoomCategory | null;
+  handleChangeCategory: (roomCategory: SearchRoomCategory) => void;
 }
 
 export default function SearchGroupResult({
