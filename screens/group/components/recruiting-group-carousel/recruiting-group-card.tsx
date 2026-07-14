@@ -1,14 +1,13 @@
 import { router } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
+import { type RoomType } from "@apis/room";
 import { IcGroupWhite } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { GroupCarouselItemType } from "../../types";
-
 interface RecruitingGroupCardProps {
-  roomInfo: GroupCarouselItemType;
+  roomInfo: RoomType;
 }
 
 export default function RecruitingGroupCard({
@@ -31,7 +30,7 @@ export default function RecruitingGroupCard({
           lineHeight={24}
           numberOfLines={1}
         >
-          {roomInfo.roomTitle}
+          {roomInfo.roomName}
         </AppText>
         <View style={styles.memberCountSection}>
           <IcGroupWhite />

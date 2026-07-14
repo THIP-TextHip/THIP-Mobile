@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -9,11 +9,11 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import type { GroupCategoryType } from "@shared/types";
+import { useGetRoomListQuery, type RoomCategory } from "@apis/room";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DUMMY_RECRUITING_GROUP_CAROUSEL, GRID_WIDTH } from "../../constants";
+import { GRID_WIDTH } from "../../constants";
 import type { RecruitingGroupCarouselType } from "../../types";
 import RecruitingGroupCard from "./recruiting-group-card";
 import RecruitingGroupCarouselHeader from "./recruiting-group-carousel-header";
@@ -24,6 +24,12 @@ interface RecruitingGroupCarouselItemProps {
   animationValue?: SharedValue<number>;
 }
 
+const CAROUSEL_LABELS = {
+  deadlineRoomList: "마감 임박한",
+  popularRoomList: "인기 있는",
+  recentRoomList: "최근 생성된",
+} satisfies Record<RecruitingGroupCarouselType, string>;
+
 export default function RecruitingGroupCarouselItem({
   width,
   carouselType,
@@ -31,21 +37,10 @@ export default function RecruitingGroupCarouselItem({
 }: RecruitingGroupCarouselItemProps) {
   // 서버에서 카테고리에 따라 다른 list 줌.
   const [selectedCategory, setSelectedCategory] =
-    useState<GroupCategoryType>("문학");
-  // TODO: 서버에서 가져오기. 여기에 selectedCategory도 추가로 필터링 해야함
-  // TODO: 이곳에 Room Query 이용하기
-  const roomList = DUMMY_RECRUITING_GROUP_CAROUSEL[carouselType];
-  const isGrid = width > GRID_WIDTH;
-  const gridCardWidth = (width - 40) / 2 - 10;
+    useState<RoomCategory>("문학");
 
-  const cardHeight = isGrid ? 430 : 730;
-
-  const label =
-    carouselType === "deadlineRoomList"
-      ? "마감 임박한"
-      : carouselType === "popularRoomList"
-        ? "인기 있는"
-        : "최근 생성된";
+  const { roomListData, isPendingRoomListData, isErrorRoomListData } =
+    useGetRoomListQuery({ category: selectedCategory });
 
   const fallbackAnimationValue = useSharedValue(0);
   const currentAnimationValue = animationValue ?? fallbackAnimationValue;
@@ -71,6 +66,74 @@ export default function RecruitingGroupCarouselItem({
     };
   });
 
+  const roomList = roomListData?.[carouselType];
+  const isGrid = width > GRID_WIDTH;
+  const gridCardWidth = (width - 40) / 2 - 10;
+
+  const cardHeight = isGrid ? 430 : 730;
+  const label = CAROUSEL_LABELS[carouselType];
+
+  const renderRoomListContent = () => {
+    if (isPendingRoomListData) {
+      return (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      );
+    }
+
+    if (isErrorRoomListData || !roomList) {
+      return (
+        <View style={styles.status}>
+          <AppText
+            weight="semibold"
+            size="lg"
+            color={colors.white}
+            lineHeight={24}
+          >
+            데이터를 불러오지 못했어요
+          </AppText>
+        </View>
+      );
+    }
+
+    if (roomList.length === 0) {
+      return (
+        <View style={styles.status}>
+          <AppText
+            weight="semibold"
+            size="lg"
+            color={colors.white}
+            lineHeight={24}
+          >
+            모임방이 아직 없어요.
+          </AppText>
+          <AppText weight="regular" size="sm" color={colors.grey[100]}>
+            해당 장르의 모임방이 생기면 보여줄게요!
+          </AppText>
+        </View>
+      );
+    }
+
+    return (
+      <View
+        style={[
+          styles.roomListWrapper,
+          isGrid && styles.roomListWrapperGrid,
+        ]}
+      >
+        {roomList.map((room) => (
+          <View
+            key={room.roomId}
+            style={isGrid ? { width: gridCardWidth } : undefined}
+          >
+            <RecruitingGroupCard roomInfo={room} />
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <Animated.View style={[styles.wrapper, { width }, cardAnimatedStyle]}>
       <LinearGradient
@@ -85,37 +148,7 @@ export default function RecruitingGroupCarouselItem({
           selectedCategory={selectedCategory}
           handleChangeCategory={setSelectedCategory}
         />
-        {roomList.length === 0 ? (
-          <View style={styles.empty}>
-            <AppText
-              weight="semibold"
-              size="lg"
-              color={colors.white}
-              lineHeight={24}
-            >
-              모임방이 아직 없어요.
-            </AppText>
-            <AppText weight="regular" size="sm" color={colors.grey[100]}>
-              해당 장르의 모임방이 생기면 보여줄게요!
-            </AppText>
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.roomListWrapper,
-              isGrid && styles.roomListWrapperGrid,
-            ]}
-          >
-            {roomList.map((room) => (
-              <View
-                key={room.roomId}
-                style={isGrid ? { width: gridCardWidth } : undefined}
-              >
-                <RecruitingGroupCard roomInfo={room} />
-              </View>
-            ))}
-          </View>
-        )}
+        {renderRoomListContent()}
       </LinearGradient>
     </Animated.View>
   );
@@ -140,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     rowGap: 20,
   },
-  empty: {
+  status: {
     marginTop: 40,
     gap: 8,
     alignItems: "center",

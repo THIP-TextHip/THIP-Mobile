@@ -75,10 +75,14 @@ export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
 };
 
 export const useGetRoomListQuery = ({ category }: GetRoomListRequest) => {
-  const { data: mainRoomListData } = useQuery<GetRoomListResponse, Error>({
+  const {
+    data: roomListData,
+    isPending: isPendingRoomListData,
+    isError: isErrorRoomListData,
+  } = useQuery<GetRoomListResponse, Error>({
     queryKey: ROOM_QUERY_KEY.MAIN(category),
     queryFn: () => getRoomListApi({ category }),
   });
 
-  return { mainRoomListData };
+  return { roomListData, isPendingRoomListData, isErrorRoomListData };
 };

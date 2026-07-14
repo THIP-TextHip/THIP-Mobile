@@ -1,14 +1,14 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { type RoomCategory } from "@apis/room";
 import { GROUP_CATEGORY } from "@shared/constants";
-import type { GroupCategoryType } from "@shared/types";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface RecruitingGroupCarouselHeaderProps {
   label: string;
-  selectedCategory: GroupCategoryType;
-  handleChangeCategory: (category: GroupCategoryType) => void;
+  selectedCategory: RoomCategory;
+  handleChangeCategory: (category: RoomCategory) => void;
 }
 
 export default function RecruitingGroupCarouselHeader({
