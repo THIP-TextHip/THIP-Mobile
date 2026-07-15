@@ -49,14 +49,6 @@ export default function MyGroupListScreen() {
     fetchNextPage();
   };
 
-  if (isPendingMyRoomList) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
-
   const MyGroupEmpty = () => {
     return (
       <View style={[styles.status, { height: height - 300 }]}>
@@ -99,28 +91,34 @@ export default function MyGroupListScreen() {
         myGroupType={myGroupType}
         handleSelectType={handleSelectType}
       />
-      <FlatList
-        contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
-        data={myRoomList}
-        keyExtractor={(item) => String(item.roomId)}
-        renderItem={({ item }) => <MyGroupCard {...item} />}
-        ListEmptyComponent={MyGroupEmpty}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator style={styles.footer} color={colors.white} />
-          ) : null
-        }
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefetchingMyRoomList}
-            onRefresh={refetchMyRoomList}
-            tintColor={colors.white}
-            colors={[colors.white]}
-          />
-        }
-      />
+      {isPendingMyRoomList ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      ) : (
+        <FlatList
+          contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
+          data={myRoomList}
+          keyExtractor={(item) => String(item.roomId)}
+          renderItem={({ item }) => <MyGroupCard {...item} />}
+          ListEmptyComponent={MyGroupEmpty}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <ActivityIndicator style={styles.footer} color={colors.white} />
+            ) : null
+          }
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefetchingMyRoomList}
+              onRefresh={refetchMyRoomList}
+              tintColor={colors.white}
+              colors={[colors.white]}
+            />
+          }
+        />
+      )}
     </View>
   );
 }
