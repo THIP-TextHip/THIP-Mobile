@@ -11,13 +11,13 @@ import {
   useDeleteRecentSearchMutation,
   useGetRecentSearchQuery,
 } from "@apis/recent-search";
+import { SearchRoomCategory } from "@apis/room";
 import { IcRightRight } from "@images/icons";
 import { AppText, RecentSearch, SearchBar } from "@shared/ui";
 import { useSearchGroupInitialCategory } from "@stores/search-group";
 import { colors } from "@theme/token";
 
 import { SearchGroupResult } from "./components";
-import { SearchGroupCategoryType } from "./types";
 
 export default function SearchGroupScreen() {
   const {
@@ -31,8 +31,9 @@ export default function SearchGroupScreen() {
 
   const [searchText, setSearchText] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
-  const [roomCategory, setRoomCategory] =
-    useState<SearchGroupCategoryType | null>(searchGroupInitialCategory);
+  const [roomCategory, setRoomCategory] = useState<SearchRoomCategory | null>(
+    searchGroupInitialCategory,
+  );
 
   const handleChangeText = useCallback((text: string) => {
     setSearchText(text);
@@ -59,7 +60,7 @@ export default function SearchGroupScreen() {
   }, []);
 
   const handleChangeCategory = useCallback(
-    (nextCategory: SearchGroupCategoryType) => {
+    (nextCategory: SearchRoomCategory) => {
       if (roomCategory === nextCategory) {
         setSearchText("");
         setHasSearched(false);

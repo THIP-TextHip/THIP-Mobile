@@ -1,21 +1,37 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { getSearchRoomApi } from "./room.api";
+import { type ApiErrorResponse } from "../api-client";
+import {
+  getHomeMyRoomApi,
+  getHomeRecuitingRoomApi,
+  getMyRoomListApi,
+  getSearchRoomApi,
+} from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  GetHomeMyRoomResponse,
+  GetHomeRecruitingRoomRequest,
+  GetHomeRecruitingRoomResponse,
+  GetMyRoomListResponse,
   GetSearchRoomResponse,
+  MyRoomType,
   SearchRoomQueryParams,
 } from "./room.types";
+
+const MY_ROOM_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 5,
+  GC: 1000 * 60 * 10,
+} as const;
 
 type RoomCursor = string | null;
 
 export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
   const normalizedParams = {
     keyword: params.keyword?.trim() ?? "",
-    category: params.category?.trim() ?? "",
+    category: params.category,
     isAllCategory: params.isAllCategory ?? false,
     sort: params.sort,
     isFinalized: params.isFinalized,
@@ -69,5 +85,102 @@ export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
     isPendingSearchRoom,
     isFetchingSearchRoom,
     isFetchingNextPage,
+  };
+};
+
+export const useGetHomeRecruitingRoomListQuery = ({
+  category,
+}: GetHomeRecruitingRoomRequest) => {
+  const {
+    data: homeRecruitingRoomData,
+    isPending: isPendingHomeRecruitingRoomData,
+    isError: isErrorHomeRecruitingRoomData,
+    error: homeRecruitingRoomError,
+  } = useQuery<GetHomeRecruitingRoomResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.HOME_RECRUITING(category),
+    queryFn: () => getHomeRecuitingRoomApi({ category }),
+  });
+
+  return {
+    homeRecruitingRoomData,
+    isPendingHomeRecruitingRoomData,
+    isErrorHomeRecruitingRoomData,
+    homeRecruitingRoomError,
+  };
+};
+
+export const useGetMyRoomListQuery = (type: MyRoomType) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingMyRoomList,
+    isError: isErrorMyRoomList,
+    error: myRoomListError,
+    refetch: refetchMyRoomList,
+    isRefetching: isRefetchingMyRoomList,
+  } = useInfiniteQuery<
+    GetMyRoomListResponse,
+    ApiErrorResponse,
+    InfiniteData<GetMyRoomListResponse, RoomCursor>,
+    ReturnType<typeof ROOM_QUERY_KEY.MY_ROOM>,
+    RoomCursor
+  >({
+    queryKey: ROOM_QUERY_KEY.MY_ROOM(type),
+    queryFn: ({ pageParam }) => getMyRoomListApi({ type, cursor: pageParam }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: MY_ROOM_QUERY_CACHE_TIME.STALE,
+    gcTime: MY_ROOM_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    myRoomList: data?.pages.flatMap((page) => page.roomList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingMyRoomList,
+    isErrorMyRoomList,
+    myRoomListError,
+    refetchMyRoomList,
+    isRefetchingMyRoomList,
+  };
+};
+
+export const useGetHomeMyRoomQuery = () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingHomeMyRoom,
+    isError: isErrorHomeMyRoom,
+    error: homeMyRoomError,
+  } = useInfiniteQuery<
+    GetHomeMyRoomResponse,
+    ApiErrorResponse,
+    InfiniteData<GetHomeMyRoomResponse, RoomCursor>,
+    typeof ROOM_QUERY_KEY.HOME_MY_ROOM,
+    RoomCursor
+  >({
+    queryKey: ROOM_QUERY_KEY.HOME_MY_ROOM,
+    queryFn: ({ pageParam }) => getHomeMyRoomApi(pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: MY_ROOM_QUERY_CACHE_TIME.STALE,
+    gcTime: MY_ROOM_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    homeMyRoomData: data?.pages.flatMap((page) => page.roomList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingHomeMyRoom,
+    isErrorHomeMyRoom,
+    homeMyRoomError,
   };
 };

@@ -2,37 +2,11 @@ import { router } from "expo-router";
 import { useCallback } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
+import { type MyRoomListType } from "@apis/room";
 import { IcGroupWhite } from "@images/icons";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
-
-interface MyGroupCardBaseProps {
-  roomId: number;
-  bookImageUrl: string;
-  roomName: string;
-  memberCount: number;
-  isPublic?: boolean; // 피그마 상에서 해당 부분 사용 x
-}
-
-export type MyGroupCardProps = MyGroupCardBaseProps &
-  (
-    | {
-        type: "recruiting";
-        recruitCount: number;
-        endDate: string;
-      }
-    | {
-        type: "playing";
-        recruitCount?: never;
-        endDate: string;
-      }
-    | {
-        type: "expired";
-        recruitCount?: never;
-        endDate?: never;
-      }
-  );
 
 export default function MyGroupCard({
   roomId,
@@ -42,8 +16,7 @@ export default function MyGroupCard({
   memberCount,
   endDate,
   type,
-  // isPublic,
-}: MyGroupCardProps) {
+}: MyRoomListType) {
   const handleToGroupDetail = useCallback(() => {
     router.push({
       pathname: "/group-detail/[roomId]",

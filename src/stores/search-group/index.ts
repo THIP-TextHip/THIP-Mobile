@@ -1,10 +1,10 @@
-// TODO: 추후 api 관련 타입으로 분리하기
-import { SearchGroupCategoryType } from "@/screens/search-group/types";
 import { create } from "zustand";
 
+import { SearchRoomCategory } from "@apis/room";
+
 interface SearchGroupInitialCategoryStore {
-  searchGroupInitialCategory: SearchGroupCategoryType | null;
-  setSearchGroupInitialCategory: (category: SearchGroupCategoryType) => void;
+  searchGroupInitialCategory: SearchRoomCategory | null;
+  setSearchGroupInitialCategory: (category: SearchRoomCategory) => void;
   clearSearchGroupInitialCategory: () => void;
 }
 
