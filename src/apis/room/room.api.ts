@@ -1,6 +1,7 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
 import type {
+  GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
   GetMyRoomListRequest,
@@ -38,6 +39,17 @@ export const getMyRoomListApi = async ({
     ROOM_URL.MY_ROOM,
     {
       params: cursor == null ? { type } : { type, cursor },
+    },
+  );
+
+  return response.data;
+};
+
+export const getHomeMyRoomApi = async (cursor?: string | null) => {
+  const response = await apiClient.get<GetHomeMyRoomResponse>(
+    ROOM_URL.HOME_MY_ROOM,
+    {
+      params: cursor == null ? undefined : { cursor },
     },
   );
 

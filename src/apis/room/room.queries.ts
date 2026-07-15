@@ -5,12 +5,14 @@ import Toast from "react-native-toast-message";
 
 import { type ApiErrorResponse } from "../api-client";
 import {
+  getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
   getSearchRoomApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
@@ -144,5 +146,41 @@ export const useGetMyRoomListQuery = (type: MyRoomType) => {
     myRoomListError,
     refetchMyRoomList,
     isRefetchingMyRoomList,
+  };
+};
+
+export const useGetHomeMyRoomQuery = () => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingHomeMyRoom,
+    isError: isErrorHomeMyRoom,
+    error: homeMyRoomError,
+  } = useInfiniteQuery<
+    GetHomeMyRoomResponse,
+    ApiErrorResponse,
+    InfiniteData<GetHomeMyRoomResponse, RoomCursor>,
+    typeof ROOM_QUERY_KEY.HOME_MY_ROOM,
+    RoomCursor
+  >({
+    queryKey: ROOM_QUERY_KEY.HOME_MY_ROOM,
+    queryFn: ({ pageParam }) => getHomeMyRoomApi(pageParam),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: MY_ROOM_QUERY_CACHE_TIME.STALE,
+    gcTime: MY_ROOM_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    homeMyRoomData: data?.pages.flatMap((page) => page.roomList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingHomeMyRoom,
+    isErrorHomeMyRoom,
+    homeMyRoomError,
   };
 };

@@ -6,7 +6,7 @@ import type {
 
 export const ROOM_QUERY_KEY = {
   DEFAULT: ["rooms"],
-  HOME_RECRUITING: (category: RoomCategory) => ["rooms", category],
+  HOME_RECRUITING: (category: RoomCategory) => ["rooms", "home", category],
   SEARCH: ({
     keyword = "",
     category,
@@ -23,4 +23,5 @@ export const ROOM_QUERY_KEY = {
     isFinalized,
   ],
   MY_ROOM: (type: MyRoomType) => ["rooms", "my-room", type],
+  HOME_MY_ROOM: ["rooms", "home", "my-room"],
 } as const;

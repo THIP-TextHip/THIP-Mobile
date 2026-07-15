@@ -11,6 +11,15 @@ export interface RoomTypeWithIsPublic extends RoomType {
   isPublic: boolean;
 }
 
+export interface JoinedRoomType {
+  roomId: number;
+  bookImageUrl: string;
+  roomTitle: string;
+  memberCount: number;
+  userPercentage: number;
+  deadlineDate: string;
+}
+
 export type SearchRoomSort = "deadline" | "memberCount";
 
 export type RoomPostType = "VOTE" | "RECORD";
@@ -76,6 +85,13 @@ export interface GetMyRoomListRequest {
 
 export interface GetMyRoomListResponse {
   roomList: MyRoomListType[];
+  nextCursor: string;
+  isLast: boolean;
+}
+
+export interface GetHomeMyRoomResponse {
+  roomList: JoinedRoomType[];
+  nickname: string;
   nextCursor: string;
   isLast: boolean;
 }
