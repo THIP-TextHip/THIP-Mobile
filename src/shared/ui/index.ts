@@ -32,7 +32,7 @@ export { default as GenreCardGroup } from "./genre-card-group";
 export { default as GroupInfo } from "./group-info";
 export { default as InputNickname } from "./input-nickname";
 export { default as ListTotalCountHeader } from "./list-total-count-header";
-export { default as MyGroupCard, type MyGroupCardProps } from "./my-group-card";
+export { default as MyGroupCard } from "./my-group-card";
 export { default as NumberPicker } from "./number-picker";
 export { default as PrivateRoomImage } from "./private-room-image";
 export { default as ProfileImage } from "./profile-image";

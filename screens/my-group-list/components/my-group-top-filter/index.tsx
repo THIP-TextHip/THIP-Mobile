@@ -1,10 +1,11 @@
 import { StyleSheet, View } from "react-native";
 
+import { type MyRoomType } from "@apis/room";
 import { SelectChip } from "@shared/ui";
 
 interface MyGroupTopFilterProps {
-  myGroupType: "playing" | "recruiting" | null;
-  handleSelectType: (type: "playing" | "recruiting") => void;
+  myGroupType: MyRoomType;
+  handleSelectType: (type: MyRoomType) => void;
 }
 
 const MY_GROUP_FILTERS = [

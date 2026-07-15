@@ -1,4 +1,8 @@
-import type { RoomCategory, SearchRoomQueryParams } from "./room.types";
+import type {
+  MyRoomType,
+  RoomCategory,
+  SearchRoomQueryParams,
+} from "./room.types";
 
 export const ROOM_QUERY_KEY = {
   DEFAULT: ["rooms"],
@@ -18,4 +22,5 @@ export const ROOM_QUERY_KEY = {
     sort,
     isFinalized,
   ],
+  MY_ROOM: (type: MyRoomType) => ["rooms", "my-room", type],
 } as const;

@@ -51,3 +51,31 @@ export interface GetSearchRoomResponse {
 }
 
 export type SearchRoomQueryParams = Omit<GetSearchRoomRequest, "cursor">;
+
+export type MyRoomType =
+  | "playingAndRecruiting"
+  | "recruiting"
+  | "playing"
+  | "expired";
+
+export interface MyRoomListType {
+  roomId: number;
+  bookImageUrl: string;
+  roomName: string;
+  recruitCount: number;
+  memberCount: number;
+  endDate: string;
+  type: MyRoomType;
+  isPublic: boolean;
+}
+
+export interface GetMyRoomListRequest {
+  type: MyRoomType;
+  cursor?: string | null;
+}
+
+export interface GetMyRoomListResponse {
+  roomList: MyRoomListType[];
+  nextCursor: string;
+  isLast: boolean;
+}

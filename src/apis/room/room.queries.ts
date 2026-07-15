@@ -3,14 +3,22 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { getRoomListApi, getSearchRoomApi } from "./room.api";
+import { type ApiErrorResponse } from "../api-client";
+import { getMyRoomListApi, getRoomListApi, getSearchRoomApi } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  GetMyRoomListResponse,
   GetRoomListRequest,
   GetRoomListResponse,
   GetSearchRoomResponse,
+  MyRoomType,
   SearchRoomQueryParams,
 } from "./room.types";
+
+const MY_ROOM_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 5,
+  GC: 1000 * 60 * 10,
+} as const;
 
 type RoomCursor = string | null;
 
@@ -85,4 +93,44 @@ export const useGetRoomListQuery = ({ category }: GetRoomListRequest) => {
   });
 
   return { roomListData, isPendingRoomListData, isErrorRoomListData };
+};
+
+export const useGetMyRoomListQuery = (type: MyRoomType) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingMyRoomList,
+    isError: isErrorMyRoomList,
+    error: myRoomListError,
+    refetch: refetchMyRoomList,
+    isRefetching: isRefetchingMyRoomList,
+  } = useInfiniteQuery<
+    GetMyRoomListResponse,
+    ApiErrorResponse,
+    InfiniteData<GetMyRoomListResponse, RoomCursor>,
+    ReturnType<typeof ROOM_QUERY_KEY.MY_ROOM>,
+    RoomCursor
+  >({
+    queryKey: ROOM_QUERY_KEY.MY_ROOM(type),
+    queryFn: ({ pageParam }) => getMyRoomListApi({ type, cursor: pageParam }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: MY_ROOM_QUERY_CACHE_TIME.STALE,
+    gcTime: MY_ROOM_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    myRoomList: data?.pages.flatMap((page) => page.roomList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingMyRoomList,
+    isErrorMyRoomList,
+    myRoomListError,
+    refetchMyRoomList,
+    isRefetchingMyRoomList,
+  };
 };

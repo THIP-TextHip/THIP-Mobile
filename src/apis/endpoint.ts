@@ -64,6 +64,7 @@ export const BOOK_URL = {
 export const ROOM_URL = {
   DEFAULT: "/rooms",
   SEARCH: "/rooms/search",
+  MY_ROOM: "/rooms/my",
 } as const;
 
 export const NOTIFICATION_URL = {
