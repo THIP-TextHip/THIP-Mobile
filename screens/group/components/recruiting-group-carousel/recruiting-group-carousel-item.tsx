@@ -9,7 +9,10 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useGetRoomListQuery, type RoomCategory } from "@apis/room";
+import {
+  useGetHomeRecruitingRoomListQuery,
+  type RoomCategory,
+} from "@apis/room";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -39,8 +42,12 @@ export default function RecruitingGroupCarouselItem({
   const [selectedCategory, setSelectedCategory] =
     useState<RoomCategory>("문학");
 
-  const { roomListData, isPendingRoomListData, isErrorRoomListData } =
-    useGetRoomListQuery({ category: selectedCategory });
+  const {
+    homeRecruitingRoomData,
+    isPendingHomeRecruitingRoomData,
+    isErrorHomeRecruitingRoomData,
+    homeRecruitingRoomError,
+  } = useGetHomeRecruitingRoomListQuery({ category: selectedCategory });
 
   const fallbackAnimationValue = useSharedValue(0);
   const currentAnimationValue = animationValue ?? fallbackAnimationValue;
@@ -66,7 +73,7 @@ export default function RecruitingGroupCarouselItem({
     };
   });
 
-  const roomList = roomListData?.[carouselType];
+  const roomList = homeRecruitingRoomData?.[carouselType];
   const isGrid = width > GRID_WIDTH;
   const gridCardWidth = (width - 40) / 2 - 10;
 
@@ -74,7 +81,7 @@ export default function RecruitingGroupCarouselItem({
   const label = CAROUSEL_LABELS[carouselType];
 
   const renderRoomListContent = () => {
-    if (isPendingRoomListData) {
+    if (isPendingHomeRecruitingRoomData) {
       return (
         <View style={styles.status}>
           <ActivityIndicator size="large" color={colors.white} />
@@ -82,7 +89,7 @@ export default function RecruitingGroupCarouselItem({
       );
     }
 
-    if (isErrorRoomListData || !roomList) {
+    if (isErrorHomeRecruitingRoomData || !roomList) {
       return (
         <View style={styles.status}>
           <AppText
@@ -91,7 +98,7 @@ export default function RecruitingGroupCarouselItem({
             color={colors.white}
             lineHeight={24}
           >
-            데이터를 불러오지 못했어요
+            데이터를 불러오지 못했어요 ({homeRecruitingRoomError?.code})
           </AppText>
         </View>
       );
@@ -117,10 +124,7 @@ export default function RecruitingGroupCarouselItem({
 
     return (
       <View
-        style={[
-          styles.roomListWrapper,
-          isGrid && styles.roomListWrapperGrid,
-        ]}
+        style={[styles.roomListWrapper, isGrid && styles.roomListWrapperGrid]}
       >
         {roomList.map((room) => (
           <View

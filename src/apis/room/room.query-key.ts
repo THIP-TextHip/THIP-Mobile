@@ -6,7 +6,7 @@ import type {
 
 export const ROOM_QUERY_KEY = {
   DEFAULT: ["rooms"],
-  MAIN: (category: RoomCategory) => ["rooms", category],
+  HOME_RECRUITING: (category: RoomCategory) => ["rooms", category],
   SEARCH: ({
     keyword = "",
     category,

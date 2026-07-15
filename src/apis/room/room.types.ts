@@ -25,11 +25,11 @@ export type SearchRoomCategory =
   | "인문학"
   | "예술";
 
-export interface GetRoomListRequest {
+export interface GetHomeRecruitingRoomRequest {
   category: RoomCategory;
 }
 
-export interface GetRoomListResponse {
+export interface GetHomeRecruitingRoomResponse {
   deadlineRoomList: RoomType[];
   popularRoomList: RoomType[];
   recentRoomList: RoomType[];

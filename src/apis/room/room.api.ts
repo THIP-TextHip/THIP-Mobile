@@ -1,10 +1,10 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
 import type {
+  GetHomeRecruitingRoomRequest,
+  GetHomeRecruitingRoomResponse,
   GetMyRoomListRequest,
   GetMyRoomListResponse,
-  GetRoomListRequest,
-  GetRoomListResponse,
   GetSearchRoomRequest,
   GetSearchRoomResponse,
 } from "./room.types";
@@ -17,10 +17,15 @@ export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
   return response.data;
 };
 
-export const getRoomListApi = async ({ category }: GetRoomListRequest) => {
-  const response = await apiClient.get<GetRoomListResponse>(ROOM_URL.DEFAULT, {
-    params: { category },
-  });
+export const getHomeRecuitingRoomApi = async ({
+  category,
+}: GetHomeRecruitingRoomRequest) => {
+  const response = await apiClient.get<GetHomeRecruitingRoomResponse>(
+    ROOM_URL.DEFAULT,
+    {
+      params: { category },
+    },
+  );
 
   return response.data;
 };

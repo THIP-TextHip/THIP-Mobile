@@ -4,12 +4,16 @@ import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import { type ApiErrorResponse } from "../api-client";
-import { getMyRoomListApi, getRoomListApi, getSearchRoomApi } from "./room.api";
+import {
+  getHomeRecuitingRoomApi,
+  getMyRoomListApi,
+  getSearchRoomApi,
+} from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  GetHomeRecruitingRoomRequest,
+  GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
-  GetRoomListRequest,
-  GetRoomListResponse,
   GetSearchRoomResponse,
   MyRoomType,
   SearchRoomQueryParams,
@@ -82,17 +86,25 @@ export const useSearchRoomQuery = (params: SearchRoomQueryParams) => {
   };
 };
 
-export const useGetRoomListQuery = ({ category }: GetRoomListRequest) => {
+export const useGetHomeRecruitingRoomListQuery = ({
+  category,
+}: GetHomeRecruitingRoomRequest) => {
   const {
-    data: roomListData,
-    isPending: isPendingRoomListData,
-    isError: isErrorRoomListData,
-  } = useQuery<GetRoomListResponse, Error>({
-    queryKey: ROOM_QUERY_KEY.MAIN(category),
-    queryFn: () => getRoomListApi({ category }),
+    data: homeRecruitingRoomData,
+    isPending: isPendingHomeRecruitingRoomData,
+    isError: isErrorHomeRecruitingRoomData,
+    error: homeRecruitingRoomError,
+  } = useQuery<GetHomeRecruitingRoomResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.HOME_RECRUITING(category),
+    queryFn: () => getHomeRecuitingRoomApi({ category }),
   });
 
-  return { roomListData, isPendingRoomListData, isErrorRoomListData };
+  return {
+    homeRecruitingRoomData,
+    isPendingHomeRecruitingRoomData,
+    isErrorHomeRecruitingRoomData,
+    homeRecruitingRoomError,
+  };
 };
 
 export const useGetMyRoomListQuery = (type: MyRoomType) => {

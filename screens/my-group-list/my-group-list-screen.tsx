@@ -15,6 +15,8 @@ import { colors } from "@theme/token";
 
 import { MyGroupTopFilter } from "./components";
 
+// TODO: [모임홈] 참여중인 내모임방 조회 api 까지는 가능할듯?
+
 export default function MyGroupListScreen() {
   const { bottom } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
