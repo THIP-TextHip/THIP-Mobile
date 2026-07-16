@@ -1,10 +1,13 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
-import { existsSync } from "node:fs";
 
 const appJson = require("./app.json");
 
 const kakaoNativeAppKey = process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY;
-const googleServicesFile = "./google-services.json";
+const googleServicesFile =
+  process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json";
+
+const googleServiceInfoPlist =
+  process.env.GOOGLE_SERVICES_INFO_PLIST ?? "./GoogleService-Info.plist";
 
 const plugins: ExpoConfig["plugins"] = [
   "expo-router",
@@ -23,6 +26,14 @@ const plugins: ExpoConfig["plugins"] = [
   "expo-font",
   "expo-secure-store",
   [
+    "expo-image-picker",
+    {
+      photosPermission: "첨부할 사진을 선택하기 위해 사진 보관함에 접근합니다.",
+      cameraPermission: false,
+      microphonePermission: false,
+    },
+  ],
+  [
     "expo-notifications",
     {
       defaultChannel: "default",
@@ -34,6 +45,18 @@ const plugins: ExpoConfig["plugins"] = [
       android: {
         extraMavenRepos: [
           "https://devrepo.kakao.com/nexus/content/groups/public/",
+        ],
+      },
+      ios: {
+        extraPods: [
+          {
+            name: "GoogleUtilities",
+            modular_headers: true,
+          },
+          {
+            name: "RecaptchaInterop",
+            modular_headers: true,
+          },
         ],
       },
     },
@@ -49,6 +72,10 @@ if (kakaoNativeAppKey) {
       android: {
         authCodeHandlerActivity: true,
       },
+      ios: {
+        handleKakaoOpenUrl: true,
+        naviApplicationQuerySchemes: false,
+      },
     },
   ]);
 }
@@ -56,17 +83,17 @@ if (kakaoNativeAppKey) {
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...appJson.expo,
   ...config,
-  // ios는 추후 애플 개발자 계정 생성 이후 구현
   ios: {
     ...appJson.expo.ios,
     ...config.ios,
     bundleIdentifier: "com.texthip.thip",
+    googleServicesFile: googleServiceInfoPlist,
   },
   android: {
     ...appJson.expo.android,
     ...config.android,
     package: "com.texthip.thip",
-    ...(existsSync(googleServicesFile) ? { googleServicesFile } : {}),
+    googleServicesFile,
   },
   plugins,
 });
