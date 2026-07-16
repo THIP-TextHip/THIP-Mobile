@@ -13,6 +13,7 @@ interface FeedImageSectionProps {
   handleImageUrls: (imageUrls: string[]) => void;
 }
 
+// TODO: 추후 사진 촬영 기능 추가하려면 UI 추가 및 app.config.ts 설정 필요. 아래 코드에서 permission 도 필요함
 export default function FeedImageSection({
   isEdit,
   imageUrls,
