@@ -22,6 +22,12 @@ const getNotificationIdFromResponse = (
 ) => {
   const { data } = response.notification.request.content;
 
+  console.log("2. ", JSON.stringify(data));
+
+  if (!data || typeof data !== "object") {
+    return null;
+  }
+
   return parseNotificationId(data.notificationId);
 };
 
@@ -40,9 +46,20 @@ export const useNotificationHandler = () => {
       return;
     }
 
+    console.log(
+      "1. ",
+      JSON.stringify(
+        lastNotificationResponse.notification.request.content,
+        null,
+        2,
+      ),
+    );
+
     const notificationId = getNotificationIdFromResponse(
       lastNotificationResponse,
     );
+
+    console.log("3. ", notificationId);
 
     if (notificationId == null) {
       Notifications.clearLastNotificationResponse();
