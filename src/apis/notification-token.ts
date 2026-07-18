@@ -1,3 +1,7 @@
+import {
+  getToken as getFirebaseMessagingToken,
+  getMessaging,
+} from "@react-native-firebase/messaging";
 import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
@@ -23,6 +27,21 @@ const createNotificationDeviceId = () => {
 
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 };
+
+type NativeNotificationPlatform = "android" | "ios";
+
+interface GetNotificationFcmTokenParams {
+  platform: NativeNotificationPlatform;
+  getAndroidFcmToken: () => Promise<string | null>;
+  getIosFcmToken: () => Promise<string>;
+}
+
+export const getNotificationFcmToken = ({
+  platform,
+  getAndroidFcmToken,
+  getIosFcmToken,
+}: GetNotificationFcmTokenParams) =>
+  platform === "ios" ? getIosFcmToken() : getAndroidFcmToken();
 
 export const getNotificationPlatformType = (): PlatformType => {
   if (Platform.OS === "android") {
@@ -110,8 +129,17 @@ export const getRegisterNotificationTokenRequest =
       return null;
     }
 
-    const devicePushToken = await Notifications.getDevicePushTokenAsync();
-    const fcmToken = devicePushToken.data;
+    const fcmToken = await getNotificationFcmToken({
+      platform: Platform.OS === "ios" ? "ios" : "android",
+      getAndroidFcmToken: async () => {
+        const devicePushToken = await Notifications.getDevicePushTokenAsync();
+
+        return typeof devicePushToken.data === "string"
+          ? devicePushToken.data
+          : null;
+      },
+      getIosFcmToken: () => getFirebaseMessagingToken(getMessaging()),
+    });
 
     if (!fcmToken) {
       return null;
