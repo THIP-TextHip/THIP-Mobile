@@ -104,7 +104,7 @@ export interface CreateRoomRequest {
   progressStartDate: string;
   progressEndDate: string;
   recruitCount: number;
-  password: string;
+  password: string | null;
   isPublic: boolean;
 }
 

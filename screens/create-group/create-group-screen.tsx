@@ -1,4 +1,4 @@
-import { router, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -9,7 +9,6 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 
 import { useCreateRoomMutation } from "@apis/room";
 import type { GroupCategoryType } from "@shared/types";
@@ -52,15 +51,19 @@ export default function CreateGroupScreen() {
   const [endDate, setEndDate] = useState("");
   const [memberCount, setMemberCount] = useState(15);
   const [isPublic, setIsPublic] = useState(true);
+  const [password, setPassword] = useState("");
 
   const [durationErrorMessage, setDurationErrorMessage] = useState("");
+
+  const cleanedPassword = password.trim();
 
   const disabled =
     groupBook === null ||
     selectedCategory === null ||
     groupTitle.trim() === "" ||
     groupDesc.trim() === "" ||
-    durationErrorMessage !== "";
+    durationErrorMessage !== "" ||
+    (!isPublic && cleanedPassword.length !== 4);
 
   useEffect(() => {
     return navigation.addListener("beforeRemove", () => {
@@ -86,8 +89,8 @@ export default function CreateGroupScreen() {
       return;
     }
 
-    if (parsedEndDate < parsedStartDate) {
-      setDurationErrorMessage("종료일은 시작일보다 빠를 수 없어요.");
+    if (parsedEndDate <= parsedStartDate) {
+      setDurationErrorMessage("종료일은 시작일 다음 날부터 선택할 수 있어요.");
       return;
     }
 
@@ -114,45 +117,34 @@ export default function CreateGroupScreen() {
     });
   };
 
-  // TODO: 서버에 모임 생성 요청 보내기
   const handleCreateGroup = () => {
-    console.log(
-      "모임 만들기 : ",
-      groupBook,
-      selectedCategory,
-      groupTitle,
-      groupDesc,
-      startDate,
-      endDate,
-      memberCount,
-      isPublic,
+    createRoom(
+      {
+        isbn: groupBook?.isbn ?? "",
+        category: selectedCategory ?? "",
+        roomName: groupTitle,
+        description: groupDesc,
+        progressStartDate: startDate,
+        progressEndDate: endDate,
+        recruitCount: memberCount,
+        password: isPublic ? null : cleanedPassword,
+        isPublic: isPublic,
+      },
+      { onSettled: clearSelectedBookInfo },
     );
-    createRoom({
-      isbn: groupBook?.isbn ?? "",
-      category: selectedCategory ?? "",
-      roomName: groupTitle,
-      description: groupDesc,
-      progressStartDate: startDate,
-      progressEndDate: endDate,
-      recruitCount: memberCount,
-      password: "",
-      isPublic: isPublic,
-    });
-    // TODO: 모임방 생성 성공 응답의 roomId 사용. 성공 시 토스트도 띄워야 함!
-    clearSelectedBookInfo();
-    Toast.show({
-      type: "default",
-      text1: "모임방 생성이 완료되었습니다.",
-    });
-    router.push({
-      pathname: "/join-group/[roomId]",
-      params: { roomId: String(123) },
-    });
   };
 
   const Separator = () => {
     return <View style={styles.separator} />;
   };
+
+  if (isPendingCreateRoom) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.page}>
@@ -160,64 +152,62 @@ export default function CreateGroupScreen() {
         disabled={disabled}
         handleConfirm={handleCreateGroup}
       />
-      {isPendingCreateRoom ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
-      ) : (
-        <KeyboardAvoidingView
-          style={styles.keyboardAvoidingView}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
+        <ScrollView
+          nestedScrollEnabled
+          contentContainerStyle={[
+            styles.content,
+            { paddingBottom: bottom + 20 },
+          ]}
         >
-          <ScrollView
-            nestedScrollEnabled
-            contentContainerStyle={[
-              styles.content,
-              { paddingBottom: bottom + 20 },
-            ]}
-          >
-            <BookSelectSection
-              isAlreadySelected={selectedBookInfo !== null}
-              book={groupBook}
-              handleOpenBottomSheet={handleOpenBottomSheet}
-            />
-            <Separator />
-            <CreateGroupGenreSection
-              selectedCategory={selectedCategory}
-              handleChangeCategory={handleSelectCategory}
-            />
-            <Separator />
-            <CreateGroupTitleSection
-              groupTitle={groupTitle}
-              handleChangeGroupTitle={setGroupTitle}
-            />
-            <Separator />
-            <CreateGroupDescSection
-              groupDesc={groupDesc}
-              handleChangeGroupDesc={setGroupDesc}
-            />
-            <Separator />
-            <SelectGroupDurationSection
-              startDate={startDate}
-              endDate={endDate}
-              errorMessage={durationErrorMessage}
-              handleChangeStartDate={setStartDate}
-              handleChangeEndDate={setEndDate}
-            />
-            <Separator />
-            <SelectMemberCountSection
-              memberCount={memberCount}
-              handleChangeMemberCount={setMemberCount}
-            />
-            <Separator />
-            <VisibilitySection
-              isPublic={isPublic}
-              handleChangeVisibility={setIsPublic}
-            />
-          </ScrollView>
-        </KeyboardAvoidingView>
-      )}
+          <BookSelectSection
+            isAlreadySelected={selectedBookInfo !== null}
+            book={groupBook}
+            handleOpenBottomSheet={handleOpenBottomSheet}
+          />
+          <Separator />
+          <CreateGroupGenreSection
+            selectedCategory={selectedCategory}
+            handleChangeCategory={handleSelectCategory}
+          />
+          <Separator />
+          <CreateGroupTitleSection
+            groupTitle={groupTitle}
+            handleChangeGroupTitle={setGroupTitle}
+          />
+          <Separator />
+          <CreateGroupDescSection
+            groupDesc={groupDesc}
+            handleChangeGroupDesc={setGroupDesc}
+          />
+          <Separator />
+          <SelectGroupDurationSection
+            startDate={startDate}
+            endDate={endDate}
+            errorMessage={durationErrorMessage}
+            handleChangeStartDate={setStartDate}
+            handleChangeEndDate={setEndDate}
+          />
+          <Separator />
+          <SelectMemberCountSection
+            memberCount={memberCount}
+            handleChangeMemberCount={setMemberCount}
+          />
+          <Separator />
+          <VisibilitySection
+            isPublic={isPublic}
+            password={password}
+            handleChangeVisibility={setIsPublic}
+            handleChangePassword={setPassword}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
+
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
         handleSelectBook={setGroupBook}

@@ -66,7 +66,7 @@ export default function RecommendGroupSection({
                 color={colors.red}
                 lineHeight={20}
               >
-                {item.recruitEndDate} 뒤 모집 마감
+                {item.recruitEndDate} 모집 마감
               </AppText>
             </View>
           </Pressable>

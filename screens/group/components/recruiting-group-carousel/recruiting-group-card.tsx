@@ -42,7 +42,7 @@ export default function RecruitingGroupCard({
           </AppText>
         </View>
         <AppText weight="semibold" size="xs" color={colors.red} lineHeight={20}>
-          {roomInfo.deadlineDate} 뒤 모집 마감
+          {roomInfo.deadlineDate} 모집 마감
         </AppText>
       </View>
     </Pressable>
