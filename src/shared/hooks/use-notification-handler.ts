@@ -1,5 +1,7 @@
+import { getMessaging, onMessage } from "@react-native-firebase/messaging";
 import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 
 import { useCheckNotification } from "@apis/notification";
 
@@ -58,6 +60,36 @@ export const useNotificationHandler = () => {
   const lastNotificationResponse = Notifications.useLastNotificationResponse();
   const { checkNotification, isPendingCheckNotification } =
     useCheckNotification();
+
+  useEffect(() => {
+    if (Platform.OS !== "android") {
+      return;
+    }
+
+    return onMessage(getMessaging(), (remoteMessage) => {
+      const notificationRequest = {
+        content: {
+          title: remoteMessage.notification?.title ?? "",
+          body: remoteMessage.notification?.body ?? "",
+          data: remoteMessage.data ?? {},
+          sound: "default",
+        },
+        trigger: {
+          channelId: "default",
+        },
+      };
+
+      if (!notificationRequest) {
+        return;
+      }
+
+      void Notifications.scheduleNotificationAsync(notificationRequest).catch(
+        (error) => {
+          console.error("[notification] foreground display failed", error);
+        },
+      );
+    });
+  }, []);
 
   useEffect(() => {
     if (
