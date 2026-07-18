@@ -1,4 +1,5 @@
 export {
+  createRoomApi,
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
@@ -6,6 +7,7 @@ export {
 } from "./room.api";
 
 export {
+  useCreateRoomMutation,
   useGetHomeMyRoomQuery,
   useGetHomeRecruitingRoomListQuery,
   useGetMyRoomListQuery,
@@ -13,6 +15,8 @@ export {
 } from "./room.queries";
 
 export type {
+  CreateRoomRequest,
+  CreateRoomResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,

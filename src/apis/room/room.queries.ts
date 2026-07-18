@@ -1,10 +1,17 @@
 import type { InfiniteData } from "@tanstack/react-query";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { router } from "expo-router";
 import { type ApiErrorResponse } from "../api-client";
 import {
+  createRoomApi,
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
@@ -12,6 +19,8 @@ import {
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  CreateRoomRequest,
+  CreateRoomResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
@@ -182,5 +191,39 @@ export const useGetHomeMyRoomQuery = () => {
     isPendingHomeMyRoom,
     isErrorHomeMyRoom,
     homeMyRoomError,
+  };
+};
+
+export const useCreateRoomMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: createRoom, isPending: isPendingCreateRoom } = useMutation<
+    CreateRoomResponse,
+    Error,
+    CreateRoomRequest
+  >({
+    mutationFn: createRoomApi,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ROOM_QUERY_KEY.ALL });
+      Toast.show({
+        type: "default",
+        text1: "모임방 생성이 완료되었습니다.",
+      });
+      router.replace({
+        pathname: "/group-detail/[roomId]",
+        params: { roomId: data.roomId },
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    createRoom,
+    isPendingCreateRoom,
   };
 };

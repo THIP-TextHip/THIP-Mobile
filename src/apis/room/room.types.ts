@@ -95,3 +95,19 @@ export interface GetHomeMyRoomResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface CreateRoomRequest {
+  isbn: string;
+  category: string;
+  roomName: string;
+  description: string;
+  progressStartDate: string;
+  progressEndDate: string;
+  recruitCount: number;
+  password: string;
+  isPublic: boolean;
+}
+
+export interface CreateRoomResponse {
+  roomId: number;
+}

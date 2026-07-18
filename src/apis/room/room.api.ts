@@ -1,6 +1,8 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
 import type {
+  CreateRoomRequest,
+  CreateRoomResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
@@ -51,6 +53,15 @@ export const getHomeMyRoomApi = async (cursor?: string | null) => {
     {
       params: cursor == null ? undefined : { cursor },
     },
+  );
+
+  return response.data;
+};
+
+export const createRoomApi = async (body: CreateRoomRequest) => {
+  const response = await apiClient.post<CreateRoomResponse>(
+    ROOM_URL.DEFAULT,
+    body,
   );
 
   return response.data;

@@ -1,6 +1,7 @@
 import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -10,6 +11,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { useCreateRoomMutation } from "@apis/room";
 import type { GroupCategoryType } from "@shared/types";
 import {
   BookSearchBottomSheet,
@@ -31,10 +33,12 @@ import {
 } from "./components";
 import { DAY_IN_MS } from "./constants";
 
+// TODO: 비공개 설정 시 비밀번호 입력 부분 추가
 export default function CreateGroupScreen() {
   const { bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
   const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
+  const { createRoom, isPendingCreateRoom } = useCreateRoomMutation();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [groupBook, setGroupBook] = useState<BottomSheetBookItemType | null>(
@@ -123,6 +127,17 @@ export default function CreateGroupScreen() {
       memberCount,
       isPublic,
     );
+    createRoom({
+      isbn: groupBook?.isbn ?? "",
+      category: selectedCategory ?? "",
+      roomName: groupTitle,
+      description: groupDesc,
+      progressStartDate: startDate,
+      progressEndDate: endDate,
+      recruitCount: memberCount,
+      password: "",
+      isPublic: isPublic,
+    });
     // TODO: 모임방 생성 성공 응답의 roomId 사용. 성공 시 토스트도 띄워야 함!
     clearSelectedBookInfo();
     Toast.show({
@@ -145,58 +160,64 @@ export default function CreateGroupScreen() {
         disabled={disabled}
         handleConfirm={handleCreateGroup}
       />
-      <KeyboardAvoidingView
-        style={styles.keyboardAvoidingView}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
-      >
-        <ScrollView
-          nestedScrollEnabled
-          contentContainerStyle={[
-            styles.content,
-            { paddingBottom: bottom + 20 },
-          ]}
+      {isPendingCreateRoom ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      ) : (
+        <KeyboardAvoidingView
+          style={styles.keyboardAvoidingView}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
         >
-          <BookSelectSection
-            isAlreadySelected={selectedBookInfo !== null}
-            book={groupBook}
-            handleOpenBottomSheet={handleOpenBottomSheet}
-          />
-          <Separator />
-          <CreateGroupGenreSection
-            selectedCategory={selectedCategory}
-            handleChangeCategory={handleSelectCategory}
-          />
-          <Separator />
-          <CreateGroupTitleSection
-            groupTitle={groupTitle}
-            handleChangeGroupTitle={setGroupTitle}
-          />
-          <Separator />
-          <CreateGroupDescSection
-            groupDesc={groupDesc}
-            handleChangeGroupDesc={setGroupDesc}
-          />
-          <Separator />
-          <SelectGroupDurationSection
-            startDate={startDate}
-            endDate={endDate}
-            errorMessage={durationErrorMessage}
-            handleChangeStartDate={setStartDate}
-            handleChangeEndDate={setEndDate}
-          />
-          <Separator />
-          <SelectMemberCountSection
-            memberCount={memberCount}
-            handleChangeMemberCount={setMemberCount}
-          />
-          <Separator />
-          <VisibilitySection
-            isPublic={isPublic}
-            handleChangeVisibility={setIsPublic}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+          <ScrollView
+            nestedScrollEnabled
+            contentContainerStyle={[
+              styles.content,
+              { paddingBottom: bottom + 20 },
+            ]}
+          >
+            <BookSelectSection
+              isAlreadySelected={selectedBookInfo !== null}
+              book={groupBook}
+              handleOpenBottomSheet={handleOpenBottomSheet}
+            />
+            <Separator />
+            <CreateGroupGenreSection
+              selectedCategory={selectedCategory}
+              handleChangeCategory={handleSelectCategory}
+            />
+            <Separator />
+            <CreateGroupTitleSection
+              groupTitle={groupTitle}
+              handleChangeGroupTitle={setGroupTitle}
+            />
+            <Separator />
+            <CreateGroupDescSection
+              groupDesc={groupDesc}
+              handleChangeGroupDesc={setGroupDesc}
+            />
+            <Separator />
+            <SelectGroupDurationSection
+              startDate={startDate}
+              endDate={endDate}
+              errorMessage={durationErrorMessage}
+              handleChangeStartDate={setStartDate}
+              handleChangeEndDate={setEndDate}
+            />
+            <Separator />
+            <SelectMemberCountSection
+              memberCount={memberCount}
+              handleChangeMemberCount={setMemberCount}
+            />
+            <Separator />
+            <VisibilitySection
+              isPublic={isPublic}
+              handleChangeVisibility={setIsPublic}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      )}
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
         handleSelectBook={setGroupBook}
@@ -221,5 +242,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: 1,
     backgroundColor: colors.darkgrey.dark,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
