@@ -44,5 +44,5 @@ export const SETTINGS_OTHER: SettingsItem[] = [
     icon: IcDocument,
   },
   { id: SETTINGS_ID.guide, label: "가이드", icon: IcGuide },
-  { id: SETTINGS_ID.version, label: "버전", icon: IcVersion },
+  { id: SETTINGS_ID.version, label: "버전 1.0.0", icon: IcVersion },
 ];

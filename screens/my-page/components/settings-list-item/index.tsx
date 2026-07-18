@@ -1,9 +1,10 @@
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { Pressable, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { IcRightRight } from "@images/icons";
-import { CUSTOMER_CENTER_URL } from "@shared/constants";
+import { MYPAGE_URL } from "@shared/constants";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -14,7 +15,6 @@ interface SettingsListItemProps {
 }
 
 export default function SettingsListItem({ item }: SettingsListItemProps) {
-  // TODO: 각 아이템에 대한 action 연결
   const handlePress = async () => {
     switch (item.id) {
       case SETTINGS_ID.save:
@@ -25,26 +25,53 @@ export default function SettingsListItem({ item }: SettingsListItemProps) {
         break;
       case SETTINGS_ID.support:
         try {
-          await WebBrowser.openBrowserAsync(CUSTOMER_CENTER_URL);
+          await WebBrowser.openBrowserAsync(MYPAGE_URL.CUSTOMER_CENTER_URL);
         } catch (e) {
-          // TODO: 추후 토스트 메시지로 알려주기
-          alert(`링크 열기 실패: ${e}`);
+          Toast.show({
+            type: "error",
+            text1: `링크 열기 실패: ${e}`,
+          });
         }
         break;
       case SETTINGS_ID.notice:
-        console.log("공지사항 페이지로 이동");
+        try {
+          await WebBrowser.openBrowserAsync(MYPAGE_URL.NOTICE_URL);
+        } catch (e) {
+          Toast.show({
+            type: "error",
+            text1: `링크 열기 실패: ${e}`,
+          });
+        }
         break;
       case SETTINGS_ID.policy:
-        console.log("개인정보처리방침 & 이용약관 페이지로 이동");
+        try {
+          await WebBrowser.openBrowserAsync(MYPAGE_URL.POLICY_URL);
+        } catch (e) {
+          Toast.show({
+            type: "error",
+            text1: `링크 열기 실패: ${e}`,
+          });
+        }
         break;
       case SETTINGS_ID.guide:
-        router.push({
-          pathname: "/sign-up/onboarding",
-          params: { from: "my-page" },
-        });
+        try {
+          await WebBrowser.openBrowserAsync(MYPAGE_URL.GUIDE_URL);
+        } catch (e) {
+          Toast.show({
+            type: "error",
+            text1: `링크 열기 실패: ${e}`,
+          });
+        }
         break;
       case SETTINGS_ID.version:
-        console.log("버전 관련 액션");
+        try {
+          await WebBrowser.openBrowserAsync(MYPAGE_URL.VERSION_URL);
+        } catch (e) {
+          Toast.show({
+            type: "error",
+            text1: `링크 열기 실패: ${e}`,
+          });
+        }
         break;
     }
   };
