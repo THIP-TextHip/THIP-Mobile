@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
@@ -143,6 +144,18 @@ export const useDeleteNotificationToken = () => {
   };
 };
 
+const RETRYABLE_NETWORK_ERROR_CODES = new Set([
+  "ERR_NETWORK",
+  "ECONNABORTED",
+  "ETIMEDOUT",
+]);
+
+// 앱이 종료된 상태에서 푸시알림을 눌러 콜드 스타트 했을 때, 순간적인 네트워크 연결 실패 시 요청 재시도 하도록 함
+const shouldRetryNotificationCheck = (failureCount: number, error: Error) =>
+  failureCount < 2 &&
+  isAxiosError(error) &&
+  RETRYABLE_NETWORK_ERROR_CODES.has(error.code ?? "");
+
 export const useCheckNotification = () => {
   const queryClient = useQueryClient();
   const {
@@ -152,6 +165,8 @@ export const useCheckNotification = () => {
     error,
   } = useMutation<CheckNotificationResponse, Error, CheckNotificationRequest>({
     mutationFn: checkNotificationApi,
+    retry: shouldRetryNotificationCheck,
+    retryDelay: 500,
     onSuccess(data) {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEY.ALL,

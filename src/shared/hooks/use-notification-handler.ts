@@ -3,6 +3,9 @@ import { useEffect } from "react";
 
 import { useCheckNotification } from "@apis/notification";
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
 const parseNotificationId = (value: unknown) => {
   if (typeof value === "number" && Number.isSafeInteger(value)) {
     return value;
@@ -17,18 +20,38 @@ const parseNotificationId = (value: unknown) => {
   return Number.isSafeInteger(notificationId) ? notificationId : null;
 };
 
-const getNotificationIdFromResponse = (
-  response: Notifications.NotificationResponse,
-) => {
-  const { data } = response.notification.request.content;
-
-  console.log("2. ", JSON.stringify(data));
-
-  if (!data || typeof data !== "object") {
-    return null;
+const getPushTriggerData = (trigger: unknown) => {
+  if (!isRecord(trigger) || trigger.type !== "push") {
+    return [];
   }
 
-  return parseNotificationId(data.notificationId);
+  // Expo exposes APNs userInfo through payload on iOS and FCM data through
+  // remoteMessage on Android.
+  const remoteMessage = isRecord(trigger.remoteMessage)
+    ? trigger.remoteMessage
+    : null;
+
+  return [trigger.payload, remoteMessage?.data].filter(isRecord);
+};
+
+export const getNotificationIdFromResponse = (
+  response: Notifications.NotificationResponse,
+) => {
+  const { content, trigger } = response.notification.request;
+  const dataCandidates = [
+    ...(isRecord(content.data) ? [content.data] : []),
+    ...getPushTriggerData(trigger),
+  ];
+
+  for (const data of dataCandidates) {
+    const notificationId = parseNotificationId(data.notificationId);
+
+    if (notificationId !== null) {
+      return notificationId;
+    }
+  }
+
+  return null;
 };
 
 export const useNotificationHandler = () => {
@@ -46,22 +69,15 @@ export const useNotificationHandler = () => {
       return;
     }
 
-    console.log(
-      "1. ",
-      JSON.stringify(
-        lastNotificationResponse.notification.request.content,
-        null,
-        2,
-      ),
-    );
-
     const notificationId = getNotificationIdFromResponse(
       lastNotificationResponse,
     );
 
-    console.log("3. ", notificationId);
-
     if (notificationId == null) {
+      console.warn(
+        "[useNotificationHandler] notificationId가 없는 알림 응답입니다.",
+        lastNotificationResponse.notification.request.trigger,
+      );
       Notifications.clearLastNotificationResponse();
       return;
     }
