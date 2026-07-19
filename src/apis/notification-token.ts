@@ -6,10 +6,7 @@ import * as Notifications from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
-import type {
-  PlatformType,
-  RegisterNotificationTokenRequest,
-} from "./notification/notification.types";
+import type { RegisterNotificationTokenRequest } from "./notification/notification.types";
 
 const NOTIFICATION_DEVICE_ID_KEY = "notificationDeviceId";
 const DEFAULT_NOTIFICATION_CHANNEL_ID = "default";
@@ -26,33 +23,6 @@ const createNotificationDeviceId = () => {
   }
 
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-};
-
-type NativeNotificationPlatform = "android" | "ios";
-
-interface GetNotificationFcmTokenParams {
-  platform: NativeNotificationPlatform;
-  getAndroidFcmToken: () => Promise<string | null>;
-  getIosFcmToken: () => Promise<string>;
-}
-
-export const getNotificationFcmToken = ({
-  platform,
-  getAndroidFcmToken,
-  getIosFcmToken,
-}: GetNotificationFcmTokenParams) =>
-  platform === "ios" ? getIosFcmToken() : getAndroidFcmToken();
-
-export const getNotificationPlatformType = (): PlatformType => {
-  if (Platform.OS === "android") {
-    return "ANDROID";
-  }
-
-  if (Platform.OS === "ios") {
-    return "IOS";
-  }
-
-  return "WEB";
 };
 
 export const getNotificationDeviceId = async () => {
@@ -129,17 +99,16 @@ export const getRegisterNotificationTokenRequest =
       return null;
     }
 
-    const fcmToken = await getNotificationFcmToken({
-      platform: Platform.OS === "ios" ? "ios" : "android",
-      getAndroidFcmToken: async () => {
-        const devicePushToken = await Notifications.getDevicePushTokenAsync();
+    let fcmToken: string | null;
 
-        return typeof devicePushToken.data === "string"
-          ? devicePushToken.data
-          : null;
-      },
-      getIosFcmToken: () => getFirebaseMessagingToken(getMessaging()),
-    });
+    if (Platform.OS === "ios") {
+      fcmToken = await getFirebaseMessagingToken(getMessaging());
+    } else {
+      const devicePushToken = await Notifications.getDevicePushTokenAsync();
+
+      fcmToken =
+        typeof devicePushToken.data === "string" ? devicePushToken.data : null;
+    }
 
     if (!fcmToken) {
       return null;
@@ -148,7 +117,12 @@ export const getRegisterNotificationTokenRequest =
     return {
       deviceId: await getNotificationDeviceId(),
       fcmToken,
-      platformType: getNotificationPlatformType(),
+      platformType:
+        Platform.OS === "ios"
+          ? "IOS"
+          : Platform.OS === "android"
+            ? "ANDROID"
+            : "WEB",
     };
   };
 
