@@ -202,6 +202,7 @@ export default function FeedWriteScreen() {
           )}
           <Separator />
           <VisibilitySection
+            createType="feed"
             isPublic={isPublic}
             handleChangeVisibility={setIsPublic}
           />

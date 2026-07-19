@@ -6,24 +6,44 @@ import { colors, typography } from "@theme/token";
 import AppText from "../app-text";
 import CustomSwitch from "../custom-switch";
 
-interface VisibilitySectionProps {
+interface BaseVisibilitySectionProps {
   isPublic: boolean;
-  password: string;
   handleChangeVisibility: (isPublic: boolean) => void;
-  handleChangePassword: (password: string) => void;
 }
 
-export default function VisibilitySection({
-  isPublic,
-  password,
-  handleChangeVisibility,
-  handleChangePassword,
-}: VisibilitySectionProps) {
+type VisibilitySectionProps = BaseVisibilitySectionProps &
+  (
+    | {
+        createType: "room";
+        password: string;
+        handleChangePassword: (password: string) => void;
+      }
+    | {
+        createType: "feed";
+        password?: never;
+        handleChangePassword?: never;
+      }
+  );
+
+export default function VisibilitySection(props: VisibilitySectionProps) {
+  const {
+    createType,
+    isPublic,
+    handleChangeVisibility,
+    password,
+    handleChangePassword,
+  } = props;
+
   const handleToggle = () => {
     handleChangeVisibility(!isPublic);
   };
 
+  const handleResetPassword = () => {
+    handleChangePassword && handleChangePassword("");
+  };
+
   const isNotPublic = !isPublic;
+
   return (
     <View style={styles.section}>
       <View style={styles.row}>
@@ -35,11 +55,13 @@ export default function VisibilitySection({
         >
           공개 설정
         </AppText>
-        {isNotPublic && password.trim().length !== 4 && (
-          <AppText weight="regular" size="xs" color={colors.red}>
-            비밀번호 4자리를 입력해주세요.
-          </AppText>
-        )}
+        {createType === "room" &&
+          isNotPublic &&
+          password.trim().length !== 4 && (
+            <AppText weight="regular" size="xs" color={colors.red}>
+              비밀번호 4자리를 입력해주세요.
+            </AppText>
+          )}
       </View>
       <View style={styles.row}>
         <AppText
@@ -52,7 +74,7 @@ export default function VisibilitySection({
         </AppText>
         <CustomSwitch isOn={isNotPublic} handleToggleButton={handleToggle} />
       </View>
-      {isNotPublic && (
+      {createType === "room" && isNotPublic && (
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -66,7 +88,7 @@ export default function VisibilitySection({
             maxLength={4}
             contextMenuHidden
           />
-          <Pressable onPress={() => handleChangePassword("")}>
+          <Pressable onPress={handleResetPassword}>
             <IcXCircleBlack />
           </Pressable>
         </View>

@@ -200,6 +200,7 @@ export default function CreateGroupScreen() {
           />
           <Separator />
           <VisibilitySection
+            createType="room"
             isPublic={isPublic}
             password={password}
             handleChangeVisibility={setIsPublic}
