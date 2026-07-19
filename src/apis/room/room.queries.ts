@@ -11,14 +11,21 @@ import Toast from "react-native-toast-message";
 import { router } from "expo-router";
 import { type ApiErrorResponse } from "../api-client";
 import {
+  changeRoomJoinStatusApi,
+  closeRoomRecruitingApi,
   createRoomApi,
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
   getSearchRoomApi,
+  leaveRoomApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
+  ChangeRoomJoinStatusRequest,
+  ChangeRoomJoinStatusResponse,
+  CloseRoomRecruitingRequest,
+  CloseRoomRecruitingResponse,
   CreateRoomRequest,
   CreateRoomResponse,
   GetHomeMyRoomResponse,
@@ -26,6 +33,7 @@ import type {
   GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
   GetSearchRoomResponse,
+  LeaveRoomRequest,
   MyRoomType,
   SearchRoomQueryParams,
 } from "./room.types";
@@ -225,5 +233,103 @@ export const useCreateRoomMutation = () => {
   return {
     createRoom,
     isPendingCreateRoom,
+  };
+};
+
+export const useChangeRoomJoinStatusMutation = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: changeRoomJoinStatus,
+    isPending: isPendingChangeRoomJoinStatus,
+  } = useMutation<
+    ChangeRoomJoinStatusResponse,
+    Error,
+    ChangeRoomJoinStatusRequest
+  >({
+    mutationFn: changeRoomJoinStatusApi,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ROOM_QUERY_KEY.ALL });
+      Toast.show({
+        type: "default",
+        text1:
+          data.type === "join"
+            ? "모임방 참여가 완료되었어요! 모집 마감 후 활동이 시작돼요."
+            : "모임방 참여가 취소되었어요! 다른 방을 찾아보세요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    changeRoomJoinStatus,
+    isPendingChangeRoomJoinStatus,
+  };
+};
+
+export const useCloseRoomRecruitingMutation = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: closeRoomRecruiting,
+    isPending: isPendingCloseRoomRecruiting,
+  } = useMutation<
+    CloseRoomRecruitingResponse,
+    Error,
+    CloseRoomRecruitingRequest
+  >({
+    mutationFn: closeRoomRecruitingApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ROOM_QUERY_KEY.ALL });
+      Toast.show({
+        type: "default",
+        text1: "독서메이트 모집을 성공적으로 마감했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    closeRoomRecruiting,
+    isPendingCloseRoomRecruiting,
+  };
+};
+
+export const useLeaveRoomMutation = () => {
+  const queryClient = useQueryClient();
+  const { mutate: leaveRoom, isPending: isPendingLeaveRoom } = useMutation<
+    string,
+    Error,
+    LeaveRoomRequest
+  >({
+    mutationFn: leaveRoomApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ROOM_QUERY_KEY.ALL });
+      Toast.show({
+        type: "default",
+        text1: "모임 나가기를 완료했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    leaveRoom,
+    isPendingLeaveRoom,
   };
 };

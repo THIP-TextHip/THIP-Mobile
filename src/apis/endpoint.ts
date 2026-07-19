@@ -66,6 +66,10 @@ export const ROOM_URL = {
   SEARCH: "/rooms/search",
   MY_ROOM: "/rooms/my",
   HOME_MY_ROOM: "/rooms/home/joined",
+  ROOM_JOIN_STATUS: (roomId: number) => `/rooms/${roomId}/join`,
+  CLOSE_ROOM_RECRUITING: (roomId: number) => `/rooms/${roomId}/close`,
+  LEAVE_ROOM: (roomId: number) => `/rooms/${roomId}/leave`,
+  ROOM_POST_LIKE_STATUS: (postId: number) => `/room-posts/${postId}/likes`,
 } as const;
 
 export const NOTIFICATION_URL = {

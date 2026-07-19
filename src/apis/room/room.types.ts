@@ -111,3 +111,27 @@ export interface CreateRoomRequest {
 export interface CreateRoomResponse {
   roomId: number;
 }
+
+export type RoomJoinStatus = "join" | "cancel";
+
+export interface ChangeRoomJoinStatusRequest {
+  roomId: number;
+  type: RoomJoinStatus;
+}
+
+export interface ChangeRoomJoinStatusResponse {
+  roomId: number;
+  type: string;
+}
+
+export interface CloseRoomRecruitingRequest {
+  roomId: number;
+}
+
+export interface CloseRoomRecruitingResponse {
+  roomId: number;
+}
+
+export interface LeaveRoomRequest {
+  roomId: number;
+}
