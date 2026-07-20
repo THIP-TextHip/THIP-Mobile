@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -193,22 +194,11 @@ export default function FeedDetailScreen() {
 
   if (!feedId) return null;
 
-  if (isPendingFeedDetail || isPendingDeleteFeed) {
-    return (
-      <View style={[styles.page, { paddingBottom: bottom }]}>
-        <FeedDetailHeader handlePressMore={handlePressMore} />
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
-      </View>
-    );
-  }
-
   if (isErrorFeedDetail || !feedDetail) {
     return (
       <View style={[styles.page, { paddingBottom: bottom }]}>
         <FeedDetailHeader handlePressMore={handlePressMore} />
-        <View style={styles.status}>
+        <View style={styles.error}>
           <AppText weight="medium" size="sm" color={colors.grey[200]}>
             피드를 불러오지 못했어요.
           </AppText>
@@ -284,6 +274,11 @@ export default function FeedDetailScreen() {
         handleCloseModal={handleCloseModal}
         handleFeedDelete={handleFeedDelete}
       />
+      {(isPendingFeedDetail || isPendingDeleteFeed) && (
+        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -295,7 +290,7 @@ const styles = StyleSheet.create({
   list: {
     gap: 24,
   },
-  status: {
+  error: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -309,5 +304,10 @@ const styles = StyleSheet.create({
   },
   commentFooter: {
     marginVertical: 24,
+  },
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -18,7 +19,6 @@ import {
   type BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
-import { getKoreaDate, parseStringToDate } from "@shared/utils";
 import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
@@ -30,9 +30,8 @@ import {
   SelectGroupDurationSection,
   SelectMemberCountSection,
 } from "./components";
-import { DAY_IN_MS } from "./constants";
+import { getDurationErrorMessage } from "./utils";
 
-// TODO: 비공개 설정 시 비밀번호 입력 부분 추가
 export default function CreateGroupScreen() {
   const { bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
@@ -72,34 +71,7 @@ export default function CreateGroupScreen() {
   }, [clearSelectedBookInfo, navigation]);
 
   useEffect(() => {
-    const today = getKoreaDate();
-    const parsedStartDate = parseStringToDate(startDate);
-    const parsedEndDate = parseStringToDate(endDate);
-
-    if (!parsedStartDate || !parsedEndDate) {
-      setDurationErrorMessage("오류가 발생했습니다. 재시도 해주세요.");
-      return;
-    }
-
-    const durationDays =
-      (parsedEndDate.getTime() - parsedStartDate.getTime()) / DAY_IN_MS;
-
-    if (parsedStartDate <= today || parsedEndDate <= today) {
-      setDurationErrorMessage("모임 기간은 오늘 이후부터 설정 가능합니다.");
-      return;
-    }
-
-    if (parsedEndDate <= parsedStartDate) {
-      setDurationErrorMessage("종료일은 시작일 다음 날부터 선택할 수 있어요.");
-      return;
-    }
-
-    if (durationDays > 90) {
-      setDurationErrorMessage("모임 기간은 최대 90일 까지 설정 가능합니다.");
-      return;
-    }
-
-    setDurationErrorMessage("");
+    setDurationErrorMessage(getDurationErrorMessage(startDate, endDate) ?? "");
   }, [startDate, endDate]);
 
   const handleOpenBottomSheet = () => {
@@ -130,21 +102,13 @@ export default function CreateGroupScreen() {
         password: isPublic ? null : cleanedPassword,
         isPublic: isPublic,
       },
-      { onSettled: clearSelectedBookInfo },
+      { onSuccess: clearSelectedBookInfo },
     );
   };
 
   const Separator = () => {
     return <View style={styles.separator} />;
   };
-
-  if (isPendingCreateRoom) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
 
   return (
     <View style={styles.page}>
@@ -160,6 +124,7 @@ export default function CreateGroupScreen() {
       >
         <ScrollView
           nestedScrollEnabled
+          scrollEnabled={!isPendingCreateRoom}
           contentContainerStyle={[
             styles.content,
             { paddingBottom: bottom + 20 },
@@ -214,6 +179,12 @@ export default function CreateGroupScreen() {
         handleSelectBook={setGroupBook}
         handleClose={handleCloseBottomSheet}
       />
+
+      {isPendingCreateRoom && (
+        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -234,8 +205,8 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: colors.darkgrey.dark,
   },
-  loadingContainer: {
-    flex: 1,
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
   },
