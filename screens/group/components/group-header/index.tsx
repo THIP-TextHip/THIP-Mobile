@@ -2,11 +2,14 @@ import { router } from "expo-router";
 import { useCallback } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import { IcAlarm, IcDone } from "@images/icons";
+import { useGetUncheckedNotificationExistsQuery } from "@apis/notification";
+import { IcAlarm, IcDone, IcNoAlarm } from "@images/icons";
 import { ThipLogo } from "@images/thip";
 import { CustomHeader } from "@shared/ui";
 
 export default function GroupHeader() {
+  const { hasUncheckedNotification } = useGetUncheckedNotificationExistsQuery();
+
   const handleToCompletedGroup = useCallback(() => {
     router.push("/expired-group-list");
   }, []);
@@ -24,7 +27,7 @@ export default function GroupHeader() {
             <IcDone />
           </Pressable>
           <Pressable onPress={handleToAlarm} hitSlop={10}>
-            <IcAlarm />
+            {hasUncheckedNotification ? <IcAlarm /> : <IcNoAlarm />}
           </Pressable>
         </View>
       }

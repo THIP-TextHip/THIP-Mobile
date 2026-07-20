@@ -28,7 +28,10 @@ export default function CommentRoot({
       {comment.replyList.length !== 0 && (
         <FlatList
           data={comment.replyList}
-          style={styles.replyList}
+          style={[
+            styles.replyList,
+            { marginBottom: postType === "FEED" ? 0 : 10 },
+          ]}
           renderItem={({ item }) => (
             <CommentItem
               postId={postId}

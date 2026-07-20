@@ -151,7 +151,10 @@ export default function CommentItem({
 }
 
 const styles = StyleSheet.create({
-  replyContainer: { flexDirection: "row", gap: 8 },
+  replyContainer: {
+    flexDirection: "row",
+    gap: 8,
+  },
   container: { gap: 12, flex: 1 },
   header: {
     flexDirection: "row",
