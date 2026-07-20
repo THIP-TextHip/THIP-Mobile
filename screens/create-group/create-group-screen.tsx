@@ -61,6 +61,8 @@ export default function CreateGroupScreen() {
     selectedCategory === null ||
     groupTitle.trim() === "" ||
     groupDesc.trim() === "" ||
+    !startDate ||
+    !endDate ||
     durationErrorMessage !== "" ||
     (!isPublic && cleanedPassword.length !== 4);
 
@@ -71,6 +73,7 @@ export default function CreateGroupScreen() {
   }, [clearSelectedBookInfo, navigation]);
 
   useEffect(() => {
+    if (!startDate || !endDate) return;
     setDurationErrorMessage(getDurationErrorMessage(startDate, endDate) ?? "");
   }, [startDate, endDate]);
 
