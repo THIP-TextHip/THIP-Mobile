@@ -1,6 +1,12 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
 import type {
+  ChangeRoomJoinStatusRequest,
+  ChangeRoomJoinStatusResponse,
+  CloseRoomRecruitingRequest,
+  CloseRoomRecruitingResponse,
+  CreateRoomRequest,
+  CreateRoomResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
@@ -8,6 +14,7 @@ import type {
   GetMyRoomListResponse,
   GetSearchRoomRequest,
   GetSearchRoomResponse,
+  LeaveRoomRequest,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -52,6 +59,45 @@ export const getHomeMyRoomApi = async (cursor?: string | null) => {
       params: cursor == null ? undefined : { cursor },
     },
   );
+
+  return response.data;
+};
+
+export const createRoomApi = async (body: CreateRoomRequest) => {
+  const response = await apiClient.post<CreateRoomResponse>(
+    ROOM_URL.DEFAULT,
+    body,
+  );
+
+  return response.data;
+};
+
+export const changeRoomJoinStatusApi = async ({
+  roomId,
+  type,
+}: ChangeRoomJoinStatusRequest) => {
+  const response = await apiClient.post<ChangeRoomJoinStatusResponse>(
+    ROOM_URL.ROOM_JOIN_STATUS(roomId),
+    {
+      type,
+    },
+  );
+
+  return response.data;
+};
+
+export const closeRoomRecruitingApi = async ({
+  roomId,
+}: CloseRoomRecruitingRequest) => {
+  const response = await apiClient.post<CloseRoomRecruitingResponse>(
+    ROOM_URL.CLOSE_ROOM_RECRUITING(roomId),
+  );
+
+  return response.data;
+};
+
+export const leaveRoomApi = async ({ roomId }: LeaveRoomRequest) => {
+  const response = await apiClient.delete<string>(ROOM_URL.LEAVE_ROOM(roomId));
 
   return response.data;
 };

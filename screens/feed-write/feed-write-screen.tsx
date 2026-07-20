@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -151,14 +152,6 @@ export default function FeedWriteScreen() {
       selectedTagList,
     });
 
-  if (isPendingWriteFeed || isPendingEditFeed) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
-  }
-
   return (
     <View style={styles.page}>
       <FeedWriteHeader
@@ -202,6 +195,7 @@ export default function FeedWriteScreen() {
           )}
           <Separator />
           <VisibilitySection
+            createType="feed"
             isPublic={isPublic}
             handleChangeVisibility={setIsPublic}
           />
@@ -218,6 +212,12 @@ export default function FeedWriteScreen() {
         handleSelectBook={setFeedBook}
         handleClose={handleCloseBottomSheet}
       />
+
+      {(isPendingWriteFeed || isPendingEditFeed) && (
+        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -238,8 +238,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: colors.darkgrey.dark,
   },
-  loadingContainer: {
-    flex: 1,
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
     alignItems: "center",
   },

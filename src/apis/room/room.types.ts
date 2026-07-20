@@ -95,3 +95,43 @@ export interface GetHomeMyRoomResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface CreateRoomRequest {
+  isbn: string;
+  category: string;
+  roomName: string;
+  description: string;
+  progressStartDate: string;
+  progressEndDate: string;
+  recruitCount: number;
+  password: string | null;
+  isPublic: boolean;
+}
+
+export interface CreateRoomResponse {
+  roomId: number;
+}
+
+export type RoomJoinStatus = "join" | "cancel";
+
+export interface ChangeRoomJoinStatusRequest {
+  roomId: number;
+  type: RoomJoinStatus;
+}
+
+export interface ChangeRoomJoinStatusResponse {
+  roomId: number;
+  type: string;
+}
+
+export interface CloseRoomRecruitingRequest {
+  roomId: number;
+}
+
+export interface CloseRoomRecruitingResponse {
+  roomId: number;
+}
+
+export interface LeaveRoomRequest {
+  roomId: number;
+}

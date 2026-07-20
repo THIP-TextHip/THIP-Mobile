@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -193,7 +194,7 @@ export default function FeedDetailScreen() {
 
   if (!feedId) return null;
 
-  if (isPendingFeedDetail || isPendingDeleteFeed) {
+  if (isPendingFeedDetail) {
     return (
       <View style={[styles.page, { paddingBottom: bottom }]}>
         <FeedDetailHeader handlePressMore={handlePressMore} />
@@ -284,6 +285,11 @@ export default function FeedDetailScreen() {
         handleCloseModal={handleCloseModal}
         handleFeedDelete={handleFeedDelete}
       />
+      {isPendingDeleteFeed && (
+        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -309,5 +315,10 @@ const styles = StyleSheet.create({
   },
   commentFooter: {
     marginVertical: 24,
+  },
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

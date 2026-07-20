@@ -1,6 +1,8 @@
-import { router, useNavigation } from "expo-router";
+import { BlurView } from "expo-blur";
+import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -8,8 +10,8 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 
+import { useCreateRoomMutation } from "@apis/room";
 import type { GroupCategoryType } from "@shared/types";
 import {
   BookSearchBottomSheet,
@@ -17,7 +19,6 @@ import {
   type BottomSheetBookItemType,
   VisibilitySection,
 } from "@shared/ui";
-import { getKoreaDate, parseStringToDate } from "@shared/utils";
 import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
@@ -29,12 +30,13 @@ import {
   SelectGroupDurationSection,
   SelectMemberCountSection,
 } from "./components";
-import { DAY_IN_MS } from "./constants";
+import { getDurationErrorMessage } from "./utils";
 
 export default function CreateGroupScreen() {
   const { bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
   const { selectedBookInfo, clearSelectedBookInfo } = useSelectedBookStore();
+  const { createRoom, isPendingCreateRoom } = useCreateRoomMutation();
 
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [groupBook, setGroupBook] = useState<BottomSheetBookItemType | null>(
@@ -48,15 +50,21 @@ export default function CreateGroupScreen() {
   const [endDate, setEndDate] = useState("");
   const [memberCount, setMemberCount] = useState(15);
   const [isPublic, setIsPublic] = useState(true);
+  const [password, setPassword] = useState("");
 
   const [durationErrorMessage, setDurationErrorMessage] = useState("");
+
+  const cleanedPassword = password.trim();
 
   const disabled =
     groupBook === null ||
     selectedCategory === null ||
     groupTitle.trim() === "" ||
     groupDesc.trim() === "" ||
-    durationErrorMessage !== "";
+    !startDate ||
+    !endDate ||
+    durationErrorMessage !== "" ||
+    (!isPublic && cleanedPassword.length !== 4);
 
   useEffect(() => {
     return navigation.addListener("beforeRemove", () => {
@@ -65,34 +73,8 @@ export default function CreateGroupScreen() {
   }, [clearSelectedBookInfo, navigation]);
 
   useEffect(() => {
-    const today = getKoreaDate();
-    const parsedStartDate = parseStringToDate(startDate);
-    const parsedEndDate = parseStringToDate(endDate);
-
-    if (!parsedStartDate || !parsedEndDate) {
-      setDurationErrorMessage("오류가 발생했습니다. 재시도 해주세요.");
-      return;
-    }
-
-    const durationDays =
-      (parsedEndDate.getTime() - parsedStartDate.getTime()) / DAY_IN_MS;
-
-    if (parsedStartDate <= today || parsedEndDate <= today) {
-      setDurationErrorMessage("모임 기간은 오늘 이후부터 설정 가능합니다.");
-      return;
-    }
-
-    if (parsedEndDate < parsedStartDate) {
-      setDurationErrorMessage("종료일은 시작일보다 빠를 수 없어요.");
-      return;
-    }
-
-    if (durationDays > 90) {
-      setDurationErrorMessage("모임 기간은 최대 90일 까지 설정 가능합니다.");
-      return;
-    }
-
-    setDurationErrorMessage("");
+    if (!startDate || !endDate) return;
+    setDurationErrorMessage(getDurationErrorMessage(startDate, endDate) ?? "");
   }, [startDate, endDate]);
 
   const handleOpenBottomSheet = () => {
@@ -110,29 +92,21 @@ export default function CreateGroupScreen() {
     });
   };
 
-  // TODO: 서버에 모임 생성 요청 보내기
   const handleCreateGroup = () => {
-    console.log(
-      "모임 만들기 : ",
-      groupBook,
-      selectedCategory,
-      groupTitle,
-      groupDesc,
-      startDate,
-      endDate,
-      memberCount,
-      isPublic,
+    createRoom(
+      {
+        isbn: groupBook?.isbn ?? "",
+        category: selectedCategory ?? "",
+        roomName: groupTitle,
+        description: groupDesc,
+        progressStartDate: startDate,
+        progressEndDate: endDate,
+        recruitCount: memberCount,
+        password: isPublic ? null : cleanedPassword,
+        isPublic: isPublic,
+      },
+      { onSuccess: clearSelectedBookInfo },
     );
-    // TODO: 모임방 생성 성공 응답의 roomId 사용. 성공 시 토스트도 띄워야 함!
-    clearSelectedBookInfo();
-    Toast.show({
-      type: "default",
-      text1: "모임방 생성이 완료되었습니다.",
-    });
-    router.push({
-      pathname: "/join-group/[roomId]",
-      params: { roomId: String(123) },
-    });
   };
 
   const Separator = () => {
@@ -145,6 +119,7 @@ export default function CreateGroupScreen() {
         disabled={disabled}
         handleConfirm={handleCreateGroup}
       />
+
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -152,6 +127,7 @@ export default function CreateGroupScreen() {
       >
         <ScrollView
           nestedScrollEnabled
+          scrollEnabled={!isPendingCreateRoom}
           contentContainerStyle={[
             styles.content,
             { paddingBottom: bottom + 20 },
@@ -192,16 +168,26 @@ export default function CreateGroupScreen() {
           />
           <Separator />
           <VisibilitySection
+            createType="room"
             isPublic={isPublic}
+            password={password}
             handleChangeVisibility={setIsPublic}
+            handleChangePassword={setPassword}
           />
         </ScrollView>
       </KeyboardAvoidingView>
+
       <BookSearchBottomSheet
         isVisible={isBottomSheetVisible}
         handleSelectBook={setGroupBook}
         handleClose={handleCloseBottomSheet}
       />
+
+      {isPendingCreateRoom && (
+        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -221,5 +207,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: 1,
     backgroundColor: colors.darkgrey.dark,
+  },
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
