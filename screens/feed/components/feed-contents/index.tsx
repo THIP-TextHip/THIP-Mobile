@@ -1,3 +1,4 @@
+import { type RefObject } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -13,8 +14,12 @@ import { colors } from "@theme/token";
 
 import MyThipPreview from "../my-thip-preview";
 
+interface FeedContentsProps {
+  listRef: RefObject<FlatList | null>;
+}
+
 // TODO: 추후 로딩 처리 스켈레톤으로 하기 / 로딩 인디케이터 고민하기
-export default function FeedContents() {
+export default function FeedContents({ listRef }: FeedContentsProps) {
   const {
     feedList,
     fetchNextPage,
@@ -70,6 +75,7 @@ export default function FeedContents() {
 
   return (
     <FlatList
+      ref={listRef}
       contentContainerStyle={[
         styles.list,
         isFetchingNextPage && { paddingBottom: 40 },

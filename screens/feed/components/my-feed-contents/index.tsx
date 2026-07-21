@@ -1,3 +1,4 @@
+import { type RefObject } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -59,7 +60,11 @@ const MyFeedTopContents = () => {
   );
 };
 
-export default function MyFeedContents() {
+interface MyFeedContentsProps {
+  listRef: RefObject<FlatList | null>;
+}
+
+export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
   const {
     feedMyProfileList,
     fetchNextPage,
@@ -114,6 +119,7 @@ export default function MyFeedContents() {
 
   return (
     <FlatList
+      ref={listRef}
       contentContainerStyle={styles.list}
       ListHeaderComponent={<MyFeedTopContents />}
       data={feedMyProfileList}
