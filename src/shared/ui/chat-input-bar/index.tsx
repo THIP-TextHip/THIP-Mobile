@@ -64,10 +64,13 @@ export default function ChatInputBar({
 
   const ableToSend = text.trim().length !== 0 && !isPendingSend;
 
+  const keyboardVerticalOffset =
+    Platform.OS === "ios" ? 36 : isFocus ? bottom : 0;
+
   return (
     <KeyboardAvoidingView
       behavior={"padding"}
-      keyboardVerticalOffset={isFocus ? bottom : 0}
+      keyboardVerticalOffset={keyboardVerticalOffset}
       style={styles.container}
       onLayout={onLayout}
     >

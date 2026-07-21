@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { ApiErrorResponse } from "../api-client";
 import {
   changeFeedLikeStatusApi,
   changeFeedSaveStatusApi,
@@ -404,7 +405,7 @@ export const useSavedFeedQuery = () => {
     isRefetching: isRefetchingSavedFeed,
   } = useInfiniteQuery<
     GetFeedListResponse,
-    Error,
+    ApiErrorResponse,
     InfiniteData<GetFeedListResponse, FeedCursor>,
     typeof FEED_QUERY_KEY.SAVED,
     FeedCursor
@@ -434,6 +435,7 @@ export const useSavedFeedQuery = () => {
     isFetchingNextPage,
     isPendingSavedFeed,
     isErrorSavedFeed,
+    savedFeedError,
     refetchSavedFeed,
     isRefetchingSavedFeed,
   };

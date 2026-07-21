@@ -41,11 +41,11 @@ export default function SearchGroupScreen() {
     setRoomCategory(null);
   }, []);
 
-  const handleSearch = useCallback(() => {
-    if (searchText.trim() === "") return;
+  const handleSearch = useCallback((value: string) => {
+    if (value.trim() === "") return;
     setHasSearched(true);
     setRoomCategory("전체");
-  }, [searchText]);
+  }, []);
 
   const handleClickKeyword = useCallback((keyword: string) => {
     setSearchText(keyword);

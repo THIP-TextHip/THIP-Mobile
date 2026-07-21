@@ -30,10 +30,22 @@ export default function CustomTabBar({
               ? options.tabBarIcon({ focused, color, size })
               : null;
 
+          const handleTabPress = () => {
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            });
+
+            if (!focused && !event.defaultPrevented) {
+              navigation.navigate(route.name, route.params);
+            }
+          };
+
           return (
             <Pressable
               key={route.key}
-              onPress={() => navigation.navigate(route.name)}
+              onPress={handleTabPress}
               style={styles.tabBarItemContainer}
             >
               <View style={styles.tabBarItemIcon}>{icon}</View>

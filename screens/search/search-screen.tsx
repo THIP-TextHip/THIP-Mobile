@@ -27,10 +27,10 @@ export default function SearchScreen() {
     setHasSearched(false);
   }, []);
 
-  const handleSearch = useCallback(() => {
-    if (searchText.trim() === "") return;
+  const handleSearch = useCallback((value: string) => {
+    if (value.trim() === "") return;
     setHasSearched(true);
-  }, [searchText]);
+  }, []);
 
   const handleClickKeyword = useCallback((keyword: string) => {
     setSearchText(keyword);

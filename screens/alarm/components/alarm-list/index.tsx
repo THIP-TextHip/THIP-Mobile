@@ -30,6 +30,7 @@ export default function AlarmList({ filter }: AlarmListProps) {
     isFetchingNextPage,
     isPendingNotificationList,
     isErrorNotificationList,
+    notificationListError,
     refetchNotificationList,
     isRefetchingNotificationList,
   } = useGetNotificationListQuery(filter);
@@ -52,7 +53,7 @@ export default function AlarmList({ filter }: AlarmListProps) {
     return (
       <View style={styles.status}>
         <AppText weight="semibold" size="lg" color={colors.white}>
-          데이터를 불러오지 못했어요
+          데이터를 불러오지 못했어요 ({notificationListError?.code})
         </AppText>
       </View>
     );
