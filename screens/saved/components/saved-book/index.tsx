@@ -33,6 +33,7 @@ export default function SavedBook() {
     isFetchingNextPage,
     isPendingSavedBook,
     isErrorSavedBook,
+    savedBookError,
     refetchSavedBook,
     isRefetchingSavedBook,
   } = useSavedBookQuery();
@@ -73,25 +74,15 @@ export default function SavedBook() {
 
   if (isErrorSavedBook && savedBookList.length === 0) {
     return (
-      <View style={styles.empty}>
+      <View style={[styles.empty, { height: height - 300 }]}>
         <AppText
           weight="semibold"
           size="lg"
           color={colors.white}
           lineHeight={24}
         >
-          데이터를 불러오지 못했어요
+          데이터를 불러오지 못했어요 ({savedBookError?.code})
         </AppText>
-        <Pressable onPress={() => void refetchSavedBook()}>
-          <AppText
-            weight="regular"
-            size="sm"
-            color={colors.grey[100]}
-            lineHeight={20}
-          >
-            다시 시도하기
-          </AppText>
-        </Pressable>
       </View>
     );
   }

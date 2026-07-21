@@ -12,6 +12,7 @@ export default function MostSearched() {
     mostSearchedBookData,
     isPendingMostSearchedBook,
     isErrorMostSearchedBook,
+    mostSearchedBookError,
   } = useMostSearchedBookQuery();
 
   const dateString = useMemo(() => {
@@ -39,7 +40,7 @@ export default function MostSearched() {
       ) : isErrorMostSearchedBook ? (
         <View style={styles.emptyContainer}>
           <AppText weight="semibold" size="lg" color={colors.white}>
-            데이터를 불러오지 못했어요
+            데이터를 불러오지 못했어요 ({mostSearchedBookError?.code})
           </AppText>
         </View>
       ) : mostSearchedBookData?.bookList.length === 0 ? (

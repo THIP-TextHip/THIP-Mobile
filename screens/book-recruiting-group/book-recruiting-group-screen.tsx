@@ -25,6 +25,7 @@ export default function BookRecruitingGroupScreen() {
     isFetchingNextPage,
     isPendingBookRecruitingRooms,
     isErrorBookRecruitingRooms,
+    bookRecruitingRoomsError,
     refetchBookRecruitingRooms,
     isRefetchingBookRecruitingRooms,
   } = useBookRecruitingRoomsQuery(isbn);
@@ -45,18 +46,8 @@ export default function BookRecruitingGroupScreen() {
           color={colors.white}
           lineHeight={24}
         >
-          데이터를 불러오지 못했어요
+          데이터를 불러오지 못했어요 ({bookRecruitingRoomsError?.code})
         </AppText>
-        <Pressable onPress={() => void refetchBookRecruitingRooms()}>
-          <AppText
-            weight="regular"
-            size="sm"
-            color={colors.grey[100]}
-            lineHeight={20}
-          >
-            다시 시도하기
-          </AppText>
-        </Pressable>
       </View>
     );
   }

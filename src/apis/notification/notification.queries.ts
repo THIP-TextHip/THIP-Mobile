@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message";
 
 import { getFormattedCurrentDateTime } from "@shared/utils";
 
+import { ApiErrorResponse } from "../api-client";
 import { COMMENT_QUERY_KEY } from "../comment";
 import { FEED_QUERY_KEY } from "../feed";
 import {
@@ -25,16 +26,16 @@ import {
 } from "./notification.api";
 import { NOTIFICATION_ROUTE } from "./notification.constant";
 import { NOTIFICATION_QUERY_KEY } from "./notification.query-key";
-import {
+import type {
   ChangePushNotificationStateRequest,
   ChangePushNotificationStateResponse,
+  CheckNotificationRequest,
+  CheckNotificationResponse,
+  GetNotificationListResponse,
   GetPushNotificationStateResponse,
-  type CheckNotificationRequest,
-  type CheckNotificationResponse,
-  type GetNotificationListResponse,
-  type GetUncheckedNotificationExistsResponse,
-  type NotificationType,
-  type RegisterNotificationTokenRequest,
+  GetUncheckedNotificationExistsResponse,
+  NotificationType,
+  RegisterNotificationTokenRequest,
 } from "./notification.types";
 
 type NotificationCursor = string | null;
@@ -47,12 +48,12 @@ export const useGetNotificationListQuery = (type: NotificationType | null) => {
     isFetchingNextPage,
     isPending: isPendingNotificationList,
     isError: isErrorNotificationList,
-    error,
+    error: notificationListError,
     refetch: refetchNotificationList,
     isRefetching: isRefetchingNotificationList,
   } = useInfiniteQuery<
     GetNotificationListResponse,
-    Error,
+    ApiErrorResponse,
     InfiniteData<GetNotificationListResponse, NotificationCursor>,
     ReturnType<typeof NOTIFICATION_QUERY_KEY.LIST>,
     NotificationCursor
@@ -69,13 +70,13 @@ export const useGetNotificationListQuery = (type: NotificationType | null) => {
   });
 
   useEffect(() => {
-    if (!isErrorNotificationList || !error) return;
+    if (!isErrorNotificationList || !notificationListError) return;
 
     Toast.show({
       type: "error",
-      text1: error.message,
+      text1: notificationListError.message,
     });
-  }, [isErrorNotificationList, error]);
+  }, [isErrorNotificationList, notificationListError]);
 
   return {
     notificationList: data?.pages.flatMap((page) => page.notifications) ?? [],
@@ -84,6 +85,7 @@ export const useGetNotificationListQuery = (type: NotificationType | null) => {
     isFetchingNextPage,
     isPendingNotificationList,
     isErrorNotificationList,
+    notificationListError,
     refetchNotificationList,
     isRefetchingNotificationList,
   };

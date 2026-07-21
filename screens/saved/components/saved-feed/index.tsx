@@ -1,7 +1,6 @@
 import {
   ActivityIndicator,
   FlatList,
-  Pressable,
   RefreshControl,
   StyleSheet,
   useWindowDimensions,
@@ -24,6 +23,7 @@ export default function SavedFeed() {
     isFetchingNextPage,
     isPendingSavedFeed,
     isErrorSavedFeed,
+    savedFeedError,
     refetchSavedFeed,
     isRefetchingSavedFeed,
   } = useSavedFeedQuery();
@@ -44,25 +44,15 @@ export default function SavedFeed() {
 
   if (isErrorSavedFeed && savedFeedList.length === 0) {
     return (
-      <View style={styles.empty}>
+      <View style={[styles.empty, { height: height - 300 }]}>
         <AppText
           weight="semibold"
           size="lg"
           color={colors.white}
           lineHeight={24}
         >
-          데이터를 불러오지 못했어요
+          데이터를 불러오지 못했어요 ({savedFeedError?.code})
         </AppText>
-        <Pressable onPress={() => void refetchSavedFeed()}>
-          <AppText
-            weight="regular"
-            size="sm"
-            color={colors.grey[100]}
-            lineHeight={20}
-          >
-            다시 시도하기
-          </AppText>
-        </Pressable>
       </View>
     );
   }

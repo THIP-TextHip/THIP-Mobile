@@ -5,10 +5,11 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
-import { router } from "expo-router";
+import { ApiErrorResponse } from "../api-client";
 import {
   changeBookSaveStatusApi,
   getBookDetailApi,
@@ -151,7 +152,8 @@ export const useMostSearchedBookQuery = () => {
     data: mostSearchedBookData,
     isPending: isPendingMostSearchedBook,
     isError: isErrorMostSearchedBook,
-  } = useQuery<GetMostSearchedBookResponse, Error>({
+    error: mostSearchedBookError,
+  } = useQuery<GetMostSearchedBookResponse, ApiErrorResponse>({
     queryKey: BOOK_QUERY_KEY.MOST,
     queryFn: getMostSearchedBookApi,
     staleTime: MOST_SEARCHED_BOOK_QUERY_CACHE_TIME.STALE,
@@ -162,6 +164,7 @@ export const useMostSearchedBookQuery = () => {
     mostSearchedBookData,
     isPendingMostSearchedBook,
     isErrorMostSearchedBook,
+    mostSearchedBookError,
   };
 };
 
@@ -205,7 +208,7 @@ export const useSavedBookQuery = () => {
     isRefetching: isRefetchingSavedBook,
   } = useInfiniteQuery<
     GetSavedBookResponse,
-    Error,
+    ApiErrorResponse,
     InfiniteData<GetSavedBookResponse, SavedBookCursor>,
     typeof BOOK_QUERY_KEY.SAVED,
     SavedBookCursor
@@ -235,6 +238,7 @@ export const useSavedBookQuery = () => {
     isFetchingNextPage,
     isPendingSavedBook,
     isErrorSavedBook,
+    savedBookError,
     refetchSavedBook,
     isRefetchingSavedBook,
   };
@@ -255,7 +259,7 @@ export const useBookRecruitingRoomsQuery = (isbn: string) => {
     isRefetching: isRefetchingBookRecruitingRooms,
   } = useInfiniteQuery<
     GetBookRecruitingRoomsResponse,
-    Error,
+    ApiErrorResponse,
     InfiniteData<GetBookRecruitingRoomsResponse, BookRecruitingRoomCursor>,
     ReturnType<typeof BOOK_QUERY_KEY.RECRUITING>,
     BookRecruitingRoomCursor
@@ -291,6 +295,7 @@ export const useBookRecruitingRoomsQuery = (isbn: string) => {
     isFetchingNextPage,
     isPendingBookRecruitingRooms,
     isErrorBookRecruitingRooms,
+    bookRecruitingRoomsError,
     refetchBookRecruitingRooms,
     isRefetchingBookRecruitingRooms,
   };
