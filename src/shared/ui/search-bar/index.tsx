@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pressable,
   StyleProp,
@@ -11,12 +11,14 @@ import {
 import { IcSearch, IcXCircle } from "@images/icons";
 import { colors, typography } from "@theme/token";
 
+const SEARCH_DEBOUNCE_DELAY = 300;
+
 interface SearchBarProps {
   value: string;
   placeholder: string;
   autoFocus?: boolean;
   setValue: (value: string) => void;
-  handleSearch?: () => void;
+  handleSearch?: (value: string) => void;
   containerStyle?: StyleProp<ViewStyle>;
 }
 
@@ -28,31 +30,56 @@ export default function SearchBar({
   handleSearch,
   containerStyle,
 }: SearchBarProps) {
+  const [inputValue, setInputValue] = useState(value);
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (inputValue === value) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setValue(inputValue);
+    }, SEARCH_DEBOUNCE_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [inputValue, setValue, value]);
+
   const handleDelete = useCallback(() => {
+    setInputValue("");
     setValue("");
   }, [setValue]);
+
+  const handleSubmit = useCallback(() => {
+    setValue(inputValue);
+    handleSearch?.(inputValue);
+  }, [handleSearch, inputValue, setValue]);
+
   return (
     <View style={[styles.container, containerStyle]}>
       <TextInput
         style={styles.input}
-        value={value}
-        onChangeText={setValue}
+        value={inputValue}
+        onChangeText={setInputValue}
         placeholder={placeholder}
         placeholderTextColor={colors.grey[300]}
         selectionColor={colors.neongreen}
         cursorColor={colors.neongreen}
         returnKeyType="search"
-        onSubmitEditing={handleSearch}
+        onSubmitEditing={handleSubmit}
         autoFocus={autoFocus}
         hitSlop={10}
       />
       <View style={styles.buttonWrapper}>
-        {!!value.trim() && (
+        {!!inputValue.trim() && (
           <Pressable onPress={handleDelete}>
             <IcXCircle />
           </Pressable>
         )}
-        <Pressable onPress={handleSearch}>
+        <Pressable onPress={handleSubmit}>
           <IcSearch />
         </Pressable>
       </View>
