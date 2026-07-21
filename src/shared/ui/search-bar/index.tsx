@@ -74,7 +74,7 @@ export default function SearchBar({
         hitSlop={10}
       />
       <View style={styles.buttonWrapper}>
-        {!!inputValue.trim() && (
+        {inputValue.length > 0 && (
           <Pressable onPress={handleDelete}>
             <IcXCircle />
           </Pressable>
