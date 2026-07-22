@@ -105,12 +105,19 @@ export default function MyGroupCarouselItem({
         return;
       }
 
-      router.push({
-        pathname: "/group-detail/[roomId]",
-        params: { roomId: String(content.roomId) },
-      });
+      if (isInProgress) {
+        router.push({
+          pathname: "/group-detail/[roomId]",
+          params: { roomId: String(content.roomId) },
+        });
+      } else {
+        router.push({
+          pathname: "/join-group/[roomId]",
+          params: { roomId: String(content.roomId) },
+        });
+      }
     },
-    [content.roomId],
+    [isInProgress, content.roomId],
   );
 
   return (
