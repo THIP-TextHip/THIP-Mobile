@@ -15,13 +15,13 @@ import { IcGroup } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { GroupCarouselItemType } from "../../types";
+import { type JoinedRoomType } from "@apis/room";
 
 const TAP_MOVE_THRESHOLD = 8;
 
 interface MyGroupCarouselItemProps {
   width: number;
-  content: GroupCarouselItemType;
+  content: JoinedRoomType;
   animationValue?: SharedValue<number>;
 }
 
@@ -30,6 +30,7 @@ export default function MyGroupCarouselItem({
   content,
   animationValue,
 }: MyGroupCarouselItemProps) {
+  const isInProgress = content.deadlineDate === null;
   const pressStartRef = useRef<{ x: number; y: number } | null>(null);
   const fallbackAnimationValue = useSharedValue(0);
   const currentAnimationValue = animationValue ?? fallbackAnimationValue;
@@ -133,8 +134,6 @@ export default function MyGroupCarouselItem({
               source={{ uri: content.bookImageUrl }}
               style={styles.image}
             />
-
-            {/* TODO: 이미지 영역까지 포함해서 눌렀을 때 넘어가도록 수정하고 싶음. 현재는 이유모르게 UX적인 오류가 뜸 */}
             <View style={styles.content}>
               <View style={styles.groupInfo}>
                 <AppText
@@ -159,11 +158,10 @@ export default function MyGroupCarouselItem({
                   </AppText>
                 </View>
               </View>
-
               <View style={styles.myProgressWrapper}>
                 <View style={styles.progressLabel}>
                   <AppText weight="medium" size="sm" color={colors.grey[300]}>
-                    내 진행도
+                    {isInProgress ? "내 진행도" : "시작까지"}
                   </AppText>
                   <AppText
                     weight="semibold"
@@ -171,30 +169,38 @@ export default function MyGroupCarouselItem({
                     color={colors.purple.main}
                     lineHeight={20}
                   >
-                    {content.userPercentage}
-                    <AppText
-                      weight="semibold"
-                      size="xs"
-                      color={colors.purple.main}
-                    >
-                      %
-                    </AppText>
+                    {isInProgress ? (
+                      <>
+                        {content.userPercentage}
+                        <AppText
+                          weight="semibold"
+                          size="xs"
+                          color={colors.purple.main}
+                        >
+                          %
+                        </AppText>
+                      </>
+                    ) : (
+                      content.deadlineDate
+                    )}
                   </AppText>
                 </View>
-
-                <View style={styles.progressBar}>
-                  <View
-                    style={[
-                      styles.currentProgress,
-                      { width: `${content.userPercentage}%` },
-                    ]}
-                  />
-                </View>
+                {isInProgress ? (
+                  <View style={styles.progressBar}>
+                    <View
+                      style={[
+                        styles.currentProgress,
+                        { width: `${content.userPercentage}%` },
+                      ]}
+                    />
+                  </View>
+                ) : (
+                  <View />
+                )}
               </View>
             </View>
           </Pressable>
         </Animated.View>
-
         <Animated.View
           pointerEvents="none"
           style={[styles.darkOverlay, overlayAnimatedStyle]}

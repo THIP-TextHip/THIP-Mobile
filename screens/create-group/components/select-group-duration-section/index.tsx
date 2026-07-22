@@ -33,7 +33,7 @@ export default function SelectGroupDurationSection({
   const [startDay, setStartDay] = useState(tomorrow.getDate());
   const [endYear, setEndYear] = useState(tomorrow.getFullYear());
   const [endMonth, setEndMonth] = useState(tomorrow.getMonth() + 1);
-  const [endDay, setEndDay] = useState(tomorrow.getDate());
+  const [endDay, setEndDay] = useState(tomorrow.getDate() + 1);
 
   const startDaysList = useMemo(
     () => getDaysList(startYear, startMonth),
