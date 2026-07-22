@@ -135,3 +135,61 @@ export interface CloseRoomRecruitingResponse {
 export interface LeaveRoomRequest {
   roomId: number;
 }
+
+export interface VerifyPrivateRoomPasswordRequest {
+  roomId: number;
+  password: string;
+}
+
+export interface VerifyPrivateRoomPasswordResponse {
+  matched: boolean;
+  roomId: number;
+}
+
+export interface GetRoomDetailRequest {
+  roomId: number | string;
+}
+
+export interface RoomDetailCurrentVotes {
+  content: string;
+  page: number;
+  isOverview: boolean;
+  voteItems: {
+    itemName: string;
+  }[];
+}
+
+export interface GetRoomDetailResponse {
+  isHost: boolean;
+  roomId: number;
+  roomName: string;
+  roomImageUrl: string;
+  isPublic: boolean;
+  progressStartDate: string;
+  progressEndDate: string;
+  category: string;
+  categoryColor: string;
+  roomDescription: string;
+  memberCount: number;
+  recruitCount: number;
+  isbn: string;
+  bookTitle: string;
+  authorName: string;
+  currentPage: number;
+  userPercentage: number;
+  currentVotes: RoomDetailCurrentVotes[];
+}
+
+export interface ReadingMateType {
+  userId: number;
+  nickname: string;
+  imageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  isMyself: boolean;
+}
+
+export interface GetReadingMateResponse {
+  userList: ReadingMateType[];
+}

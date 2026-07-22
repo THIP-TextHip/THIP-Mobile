@@ -5,8 +5,11 @@ export {
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
+  getReadingMateApi,
+  getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
+  verifyPrivateRoomPasswordApi,
 } from "./room.api";
 
 export {
@@ -16,8 +19,11 @@ export {
   useGetHomeMyRoomQuery,
   useGetHomeRecruitingRoomListQuery,
   useGetMyRoomListQuery,
+  useGetReadingMateQuery,
+  useGetRoomDetailQuery,
   useLeaveRoomMutation,
   useSearchRoomQuery,
+  useVerifyPrivateRoomPassword,
 } from "./room.queries";
 
 export type {
@@ -32,13 +38,18 @@ export type {
   GetHomeRecruitingRoomResponse,
   GetMyRoomListRequest,
   GetMyRoomListResponse,
+  GetReadingMateResponse,
+  GetRoomDetailRequest,
+  GetRoomDetailResponse,
   GetSearchRoomRequest,
   GetSearchRoomResponse,
   JoinedRoomType,
   LeaveRoomRequest,
   MyRoomListType,
   MyRoomType,
+  ReadingMateType,
   RoomCategory,
+  RoomDetailCurrentVotes,
   RoomJoinStatus,
   RoomPostType,
   RoomType,
@@ -46,6 +57,8 @@ export type {
   SearchRoomCategory,
   SearchRoomQueryParams,
   SearchRoomSort,
+  VerifyPrivateRoomPasswordRequest,
+  VerifyPrivateRoomPasswordResponse,
 } from "./room.types";
 
 export { ROOM_QUERY_KEY } from "./room.query-key";

@@ -12,9 +12,14 @@ import type {
   GetHomeRecruitingRoomResponse,
   GetMyRoomListRequest,
   GetMyRoomListResponse,
+  GetReadingMateResponse,
+  GetRoomDetailRequest,
+  GetRoomDetailResponse,
   GetSearchRoomRequest,
   GetSearchRoomResponse,
   LeaveRoomRequest,
+  VerifyPrivateRoomPasswordRequest,
+  VerifyPrivateRoomPasswordResponse,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -98,6 +103,36 @@ export const closeRoomRecruitingApi = async ({
 
 export const leaveRoomApi = async ({ roomId }: LeaveRoomRequest) => {
   const response = await apiClient.delete<string>(ROOM_URL.LEAVE_ROOM(roomId));
+
+  return response.data;
+};
+
+export const verifyPrivateRoomPasswordApi = async ({
+  roomId,
+  password,
+}: VerifyPrivateRoomPasswordRequest) => {
+  const response = await apiClient.post<VerifyPrivateRoomPasswordResponse>(
+    ROOM_URL.VERIFY_PASSWORD(roomId),
+    {
+      password,
+    },
+  );
+
+  return response.data;
+};
+
+export const getRoomDetailApi = async ({ roomId }: GetRoomDetailRequest) => {
+  const response = await apiClient.get<GetRoomDetailResponse>(
+    ROOM_URL.DETAIL(roomId),
+  );
+
+  return response.data;
+};
+
+export const getReadingMateApi = async (roomId: string | number) => {
+  const response = await apiClient.get<GetReadingMateResponse>(
+    ROOM_URL.READING_MATE(roomId),
+  );
 
   return response.data;
 };

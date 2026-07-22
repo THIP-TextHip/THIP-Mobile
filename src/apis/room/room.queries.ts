@@ -17,8 +17,11 @@ import {
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
+  getReadingMateApi,
+  getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
+  verifyPrivateRoomPasswordApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
@@ -32,15 +35,29 @@ import type {
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
+  GetReadingMateResponse,
+  GetRoomDetailResponse,
   GetSearchRoomResponse,
   LeaveRoomRequest,
   MyRoomType,
   SearchRoomQueryParams,
+  VerifyPrivateRoomPasswordRequest,
+  VerifyPrivateRoomPasswordResponse,
 } from "./room.types";
 
 const MY_ROOM_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 5,
   GC: 1000 * 60 * 10,
+} as const;
+
+const ROOM_DETAIL_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 2,
+  GC: 1000 * 60 * 5,
+} as const;
+
+const ROOM_READING_MATE_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 10,
+  GC: 1000 * 60 * 15,
 } as const;
 
 type RoomCursor = string | null;
@@ -331,5 +348,104 @@ export const useLeaveRoomMutation = () => {
   return {
     leaveRoom,
     isPendingLeaveRoom,
+  };
+};
+
+export const useVerifyPrivateRoomPassword = () => {
+  const {
+    mutate: verifyPrivateRoomPassword,
+    isPending: isPendingVerifyPrivateRoomPassword,
+  } = useMutation<
+    VerifyPrivateRoomPasswordResponse,
+    ApiErrorResponse,
+    VerifyPrivateRoomPasswordRequest
+  >({
+    mutationFn: verifyPrivateRoomPasswordApi,
+    // TODO: 이부분은 추후 페이지에서 사용할 때, onSuccess 하기
+    onSuccess: (data) => {
+      if (data.matched) {
+      } else {
+      }
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    verifyPrivateRoomPassword,
+    isPendingVerifyPrivateRoomPassword,
+  };
+};
+
+const hasRoomId = (roomId?: number | string): roomId is number | string =>
+  roomId != null && roomId !== "";
+
+export const useGetRoomDetailQuery = (roomId?: number | string) => {
+  const {
+    data: roomDetailData,
+    isPending: isPendingRoomDetail,
+    isError: isErrorRoomDetail,
+    error: roomDetailError,
+    refetch: refetchRoomDetail,
+    isRefetching: isRefetchingRoomDetail,
+  } = useQuery<GetRoomDetailResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.DETAIL(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getRoomDetailApi({ roomId });
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_DETAIL_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_DETAIL_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    roomDetailData,
+    isPendingRoomDetail,
+    isErrorRoomDetail,
+    roomDetailError,
+    refetchRoomDetail,
+    isRefetchingRoomDetail,
+  };
+};
+
+export const useGetReadingMateQuery = (roomId?: number | string) => {
+  const {
+    data,
+    isPending: isPendingReadingMateList,
+    isError: isErrorReadingMateList,
+    error: readingMateListError,
+    refetch: refetchReadingMateList,
+    isRefetching: isRefetchingReadingMateList,
+  } = useQuery<GetReadingMateResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.READING_MATE(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getReadingMateApi(roomId);
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_READING_MATE_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_READING_MATE_QUERY_CACHE_TIME.GC,
+  });
+
+  const readingMateList = data?.userList;
+
+  return {
+    readingMateList,
+    isPendingReadingMateList,
+    isErrorReadingMateList,
+    readingMateListError,
+    refetchReadingMateList,
+    isRefetchingReadingMateList,
   };
 };

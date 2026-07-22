@@ -7,10 +7,12 @@ import { IcArrowLeft, IcMore } from "@images/icons";
 import { CustomHeader } from "@shared/ui";
 
 interface GroupDetailHeaderProps {
+  disabled: boolean;
   handlePressMore: () => void;
 }
 
 export default function GroupDetailHeader({
+  disabled,
   handlePressMore,
 }: GroupDetailHeaderProps) {
   const handleGoBack = useCallback(() => {
@@ -41,6 +43,7 @@ export default function GroupDetailHeader({
             accessibilityRole="button"
             accessibilityLabel="바텀시트 열기"
             hitSlop={10}
+            disabled={disabled}
           >
             <IcMore />
           </Pressable>
