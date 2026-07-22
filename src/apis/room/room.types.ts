@@ -135,3 +135,13 @@ export interface CloseRoomRecruitingResponse {
 export interface LeaveRoomRequest {
   roomId: number;
 }
+
+export interface VerifyPrivateRoomPasswordRequest {
+  roomId: number;
+  password: string;
+}
+
+export interface VerifyPrivateRoomPasswordResponse {
+  matched: boolean;
+  roomId: number;
+}

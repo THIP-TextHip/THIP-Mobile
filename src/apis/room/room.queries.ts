@@ -19,23 +19,26 @@ import {
   getMyRoomListApi,
   getSearchRoomApi,
   leaveRoomApi,
+  verifyPrivateRoomPasswordApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
-import type {
-  ChangeRoomJoinStatusRequest,
-  ChangeRoomJoinStatusResponse,
-  CloseRoomRecruitingRequest,
-  CloseRoomRecruitingResponse,
-  CreateRoomRequest,
-  CreateRoomResponse,
-  GetHomeMyRoomResponse,
-  GetHomeRecruitingRoomRequest,
-  GetHomeRecruitingRoomResponse,
-  GetMyRoomListResponse,
-  GetSearchRoomResponse,
-  LeaveRoomRequest,
-  MyRoomType,
-  SearchRoomQueryParams,
+import {
+  VerifyPrivateRoomPasswordRequest,
+  VerifyPrivateRoomPasswordResponse,
+  type ChangeRoomJoinStatusRequest,
+  type ChangeRoomJoinStatusResponse,
+  type CloseRoomRecruitingRequest,
+  type CloseRoomRecruitingResponse,
+  type CreateRoomRequest,
+  type CreateRoomResponse,
+  type GetHomeMyRoomResponse,
+  type GetHomeRecruitingRoomRequest,
+  type GetHomeRecruitingRoomResponse,
+  type GetMyRoomListResponse,
+  type GetSearchRoomResponse,
+  type LeaveRoomRequest,
+  type MyRoomType,
+  type SearchRoomQueryParams,
 } from "./room.types";
 
 const MY_ROOM_QUERY_CACHE_TIME = {
@@ -331,5 +334,35 @@ export const useLeaveRoomMutation = () => {
   return {
     leaveRoom,
     isPendingLeaveRoom,
+  };
+};
+
+export const useVerifyPrivateRoomPassword = () => {
+  const {
+    mutate: verifyPrivateRoomPassword,
+    isPending: isPendingVerifyPrivateRoomPassowrd,
+  } = useMutation<
+    VerifyPrivateRoomPasswordResponse,
+    ApiErrorResponse,
+    VerifyPrivateRoomPasswordRequest
+  >({
+    mutationFn: verifyPrivateRoomPasswordApi,
+    // TODO: 이부분은 추후 페이지에서 사용할 때, onSuccess 하기
+    onSuccess: (data) => {
+      if (data.matched) {
+      } else {
+      }
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    verifyPrivateRoomPassword,
+    isPendingVerifyPrivateRoomPassowrd,
   };
 };

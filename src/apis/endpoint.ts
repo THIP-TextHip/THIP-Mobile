@@ -70,6 +70,7 @@ export const ROOM_URL = {
   CLOSE_ROOM_RECRUITING: (roomId: number) => `/rooms/${roomId}/close`,
   LEAVE_ROOM: (roomId: number) => `/rooms/${roomId}/leave`,
   ROOM_POST_LIKE_STATUS: (postId: number) => `/room-posts/${postId}/likes`,
+  VERIFY_PASSWORD: (roomId: number) => `/rooms/${roomId}/password`,
 } as const;
 
 export const NOTIFICATION_URL = {

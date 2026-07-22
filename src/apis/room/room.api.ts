@@ -1,20 +1,22 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
-import type {
-  ChangeRoomJoinStatusRequest,
-  ChangeRoomJoinStatusResponse,
-  CloseRoomRecruitingRequest,
-  CloseRoomRecruitingResponse,
-  CreateRoomRequest,
-  CreateRoomResponse,
-  GetHomeMyRoomResponse,
-  GetHomeRecruitingRoomRequest,
-  GetHomeRecruitingRoomResponse,
-  GetMyRoomListRequest,
-  GetMyRoomListResponse,
-  GetSearchRoomRequest,
-  GetSearchRoomResponse,
-  LeaveRoomRequest,
+import {
+  VerifyPrivateRoomPasswordResponse,
+  type ChangeRoomJoinStatusRequest,
+  type ChangeRoomJoinStatusResponse,
+  type CloseRoomRecruitingRequest,
+  type CloseRoomRecruitingResponse,
+  type CreateRoomRequest,
+  type CreateRoomResponse,
+  type GetHomeMyRoomResponse,
+  type GetHomeRecruitingRoomRequest,
+  type GetHomeRecruitingRoomResponse,
+  type GetMyRoomListRequest,
+  type GetMyRoomListResponse,
+  type GetSearchRoomRequest,
+  type GetSearchRoomResponse,
+  type LeaveRoomRequest,
+  type VerifyPrivateRoomPasswordRequest,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -98,6 +100,20 @@ export const closeRoomRecruitingApi = async ({
 
 export const leaveRoomApi = async ({ roomId }: LeaveRoomRequest) => {
   const response = await apiClient.delete<string>(ROOM_URL.LEAVE_ROOM(roomId));
+
+  return response.data;
+};
+
+export const verifyPrivateRoomPasswordApi = async ({
+  roomId,
+  password,
+}: VerifyPrivateRoomPasswordRequest) => {
+  const response = await apiClient.post<VerifyPrivateRoomPasswordResponse>(
+    ROOM_URL.VERIFY_PASSWORD(roomId),
+    {
+      password,
+    },
+  );
 
   return response.data;
 };

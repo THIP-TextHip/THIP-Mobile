@@ -7,6 +7,7 @@ export {
   getMyRoomListApi,
   getSearchRoomApi,
   leaveRoomApi,
+  verifyPrivateRoomPasswordApi,
 } from "./room.api";
 
 export {
@@ -18,6 +19,7 @@ export {
   useGetMyRoomListQuery,
   useLeaveRoomMutation,
   useSearchRoomQuery,
+  useVerifyPrivateRoomPassword,
 } from "./room.queries";
 
 export type {
@@ -46,6 +48,8 @@ export type {
   SearchRoomCategory,
   SearchRoomQueryParams,
   SearchRoomSort,
+  VerifyPrivateRoomPasswordRequest,
+  VerifyPrivateRoomPasswordResponse,
 } from "./room.types";
 
 export { ROOM_QUERY_KEY } from "./room.query-key";
