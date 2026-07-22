@@ -11,6 +11,11 @@ export const ROOM_QUERY_KEY = {
     "detail",
     roomId == null || roomId === "" ? undefined : String(roomId),
   ],
+  READING_MATE: (roomId?: number | string) => [
+    "rooms",
+    "readingMate",
+    roomId == null || roomId === "" ? undefined : String(roomId),
+  ],
   HOME_RECRUITING: (category: RoomCategory) => ["rooms", "home", category],
   SEARCH: ({
     keyword = "",

@@ -17,6 +17,7 @@ import {
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
+  getReadingMateApi,
   getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
@@ -34,6 +35,7 @@ import type {
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
+  GetReadingMateResponse,
   GetRoomDetailResponse,
   GetSearchRoomResponse,
   LeaveRoomRequest,
@@ -51,6 +53,11 @@ const MY_ROOM_QUERY_CACHE_TIME = {
 const ROOM_DETAIL_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 2,
   GC: 1000 * 60 * 5,
+} as const;
+
+const ROOM_READING_MATE_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 10,
+  GC: 1000 * 60 * 15,
 } as const;
 
 type RoomCursor = string | null;
@@ -406,5 +413,39 @@ export const useGetRoomDetailQuery = (roomId?: number | string) => {
     roomDetailError,
     refetchRoomDetail,
     isRefetchingRoomDetail,
+  };
+};
+
+export const useGetReadingMateQuery = (roomId?: number | string) => {
+  const {
+    data,
+    isPending: isPendingReadingMateList,
+    isError: isErrorReadingMateList,
+    error: readingMateListError,
+    refetch: refetchReadingMateList,
+    isRefetching: isRefetchingReadingMateList,
+  } = useQuery<GetReadingMateResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.READING_MATE(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getReadingMateApi(roomId);
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_READING_MATE_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_READING_MATE_QUERY_CACHE_TIME.GC,
+  });
+
+  const readingMateList = data?.userList;
+
+  return {
+    readingMateList,
+    isPendingReadingMateList,
+    isErrorReadingMateList,
+    readingMateListError,
+    refetchReadingMateList,
+    isRefetchingReadingMateList,
   };
 };

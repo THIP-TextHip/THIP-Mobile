@@ -68,6 +68,8 @@ export const ROOM_URL = {
   HOME_MY_ROOM: "/rooms/home/joined",
   DETAIL: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}`,
+  READING_MATE: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/users`,
   ROOM_JOIN_STATUS: (roomId: number) => `/rooms/${roomId}/join`,
   CLOSE_ROOM_RECRUITING: (roomId: number) => `/rooms/${roomId}/close`,
   LEAVE_ROOM: (roomId: number) => `/rooms/${roomId}/leave`,

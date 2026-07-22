@@ -179,3 +179,17 @@ export interface GetRoomDetailResponse {
   userPercentage: number;
   currentVotes: RoomDetailCurrentVotes[];
 }
+
+export interface ReadingMateType {
+  userId: number;
+  nickname: string;
+  imageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+  followerCount: number;
+  isMyself: boolean;
+}
+
+export interface GetReadingMateResponse {
+  userList: ReadingMateType[];
+}
