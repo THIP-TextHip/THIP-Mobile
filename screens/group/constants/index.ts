@@ -4,6 +4,6 @@ export const RECRUITING_GROUP_CAROUSEL_TYPE: RecruitingGroupCarouselType[] = [
   "deadlineRoomList",
   "popularRoomList",
   "recentRoomList",
-] as const;
+];
 
-export const GRID_WIDTH = 600;
+export const GRID_WIDTH = 600 as const;

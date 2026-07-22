@@ -123,7 +123,10 @@ export default function GroupDetailScreen() {
       ) : !roomDetailData || isErrorRoomDetail ? (
         <View style={styles.status}>
           <AppText weight="semibold" size="lg" color={colors.white}>
-            데이터를 불러오지 못했어요 ({roomDetailError?.code})
+            데이터를 불러오지 못했어요.{" "}
+            {roomDetailError?.code
+              ? `${roomDetailError.code}`
+              : "다시 시도해 주세요."}
           </AppText>
         </View>
       ) : (

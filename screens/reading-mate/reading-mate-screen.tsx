@@ -42,7 +42,10 @@ export default function ReadingMateScreen() {
   ) : isErrorReadingMateList ? (
     <View style={styles.status}>
       <AppText weight="semibold" size="lg" color={colors.white}>
-        데이터를 불러오지 못했어요 ({readingMateListError?.code})
+        데이터를 불러오지 못했어요.{" "}
+        {readingMateListError?.code
+          ? `${readingMateListError.code}`
+          : "다시 시도해 주세요."}
       </AppText>
     </View>
   ) : (

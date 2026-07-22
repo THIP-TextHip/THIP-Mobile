@@ -8,6 +8,11 @@ import { colors } from "@theme/token";
 const { currentYear, currentMonth, currentDay } = getCurrentDate();
 
 const tomorrow = new Date(currentYear, currentMonth - 1, currentDay + 1);
+const dayAfterTomorrow = new Date(
+  currentYear,
+  currentMonth - 1,
+  currentDay + 2,
+);
 
 const YEARS_LIST = [currentYear, currentYear + 1, currentYear + 2];
 
@@ -31,9 +36,9 @@ export default function SelectGroupDurationSection({
   const [startYear, setStartYear] = useState(tomorrow.getFullYear());
   const [startMonth, setStartMonth] = useState(tomorrow.getMonth() + 1);
   const [startDay, setStartDay] = useState(tomorrow.getDate());
-  const [endYear, setEndYear] = useState(tomorrow.getFullYear());
-  const [endMonth, setEndMonth] = useState(tomorrow.getMonth() + 1);
-  const [endDay, setEndDay] = useState(tomorrow.getDate() + 1);
+  const [endYear, setEndYear] = useState(dayAfterTomorrow.getFullYear());
+  const [endMonth, setEndMonth] = useState(dayAfterTomorrow.getMonth() + 1);
+  const [endDay, setEndDay] = useState(dayAfterTomorrow.getDate());
 
   const startDaysList = useMemo(
     () => getDaysList(startYear, startMonth),

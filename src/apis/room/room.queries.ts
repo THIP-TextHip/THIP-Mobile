@@ -354,7 +354,7 @@ export const useLeaveRoomMutation = () => {
 export const useVerifyPrivateRoomPassword = () => {
   const {
     mutate: verifyPrivateRoomPassword,
-    isPending: isPendingVerifyPrivateRoomPassowrd,
+    isPending: isPendingVerifyPrivateRoomPassword,
   } = useMutation<
     VerifyPrivateRoomPasswordResponse,
     ApiErrorResponse,
@@ -377,7 +377,7 @@ export const useVerifyPrivateRoomPassword = () => {
 
   return {
     verifyPrivateRoomPassword,
-    isPendingVerifyPrivateRoomPassowrd,
+    isPendingVerifyPrivateRoomPassword,
   };
 };
 
