@@ -26,16 +26,28 @@ export default function GroupBook({
   return (
     <Pressable style={styles.container} onPress={handleToBookDetail}>
       <AppText
+        style={styles.title}
         weight="semibold"
         size="base"
         color={colors.white}
         lineHeight={24}
+        numberOfLines={1}
       >
         {bookTitle}
       </AppText>
       <View style={styles.right}>
+        <AppText
+          style={styles.author}
+          weight="regular"
+          size="xs"
+          color={colors.grey[100]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {authorName}
+        </AppText>
         <AppText weight="regular" size="xs" color={colors.grey[100]}>
-          {authorName} 저
+          저
         </AppText>
         <IcRight />
       </View>
@@ -55,7 +67,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkgrey.dark,
   },
   right: {
+    width: "38%",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 4,
+  },
+  title: {
+    flexShrink: 1,
+    maxWidth: "60%",
+  },
+  author: {
+    flexShrink: 1,
+    maxWidth: "100%",
   },
 });

@@ -1,22 +1,24 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
-import {
+import type {
+  ChangeRoomJoinStatusRequest,
+  ChangeRoomJoinStatusResponse,
+  CloseRoomRecruitingRequest,
+  CloseRoomRecruitingResponse,
+  CreateRoomRequest,
+  CreateRoomResponse,
+  GetHomeMyRoomResponse,
+  GetHomeRecruitingRoomRequest,
+  GetHomeRecruitingRoomResponse,
+  GetMyRoomListRequest,
+  GetMyRoomListResponse,
+  GetRoomDetailRequest,
+  GetRoomDetailResponse,
+  GetSearchRoomRequest,
+  GetSearchRoomResponse,
+  LeaveRoomRequest,
+  VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
-  type ChangeRoomJoinStatusRequest,
-  type ChangeRoomJoinStatusResponse,
-  type CloseRoomRecruitingRequest,
-  type CloseRoomRecruitingResponse,
-  type CreateRoomRequest,
-  type CreateRoomResponse,
-  type GetHomeMyRoomResponse,
-  type GetHomeRecruitingRoomRequest,
-  type GetHomeRecruitingRoomResponse,
-  type GetMyRoomListRequest,
-  type GetMyRoomListResponse,
-  type GetSearchRoomRequest,
-  type GetSearchRoomResponse,
-  type LeaveRoomRequest,
-  type VerifyPrivateRoomPasswordRequest,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -113,6 +115,14 @@ export const verifyPrivateRoomPasswordApi = async ({
     {
       password,
     },
+  );
+
+  return response.data;
+};
+
+export const getRoomDetailApi = async ({ roomId }: GetRoomDetailRequest) => {
+  const response = await apiClient.get<GetRoomDetailResponse>(
+    ROOM_URL.DETAIL(roomId),
   );
 
   return response.data;

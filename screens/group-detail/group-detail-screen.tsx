@@ -1,11 +1,19 @@
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-import { GroupInfo } from "@shared/ui";
-
-import { router } from "expo-router";
 import Toast from "react-native-toast-message";
+
+import { useGetRoomDetailQuery } from "@apis/room";
+import { AppText, GroupInfo } from "@shared/ui";
+import { colors } from "@theme/token";
+
 import {
   DailyGreetingButton,
   GroupBook,
@@ -15,35 +23,22 @@ import {
   RecordBookOverview,
   VotesCarousel,
 } from "./components";
-import { DUMMY_GROUP_DETAIL } from "./constants";
 
 export default function GroupDetailScreen() {
+  const { roomId } = useLocalSearchParams<{ roomId: string }>();
   const { bottom } = useSafeAreaInsets();
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalType, setModalType] = useState<"delete" | "leave" | null>(null);
 
-  // TODO: 추후 서버에서 데이터 가져오기. url 파라미터의 roomId 이용
   const {
-    isHost,
-    roomId,
-    roomName,
-    roomImageUrl,
-    isPublic,
-    progressStartDate,
-    progressEndDate,
-    category,
-    categoryColor,
-    roomDescription,
-    memberCount,
-    recruitCount,
-    isbn,
-    bookTitle,
-    authorName,
-    currentPage,
-    userPercentage,
-    currentVotes,
-  } = DUMMY_GROUP_DETAIL;
+    roomDetailData,
+    isPendingRoomDetail,
+    isErrorRoomDetail,
+    roomDetailError,
+    refetchRoomDetail,
+    isRefetchingRoomDetail,
+  } = useGetRoomDetailQuery(roomId);
 
   const handleToReadingMateList = () => {
     router.push({
@@ -112,53 +107,86 @@ export default function GroupDetailScreen() {
     }
   };
 
+  const disabledHeaderOption =
+    !roomDetailData || isPendingRoomDetail || isErrorRoomDetail;
+
   return (
     <View style={styles.page}>
-      <GroupDetailHeader handlePressMore={handleOpenBottomSheet} />
-      <ScrollView contentContainerStyle={{ paddingBottom: bottom + 20 }}>
-        <GroupInfo
-          roomId={roomId}
-          roomName={roomName}
-          roomImageUrl={roomImageUrl}
-          isPublic={isPublic}
-          progressStartDate={progressStartDate}
-          progressEndDate={progressEndDate}
-          category={category}
-          categoryColor={categoryColor}
-          roomDescription={roomDescription}
-          memberCount={memberCount}
-          recruitCount={recruitCount}
-          onPressReadingMate={handleToReadingMateList}
-        />
-        <View style={styles.content}>
-          <GroupBook
-            isbn={isbn}
-            bookTitle={bookTitle}
-            authorName={authorName}
-          />
-          <RecordBookOverview
-            roomId={roomId}
-            currentPage={currentPage}
-            userPercentage={userPercentage}
-          />
-          <DailyGreetingButton roomId={roomId} />
-          <VotesCarousel roomId={roomId} currentVotes={currentVotes} />
+      <GroupDetailHeader
+        disabled={disabledHeaderOption}
+        handlePressMore={handleOpenBottomSheet}
+      />
+      {isPendingRoomDetail ? (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.white} />
         </View>
-      </ScrollView>
-      <GroupDetailBottomSheet
-        isHost={isHost}
-        isVisible={isBottomSheetVisible}
-        handleClose={handleCloseBottomSheet}
-        handleDelete={handleDeleteGroup}
-        handleLeave={handleLeaveGroup}
-        handleReport={handleReportGroup}
-      />
-      <GroupDetailModal
-        type={modalType}
-        isVisible={isModalVisible}
-        handleCloseModal={handleCloseModal}
-        handleAccept={handleModalAccept}
-      />
+      ) : !roomDetailData || isErrorRoomDetail ? (
+        <View style={styles.status}>
+          <AppText weight="semibold" size="lg" color={colors.white}>
+            데이터를 불러오지 못했어요 ({roomDetailError?.code})
+          </AppText>
+        </View>
+      ) : (
+        <>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: bottom + 20 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefetchingRoomDetail}
+                onRefresh={refetchRoomDetail}
+                tintColor={colors.white}
+                colors={[colors.white]}
+              />
+            }
+          >
+            <GroupInfo
+              roomId={roomDetailData.roomId}
+              roomName={roomDetailData.roomName}
+              roomImageUrl={roomDetailData.roomImageUrl}
+              isPublic={roomDetailData.isPublic}
+              progressStartDate={roomDetailData.progressStartDate}
+              progressEndDate={roomDetailData.progressEndDate}
+              category={roomDetailData.category}
+              categoryColor={roomDetailData.categoryColor}
+              roomDescription={roomDetailData.roomDescription}
+              memberCount={roomDetailData.memberCount}
+              recruitCount={roomDetailData.recruitCount}
+              onPressReadingMate={handleToReadingMateList}
+            />
+            <View style={styles.content}>
+              <GroupBook
+                isbn={roomDetailData.isbn}
+                bookTitle={roomDetailData.bookTitle}
+                authorName={roomDetailData.authorName}
+              />
+              <RecordBookOverview
+                roomId={roomDetailData.roomId}
+                currentPage={roomDetailData.currentPage}
+                userPercentage={roomDetailData.userPercentage}
+              />
+              <DailyGreetingButton roomId={roomDetailData.roomId} />
+              <VotesCarousel
+                roomId={roomDetailData.roomId}
+                currentVotes={roomDetailData.currentVotes}
+              />
+            </View>
+          </ScrollView>
+          <GroupDetailBottomSheet
+            isHost={roomDetailData.isHost}
+            isVisible={isBottomSheetVisible}
+            handleClose={handleCloseBottomSheet}
+            handleDelete={handleDeleteGroup}
+            handleLeave={handleLeaveGroup}
+            handleReport={handleReportGroup}
+          />
+          <GroupDetailModal
+            type={modalType}
+            isVisible={isModalVisible}
+            handleCloseModal={handleCloseModal}
+            handleAccept={handleModalAccept}
+          />
+        </>
+      )}
     </View>
   );
 }
@@ -170,5 +198,10 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     gap: 20,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -17,33 +17,40 @@ import {
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
+  getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
   verifyPrivateRoomPasswordApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
-import {
+import type {
+  ChangeRoomJoinStatusRequest,
+  ChangeRoomJoinStatusResponse,
+  CloseRoomRecruitingRequest,
+  CloseRoomRecruitingResponse,
+  CreateRoomRequest,
+  CreateRoomResponse,
+  GetHomeMyRoomResponse,
+  GetHomeRecruitingRoomRequest,
+  GetHomeRecruitingRoomResponse,
+  GetMyRoomListResponse,
+  GetRoomDetailResponse,
+  GetSearchRoomResponse,
+  LeaveRoomRequest,
+  MyRoomType,
+  SearchRoomQueryParams,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
-  type ChangeRoomJoinStatusRequest,
-  type ChangeRoomJoinStatusResponse,
-  type CloseRoomRecruitingRequest,
-  type CloseRoomRecruitingResponse,
-  type CreateRoomRequest,
-  type CreateRoomResponse,
-  type GetHomeMyRoomResponse,
-  type GetHomeRecruitingRoomRequest,
-  type GetHomeRecruitingRoomResponse,
-  type GetMyRoomListResponse,
-  type GetSearchRoomResponse,
-  type LeaveRoomRequest,
-  type MyRoomType,
-  type SearchRoomQueryParams,
 } from "./room.types";
 
 const MY_ROOM_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 5,
   GC: 1000 * 60 * 10,
+} as const;
+
+const ROOM_DETAIL_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 2,
+  GC: 1000 * 60 * 5,
 } as const;
 
 type RoomCursor = string | null;
@@ -364,5 +371,40 @@ export const useVerifyPrivateRoomPassword = () => {
   return {
     verifyPrivateRoomPassword,
     isPendingVerifyPrivateRoomPassowrd,
+  };
+};
+
+const hasRoomId = (roomId?: number | string): roomId is number | string =>
+  roomId != null && roomId !== "";
+
+export const useGetRoomDetailQuery = (roomId?: number | string) => {
+  const {
+    data: roomDetailData,
+    isPending: isPendingRoomDetail,
+    isError: isErrorRoomDetail,
+    error: roomDetailError,
+    refetch: refetchRoomDetail,
+    isRefetching: isRefetchingRoomDetail,
+  } = useQuery<GetRoomDetailResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.DETAIL(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getRoomDetailApi({ roomId });
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_DETAIL_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_DETAIL_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    roomDetailData,
+    isPendingRoomDetail,
+    isErrorRoomDetail,
+    roomDetailError,
+    refetchRoomDetail,
+    isRefetchingRoomDetail,
   };
 };
