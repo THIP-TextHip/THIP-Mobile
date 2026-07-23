@@ -263,6 +263,7 @@ export default function JoinGroupScreen() {
             roomId={recruitingRoomDetailData.roomId}
             isOpen={isPasswordOpen}
             handleClose={handleClosePassword}
+            changeRoomJoinStatus={changeRoomJoinStatus}
           />
         </>
       )}

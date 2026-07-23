@@ -335,7 +335,6 @@ export const useCloseRoomRecruitingMutation = () => {
   };
 };
 
-// TODO: 화면에 연동 필요
 export const useLeaveRoomMutation = () => {
   const queryClient = useQueryClient();
   const { mutate: leaveRoom, isPending: isPendingLeaveRoom } = useMutation<
@@ -365,7 +364,6 @@ export const useLeaveRoomMutation = () => {
   };
 };
 
-// TODO: 화면에 연동 필요
 export const useVerifyPrivateRoomPassword = () => {
   const {
     mutate: verifyPrivateRoomPassword,
@@ -376,12 +374,6 @@ export const useVerifyPrivateRoomPassword = () => {
     VerifyPrivateRoomPasswordRequest
   >({
     mutationFn: verifyPrivateRoomPasswordApi,
-    // TODO: 이부분은 추후 페이지에서 사용할 때, onSuccess 하기
-    onSuccess: (data) => {
-      if (data.matched) {
-      } else {
-      }
-    },
     onError: (error) => {
       Toast.show({
         type: "error",

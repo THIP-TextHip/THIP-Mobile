@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Keyboard, Pressable, StyleSheet, TextInput, View } from "react-native";
-import Toast from "react-native-toast-message";
 
+import {
+  type ChangeRoomJoinStatusRequest,
+  useVerifyPrivateRoomPassword,
+} from "@apis/room";
 import { IcArrowLeft } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
-
-import { DUMMY_GROUP_PASSWORD } from "../../constants";
 
 const PASSWORD_LENGTH = 4;
 const PASSWORD_INPUT_INDICES = Array.from(
@@ -18,51 +19,68 @@ interface JoinPasswordProps {
   roomId: number;
   isOpen: boolean;
   handleClose: () => void;
+  changeRoomJoinStatus: ({ roomId, type }: ChangeRoomJoinStatusRequest) => void;
 }
 
 export default function JoinPassword({
-  // roomId, 추후 서버에 해당 id로 요청
+  roomId,
   isOpen,
   handleClose,
+  changeRoomJoinStatus,
 }: JoinPasswordProps) {
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const [password, setPassword] = useState<string[]>(
     Array(PASSWORD_LENGTH).fill(""),
   );
+  const [isError, setIsError] = useState(false);
+
+  const { verifyPrivateRoomPassword, isPendingVerifyPrivateRoomPassword } =
+    useVerifyPrivateRoomPassword();
 
   const handleChangePassword = (index: number, text: string) => {
     const value = text.slice(-1);
     const nextPassword = [...password];
     nextPassword[index] = value;
 
+    setIsError(false);
     setPassword(nextPassword);
 
     if (value && index < PASSWORD_LENGTH - 1) {
       inputRefs.current[index + 1]?.focus();
     }
-
-    if (value && index === PASSWORD_LENGTH - 1) {
-      console.log(...nextPassword);
-    }
   };
 
   const allInput = password.join("");
 
-  // TODO: 추후 서버에서 온 응답으로 수정
-  const isError = allInput.length === 4 && allInput !== DUMMY_GROUP_PASSWORD;
-
   useEffect(() => {
-    if (allInput.length === 4) {
-      // TODO : 서버에 비밀번호 요청
-      if (!isError) {
-        Toast.show({
-          type: "default",
-          text1: "모임방 참여가 완료되었어요! 모집 마감 후 활동이 시작돼요.",
-        });
-        handleClose();
-      }
+    if (allInput.length === 4 && !isPendingVerifyPrivateRoomPassword) {
+      verifyPrivateRoomPassword(
+        { roomId, password: allInput },
+        {
+          onSuccess: (data) => {
+            if (data.matched) {
+              changeRoomJoinStatus({
+                roomId,
+                type: "join",
+              });
+              handleClose();
+              setIsError(false);
+              setPassword([]);
+            } else {
+              setIsError(true);
+            }
+          },
+        },
+      );
     }
-  }, [allInput, isError, handleClose]);
+  }, [
+    roomId,
+    allInput,
+    isPendingVerifyPrivateRoomPassword,
+    changeRoomJoinStatus,
+    verifyPrivateRoomPassword,
+    handleClose,
+  ]);
 
   return (
     isOpen && (
