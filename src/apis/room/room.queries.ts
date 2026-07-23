@@ -18,6 +18,7 @@ import {
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
   getReadingMateApi,
+  getRecruitingRoomDetailApi,
   getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
@@ -36,6 +37,7 @@ import type {
   GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
   GetReadingMateResponse,
+  GetRecruitingRoomDetailResponse,
   GetRoomDetailResponse,
   GetSearchRoomResponse,
   LeaveRoomRequest,
@@ -447,5 +449,37 @@ export const useGetReadingMateQuery = (roomId?: number | string) => {
     readingMateListError,
     refetchReadingMateList,
     isRefetchingReadingMateList,
+  };
+};
+
+export const useGetRecruitingRoomDetailQuery = (roomId?: number | string) => {
+  const {
+    data: recruitingRoomDetailData,
+    isPending: isPendingRecruitingRoomDetail,
+    isError: isErrorRecruitingRoomDetail,
+    error: recruitingRoomDetailError,
+    refetch: refetchRecruitingRoomDetail,
+    isRefetching: isRefetchingRecruitingRoomDetail,
+  } = useQuery<GetRecruitingRoomDetailResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.RECRUITING_DETAIL(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getRecruitingRoomDetailApi(roomId);
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_DETAIL_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_DETAIL_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    recruitingRoomDetailData,
+    isPendingRecruitingRoomDetail,
+    isErrorRecruitingRoomDetail,
+    recruitingRoomDetailError,
+    refetchRecruitingRoomDetail,
+    isRefetchingRecruitingRoomDetail,
   };
 };

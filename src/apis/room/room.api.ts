@@ -13,6 +13,7 @@ import type {
   GetMyRoomListRequest,
   GetMyRoomListResponse,
   GetReadingMateResponse,
+  GetRecruitingRoomDetailResponse,
   GetRoomDetailRequest,
   GetRoomDetailResponse,
   GetSearchRoomRequest,
@@ -132,6 +133,14 @@ export const getRoomDetailApi = async ({ roomId }: GetRoomDetailRequest) => {
 export const getReadingMateApi = async (roomId: string | number) => {
   const response = await apiClient.get<GetReadingMateResponse>(
     ROOM_URL.READING_MATE(roomId),
+  );
+
+  return response.data;
+};
+
+export const getRecruitingRoomDetailApi = async (roomId: string | number) => {
+  const response = await apiClient.get<GetRecruitingRoomDetailResponse>(
+    ROOM_URL.RECRUITING_DETAIL(roomId),
   );
 
   return response.data;

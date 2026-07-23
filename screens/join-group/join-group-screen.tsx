@@ -4,11 +4,13 @@ import {
   useNavigation,
   usePreventRemove,
 } from "@react-navigation/native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   BackHandler,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   View,
@@ -16,7 +18,9 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { GroupInfo } from "@shared/ui";
+import { useGetRecruitingRoomDetailQuery } from "@apis/room";
+import { AppText, GroupInfo } from "@shared/ui";
+import { colors } from "@theme/token";
 
 import {
   CancelJoinModal,
@@ -27,7 +31,6 @@ import {
   JoinPassword,
   RecommendGroupSection,
 } from "./components";
-import { DUMMY_JOIN_GROUP_INFO } from "./constants";
 
 function usePreventPasswordOverlayNavigation(
   isPasswordOpen: boolean,
@@ -61,6 +64,7 @@ function usePreventPasswordOverlayNavigation(
 }
 
 export default function JoinGroupScreen() {
+  const { roomId } = useLocalSearchParams<{ roomId: string }>();
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const { bottom } = useSafeAreaInsets();
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -69,33 +73,20 @@ export default function JoinGroupScreen() {
 
   usePreventPasswordOverlayNavigation(isPasswordOpen, navigation);
 
-  // TODO: 추후 서버에서 데이터 가져오기. url 파라미터의 roomId 이용
   const {
-    isHost,
-    isJoining,
-    roomId,
-    roomName,
-    roomImageUrl,
-    isPublic,
-    progressStartDate,
-    progressEndDate,
-    recruitEndDate,
-    category,
-    categoryColor,
-    roomDescription,
-    memberCount,
-    recruitCount,
-    isbn,
-    bookImageUrl,
-    bookTitle,
-    authorName,
-    bookDescription,
-    publisher,
-    recommendRooms,
-  } = DUMMY_JOIN_GROUP_INFO;
+    recruitingRoomDetailData,
+    isPendingRecruitingRoomDetail,
+    isErrorRecruitingRoomDetail,
+    recruitingRoomDetailError,
+    refetchRecruitingRoomDetail,
+    isRefetchingRecruitingRoomDetail,
+  } = useGetRecruitingRoomDetailQuery(roomId);
 
-  const isRecruitingFull = memberCount === recruitCount;
+  const isRecruitingFull =
+    recruitingRoomDetailData?.memberCount ===
+    recruitingRoomDetailData?.recruitCount;
 
+  // TODO: 연동 필요
   const handlePressJoinButton = useCallback(() => {
     if (isRecruitingFull) {
       Toast.show({
@@ -105,11 +96,11 @@ export default function JoinGroupScreen() {
       return;
     }
     // TODO: 모집 마감 및 참여 취소 모달 추가 필요 / roomId로 신청 및 해제
-    if (isHost) {
+    if (recruitingRoomDetailData?.isHost) {
       setIsFinishModalOpen(true);
-    } else if (isJoining) {
+    } else if (recruitingRoomDetailData?.isJoining) {
       setIsCancelModalOpen(true);
-    } else if (!isPublic) {
+    } else if (!recruitingRoomDetailData?.isPublic) {
       setIsPasswordOpen(true);
     } else {
       Toast.show({
@@ -117,12 +108,13 @@ export default function JoinGroupScreen() {
         text1: "모임방 참여가 완료되었어요!",
       });
     }
-  }, [isHost, isJoining, isPublic, isRecruitingFull]);
+  }, [recruitingRoomDetailData, isRecruitingFull]);
 
   const handleCloseCancelModal = useCallback(() => {
     setIsCancelModalOpen(false);
   }, []);
 
+  // TODO: 연동 필요
   const handleCancelJoin = useCallback(() => {
     setIsCancelModalOpen(false);
     router.push("/group");
@@ -152,59 +144,88 @@ export default function JoinGroupScreen() {
   return (
     <View style={styles.page}>
       <JoinGroupHeader />
-      <ScrollView contentContainerStyle={{ paddingBottom: bottom + 90 }}>
-        <GroupInfo
-          roomId={roomId}
-          isRecruiting={true}
-          roomName={roomName}
-          roomImageUrl={roomImageUrl}
-          isPublic={isPublic}
-          progressStartDate={progressStartDate}
-          progressEndDate={progressEndDate}
-          recruitEndDate={recruitEndDate}
-          category={category}
-          categoryColor={categoryColor}
-          roomDescription={roomDescription}
-          memberCount={memberCount}
-          recruitCount={recruitCount}
-        />
-        <View style={styles.wrapper}>
-          <View style={styles.bookWrapper}>
-            <JoinGroupBook
-              isbn={isbn}
-              bookImageUrl={bookImageUrl}
-              bookTitle={bookTitle}
-              authorName={authorName}
-              bookDescription={bookDescription}
-              publisher={publisher}
-            />
-          </View>
-          {recommendRooms.length !== 0 && (
-            <RecommendGroupSection recommendRooms={recommendRooms} />
-          )}
+      {isPendingRecruitingRoomDetail ? (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.white} />
         </View>
-      </ScrollView>
-      <JoinButton
-        isHost={isHost}
-        isJoining={isJoining}
-        disabled={isRecruitingFull}
-        handlePressJoinButton={handlePressJoinButton}
-      />
-      <CancelJoinModal
-        isVisible={isCancelModalOpen}
-        handleClose={handleCloseCancelModal}
-        handleCancelJoin={handleCancelJoin}
-      />
-      <FinishRecruitingModal
-        isVisible={isFinishModalOpen}
-        handleClose={handleCloseFinishModal}
-        handleFinishRecruiting={handleFinishRecruiting}
-      />
-      <JoinPassword
-        roomId={roomId}
-        isOpen={isPasswordOpen}
-        handleClose={handleClosePassword}
-      />
+      ) : !recruitingRoomDetailData || isErrorRecruitingRoomDetail ? (
+        <View style={styles.status}>
+          <AppText weight="semibold" size="lg" color={colors.white}>
+            데이터를 불러오지 못했어요.{" "}
+            {recruitingRoomDetailError?.code
+              ? `${recruitingRoomDetailError.code}`
+              : "다시 시도해 주세요."}
+          </AppText>
+        </View>
+      ) : (
+        <>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: bottom + 90 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefetchingRecruitingRoomDetail}
+                onRefresh={refetchRecruitingRoomDetail}
+                tintColor={colors.white}
+                colors={[colors.white]}
+              />
+            }
+          >
+            <GroupInfo
+              roomId={recruitingRoomDetailData.roomId}
+              isRecruiting={true}
+              roomName={recruitingRoomDetailData.roomName}
+              roomImageUrl={recruitingRoomDetailData.roomImageUrl}
+              isPublic={recruitingRoomDetailData.isPublic}
+              progressStartDate={recruitingRoomDetailData.progressStartDate}
+              progressEndDate={recruitingRoomDetailData.progressEndDate}
+              recruitEndDate={recruitingRoomDetailData.recruitEndDate}
+              category={recruitingRoomDetailData.category}
+              categoryColor={recruitingRoomDetailData.categoryColor}
+              roomDescription={recruitingRoomDetailData.roomDescription}
+              memberCount={recruitingRoomDetailData.memberCount}
+              recruitCount={recruitingRoomDetailData.recruitCount}
+            />
+            <View style={styles.wrapper}>
+              <View style={styles.bookWrapper}>
+                <JoinGroupBook
+                  isbn={recruitingRoomDetailData.isbn}
+                  bookImageUrl={recruitingRoomDetailData.bookImageUrl}
+                  bookTitle={recruitingRoomDetailData.bookTitle}
+                  authorName={recruitingRoomDetailData.authorName}
+                  bookDescription={recruitingRoomDetailData.bookDescription}
+                  publisher={recruitingRoomDetailData.publisher}
+                />
+              </View>
+              {recruitingRoomDetailData.recommendRooms.length !== 0 && (
+                <RecommendGroupSection
+                  recommendRooms={recruitingRoomDetailData.recommendRooms}
+                />
+              )}
+            </View>
+          </ScrollView>
+          <JoinButton
+            isHost={recruitingRoomDetailData.isHost}
+            isJoining={recruitingRoomDetailData.isJoining}
+            disabled={isRecruitingFull}
+            handlePressJoinButton={handlePressJoinButton}
+          />
+          <CancelJoinModal
+            isVisible={isCancelModalOpen}
+            handleClose={handleCloseCancelModal}
+            handleCancelJoin={handleCancelJoin}
+          />
+          <FinishRecruitingModal
+            isVisible={isFinishModalOpen}
+            handleClose={handleCloseFinishModal}
+            handleFinishRecruiting={handleFinishRecruiting}
+          />
+          <JoinPassword
+            roomId={recruitingRoomDetailData.roomId}
+            isOpen={isPasswordOpen}
+            handleClose={handleClosePassword}
+          />
+        </>
+      )}
     </View>
   );
 }
@@ -219,5 +240,10 @@ const styles = StyleSheet.create({
   },
   bookWrapper: {
     paddingHorizontal: 20,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

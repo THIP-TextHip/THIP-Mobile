@@ -33,6 +33,7 @@ export default function JoinGroupBook({
     <Pressable style={styles.container} onPress={handleToBookDetail}>
       <View style={styles.header}>
         <AppText
+          style={styles.title}
           weight="medium"
           size="base"
           color={colors.white}
@@ -46,12 +47,13 @@ export default function JoinGroupBook({
         <Image source={{ uri: bookImageUrl }} style={styles.image} />
         <View style={styles.info}>
           <View style={styles.authorPublisher}>
-            <AppText weight="medium" size="xs" color={colors.white}>
-              {authorName} 저
-            </AppText>
-            <View style={styles.dot} />
-            <AppText weight="medium" size="xs" color={colors.white}>
-              {publisher}
+            <AppText
+              weight="medium"
+              size="xs"
+              color={colors.white}
+              numberOfLines={2}
+            >
+              {authorName} 저 • {publisher}
             </AppText>
           </View>
           <View style={styles.desc}>
@@ -87,6 +89,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+  title: {
+    flexShrink: 1,
   },
   content: {
     flexDirection: "row",

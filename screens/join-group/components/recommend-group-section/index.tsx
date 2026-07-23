@@ -1,11 +1,10 @@
 import { router } from "expo-router";
 import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 
+import { type RecommendRoomType } from "@apis/room";
 import { IcGroupWhite } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
-
-import { RecommendRoomType } from "../../types";
 
 interface RecommendGroupSectionProps {
   recommendRooms: RecommendRoomType[];
