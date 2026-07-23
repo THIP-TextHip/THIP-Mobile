@@ -18,7 +18,11 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { useGetRecruitingRoomDetailQuery } from "@apis/room";
+import {
+  useChangeRoomJoinStatusMutation,
+  useCloseRoomRecruitingMutation,
+  useGetRecruitingRoomDetailQuery,
+} from "@apis/room";
 import { AppText, GroupInfo } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -81,6 +85,10 @@ export default function JoinGroupScreen() {
     refetchRecruitingRoomDetail,
     isRefetchingRecruitingRoomDetail,
   } = useGetRecruitingRoomDetailQuery(roomId);
+  const { changeRoomJoinStatus, isPendingChangeRoomJoinStatus } =
+    useChangeRoomJoinStatusMutation();
+  const { closeRoomRecruiting, isPendingCloseRoomRecruiting } =
+    useCloseRoomRecruitingMutation();
 
   const isRecruitingFull =
     recruitingRoomDetailData?.memberCount ===
@@ -88,6 +96,7 @@ export default function JoinGroupScreen() {
 
   // TODO: 연동 필요
   const handlePressJoinButton = useCallback(() => {
+    if (isPendingChangeRoomJoinStatus) return;
     if (isRecruitingFull) {
       Toast.show({
         type: "default",
@@ -95,7 +104,6 @@ export default function JoinGroupScreen() {
       });
       return;
     }
-    // TODO: 모집 마감 및 참여 취소 모달 추가 필요 / roomId로 신청 및 해제
     if (recruitingRoomDetailData?.isHost) {
       setIsFinishModalOpen(true);
     } else if (recruitingRoomDetailData?.isJoining) {
@@ -103,39 +111,65 @@ export default function JoinGroupScreen() {
     } else if (!recruitingRoomDetailData?.isPublic) {
       setIsPasswordOpen(true);
     } else {
-      Toast.show({
-        type: "default",
-        text1: "모임방 참여가 완료되었어요!",
+      changeRoomJoinStatus({
+        roomId: recruitingRoomDetailData.roomId,
+        type: "join",
       });
     }
-  }, [recruitingRoomDetailData, isRecruitingFull]);
+  }, [
+    recruitingRoomDetailData,
+    isRecruitingFull,
+    isPendingChangeRoomJoinStatus,
+    changeRoomJoinStatus,
+  ]);
 
   const handleCloseCancelModal = useCallback(() => {
     setIsCancelModalOpen(false);
   }, []);
 
-  // TODO: 연동 필요
   const handleCancelJoin = useCallback(() => {
-    setIsCancelModalOpen(false);
-    router.push("/group");
-    Toast.show({
-      type: "default",
-      text1: "모임방 참여가 취소되었어요! 다른 방을 찾아보세요.",
-    });
-  }, []);
+    if (!recruitingRoomDetailData || isPendingChangeRoomJoinStatus) return;
+    changeRoomJoinStatus(
+      {
+        roomId: recruitingRoomDetailData.roomId,
+        type: "cancel",
+      },
+      {
+        onSuccess: () => {
+          setIsCancelModalOpen(false);
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            router.push("/group");
+          }
+        },
+      },
+    );
+  }, [
+    changeRoomJoinStatus,
+    recruitingRoomDetailData,
+    isPendingChangeRoomJoinStatus,
+  ]);
 
   const handleCloseFinishModal = useCallback(() => {
     setIsFinishModalOpen(false);
   }, []);
 
-  // TODO: 서버에 요청 성공 시 토스트 띄우고 모임방 상세 페이지로 이동
   const handleFinishRecruiting = useCallback(() => {
-    setIsFinishModalOpen(false);
-    Toast.show({
-      type: "default",
-      text1: "독서메이트 모집을 성공적으로 마감했어요.",
-    });
-  }, []);
+    if (!recruitingRoomDetailData || isPendingCloseRoomRecruiting) return;
+    closeRoomRecruiting(
+      { roomId: recruitingRoomDetailData.roomId },
+      {
+        onSettled: () => {
+          setIsFinishModalOpen(false);
+        },
+      },
+    );
+  }, [
+    closeRoomRecruiting,
+    recruitingRoomDetailData,
+    isPendingCloseRoomRecruiting,
+  ]);
 
   const handleClosePassword = useCallback(() => {
     setIsPasswordOpen(false);
@@ -159,7 +193,7 @@ export default function JoinGroupScreen() {
           <AppText weight="semibold" size="lg" color={colors.white}>
             데이터를 불러오지 못했어요.{" "}
             {recruitingRoomDetailError?.code
-              ? `${recruitingRoomDetailError.code}`
+              ? `(${recruitingRoomDetailError.code})`
               : "다시 시도해 주세요."}
           </AppText>
         </View>
