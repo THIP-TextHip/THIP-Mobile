@@ -51,9 +51,15 @@ export default function JoinPassword({
   };
 
   const allInput = password.join("");
+  const lastVerifiedInputRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (allInput.length === 4 && !isPendingVerifyPrivateRoomPassword) {
+    if (
+      allInput.length === 4 &&
+      !isPendingVerifyPrivateRoomPassword &&
+      lastVerifiedInputRef.current !== allInput
+    ) {
+      lastVerifiedInputRef.current = allInput;
       verifyPrivateRoomPassword(
         { roomId, password: allInput },
         {
@@ -65,7 +71,7 @@ export default function JoinPassword({
               });
               handleClose();
               setIsError(false);
-              setPassword([]);
+              setPassword(Array(PASSWORD_LENGTH).fill(""));
             } else {
               setIsError(true);
             }

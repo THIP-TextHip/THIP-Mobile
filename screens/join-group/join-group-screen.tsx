@@ -94,7 +94,6 @@ export default function JoinGroupScreen() {
     recruitingRoomDetailData?.memberCount ===
     recruitingRoomDetailData?.recruitCount;
 
-  // TODO: 연동 필요
   const handlePressJoinButton = useCallback(() => {
     if (isPendingChangeRoomJoinStatus) return;
     if (isRecruitingFull) {

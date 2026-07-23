@@ -95,15 +95,27 @@ export default function GroupDetailScreen() {
         type: "default",
         text1: "모임방을 성공적으로 삭제했어요.",
       });
+      // TODO: 성공했을 때만 사용되도록
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.push("/group");
+      }
     }
     if (modalType === "leave") {
       if (isPendingLeaveRoom) return;
-      leaveRoom({ roomId: roomDetailData.roomId });
-    }
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.push("/group");
+      leaveRoom(
+        { roomId: roomDetailData.roomId },
+        {
+          onSuccess: () => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.push("/group");
+            }
+          },
+        },
+      );
     }
   };
 
