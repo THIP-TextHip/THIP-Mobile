@@ -75,9 +75,13 @@ export const ROOM_URL = {
   ROOM_JOIN_STATUS: (roomId: number) => `/rooms/${roomId}/join`,
   CLOSE_ROOM_RECRUITING: (roomId: number) => `/rooms/${roomId}/close`,
   LEAVE_ROOM: (roomId: number) => `/rooms/${roomId}/leave`,
-  ROOM_POST_LIKE_STATUS: (postId: number) => `/room-posts/${postId}/likes`,
   VERIFY_PASSWORD: (roomId: number) => `/rooms/${roomId}/password`,
+  BOOK_PAGE: (roomId: number | string) => `/rooms/${roomId}/book-page`,
 } as const;
+
+export const ROOM_POST_URL = {
+  LIKE_STATUS: (postId: number) => `/room-posts/${postId}/likes`,
+};
 
 export const NOTIFICATION_URL = {
   DEFAULT: "/notifications",

@@ -1,5 +1,5 @@
 import { apiClient } from "../api-client";
-import { ROOM_URL } from "../endpoint";
+import { ROOM_POST_URL } from "../endpoint";
 import type {
   ChangeRoomPostLikeStatusRequest,
   ChangeRoomPostLikeStatusResponse,
@@ -11,7 +11,7 @@ export const changeRoomPostLikeStatusApi = async ({
   roomPostType,
 }: ChangeRoomPostLikeStatusRequest) => {
   const response = await apiClient.post<ChangeRoomPostLikeStatusResponse>(
-    ROOM_URL.ROOM_POST_LIKE_STATUS(postId),
+    ROOM_POST_URL.LIKE_STATUS(postId),
     {
       type,
       roomPostType,

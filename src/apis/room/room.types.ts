@@ -226,3 +226,10 @@ export interface GetRecruitingRoomDetailResponse {
   publisher: string;
   recommendRooms: RecommendRoomType[];
 }
+
+export interface GetRoomBookPageInfoResponse {
+  totalBookPage: number;
+  recentBookPage: number;
+  isOverviewPossible: boolean;
+  roomId: number;
+}
