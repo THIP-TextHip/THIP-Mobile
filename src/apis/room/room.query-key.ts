@@ -11,6 +11,11 @@ export const ROOM_QUERY_KEY = {
     "detail",
     roomId == null || roomId === "" ? undefined : String(roomId),
   ],
+  RECRUITING_DETAIL: (roomId?: number | string) => [
+    "rooms",
+    "recruiting-detail",
+    roomId == null || roomId === "" ? undefined : String(roomId),
+  ],
   READING_MATE: (roomId?: number | string) => [
     "rooms",
     "readingMate",
@@ -34,4 +39,9 @@ export const ROOM_QUERY_KEY = {
   ],
   MY_ROOM: (type: MyRoomType) => ["rooms", "my-room", type],
   HOME_MY_ROOM: ["rooms", "home", "my-room"],
+  BOOK_PAGE: (roomId?: number | string) => [
+    "rooms",
+    "book-page",
+    roomId == null || roomId === "" ? undefined : String(roomId),
+  ],
 } as const;

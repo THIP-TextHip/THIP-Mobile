@@ -18,6 +18,8 @@ import {
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
   getReadingMateApi,
+  getRecruitingRoomDetailApi,
+  getRoomBookPageInfoApi,
   getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
@@ -36,6 +38,8 @@ import type {
   GetHomeRecruitingRoomResponse,
   GetMyRoomListResponse,
   GetReadingMateResponse,
+  GetRecruitingRoomDetailResponse,
+  GetRoomBookPageInfoResponse,
   GetRoomDetailResponse,
   GetSearchRoomResponse,
   LeaveRoomRequest,
@@ -59,6 +63,11 @@ const ROOM_READING_MATE_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 10,
   GC: 1000 * 60 * 15,
 } as const;
+
+const ROOM_BOOK_PAGE_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 30,
+  GC: 1000 * 60 * 45,
+};
 
 type RoomCursor = string | null;
 
@@ -447,5 +456,66 @@ export const useGetReadingMateQuery = (roomId?: number | string) => {
     readingMateListError,
     refetchReadingMateList,
     isRefetchingReadingMateList,
+  };
+};
+
+export const useGetRecruitingRoomDetailQuery = (roomId?: number | string) => {
+  const {
+    data: recruitingRoomDetailData,
+    isPending: isPendingRecruitingRoomDetail,
+    isError: isErrorRecruitingRoomDetail,
+    error: recruitingRoomDetailError,
+    refetch: refetchRecruitingRoomDetail,
+    isRefetching: isRefetchingRecruitingRoomDetail,
+  } = useQuery<GetRecruitingRoomDetailResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.RECRUITING_DETAIL(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getRecruitingRoomDetailApi(roomId);
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_DETAIL_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_DETAIL_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    recruitingRoomDetailData,
+    isPendingRecruitingRoomDetail,
+    isErrorRecruitingRoomDetail,
+    recruitingRoomDetailError,
+    refetchRecruitingRoomDetail,
+    isRefetchingRecruitingRoomDetail,
+  };
+};
+
+// TODO: 추후 기록 작성 페이지에서 사용! 에러 나면 작성 불가하므로 토스트 띄우고 뒤로가기. Pending이면 페이지 선택 잠시 못하도록 방어
+export const useGetRoomBookPageQuery = (roomId?: number | string) => {
+  const {
+    data: bookPageInfo,
+    isPending: isPendingBookPageInfo,
+    isError: isErrorBookPageInfo,
+    error: bookPageInfoError,
+  } = useQuery<GetRoomBookPageInfoResponse, ApiErrorResponse>({
+    queryKey: ROOM_QUERY_KEY.BOOK_PAGE(roomId),
+    queryFn: () => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getRoomBookPageInfoApi(roomId);
+    },
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_BOOK_PAGE_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_BOOK_PAGE_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    bookPageInfo,
+    isPendingBookPageInfo,
+    isErrorBookPageInfo,
+    bookPageInfoError,
   };
 };

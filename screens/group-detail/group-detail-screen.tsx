@@ -116,7 +116,13 @@ export default function GroupDetailScreen() {
         disabled={disabledHeaderOption}
         handlePressMore={handleOpenBottomSheet}
       />
-      {isPendingRoomDetail ? (
+      {!roomId ? (
+        <View style={styles.status}>
+          <AppText weight="semibold" size="lg" color={colors.white}>
+            잘못된 접근이에요. 다시 시도해 주세요.
+          </AppText>
+        </View>
+      ) : isPendingRoomDetail ? (
         <View style={styles.status}>
           <ActivityIndicator size="large" color={colors.white} />
         </View>

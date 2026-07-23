@@ -68,14 +68,26 @@ export const ROOM_URL = {
   HOME_MY_ROOM: "/rooms/home/joined",
   DETAIL: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}`,
+  RECRUITING_DETAIL: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/recruiting`,
   READING_MATE: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}/users`,
-  ROOM_JOIN_STATUS: (roomId: number) => `/rooms/${roomId}/join`,
-  CLOSE_ROOM_RECRUITING: (roomId: number) => `/rooms/${roomId}/close`,
-  LEAVE_ROOM: (roomId: number) => `/rooms/${roomId}/leave`,
-  ROOM_POST_LIKE_STATUS: (postId: number) => `/room-posts/${postId}/likes`,
-  VERIFY_PASSWORD: (roomId: number) => `/rooms/${roomId}/password`,
+  ROOM_JOIN_STATUS: (roomId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/join`,
+  CLOSE_ROOM_RECRUITING: (roomId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/close`,
+  LEAVE_ROOM: (roomId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/leave`,
+  VERIFY_PASSWORD: (roomId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/password`,
+  BOOK_PAGE: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/book-page`,
 } as const;
+
+export const ROOM_POST_URL = {
+  LIKE_STATUS: (postId: number) =>
+    `/room-posts/${encodeURIComponent(String(postId))}/likes`,
+};
 
 export const NOTIFICATION_URL = {
   DEFAULT: "/notifications",
