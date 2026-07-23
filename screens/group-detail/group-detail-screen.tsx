@@ -10,7 +10,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { useGetRoomDetailQuery } from "@apis/room";
+import { useGetRoomDetailQuery, useLeaveRoomMutation } from "@apis/room";
 import { AppText, GroupInfo } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -39,6 +39,7 @@ export default function GroupDetailScreen() {
     refetchRoomDetail,
     isRefetchingRoomDetail,
   } = useGetRoomDetailQuery(roomId);
+  const { leaveRoom, isPendingLeaveRoom } = useLeaveRoomMutation();
 
   const handleToReadingMateList = () => {
     router.push({
@@ -66,7 +67,7 @@ export default function GroupDetailScreen() {
     setIsBottomSheetVisible(false);
   };
 
-  // TODO: 서버에 요청
+  // TODO: 서버에 신고 요청
   const handleReportGroup = () => {
     setIsBottomSheetVisible(false);
     Toast.show({
@@ -85,25 +86,36 @@ export default function GroupDetailScreen() {
     setModalType(null);
   };
 
-  // TODO: 서버에 요청
   const handleModalAccept = () => {
+    if (!roomDetailData) return;
     handleCloseModal();
+    // TODO: 서버에 삭제 요청
     if (modalType === "delete") {
       Toast.show({
         type: "default",
         text1: "모임방을 성공적으로 삭제했어요.",
       });
+      // TODO: 성공했을 때만 사용되도록
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.push("/group");
+      }
     }
     if (modalType === "leave") {
-      Toast.show({
-        type: "default",
-        text1: "모임 나가기를 완료했어요.",
-      });
-    }
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.push("/group");
+      if (isPendingLeaveRoom) return;
+      leaveRoom(
+        { roomId: roomDetailData.roomId },
+        {
+          onSuccess: () => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.push("/group");
+            }
+          },
+        },
+      );
     }
   };
 

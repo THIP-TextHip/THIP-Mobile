@@ -310,11 +310,15 @@ export const useCloseRoomRecruitingMutation = () => {
     CloseRoomRecruitingRequest
   >({
     mutationFn: closeRoomRecruitingApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ROOM_QUERY_KEY.ALL });
       Toast.show({
         type: "default",
         text1: "독서메이트 모집을 성공적으로 마감했어요.",
+      });
+      router.replace({
+        pathname: "/group-detail/[roomId]",
+        params: { roomId: data.roomId },
       });
     },
     onError: (error) => {
@@ -370,12 +374,6 @@ export const useVerifyPrivateRoomPassword = () => {
     VerifyPrivateRoomPasswordRequest
   >({
     mutationFn: verifyPrivateRoomPasswordApi,
-    // TODO: 이부분은 추후 페이지에서 사용할 때, onSuccess 하기
-    onSuccess: (data) => {
-      if (data.matched) {
-      } else {
-      }
-    },
     onError: (error) => {
       Toast.show({
         type: "error",
