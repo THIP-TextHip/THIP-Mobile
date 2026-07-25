@@ -1,6 +1,4 @@
-import * as Notifications from "expo-notifications";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Alert, AppState, Linking, StyleSheet, View } from "react-native";
+import { Alert, Linking, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import {
@@ -9,7 +7,6 @@ import {
   useRegisterNotificationToken,
 } from "@apis/notification";
 import {
-  isNotificationPermissionGranted,
   requestNotificationPermission,
   tryRegisterCurrentDeviceNotificationToken,
 } from "@apis/notification-token";
@@ -39,84 +36,24 @@ const showNotificationPermissionSettingsAlert = () => {
 };
 
 export default function AlarmSettingsScreen() {
-  const isHandlingPermissionRef = useRef(false);
-  const shouldPrepareNotificationAgainRef = useRef(false);
-  const [canRequestNotificationServer, setCanRequestNotificationServer] =
-    useState(false);
   const { registerNotificationTokenAsync } = useRegisterNotificationToken();
 
   const { isPushNotificationEnabled, isPendingPushNotificationData } =
-    useGetPushNotificationState(canRequestNotificationServer);
+    useGetPushNotificationState();
   const { changePushNotification, isPendingChangePushNotification } =
     useChangePushNotificationState();
 
-  const prepareNotificationServer = useCallback(async () => {
-    if (isHandlingPermissionRef.current) {
-      shouldPrepareNotificationAgainRef.current = true;
-      return;
-    }
-
-    isHandlingPermissionRef.current = true;
-
-    try {
-      do {
-        shouldPrepareNotificationAgainRef.current = false;
-        setCanRequestNotificationServer(false);
-
-        const hasPermission = isNotificationPermissionGranted(
-          await Notifications.getPermissionsAsync(),
-        );
-
-        if (!hasPermission) {
-          continue;
-        }
-
-        const isTokenRegistered =
-          await tryRegisterCurrentDeviceNotificationToken(
-            registerNotificationTokenAsync,
-          );
-
-        if (!shouldPrepareNotificationAgainRef.current) {
-          setCanRequestNotificationServer(isTokenRegistered);
-        }
-      } while (shouldPrepareNotificationAgainRef.current);
-    } catch (error) {
-      console.error(
-        "[AlarmSettingsScreen] notification preparation failed",
-        error,
-      );
-      setCanRequestNotificationServer(false);
-    } finally {
-      isHandlingPermissionRef.current = false;
-    }
-  }, [registerNotificationTokenAsync]);
-
-  useEffect(() => {
-    void prepareNotificationServer();
-
-    const subscription = AppState.addEventListener("change", (nextState) => {
-      if (nextState === "active") {
-        void prepareNotificationServer();
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [prepareNotificationServer]);
-
   const handleToggleSwitch = async () => {
-    if (
-      isPendingChangePushNotification ||
-      isPendingPushNotificationData ||
-      isHandlingPermissionRef.current
-    )
+    if (isPendingChangePushNotification || isPendingPushNotificationData) {
       return;
-
-    isHandlingPermissionRef.current = true;
-    setCanRequestNotificationServer(false);
+    }
 
     try {
+      if (isPushNotificationEnabled) {
+        changePushNotification({ enable: false });
+        return;
+      }
+
       const hasPermission = await requestNotificationPermission();
 
       if (!hasPermission) {
@@ -124,16 +61,9 @@ export default function AlarmSettingsScreen() {
         return;
       }
 
-      if (isPushNotificationEnabled) {
-        setCanRequestNotificationServer(true);
-        changePushNotification({ enable: false });
-        return;
-      }
-
       const isTokenRegistered = await tryRegisterCurrentDeviceNotificationToken(
         registerNotificationTokenAsync,
       );
-      setCanRequestNotificationServer(isTokenRegistered);
 
       if (!isTokenRegistered) {
         Toast.show({
@@ -153,12 +83,6 @@ export default function AlarmSettingsScreen() {
         type: "error",
         text1: "알림 권한을 확인하지 못했어요. 다시 시도해 주세요.",
       });
-    } finally {
-      isHandlingPermissionRef.current = false;
-
-      if (shouldPrepareNotificationAgainRef.current) {
-        void prepareNotificationServer();
-      }
     }
   };
 

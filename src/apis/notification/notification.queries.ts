@@ -225,7 +225,7 @@ export const useCheckNotification = () => {
   };
 };
 
-export const useGetPushNotificationState = (enabled = true) => {
+export const useGetPushNotificationState = () => {
   const {
     data,
     isFetching: isPendingPushNotificationData,
@@ -234,25 +234,23 @@ export const useGetPushNotificationState = (enabled = true) => {
   } = useQuery<GetPushNotificationStateResponse, Error>({
     queryKey: NOTIFICATION_QUERY_KEY.NOTIFICATION_STATE,
     queryFn: getPushNotificationStateApi,
-    enabled,
   });
 
   useEffect(() => {
-    if (!enabled || !isErrorPushNotificationData || !error) return;
+    if (!isErrorPushNotificationData || !error) return;
 
     Toast.show({
       type: "error",
       text1: error.message,
     });
-  }, [enabled, isErrorPushNotificationData, error]);
+  }, [isErrorPushNotificationData, error]);
 
-  const isPushNotificationEnabled = enabled && (data?.isEnabled ?? false);
+  const isPushNotificationEnabled = data?.isEnabled ?? false;
 
   return {
     isPushNotificationEnabled,
     isPendingPushNotificationData,
-    isErrorPushNotificationData:
-      enabled && isErrorPushNotificationData,
+    isErrorPushNotificationData: isErrorPushNotificationData,
   };
 };
 

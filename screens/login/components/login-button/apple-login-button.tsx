@@ -1,11 +1,14 @@
 import * as AppleAuthentication from "expo-apple-authentication";
 import { StyleSheet } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { useAppleLoginMutation } from "@apis/auth";
 
 export default function AppleLoginButton() {
   const { appleLogin, isPendingAppleLogin } = useAppleLoginMutation();
   const handleLogin = async () => {
+    if (isPendingAppleLogin) return;
+
     try {
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
@@ -22,16 +25,11 @@ export default function AppleLoginButton() {
         identityToken: credential.identityToken,
         authorizationCode: credential.authorizationCode,
       });
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        "code" in error &&
-        error.code === "ERR_REQUEST_CANCELED"
-      ) {
-        return;
-      }
-
-      console.error("[AppleLoginButton] Apple login failed", error);
+    } catch {
+      Toast.show({
+        type: "error",
+        text1: "애플 로그인에 실패했어요.",
+      });
     }
   };
 
@@ -42,7 +40,6 @@ export default function AppleLoginButton() {
       cornerRadius={12}
       style={styles.loginButtonContainer}
       onPress={handleLogin}
-      aria-disabled={isPendingAppleLogin}
     />
   );
 }

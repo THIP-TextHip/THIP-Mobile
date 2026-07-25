@@ -57,7 +57,7 @@ const setAndroidNotificationChannel = async () => {
   );
 };
 
-export const isNotificationPermissionGranted = (
+const isNotificationPermissionGranted = (
   permissions: Notifications.NotificationPermissionsStatus,
 ) => {
   if (permissions.status === "granted") {
