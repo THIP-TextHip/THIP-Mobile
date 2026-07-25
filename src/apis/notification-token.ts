@@ -57,7 +57,7 @@ const setAndroidNotificationChannel = async () => {
   );
 };
 
-const isNotificationPermissionGranted = (
+export const isNotificationPermissionGranted = (
   permissions: Notifications.NotificationPermissionsStatus,
 ) => {
   if (permissions.status === "granted") {
@@ -73,11 +73,21 @@ const isNotificationPermissionGranted = (
   );
 };
 
-const requestNotificationPermission = async () => {
+export const requestNotificationPermission = async () => {
   const existingPermissions = await Notifications.getPermissionsAsync();
 
-  if (isNotificationPermissionGranted(existingPermissions)) {
+  const permissionAction = isNotificationPermissionGranted(existingPermissions)
+    ? "granted"
+    : existingPermissions.canAskAgain
+      ? "request"
+      : "settings";
+
+  if (permissionAction === "granted") {
     return true;
+  }
+
+  if (permissionAction === "settings") {
+    return false;
   }
 
   const requestedPermissions = await Notifications.requestPermissionsAsync();
