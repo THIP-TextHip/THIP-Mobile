@@ -21,7 +21,12 @@ export default function KakaoLoginButton() {
 
       login({ oauth2Id: `kakao_${kakaoUser.id}` });
     } catch (error) {
-      console.error("[KakaoLoginButton] Kakao login failed", error);
+      if (
+        error instanceof Error &&
+        "code" in error &&
+        error.code === "ERR_REQUEST_CANCELED"
+      )
+        return;
 
       Toast.show({
         type: "error",

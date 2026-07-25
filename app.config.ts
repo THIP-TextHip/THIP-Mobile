@@ -92,6 +92,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ...config.ios,
     bundleIdentifier: "com.texthip.thip",
     googleServicesFile: googleServiceInfoPlist,
+    usesAppleSignIn: true,
   },
   android: {
     ...appJson.expo.android,

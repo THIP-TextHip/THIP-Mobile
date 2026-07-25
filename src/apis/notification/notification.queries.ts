@@ -228,7 +228,7 @@ export const useCheckNotification = () => {
 export const useGetPushNotificationState = () => {
   const {
     data,
-    isPending: isPendingPushNotificationData,
+    isFetching: isPendingPushNotificationData,
     isError: isErrorPushNotificationData,
     error,
   } = useQuery<GetPushNotificationStateResponse, Error>({
@@ -250,7 +250,7 @@ export const useGetPushNotificationState = () => {
   return {
     isPushNotificationEnabled,
     isPendingPushNotificationData,
-    isErrorPushNotificationData,
+    isErrorPushNotificationData: isErrorPushNotificationData,
   };
 };
 

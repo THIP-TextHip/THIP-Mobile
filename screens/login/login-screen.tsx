@@ -1,10 +1,20 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { Image, StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 import { ThipSplash } from "@images/thip";
 
-import { GoogleLoginButton, KakaoLoginButton } from "./components";
+import {
+  AppleLoginButton,
+  GoogleLoginButton,
+  KakaoLoginButton,
+} from "./components";
 
 export default function LoginScreen() {
   const hasClearedRef = useRef(false);
@@ -31,6 +41,7 @@ export default function LoginScreen() {
       <View style={styles.loginButtonWrapper}>
         <KakaoLoginButton />
         <GoogleLoginButton />
+        {Platform.OS === "ios" && <AppleLoginButton />}
       </View>
     </View>
   );
