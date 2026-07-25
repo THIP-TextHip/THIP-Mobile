@@ -1,1 +1,5 @@
-export { GoogleLoginButton, KakaoLoginButton } from "./login-button";
+export {
+  AppleLoginButton,
+  GoogleLoginButton,
+  KakaoLoginButton,
+} from "./login-button";

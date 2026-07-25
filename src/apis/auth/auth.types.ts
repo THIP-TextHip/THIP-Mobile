@@ -6,3 +6,8 @@ export type LoginResponse = {
   token: string;
   isNewUser: boolean;
 };
+
+export interface AppleLoginRequest {
+  identityToken: string;
+  authorizationCode: string;
+}

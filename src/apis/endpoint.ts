@@ -1,5 +1,6 @@
 export const AUTH_URL = {
   LOGIN: "/auth/users",
+  APPLE_LOGIN: "/auth/apple",
 } as const;
 
 export const USER_URL = {
