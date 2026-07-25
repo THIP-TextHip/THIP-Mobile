@@ -27,7 +27,13 @@ export default function GoogleLoginButton() {
       }
 
       login({ oauth2Id: `google_${response.data.user.id}` });
-    } catch {
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        "code" in error &&
+        error.code === "ERR_REQUEST_CANCELED"
+      )
+        return;
       Toast.show({
         type: "error",
         text1: "구글 로그인에 실패했어요.",

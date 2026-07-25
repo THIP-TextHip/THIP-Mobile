@@ -25,7 +25,14 @@ export default function AppleLoginButton() {
         identityToken: credential.identityToken,
         authorizationCode: credential.authorizationCode,
       });
-    } catch {
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        "code" in error &&
+        error.code === "ERR_REQUEST_CANCELED"
+      )
+        return;
+
       Toast.show({
         type: "error",
         text1: "애플 로그인에 실패했어요.",
