@@ -1,8 +1,22 @@
-export { changeRoomPostLikeStatusApi } from "./room-post.api";
+export {
+  changeRoomPostLikeStatusApi,
+  getRoomBookPageInfoApi,
+  getRoomPostListApi,
+} from "./room-post.api";
 
-export { useChangeRoomPostLikeStatusMutation } from "./room-post.queries";
+export {
+  useChangeRoomPostLikeStatusMutation,
+  useGetRoomBookPageQuery,
+  useGetRoomPostListQuery,
+} from "./room-post.queries";
 
 export type {
   ChangeRoomPostLikeStatusRequest,
   ChangeRoomPostLikeStatusResponse,
+  GetRoomBookPageInfoResponse,
+  GetRoomPostListResponse,
+  GetRoomPostListResquest,
+  RoomPostContent,
+  RoomPostSortType,
+  RoomPostVote,
 } from "./room-post.types";

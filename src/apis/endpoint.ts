@@ -81,8 +81,6 @@ export const ROOM_URL = {
     `/rooms/${encodeURIComponent(String(roomId))}/leave`,
   VERIFY_PASSWORD: (roomId: number) =>
     `/rooms/${encodeURIComponent(String(roomId))}/password`,
-  BOOK_PAGE: (roomId: number | string) =>
-    `/rooms/${encodeURIComponent(String(roomId))}/book-page`,
   DAILY_GREETING: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}/daily-greeting`,
   DELETE_DAILY_GREETING: (roomId: number | string, attendanceCheckId: number) =>
@@ -90,8 +88,12 @@ export const ROOM_URL = {
 } as const;
 
 export const ROOM_POST_URL = {
+  BOOK_PAGE: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/book-page`,
   LIKE_STATUS: (postId: number) =>
     `/room-posts/${encodeURIComponent(String(postId))}/likes`,
+  LIST: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/posts`,
 };
 
 export const NOTIFICATION_URL = {

@@ -55,17 +55,19 @@ export default function DailyGreetingScreen() {
       text1: "잘못된 접근이에요. 다시 시도해 주세요.",
     });
     router.back();
+
+    return;
   }
 
   const StatusView = () => {
     if (isPendingDailyGreeting)
       return (
-        <View style={[styles.empty, { marginBottom: inputBarHeight }]}>
+        <View style={[styles.status, { marginBottom: inputBarHeight }]}>
           <ActivityIndicator size="large" color={colors.white} />
         </View>
       );
     return (
-      <View style={[styles.empty, { marginBottom: inputBarHeight }]}>
+      <View style={[styles.status, { marginBottom: inputBarHeight }]}>
         {isErrorDailyGreeting ? (
           <AppText
             weight="semibold"
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  empty: {
+  status: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

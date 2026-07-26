@@ -1,13 +1,13 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { type RoomPostVote } from "@apis/room-post";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import type { RecordBookVoteItemType } from "../../types";
 import { calculateVoteFillPercent } from "../../utils";
 
 interface RecordVoteListProps {
-  voteItems: RecordBookVoteItemType[];
+  voteItems: RoomPostVote[];
   handleVote: (voteItemId: number) => void;
 }
 

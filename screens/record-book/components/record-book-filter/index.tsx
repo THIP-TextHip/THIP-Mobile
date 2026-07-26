@@ -1,23 +1,25 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { IcCheck, IcDownmoreGrey, IcReset, IcX } from "@images/icons";
-import { AppText, DropdownFilter, FilterType, SelectChip } from "@shared/ui";
+import { AppText, DropdownFilter, SelectChip } from "@shared/ui";
 import { colors, typography } from "@theme/token";
 
 import { GROUP_RECORD_SORT } from "../../constants";
+import type { RoomPostSortTypeWithLabel } from "../../types";
 
 interface RecordBookFilterProps {
   selectedChip: "page" | "overview" | null;
   pageSettingMode: boolean;
   isDropdownVisible: boolean;
-  sortType: FilterType;
+  sortType: RoomPostSortTypeWithLabel;
   handlePressPageChip: () => void;
   handleResetPage: () => void;
   handleApplyPage: (start: number | null, end: number | null) => void;
   handlePressOverviewChip: () => void;
   handlePressDropdown: () => void;
-  handleSelectType: (type: FilterType) => void;
+  handleSelectType: (type: RoomPostSortTypeWithLabel) => void;
 }
 
 export default function RecordBookFilter({
@@ -45,24 +47,30 @@ export default function RecordBookFilter({
     const start = startPage === "" ? null : Number(startPage);
     const end = endPage === "" ? null : Number(endPage);
 
-    // 숫자 변환 검증
     if (
       (startPage !== "" && isNaN(start!)) ||
       (endPage !== "" && isNaN(end!))
     ) {
-      // TODO: 에러 토스트 또는 알림 표시
+      Toast.show({
+        type: "error",
+        text1: "숫자만 입력 가능해요!",
+      });
       return;
     }
 
-    // 페이지 범위 검증
     if (start !== null && end !== null && start > end) {
-      // TODO: 에러 토스트 또는 알림 표시
+      Toast.show({
+        type: "error",
+        text1: "시작 페이지가 끝 페이지보다 작아야 해요",
+      });
       return;
     }
 
-    // 양수 검증
-    if ((start !== null && start <= 0) || (end !== null && end <= 0)) {
-      // TODO: 에러 토스트 또는 알림 표시
+    if ((start !== null && start < 0) || (end !== null && end < 0)) {
+      Toast.show({
+        type: "error",
+        text1: "음수는 입력할 수 없어요",
+      });
       return;
     }
 

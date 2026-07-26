@@ -21,7 +21,6 @@ import {
   getMyRoomListApi,
   getReadingMateApi,
   getRecruitingRoomDetailApi,
-  getRoomBookPageInfoApi,
   getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
@@ -45,7 +44,6 @@ import type {
   GetMyRoomListResponse,
   GetReadingMateResponse,
   GetRecruitingRoomDetailResponse,
-  GetRoomBookPageInfoResponse,
   GetRoomDetailResponse,
   GetSearchRoomResponse,
   LeaveRoomRequest,
@@ -70,11 +68,6 @@ const ROOM_DETAIL_QUERY_CACHE_TIME = {
 const ROOM_READING_MATE_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 10,
   GC: 1000 * 60 * 15,
-} as const;
-
-const ROOM_BOOK_PAGE_QUERY_CACHE_TIME = {
-  STALE: 1000 * 60 * 30,
-  GC: 1000 * 60 * 45,
 } as const;
 
 type RoomCursor = string | null;
@@ -494,35 +487,6 @@ export const useGetRecruitingRoomDetailQuery = (roomId?: number | string) => {
     recruitingRoomDetailError,
     refetchRecruitingRoomDetail,
     isRefetchingRecruitingRoomDetail,
-  };
-};
-
-// TODO: 추후 기록 작성 페이지에서 사용! 에러 나면 작성 불가하므로 토스트 띄우고 뒤로가기. Pending이면 페이지 선택 잠시 못하도록 방어
-export const useGetRoomBookPageQuery = (roomId?: number | string) => {
-  const {
-    data: bookPageInfo,
-    isPending: isPendingBookPageInfo,
-    isError: isErrorBookPageInfo,
-    error: bookPageInfoError,
-  } = useQuery<GetRoomBookPageInfoResponse, ApiErrorResponse>({
-    queryKey: ROOM_QUERY_KEY.BOOK_PAGE(roomId),
-    queryFn: () => {
-      if (!hasRoomId(roomId)) {
-        throw new Error("roomId is required.");
-      }
-
-      return getRoomBookPageInfoApi(roomId);
-    },
-    enabled: hasRoomId(roomId),
-    staleTime: ROOM_BOOK_PAGE_QUERY_CACHE_TIME.STALE,
-    gcTime: ROOM_BOOK_PAGE_QUERY_CACHE_TIME.GC,
-  });
-
-  return {
-    bookPageInfo,
-    isPendingBookPageInfo,
-    isErrorBookPageInfo,
-    bookPageInfoError,
   };
 };
 

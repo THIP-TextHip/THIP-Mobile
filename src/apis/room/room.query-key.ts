@@ -39,11 +39,6 @@ export const ROOM_QUERY_KEY = {
   ],
   MY_ROOM: (type: MyRoomType) => ["rooms", "my-room", type],
   HOME_MY_ROOM: ["rooms", "home", "my-room"],
-  BOOK_PAGE: (roomId?: number | string) => [
-    "rooms",
-    "book-page",
-    roomId == null || roomId === "" ? undefined : String(roomId),
-  ],
   DAILY_GREETING: (roomId?: number | string) => [
     "rooms",
     "daily-greeting",

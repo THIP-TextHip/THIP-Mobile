@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
-import { type RecordBookVoteItemType } from "@screens/record-book";
+import { type RoomPostVote } from "@apis/room-post";
 
 interface PrevRecord {
   postId: number;
   page: number;
   isOverview: boolean;
   content: string;
-  voteItems: RecordBookVoteItemType[];
+  voteItems: RoomPostVote[];
 }
 
 interface PrevRecordStore {

@@ -227,13 +227,6 @@ export interface GetRecruitingRoomDetailResponse {
   recommendRooms: RecommendRoomType[];
 }
 
-export interface GetRoomBookPageInfoResponse {
-  totalBookPage: number;
-  recentBookPage: number;
-  isOverviewPossible: boolean;
-  roomId: number;
-}
-
 export interface GetDailyGreetingRequest {
   roomId: number | string;
   cursor?: string | null;

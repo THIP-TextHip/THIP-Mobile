@@ -2,12 +2,12 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
+import { type RoomPostContent } from "@apis/room-post";
 import { AppText } from "@shared/ui";
 import { usePrevRecordStore, useRecordBookPinStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
 import { DUMMY_RECORD_PIN_BOOK_INFO } from "../../constants";
-import { RecordBookPostType } from "../../types";
 import RecordModal from "../record-modal";
 import RecordOptionBottomSheet from "../record-option-bottom-sheet";
 import RecordPostActions from "./record-post-actions";
@@ -15,11 +15,12 @@ import RecordVoteList from "./record-vote-list";
 
 interface RecordBookPostItemProps {
   roomId: number;
-  post: RecordBookPostType;
+  post: RoomPostContent;
   handleOpenComment: (postId: number) => void;
 }
 
 // TODO: 서버 연결하면서 이벤트 핸들러 구현
+// TODO: isLocked가 true 면 블러 처리해야함
 export default function RecordBookPostItem({
   roomId,
   post,
