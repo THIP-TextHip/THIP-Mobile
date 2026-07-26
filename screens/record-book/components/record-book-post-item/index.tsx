@@ -21,7 +21,6 @@ interface RecordBookPostItemProps {
 }
 
 // TODO: 서버 연결하면서 이벤트 핸들러 구현
-// TODO: isLocked가 true 면 블러 처리해야함
 export default function RecordBookPostItem({
   roomId,
   post,
@@ -150,6 +149,7 @@ export default function RecordBookPostItem({
           postId={post.postId}
           isLiked={post.isLiked}
           isWriter={post.isWriter}
+          postType={post.postType}
           likeCount={post.likeCount}
           commentCount={post.commentCount}
           handlePressLike={handlePressLike}

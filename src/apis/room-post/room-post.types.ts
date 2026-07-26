@@ -41,7 +41,7 @@ export interface RoomPostVote {
 export interface RoomPostContent {
   postId: number;
   postDate: string;
-  postType: string;
+  postType: RoomPostType;
   page: number;
   userId: number;
   nickName: string;
