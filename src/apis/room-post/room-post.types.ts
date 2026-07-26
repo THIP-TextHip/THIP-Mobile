@@ -101,3 +101,23 @@ export interface GetBookInfoForPinResponse {
   bookImageUrl: string;
   isbn: string;
 }
+
+export interface EditRoomRecordRequest {
+  roomId: number | string;
+  recordId: number;
+  content: string;
+}
+
+export interface EditRoomRecordResponse {
+  roomId: number;
+}
+
+export interface EditRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+  content: string;
+}
+
+export interface EditRoomVoteResponse {
+  roomId: number;
+}

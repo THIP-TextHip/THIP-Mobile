@@ -63,7 +63,10 @@ export default function VoteContentSection({
         {voteItemList.map((item, index) => (
           <View key={index} style={styles.itemInputContainer}>
             <TextInput
-              style={styles.itemInput}
+              style={[
+                styles.itemInput,
+                !editable && { color: colors.grey[300] },
+              ]}
               value={item.itemName}
               onChangeText={(text) => handleChangeItemName(index, text)}
               placeholder={VOTE_ITEM_PLACEHOLDER}

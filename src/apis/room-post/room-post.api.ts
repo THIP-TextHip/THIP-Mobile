@@ -7,6 +7,10 @@ import type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  EditRoomRecordRequest,
+  EditRoomRecordResponse,
+  EditRoomVoteRequest,
+  EditRoomVoteResponse,
   GetBookInfoForPinRequest,
   GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
@@ -113,6 +117,36 @@ export const getBookInfoForPinApi = async ({
 }: GetBookInfoForPinRequest) => {
   const response = await apiClient.get<GetBookInfoForPinResponse>(
     ROOM_POST_URL.BOOK_INFO_FOR_PIN(roomId, recordId),
+  );
+
+  return response.data;
+};
+
+export const editRoomRecordApi = async ({
+  roomId,
+  recordId,
+  content,
+}: EditRoomRecordRequest) => {
+  const response = await apiClient.patch<EditRoomRecordResponse>(
+    ROOM_POST_URL.EDIT_RECORD(roomId, recordId),
+    {
+      content,
+    },
+  );
+
+  return response.data;
+};
+
+export const editRoomVoteApi = async ({
+  roomId,
+  voteId,
+  content,
+}: EditRoomVoteRequest) => {
+  const response = await apiClient.patch<EditRoomVoteResponse>(
+    ROOM_POST_URL.EDIT_VOTE(roomId, voteId),
+    {
+      content,
+    },
   );
 
   return response.data;

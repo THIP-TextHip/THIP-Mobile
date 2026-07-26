@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 
 import {
   useCreateRoomRecordMutation,
+  useEditRoomRecordMutation,
   useGetRoomBookPageQuery,
 } from "@apis/room-post";
 import { RecordPageSection } from "@shared/ui";
@@ -45,6 +46,8 @@ export default function RecordWriteScreen() {
   } = useGetRoomBookPageQuery(roomId);
   const { createRoomRecord, isPendingCreateRoomRecord } =
     useCreateRoomRecordMutation();
+  const { editRoomRecord, isPendingEditRoomRecord } =
+    useEditRoomRecordMutation();
 
   useEffect(() => {
     return navigation.addListener("beforeRemove", clearPrevRecord);
@@ -65,7 +68,7 @@ export default function RecordWriteScreen() {
   }, [clearPrevRecord]);
 
   const handleCompleteWrite = () => {
-    if (isPendingCreateRoomRecord) return;
+    if (isPendingCreateRoomRecord || isPendingEditRoomRecord) return;
 
     if (prevRecord === null) {
       createRoomRecord({
@@ -75,10 +78,10 @@ export default function RecordWriteScreen() {
         content,
       });
     } else {
-      // TODO: 기록 수정 api 연동
-      console.log("기록 수정", roomId, prevRecord.postId, content);
-      clearPrevRecord();
-      router.back();
+      editRoomRecord(
+        { roomId, recordId: prevRecord.postId, content },
+        { onSuccess: () => clearPrevRecord() },
+      );
     }
   };
 
@@ -87,7 +90,8 @@ export default function RecordWriteScreen() {
     content.trim().length === 0 ||
     (prevRecord !== null && prevRecord.content.trim() === content.trim()) ||
     isPendingBookPageInfo ||
-    isPendingCreateRoomRecord;
+    isPendingCreateRoomRecord ||
+    isPendingEditRoomRecord;
 
   if (!roomId) {
     Toast.show({
@@ -153,7 +157,7 @@ export default function RecordWriteScreen() {
           />
         </ScrollView>
       </KeyboardAvoidingView>
-      {isPendingCreateRoomRecord && (
+      {(isPendingCreateRoomRecord || isPendingEditRoomRecord) && (
         <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
           <ActivityIndicator size="large" color={colors.white} />
         </BlurView>

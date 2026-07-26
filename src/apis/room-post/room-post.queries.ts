@@ -14,6 +14,8 @@ import {
   changeRoomPostLikeStatusApi,
   createRoomRecordApi,
   createRoomVoteApi,
+  editRoomRecordApi,
+  editRoomVoteApi,
   getBookInfoForPinApi,
   getRoomBookPageInfoApi,
   getRoomPostListApi,
@@ -26,6 +28,10 @@ import type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  EditRoomRecordRequest,
+  EditRoomRecordResponse,
+  EditRoomVoteRequest,
+  EditRoomVoteResponse,
   GetBookInfoForPinRequest,
   GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
@@ -288,5 +294,87 @@ export const useGetBookInfoForPinQuery = ({
     isPendingBookInfoForPin,
     isErrorBookInfoForPin,
     bookInfoForPinError,
+  };
+};
+
+export const useEditRoomRecordMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: editRoomRecord, isPending: isPendingEditRoomRecord } =
+    useMutation<
+      EditRoomRecordResponse,
+      ApiErrorResponse,
+      EditRoomRecordRequest
+    >({
+      mutationFn: editRoomRecordApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        if (router.canGoBack()) {
+          router.back();
+        } else {
+          router.replace({
+            pathname: "/record-book/[roomId]",
+            params: { roomId: data.roomId },
+          });
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    editRoomRecord,
+    isPendingEditRoomRecord,
+  };
+};
+
+export const useEditRoomVoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: editRoomVote, isPending: isPendingEditRoomVote } =
+    useMutation<EditRoomVoteResponse, ApiErrorResponse, EditRoomVoteRequest>({
+      mutationFn: editRoomVoteApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        if (router.canGoBack()) {
+          router.back();
+        } else {
+          router.replace({
+            pathname: "/record-book/[roomId]",
+            params: { roomId: data.roomId },
+          });
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    editRoomVote,
+    isPendingEditRoomVote,
   };
 };

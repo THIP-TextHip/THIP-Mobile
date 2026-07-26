@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 
 import {
   useCreateRoomVoteMutation,
+  useEditRoomVoteMutation,
   useGetRoomBookPageQuery,
 } from "@apis/room-post";
 import { RecordPageSection } from "@shared/ui";
@@ -48,6 +49,7 @@ export default function CreateVoteScreen() {
   } = useGetRoomBookPageQuery(roomId);
   const { createRoomVote, isPendingCreateRoomVote } =
     useCreateRoomVoteMutation();
+  const { editRoomVote, isPendingEditRoomVote } = useEditRoomVoteMutation();
 
   useEffect(() => {
     return navigation.addListener("beforeRemove", clearPrevRecord);
@@ -68,7 +70,7 @@ export default function CreateVoteScreen() {
   }, [clearPrevRecord]);
 
   const handleComplete = () => {
-    if (isPendingCreateRoomVote) return;
+    if (isPendingCreateRoomVote || isPendingEditRoomVote) return;
 
     if (prevRecord === null) {
       createRoomVote({
@@ -79,16 +81,10 @@ export default function CreateVoteScreen() {
         voteItemList: cleanedVoteItemList,
       });
     } else {
-      // TODO: 투표 수정 api 연동
-      console.log(
-        "투표 수정",
-        roomId,
-        prevRecord.postId,
-        content,
-        cleanedVoteItemList,
+      editRoomVote(
+        { roomId, voteId: prevRecord.postId, content },
+        { onSuccess: () => clearPrevRecord() },
       );
-      clearPrevRecord();
-      router.back();
     }
   };
 
@@ -102,7 +98,8 @@ export default function CreateVoteScreen() {
     cleanedVoteItemList.length < 2 ||
     (prevRecord !== null && prevRecord.content.trim() === content.trim()) ||
     isPendingBookPageInfo ||
-    isPendingCreateRoomVote;
+    isPendingCreateRoomVote ||
+    isPendingEditRoomVote;
 
   if (!roomId) {
     Toast.show({
@@ -171,7 +168,7 @@ export default function CreateVoteScreen() {
           />
         </ScrollView>
       </KeyboardAvoidingView>
-      {isPendingCreateRoomVote && (
+      {(isPendingCreateRoomVote || isPendingEditRoomVote) && (
         <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
           <ActivityIndicator size="large" color={colors.white} />
         </BlurView>
