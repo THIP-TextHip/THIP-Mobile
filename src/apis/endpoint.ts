@@ -83,6 +83,8 @@ export const ROOM_URL = {
     `/rooms/${encodeURIComponent(String(roomId))}/password`,
   BOOK_PAGE: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}/book-page`,
+  DAILY_GREETING: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/daily-greeting`,
 } as const;
 
 export const ROOM_POST_URL = {

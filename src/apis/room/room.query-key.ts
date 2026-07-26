@@ -44,4 +44,9 @@ export const ROOM_QUERY_KEY = {
     "book-page",
     roomId == null || roomId === "" ? undefined : String(roomId),
   ],
+  DAILY_GREETING: (roomId?: number | string) => [
+    "rooms",
+    "daily-greeting",
+    roomId == null || roomId === "" ? undefined : String(roomId),
+  ],
 } as const;

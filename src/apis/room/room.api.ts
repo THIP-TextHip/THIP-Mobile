@@ -1,27 +1,29 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
-import type {
-  ChangeRoomJoinStatusRequest,
-  ChangeRoomJoinStatusResponse,
-  CloseRoomRecruitingRequest,
-  CloseRoomRecruitingResponse,
-  CreateRoomRequest,
-  CreateRoomResponse,
-  GetHomeMyRoomResponse,
-  GetHomeRecruitingRoomRequest,
-  GetHomeRecruitingRoomResponse,
-  GetMyRoomListRequest,
-  GetMyRoomListResponse,
-  GetReadingMateResponse,
-  GetRecruitingRoomDetailResponse,
-  GetRoomBookPageInfoResponse,
-  GetRoomDetailRequest,
-  GetRoomDetailResponse,
-  GetSearchRoomRequest,
-  GetSearchRoomResponse,
-  LeaveRoomRequest,
-  VerifyPrivateRoomPasswordRequest,
-  VerifyPrivateRoomPasswordResponse,
+import {
+  GetDailyGreetingResponse,
+  type ChangeRoomJoinStatusRequest,
+  type ChangeRoomJoinStatusResponse,
+  type CloseRoomRecruitingRequest,
+  type CloseRoomRecruitingResponse,
+  type CreateRoomRequest,
+  type CreateRoomResponse,
+  type GetDailyGreetingRequest,
+  type GetHomeMyRoomResponse,
+  type GetHomeRecruitingRoomRequest,
+  type GetHomeRecruitingRoomResponse,
+  type GetMyRoomListRequest,
+  type GetMyRoomListResponse,
+  type GetReadingMateResponse,
+  type GetRecruitingRoomDetailResponse,
+  type GetRoomBookPageInfoResponse,
+  type GetRoomDetailRequest,
+  type GetRoomDetailResponse,
+  type GetSearchRoomRequest,
+  type GetSearchRoomResponse,
+  type LeaveRoomRequest,
+  type VerifyPrivateRoomPasswordRequest,
+  type VerifyPrivateRoomPasswordResponse,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -150,6 +152,20 @@ export const getRecruitingRoomDetailApi = async (roomId: string | number) => {
 export const getRoomBookPageInfoApi = async (roomId: number | string) => {
   const response = await apiClient.get<GetRoomBookPageInfoResponse>(
     ROOM_URL.BOOK_PAGE(roomId),
+  );
+
+  return response.data;
+};
+
+export const getDailyGreetingApi = async ({
+  roomId,
+  cursor,
+}: GetDailyGreetingRequest) => {
+  const response = await apiClient.get<GetDailyGreetingResponse>(
+    ROOM_URL.DAILY_GREETING(roomId),
+    {
+      params: cursor == null ? undefined : { cursor },
+    },
   );
 
   return response.data;
