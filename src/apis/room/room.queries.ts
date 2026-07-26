@@ -553,6 +553,7 @@ export const useGetDailyGreetingQuery = (roomId?: number | string) => {
     initialPageParam: null,
     getNextPageParam: (lastPage) =>
       lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: hasRoomId(roomId),
   });
 
   return {
