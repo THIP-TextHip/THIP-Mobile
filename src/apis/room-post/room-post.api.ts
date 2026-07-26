@@ -7,6 +7,10 @@ import type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  DeleteRoomRecordRequest,
+  DeleteRoomRecordResponse,
+  DeleteRoomVoteRequest,
+  DeleteRoomVoteResponse,
   EditRoomRecordRequest,
   EditRoomRecordResponse,
   EditRoomVoteRequest,
@@ -147,6 +151,28 @@ export const editRoomVoteApi = async ({
     {
       content,
     },
+  );
+
+  return response.data;
+};
+
+export const deleteRoomRecordApi = async ({
+  roomId,
+  recordId,
+}: DeleteRoomRecordRequest) => {
+  const response = await apiClient.delete<DeleteRoomRecordResponse>(
+    ROOM_POST_URL.DELETE_RECORD(roomId, recordId),
+  );
+
+  return response.data;
+};
+
+export const deleteRoomVoteApi = async ({
+  roomId,
+  voteId,
+}: DeleteRoomVoteRequest) => {
+  const response = await apiClient.delete<DeleteRoomVoteResponse>(
+    ROOM_POST_URL.DELETE_VOTE(roomId, voteId),
   );
 
   return response.data;

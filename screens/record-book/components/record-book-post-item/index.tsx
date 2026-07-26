@@ -5,6 +5,7 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import {
+  useDeleteRoomPostMutation,
   useGetBookInfoForPinQuery,
   type RoomPostContent,
 } from "@apis/room-post";
@@ -42,6 +43,12 @@ export default function RecordBookPostItem({
     isErrorBookInfoForPin,
     bookInfoForPinError,
   } = useGetBookInfoForPinQuery({ roomId, recordId: post.postId });
+  const {
+    deleteRoomRecord,
+    deleteRoomVote,
+    isPendingDeleteRoomRecord,
+    isPendingDeleteRoomVote,
+  } = useDeleteRoomPostMutation();
 
   const handleToProfile = () => {
     router.push({
@@ -93,8 +100,18 @@ export default function RecordBookPostItem({
   };
 
   const handleDelete = () => {
-    console.log(post.postId, "번 기록 삭제");
-    setIsModalOpen(false);
+    if (isPendingDeleteRoomRecord || isPendingDeleteRoomVote) return;
+    if (post.postType === "RECORD") {
+      deleteRoomRecord(
+        { roomId, recordId: post.postId },
+        { onSettled: () => setIsModalOpen(false) },
+      );
+    } else {
+      deleteRoomVote(
+        { roomId, voteId: post.postId },
+        { onSettled: () => setIsModalOpen(false) },
+      );
+    }
   };
 
   const handleToPin = () => {
@@ -188,8 +205,11 @@ export default function RecordBookPostItem({
       <RecordModal
         modalType={modalType}
         isVisible={isModalOpen}
-        // TODO: 추후 삭제 관련도 pending 상태도 추가
-        isPending={isPendingBookInfoForPin}
+        isPending={
+          isPendingBookInfoForPin ||
+          isPendingDeleteRoomRecord ||
+          isPendingDeleteRoomVote
+        }
         handleCloseModal={handleCloseModal}
         handleDelete={handleDelete}
         handleToPin={handleToPin}

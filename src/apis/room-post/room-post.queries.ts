@@ -14,6 +14,8 @@ import {
   changeRoomPostLikeStatusApi,
   createRoomRecordApi,
   createRoomVoteApi,
+  deleteRoomRecordApi,
+  deleteRoomVoteApi,
   editRoomRecordApi,
   editRoomVoteApi,
   getBookInfoForPinApi,
@@ -28,6 +30,10 @@ import type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  DeleteRoomRecordRequest,
+  DeleteRoomRecordResponse,
+  DeleteRoomVoteRequest,
+  DeleteRoomVoteResponse,
   EditRoomRecordRequest,
   EditRoomRecordResponse,
   EditRoomVoteRequest,
@@ -85,7 +91,6 @@ export const useChangeRoomPostLikeStatusMutation = () => {
   };
 };
 
-// TODO: 추후 기록 작성 페이지에서 사용! 에러 나면 작성 불가하므로 토스트 띄우고 뒤로가기. Pending이면 페이지 선택 잠시 못하도록 방어
 export const useGetRoomBookPageQuery = (roomId?: number | string) => {
   const {
     data: bookPageInfo,
@@ -206,6 +211,10 @@ export const useCreateRoomRecordMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ROOM_QUERY_KEY.ALL,
         });
+        Toast.show({
+          type: "default",
+          text1: "기록이 생성되었어요.",
+        });
         if (router.canGoBack()) {
           router.back();
         } else {
@@ -248,6 +257,10 @@ export const useCreateRoomVoteMutation = () => {
         });
         queryClient.invalidateQueries({
           queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        Toast.show({
+          type: "default",
+          text1: "투표가 생성되었어요.",
         });
         if (router.canGoBack()) {
           router.back();
@@ -317,6 +330,10 @@ export const useEditRoomRecordMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ROOM_QUERY_KEY.ALL,
         });
+        Toast.show({
+          type: "default",
+          text1: "기록이 수정되었어요.",
+        });
         if (router.canGoBack()) {
           router.back();
         } else {
@@ -356,6 +373,10 @@ export const useEditRoomVoteMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ROOM_QUERY_KEY.ALL,
         });
+        Toast.show({
+          type: "default",
+          text1: "투표가 수정되었어요.",
+        });
         if (router.canGoBack()) {
           router.back();
         } else {
@@ -376,5 +397,76 @@ export const useEditRoomVoteMutation = () => {
   return {
     editRoomVote,
     isPendingEditRoomVote,
+  };
+};
+
+export const useDeleteRoomPostMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteRoomRecord, isPending: isPendingDeleteRoomRecord } =
+    useMutation<
+      DeleteRoomRecordResponse,
+      ApiErrorResponse,
+      DeleteRoomRecordRequest
+    >({
+      mutationFn: deleteRoomRecordApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        Toast.show({
+          type: "default",
+          text1: "기록이 삭제되었어요.",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  const { mutate: deleteRoomVote, isPending: isPendingDeleteRoomVote } =
+    useMutation<
+      DeleteRoomVoteResponse,
+      ApiErrorResponse,
+      DeleteRoomVoteRequest
+    >({
+      mutationFn: deleteRoomVoteApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        Toast.show({
+          type: "default",
+          text1: "투표가 삭제되었어요.",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    deleteRoomRecord,
+    deleteRoomVote,
+    isPendingDeleteRoomRecord,
+    isPendingDeleteRoomVote,
   };
 };

@@ -121,3 +121,21 @@ export interface EditRoomVoteRequest {
 export interface EditRoomVoteResponse {
   roomId: number;
 }
+
+export interface DeleteRoomRecordRequest {
+  roomId: number | string;
+  recordId: number;
+}
+
+export interface DeleteRoomRecordResponse {
+  roomId: number;
+}
+
+export interface DeleteRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+}
+
+export interface DeleteRoomVoteResponse {
+  roomId: number;
+}
