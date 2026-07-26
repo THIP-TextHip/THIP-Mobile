@@ -98,6 +98,8 @@ export const ROOM_POST_URL = {
     `/rooms/${encodeURIComponent(String(roomId))}/record`,
   CREATE_VOTE: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}/vote`,
+  BOOK_INFO_FOR_PIN: (roomId: number, recordId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/records/${encodeURIComponent(String(recordId))}/pin`,
 };
 
 export const NOTIFICATION_URL = {

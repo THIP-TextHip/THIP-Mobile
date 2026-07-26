@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
-import { type RoomPostVote } from "@apis/room-post";
+import {
+  type GetBookInfoForPinResponse,
+  type RoomPostVote,
+} from "@apis/room-post";
 
 interface PrevRecord {
   postId: number;
@@ -23,12 +26,7 @@ export const usePrevRecordStore = create<PrevRecordStore>((set) => ({
 }));
 
 interface RecordBookPinInfo {
-  bookInfo: {
-    bookTitle: string;
-    authorName: string;
-    bookImageUrl: string;
-    isbn: string;
-  };
+  bookInfo: GetBookInfoForPinResponse;
   content: string;
 }
 

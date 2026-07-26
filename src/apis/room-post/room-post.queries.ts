@@ -14,6 +14,7 @@ import {
   changeRoomPostLikeStatusApi,
   createRoomRecordApi,
   createRoomVoteApi,
+  getBookInfoForPinApi,
   getRoomBookPageInfoApi,
   getRoomPostListApi,
 } from "./room-post.api";
@@ -25,6 +26,8 @@ import type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  GetBookInfoForPinRequest,
+  GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
   GetRoomPostListResponse,
   GetRoomPostListResquest,
@@ -38,6 +41,11 @@ const ROOM_BOOK_PAGE_QUERY_CACHE_TIME = {
 const ROOM_POST_LIST_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 2,
   GC: 1000 * 60 * 5,
+} as const;
+
+const ROOM_BOOK_INFO_FOR_PIN_QUERY_CACHE_TIME = {
+  STALE: 1000 * 60 * 60,
+  GC: 1000 * 60 * 90,
 } as const;
 
 type RoomPostCursor = string | null;
@@ -255,5 +263,30 @@ export const useCreateRoomVoteMutation = () => {
   return {
     createRoomVote,
     isPendingCreateRoomVote,
+  };
+};
+
+export const useGetBookInfoForPinQuery = ({
+  roomId,
+  recordId,
+}: GetBookInfoForPinRequest) => {
+  const {
+    data: bookInfoForPin,
+    isPending: isPendingBookInfoForPin,
+    isError: isErrorBookInfoForPin,
+    error: bookInfoForPinError,
+  } = useQuery<GetBookInfoForPinResponse, ApiErrorResponse>({
+    queryKey: ROOM_POST_QUERY_KEY.BOOK_INFO_FOR_PIN(roomId, recordId),
+    queryFn: () => getBookInfoForPinApi({ roomId, recordId }),
+    enabled: hasRoomId(roomId),
+    staleTime: ROOM_BOOK_INFO_FOR_PIN_QUERY_CACHE_TIME.STALE,
+    gcTime: ROOM_BOOK_INFO_FOR_PIN_QUERY_CACHE_TIME.GC,
+  });
+
+  return {
+    bookInfoForPin,
+    isPendingBookInfoForPin,
+    isErrorBookInfoForPin,
+    bookInfoForPinError,
   };
 };

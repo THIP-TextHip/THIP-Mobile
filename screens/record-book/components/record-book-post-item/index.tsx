@@ -2,13 +2,16 @@ import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
-import { type RoomPostContent } from "@apis/room-post";
+import {
+  useGetBookInfoForPinQuery,
+  type RoomPostContent,
+} from "@apis/room-post";
 import { AppText } from "@shared/ui";
 import { usePrevRecordStore, useRecordBookPinStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
-import { DUMMY_RECORD_PIN_BOOK_INFO } from "../../constants";
 import RecordModal from "../record-modal";
 import RecordOptionBottomSheet from "../record-option-bottom-sheet";
 import RecordPostActions from "./record-post-actions";
@@ -32,6 +35,13 @@ export default function RecordBookPostItem({
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"delete" | "pin" | null>(null);
+
+  const {
+    bookInfoForPin,
+    isPendingBookInfoForPin,
+    isErrorBookInfoForPin,
+    bookInfoForPinError,
+  } = useGetBookInfoForPinQuery({ roomId, recordId: post.postId });
 
   const handleToProfile = () => {
     router.push({
@@ -87,9 +97,16 @@ export default function RecordBookPostItem({
     setIsModalOpen(false);
   };
 
-  // TODO: 추후 서버 api를 통해 핀을 위한 책 정보 조회
   const handleToPin = () => {
-    setPinInfo({ bookInfo: DUMMY_RECORD_PIN_BOOK_INFO, content: post.content });
+    if (!bookInfoForPin || isPendingBookInfoForPin || isErrorBookInfoForPin) {
+      Toast.show({
+        type: "error",
+        text1: `핀을 위한 책 조회에 실패했어요. (${bookInfoForPinError?.code})`,
+      });
+      return;
+    }
+
+    setPinInfo({ bookInfo: bookInfoForPin, content: post.content });
     router.push("/feed-write");
     setIsModalOpen(false);
   };
@@ -171,6 +188,8 @@ export default function RecordBookPostItem({
       <RecordModal
         modalType={modalType}
         isVisible={isModalOpen}
+        // TODO: 추후 삭제 관련도 pending 상태도 추가
+        isPending={isPendingBookInfoForPin}
         handleCloseModal={handleCloseModal}
         handleDelete={handleDelete}
         handleToPin={handleToPin}

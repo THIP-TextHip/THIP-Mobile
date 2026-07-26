@@ -26,4 +26,10 @@ export const ROOM_POST_QUERY_KEY = {
     pageStart,
     pageEnd,
   ],
+  BOOK_INFO_FOR_PIN: (roomId: number, recordId: number) => [
+    "room-post",
+    "book-page",
+    roomId,
+    recordId,
+  ],
 };

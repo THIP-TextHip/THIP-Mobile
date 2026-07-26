@@ -2,6 +2,7 @@ export {
   changeRoomPostLikeStatusApi,
   createRoomRecordApi,
   createRoomVoteApi,
+  getBookInfoForPinApi,
   getRoomBookPageInfoApi,
   getRoomPostListApi,
 } from "./room-post.api";
@@ -10,6 +11,7 @@ export {
   useChangeRoomPostLikeStatusMutation,
   useCreateRoomRecordMutation,
   useCreateRoomVoteMutation,
+  useGetBookInfoForPinQuery,
   useGetRoomBookPageQuery,
   useGetRoomPostListQuery,
 } from "./room-post.queries";
@@ -21,6 +23,8 @@ export type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  GetBookInfoForPinRequest,
+  GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
   GetRoomPostListResponse,
   GetRoomPostListResquest,

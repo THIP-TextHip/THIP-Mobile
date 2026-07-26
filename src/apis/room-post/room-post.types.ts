@@ -89,3 +89,15 @@ export interface CreateRoomVoteResponse {
   voteId: number;
   roomId: number;
 }
+
+export interface GetBookInfoForPinRequest {
+  roomId: number;
+  recordId: number;
+}
+
+export interface GetBookInfoForPinResponse {
+  bookTitle: string;
+  authorName: string;
+  bookImageUrl: string;
+  isbn: string;
+}

@@ -7,6 +7,8 @@ import type {
   CreateRoomRecordResponse,
   CreateRoomVoteRequest,
   CreateRoomVoteResponse,
+  GetBookInfoForPinRequest,
+  GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
   GetRoomPostListResponse,
   GetRoomPostListResquest,
@@ -100,6 +102,17 @@ export const createRoomVoteApi = async ({
       content,
       voteItemList,
     },
+  );
+
+  return response.data;
+};
+
+export const getBookInfoForPinApi = async ({
+  roomId,
+  recordId,
+}: GetBookInfoForPinRequest) => {
+  const response = await apiClient.get<GetBookInfoForPinResponse>(
+    ROOM_POST_URL.BOOK_INFO_FOR_PIN(roomId, recordId),
   );
 
   return response.data;
