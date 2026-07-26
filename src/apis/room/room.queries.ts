@@ -14,6 +14,7 @@ import {
   changeRoomJoinStatusApi,
   closeRoomRecruitingApi,
   createRoomApi,
+  deleteDailyGreetingApi,
   getDailyGreetingApi,
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
@@ -35,6 +36,8 @@ import type {
   CloseRoomRecruitingResponse,
   CreateRoomRequest,
   CreateRoomResponse,
+  DeleteDailyGreetingRequest,
+  DeleteDailyGreetingResponse,
   GetDailyGreetingResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
@@ -590,5 +593,40 @@ export const useWriteDailyGreetingMutation = () => {
   return {
     writeDailyGreeting,
     isPendingWriteDailyGreeting,
+  };
+};
+
+export const useDeleteDailyGreetingMutation = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: deleteDailyGreeting,
+    isPending: isPendingDeleteDailyGreeting,
+  } = useMutation<
+    DeleteDailyGreetingResponse,
+    ApiErrorResponse,
+    DeleteDailyGreetingRequest
+  >({
+    mutationFn: deleteDailyGreetingApi,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ROOM_QUERY_KEY.DAILY_GREETING(data.roomId),
+      });
+      Toast.show({
+        type: "default",
+        text1: "성공적으로 삭제했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    deleteDailyGreeting,
+    isPendingDeleteDailyGreeting,
   };
 };

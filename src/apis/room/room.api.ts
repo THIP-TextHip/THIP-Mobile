@@ -7,6 +7,8 @@ import type {
   CloseRoomRecruitingResponse,
   CreateRoomRequest,
   CreateRoomResponse,
+  DeleteDailyGreetingRequest,
+  DeleteDailyGreetingResponse,
   GetDailyGreetingRequest,
   GetDailyGreetingResponse,
   GetHomeMyRoomResponse,
@@ -182,6 +184,17 @@ export const writeDailyGreetingApi = async ({
     {
       content,
     },
+  );
+
+  return response.data;
+};
+
+export const deleteDailyGreetingApi = async ({
+  roomId,
+  attendanceCheckId,
+}: DeleteDailyGreetingRequest) => {
+  const response = await apiClient.delete<DeleteDailyGreetingResponse>(
+    ROOM_URL.DELETE_DAILY_GREETING(roomId, attendanceCheckId),
   );
 
   return response.data;

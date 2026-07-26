@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { useDeleteDailyGreetingMutation } from "@apis/room";
 import { IcMore } from "@images/icons";
 import { AppText, CustomBottomSheet } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -10,15 +11,20 @@ import { colors } from "@theme/token";
 import { DailyGreetingCommentType } from "../../types";
 
 interface GreetingItemProps {
+  roomId: number | string;
   isLatest: boolean;
   greetingItem: DailyGreetingCommentType;
 }
 
 export default function GreetingItem({
+  roomId,
   isLatest,
   greetingItem,
 }: GreetingItemProps) {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
+  const { deleteDailyGreeting, isPendingDeleteDailyGreeting } =
+    useDeleteDailyGreetingMutation();
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -36,18 +42,22 @@ export default function GreetingItem({
   };
 
   const handlePressBottomSheetButton = () => {
+    if (isPendingDeleteDailyGreeting) return;
+
     if (greetingItem.isWriter) {
-      Toast.show({
-        type: "default",
-        text1: "성공적으로 삭제했어요.",
-      });
+      deleteDailyGreeting(
+        {
+          roomId: roomId,
+          attendanceCheckId: greetingItem.attendanceCheckId,
+        },
+        { onSettled: () => setIsBottomSheetVisible(false) },
+      );
     } else {
       Toast.show({
         type: "default",
         text1: "성공적으로 신고했어요.",
       });
     }
-    setIsBottomSheetVisible(false);
   };
 
   return (

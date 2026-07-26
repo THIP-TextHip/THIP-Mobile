@@ -115,6 +115,7 @@ export default function DailyGreetingScreen() {
 
             return (
               <GreetingListItem
+                roomId={roomId}
                 isLatestComment={isLatestComment}
                 isOldestComment={isOldestComment}
                 isFirstCommentOfDate={isFirstCommentOfDate}

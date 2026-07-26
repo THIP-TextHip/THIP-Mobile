@@ -7,6 +7,7 @@ import { DailyGreetingCommentType } from "../../types";
 import GreetingItem from "../greeting-item";
 
 interface GreetingListItemProps {
+  roomId: number | string;
   isLatestComment: boolean;
   isOldestComment: boolean;
   isFirstCommentOfDate: boolean;
@@ -14,6 +15,7 @@ interface GreetingListItemProps {
 }
 
 export default function GreetingListItem({
+  roomId,
   isLatestComment,
   isOldestComment,
   isFirstCommentOfDate,
@@ -41,7 +43,11 @@ export default function GreetingListItem({
           </AppText>
         </View>
       )}
-      <GreetingItem isLatest={isLatestComment} greetingItem={greetingItem} />
+      <GreetingItem
+        roomId={roomId}
+        isLatest={isLatestComment}
+        greetingItem={greetingItem}
+      />
     </View>
   );
 }

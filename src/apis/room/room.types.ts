@@ -273,3 +273,12 @@ export interface WriteDailyGreetingResponse {
   isFirstWrite: boolean;
   isWriter: boolean;
 }
+
+export interface DeleteDailyGreetingRequest {
+  roomId: number | string;
+  attendanceCheckId: number;
+}
+
+export interface DeleteDailyGreetingResponse {
+  roomId: number;
+}
