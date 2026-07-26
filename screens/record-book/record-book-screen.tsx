@@ -221,7 +221,9 @@ export default function RecordBookScreen() {
             <AppText weight="regular" size="sm" color={colors.grey[100]}>
               {isMyRecord
                 ? "나의 첫번째 기록을 남겨보세요"
-                : "우리 모임의 첫번째 기록을 남겨보세요"}
+                : selectedPages.start !== null &&
+                  selectedPages.end !== null &&
+                  "우리 모임의 첫번째 기록을 남겨보세요"}
             </AppText>
           </>
         )}

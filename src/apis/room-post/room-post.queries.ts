@@ -3,12 +3,17 @@ import {
   useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
+import { router } from "expo-router";
 import Toast from "react-native-toast-message";
 
 import { type ApiErrorResponse } from "../api-client";
+import { ROOM_QUERY_KEY } from "../room/room.query-key";
 import {
   changeRoomPostLikeStatusApi,
+  createRoomRecordApi,
+  createRoomVoteApi,
   getRoomBookPageInfoApi,
   getRoomPostListApi,
 } from "./room-post.api";
@@ -16,6 +21,10 @@ import { ROOM_POST_QUERY_KEY } from "./room-post.query-key";
 import type {
   ChangeRoomPostLikeStatusRequest,
   ChangeRoomPostLikeStatusResponse,
+  CreateRoomRecordRequest,
+  CreateRoomRecordResponse,
+  CreateRoomVoteRequest,
+  CreateRoomVoteResponse,
   GetRoomBookPageInfoResponse,
   GetRoomPostListResponse,
   GetRoomPostListResquest,
@@ -46,7 +55,7 @@ export const useChangeRoomPostLikeStatusMutation = () => {
     ChangeRoomPostLikeStatusRequest
   >({
     mutationFn: changeRoomPostLikeStatusApi,
-    // TODO: roomId 정보를 얻을 수가 없어서 추후 사용하는 곳에서 onSuccess를 정의하는 것으로 해결한다.
+    // TODO: roomId 정보를 얻을 수가 없어서 추후 사용하는 곳에서 onSuccess를 정의하는 것으로 해결한다. room-post의 캐시 초기화
     onSuccess: () => {},
     onError: (error) => {
       Toast.show({
@@ -160,5 +169,91 @@ export const useGetRoomPostListQuery = ({
     roomPostListError,
     refetchRoomPostList,
     isRefetchingRoomPostList,
+  };
+};
+
+export const useCreateRoomRecordMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: createRoomRecord, isPending: isPendingCreateRoomRecord } =
+    useMutation<
+      CreateRoomRecordResponse,
+      ApiErrorResponse,
+      CreateRoomRecordRequest
+    >({
+      mutationFn: createRoomRecordApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        if (router.canGoBack()) {
+          router.back();
+        } else {
+          router.replace({
+            pathname: "/record-book/[roomId]",
+            params: { roomId: data.roomId },
+          });
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    createRoomRecord,
+    isPendingCreateRoomRecord,
+  };
+};
+
+export const useCreateRoomVoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: createRoomVote, isPending: isPendingCreateRoomVote } =
+    useMutation<
+      CreateRoomVoteResponse,
+      ApiErrorResponse,
+      CreateRoomVoteRequest
+    >({
+      mutationFn: createRoomVoteApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
+        });
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.ALL,
+        });
+        if (router.canGoBack()) {
+          router.back();
+        } else {
+          router.replace({
+            pathname: "/record-book/[roomId]",
+            params: { roomId: data.roomId },
+          });
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    createRoomVote,
+    isPendingCreateRoomVote,
   };
 };

@@ -1,5 +1,5 @@
 export const ROOM_POST_QUERY_KEY = {
-  ALL: (roomId?: number | string) => [
+  ALL_POST: (roomId?: number | string) => [
     "room-post",
     roomId == null || roomId === "" ? undefined : String(roomId),
   ],

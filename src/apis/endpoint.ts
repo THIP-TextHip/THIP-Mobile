@@ -94,6 +94,10 @@ export const ROOM_POST_URL = {
     `/room-posts/${encodeURIComponent(String(postId))}/likes`,
   LIST: (roomId: number | string) =>
     `/rooms/${encodeURIComponent(String(roomId))}/posts`,
+  CREATE_RECORD: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/record`,
+  CREATE_VOTE: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/vote`,
 };
 
 export const NOTIFICATION_URL = {

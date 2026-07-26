@@ -3,6 +3,10 @@ import { ROOM_POST_URL } from "../endpoint";
 import type {
   ChangeRoomPostLikeStatusRequest,
   ChangeRoomPostLikeStatusResponse,
+  CreateRoomRecordRequest,
+  CreateRoomRecordResponse,
+  CreateRoomVoteRequest,
+  CreateRoomVoteResponse,
   GetRoomBookPageInfoResponse,
   GetRoomPostListResponse,
   GetRoomPostListResquest,
@@ -57,6 +61,44 @@ export const getRoomPostListApi = async ({
               isPageFilter,
               cursor,
             },
+    },
+  );
+
+  return response.data;
+};
+
+export const createRoomRecordApi = async ({
+  roomId,
+  page,
+  isOverview,
+  content,
+}: CreateRoomRecordRequest) => {
+  const response = await apiClient.post<CreateRoomRecordResponse>(
+    ROOM_POST_URL.CREATE_RECORD(roomId),
+    {
+      page,
+      isOverview,
+      content,
+    },
+  );
+
+  return response.data;
+};
+
+export const createRoomVoteApi = async ({
+  roomId,
+  page,
+  isOverview,
+  content,
+  voteItemList,
+}: CreateRoomVoteRequest) => {
+  const response = await apiClient.post<CreateRoomVoteResponse>(
+    ROOM_POST_URL.CREATE_VOTE(roomId),
+    {
+      page,
+      isOverview,
+      content,
+      voteItemList,
     },
   );
 

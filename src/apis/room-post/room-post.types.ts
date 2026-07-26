@@ -64,3 +64,28 @@ export interface GetRoomPostListResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface CreateRoomRecordRequest {
+  roomId: number | string;
+  page: number;
+  isOverview: boolean;
+  content: string;
+}
+
+export interface CreateRoomRecordResponse {
+  recordId: number;
+  roomId: number;
+}
+
+export interface CreateRoomVoteRequest {
+  roomId: number | string;
+  page: number;
+  isOverview: boolean;
+  content: string;
+  voteItemList: { itemName: string }[];
+}
+
+export interface CreateRoomVoteResponse {
+  voteId: number;
+  roomId: number;
+}
