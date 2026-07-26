@@ -233,3 +233,52 @@ export interface GetRoomBookPageInfoResponse {
   isOverviewPossible: boolean;
   roomId: number;
 }
+
+export interface GetDailyGreetingRequest {
+  roomId: number | string;
+  cursor?: string | null;
+}
+
+export interface TodayCommentListType {
+  attendanceCheckId: number;
+  creatorId: number;
+  creatorNickname: string;
+  creatorProfileImageUrl: string;
+  todayComment: string;
+  postDate: string;
+  date: string;
+  isWriter: boolean;
+}
+
+export interface GetDailyGreetingResponse {
+  todayCommentList: TodayCommentListType[];
+  nextCursor: string;
+  isLast: boolean;
+}
+
+export interface WriteDailyGreetingRequest {
+  roomId: number | string;
+  content: string;
+}
+
+export interface WriteDailyGreetingResponse {
+  roomId: number;
+  attendanceCheckId: number;
+  creatorId: number;
+  creatorNickname: string;
+  creatorProfileImageUrl: string;
+  todayComment: string;
+  postDate: string;
+  date: string;
+  isFirstWrite: boolean;
+  isWriter: boolean;
+}
+
+export interface DeleteDailyGreetingRequest {
+  roomId: number | string;
+  attendanceCheckId: number;
+}
+
+export interface DeleteDailyGreetingResponse {
+  roomId: number;
+}

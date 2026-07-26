@@ -14,6 +14,8 @@ import {
   changeRoomJoinStatusApi,
   closeRoomRecruitingApi,
   createRoomApi,
+  deleteDailyGreetingApi,
+  getDailyGreetingApi,
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
@@ -24,6 +26,7 @@ import {
   getSearchRoomApi,
   leaveRoomApi,
   verifyPrivateRoomPasswordApi,
+  writeDailyGreetingApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
@@ -33,6 +36,9 @@ import type {
   CloseRoomRecruitingResponse,
   CreateRoomRequest,
   CreateRoomResponse,
+  DeleteDailyGreetingRequest,
+  DeleteDailyGreetingResponse,
+  GetDailyGreetingResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
@@ -47,6 +53,8 @@ import type {
   SearchRoomQueryParams,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
+  WriteDailyGreetingRequest,
+  WriteDailyGreetingResponse,
 } from "./room.types";
 
 const MY_ROOM_QUERY_CACHE_TIME = {
@@ -67,7 +75,7 @@ const ROOM_READING_MATE_QUERY_CACHE_TIME = {
 const ROOM_BOOK_PAGE_QUERY_CACHE_TIME = {
   STALE: 1000 * 60 * 30,
   GC: 1000 * 60 * 45,
-};
+} as const;
 
 type RoomCursor = string | null;
 
@@ -515,5 +523,111 @@ export const useGetRoomBookPageQuery = (roomId?: number | string) => {
     isPendingBookPageInfo,
     isErrorBookPageInfo,
     bookPageInfoError,
+  };
+};
+
+export const useGetDailyGreetingQuery = (roomId?: number | string) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingDailyGreeting,
+    isError: isErrorDailyGreeting,
+    error: dailyGreetingError,
+  } = useInfiniteQuery<
+    GetDailyGreetingResponse,
+    ApiErrorResponse,
+    InfiniteData<GetDailyGreetingResponse, RoomCursor>,
+    ReturnType<typeof ROOM_QUERY_KEY.DAILY_GREETING>,
+    RoomCursor
+  >({
+    queryKey: ROOM_QUERY_KEY.DAILY_GREETING(roomId),
+    queryFn: ({ pageParam }) => {
+      if (!hasRoomId(roomId)) {
+        throw new Error("roomId is required.");
+      }
+
+      return getDailyGreetingApi({ roomId, cursor: pageParam });
+    },
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    enabled: hasRoomId(roomId),
+  });
+
+  return {
+    dailyGreetingData:
+      data?.pages.flatMap((page) => page.todayCommentList) ?? [],
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingDailyGreeting,
+    isErrorDailyGreeting,
+    dailyGreetingError,
+  };
+};
+
+export const useWriteDailyGreetingMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: writeDailyGreeting, isPending: isPendingWriteDailyGreeting } =
+    useMutation<
+      WriteDailyGreetingResponse,
+      ApiErrorResponse,
+      WriteDailyGreetingRequest
+    >({
+      mutationFn: writeDailyGreetingApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.DAILY_GREETING(data.roomId),
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    writeDailyGreeting,
+    isPendingWriteDailyGreeting,
+  };
+};
+
+export const useDeleteDailyGreetingMutation = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: deleteDailyGreeting,
+    isPending: isPendingDeleteDailyGreeting,
+  } = useMutation<
+    DeleteDailyGreetingResponse,
+    ApiErrorResponse,
+    DeleteDailyGreetingRequest
+  >({
+    mutationFn: deleteDailyGreetingApi,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ROOM_QUERY_KEY.DAILY_GREETING(data.roomId),
+      });
+      Toast.show({
+        type: "default",
+        text1: "성공적으로 삭제했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    deleteDailyGreeting,
+    isPendingDeleteDailyGreeting,
   };
 };

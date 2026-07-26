@@ -7,6 +7,10 @@ import type {
   CloseRoomRecruitingResponse,
   CreateRoomRequest,
   CreateRoomResponse,
+  DeleteDailyGreetingRequest,
+  DeleteDailyGreetingResponse,
+  GetDailyGreetingRequest,
+  GetDailyGreetingResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
@@ -22,6 +26,8 @@ import type {
   LeaveRoomRequest,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
+  WriteDailyGreetingRequest,
+  WriteDailyGreetingResponse,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -150,6 +156,45 @@ export const getRecruitingRoomDetailApi = async (roomId: string | number) => {
 export const getRoomBookPageInfoApi = async (roomId: number | string) => {
   const response = await apiClient.get<GetRoomBookPageInfoResponse>(
     ROOM_URL.BOOK_PAGE(roomId),
+  );
+
+  return response.data;
+};
+
+export const getDailyGreetingApi = async ({
+  roomId,
+  cursor,
+}: GetDailyGreetingRequest) => {
+  const response = await apiClient.get<GetDailyGreetingResponse>(
+    ROOM_URL.DAILY_GREETING(roomId),
+    {
+      params: cursor == null ? undefined : { cursor },
+    },
+  );
+
+  return response.data;
+};
+
+export const writeDailyGreetingApi = async ({
+  roomId,
+  content,
+}: WriteDailyGreetingRequest) => {
+  const response = await apiClient.post<WriteDailyGreetingResponse>(
+    ROOM_URL.DAILY_GREETING(roomId),
+    {
+      content,
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteDailyGreetingApi = async ({
+  roomId,
+  attendanceCheckId,
+}: DeleteDailyGreetingRequest) => {
+  const response = await apiClient.delete<DeleteDailyGreetingResponse>(
+    ROOM_URL.DELETE_DAILY_GREETING(roomId, attendanceCheckId),
   );
 
   return response.data;

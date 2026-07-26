@@ -2,6 +2,8 @@ export {
   changeRoomJoinStatusApi,
   closeRoomRecruitingApi,
   createRoomApi,
+  deleteDailyGreetingApi,
+  getDailyGreetingApi,
   getHomeMyRoomApi,
   getHomeRecuitingRoomApi,
   getMyRoomListApi,
@@ -12,12 +14,15 @@ export {
   getSearchRoomApi,
   leaveRoomApi,
   verifyPrivateRoomPasswordApi,
+  writeDailyGreetingApi,
 } from "./room.api";
 
 export {
   useChangeRoomJoinStatusMutation,
   useCloseRoomRecruitingMutation,
   useCreateRoomMutation,
+  useDeleteDailyGreetingMutation,
+  useGetDailyGreetingQuery,
   useGetHomeMyRoomQuery,
   useGetHomeRecruitingRoomListQuery,
   useGetMyRoomListQuery,
@@ -28,6 +33,7 @@ export {
   useLeaveRoomMutation,
   useSearchRoomQuery,
   useVerifyPrivateRoomPassword,
+  useWriteDailyGreetingMutation,
 } from "./room.queries";
 
 export type {
@@ -37,6 +43,10 @@ export type {
   CloseRoomRecruitingResponse,
   CreateRoomRequest,
   CreateRoomResponse,
+  DeleteDailyGreetingRequest,
+  DeleteDailyGreetingResponse,
+  GetDailyGreetingRequest,
+  GetDailyGreetingResponse,
   GetHomeMyRoomResponse,
   GetHomeRecruitingRoomRequest,
   GetHomeRecruitingRoomResponse,
@@ -64,8 +74,11 @@ export type {
   SearchRoomCategory,
   SearchRoomQueryParams,
   SearchRoomSort,
+  TodayCommentListType,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
+  WriteDailyGreetingRequest,
+  WriteDailyGreetingResponse,
 } from "./room.types";
 
 export { ROOM_QUERY_KEY } from "./room.query-key";
