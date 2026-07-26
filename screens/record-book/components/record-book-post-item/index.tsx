@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
@@ -112,7 +113,11 @@ export default function RecordBookPostItem({
 
   return (
     <>
-      <Pressable style={styles.container} onLongPress={handleOpenOption}>
+      <Pressable
+        style={styles.container}
+        onLongPress={handleOpenOption}
+        disabled={post.isLocked}
+      >
         <View style={styles.header}>
           <Pressable style={styles.profile} onPress={handleToProfile}>
             <Image
@@ -151,6 +156,9 @@ export default function RecordBookPostItem({
           handleOpenComment={handleOpenComment}
           handleOpenPinModal={handleOpenPinModal}
         />
+        {post.isLocked && (
+          <BlurView intensity={15} tint="dark" style={styles.blur} />
+        )}
       </Pressable>
       <RecordOptionBottomSheet
         isWriter={post.isWriter}
@@ -174,6 +182,8 @@ export default function RecordBookPostItem({
 const styles = StyleSheet.create({
   container: {
     gap: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   header: {
     flexDirection: "row",
@@ -194,5 +204,9 @@ const styles = StyleSheet.create({
   },
   profileText: {
     gap: 4,
+  },
+  blur: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 10,
   },
 });

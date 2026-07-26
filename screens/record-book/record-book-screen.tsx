@@ -258,10 +258,7 @@ export default function RecordBookScreen() {
       ) : (
         <>
           <FlatList
-            contentContainerStyle={[
-              styles.list,
-              { paddingBottom: bottom + 80 },
-            ]}
+            contentContainerStyle={{ paddingBottom: bottom + 80 }}
             data={roomPostList}
             keyExtractor={(item) => String(item.postId)}
             renderItem={({ item }) => (
@@ -307,13 +304,12 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  list: {
-    paddingHorizontal: 20,
-    gap: 32,
-  },
+
   listHeader: {
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 16,
     gap: 4,
   },
   status: {
