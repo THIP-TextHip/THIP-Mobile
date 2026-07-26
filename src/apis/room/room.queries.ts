@@ -25,6 +25,7 @@ import {
   getSearchRoomApi,
   leaveRoomApi,
   verifyPrivateRoomPasswordApi,
+  writeDailyGreetingApi,
 } from "./room.api";
 import { ROOM_QUERY_KEY } from "./room.query-key";
 import type {
@@ -49,6 +50,8 @@ import type {
   SearchRoomQueryParams,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
+  WriteDailyGreetingRequest,
+  WriteDailyGreetingResponse,
 } from "./room.types";
 
 const MY_ROOM_QUERY_CACHE_TIME = {
@@ -558,5 +561,34 @@ export const useGetDailyGreetingQuery = (roomId?: number | string) => {
     isPendingDailyGreeting,
     isErrorDailyGreeting,
     dailyGreetingError,
+  };
+};
+
+export const useWriteDailyGreetingMutation = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: writeDailyGreeting, isPending: isPendingWriteDailyGreeting } =
+    useMutation<
+      WriteDailyGreetingResponse,
+      ApiErrorResponse,
+      WriteDailyGreetingRequest
+    >({
+      mutationFn: writeDailyGreetingApi,
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ROOM_QUERY_KEY.DAILY_GREETING(data.roomId),
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    writeDailyGreeting,
+    isPendingWriteDailyGreeting,
   };
 };

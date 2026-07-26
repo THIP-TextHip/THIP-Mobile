@@ -4,12 +4,16 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { useGetDailyGreetingQuery } from "@apis/room";
+import {
+  useGetDailyGreetingQuery,
+  useWriteDailyGreetingMutation,
+} from "@apis/room";
 import { AppText, ChatInputBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DailyGreetingHeader, GreetingListItem } from "./components";
 
+// TODO: 반드시 역방향 무한스크롤 잘 되는지 테스트해보기
 export default function DailyGreetingScreen() {
   const { bottom } = useSafeAreaInsets();
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
@@ -27,12 +31,16 @@ export default function DailyGreetingScreen() {
     isErrorDailyGreeting,
     dailyGreetingError,
   } = useGetDailyGreetingQuery(roomId);
+  const { writeDailyGreeting, isPendingWriteDailyGreeting } =
+    useWriteDailyGreetingMutation();
 
-  // TODO: 추후 하루에 최대 5개까지 작성할 수 있다는 에러 메시지 토스트로 알림. 서버에서 주는 에러메시지 활용
   const handleSendText = () => {
-    if (comment.trim() === "") return;
-    console.log(comment.trim(), " 전송");
-    setComment("");
+    const normalizedComment = comment.trim();
+    if (normalizedComment === "" || isPendingWriteDailyGreeting) return;
+    writeDailyGreeting(
+      { roomId, content: normalizedComment },
+      { onSuccess: () => setComment("") },
+    );
   };
 
   const handleLoadMore = () => {
@@ -94,8 +102,10 @@ export default function DailyGreetingScreen() {
       ) : (
         <FlatList
           inverted
-          contentContainerStyle={{ paddingTop: inputBarHeight }}
-          data={[...dailyGreetingData, ...dailyGreetingData]}
+          contentContainerStyle={{
+            paddingTop: inputBarHeight,
+          }}
+          data={dailyGreetingData}
           keyExtractor={(item) => String(item.attendanceCheckId)}
           renderItem={({ item, index }) => {
             const isLatestComment = index === 0;
@@ -132,8 +142,7 @@ export default function DailyGreetingScreen() {
         }}
         isFocus={isInputFocus}
         handleIsFocus={setIsInputFocus}
-        // TODO: 추후 반영
-        isPendingSend={false}
+        isPendingSend={isPendingWriteDailyGreeting}
       />
     </View>
   );

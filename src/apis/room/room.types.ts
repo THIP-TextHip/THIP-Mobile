@@ -255,3 +255,21 @@ export interface GetDailyGreetingResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface WriteDailyGreetingRequest {
+  roomId: number | string;
+  content: string;
+}
+
+export interface WriteDailyGreetingResponse {
+  roomId: number;
+  attendanceCheckId: number;
+  creatorId: number;
+  creatorNickname: string;
+  creatorProfileImageUrl: string;
+  todayComment: string;
+  postDate: string;
+  date: string;
+  isFirstWrite: boolean;
+  isWriter: boolean;
+}

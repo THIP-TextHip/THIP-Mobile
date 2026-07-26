@@ -13,6 +13,7 @@ export {
   getSearchRoomApi,
   leaveRoomApi,
   verifyPrivateRoomPasswordApi,
+  writeDailyGreetingApi,
 } from "./room.api";
 
 export {
@@ -30,6 +31,7 @@ export {
   useLeaveRoomMutation,
   useSearchRoomQuery,
   useVerifyPrivateRoomPassword,
+  useWriteDailyGreetingMutation,
 } from "./room.queries";
 
 export type {
@@ -71,6 +73,8 @@ export type {
   TodayCommentListType,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
+  WriteDailyGreetingRequest,
+  WriteDailyGreetingResponse,
 } from "./room.types";
 
 export { ROOM_QUERY_KEY } from "./room.query-key";

@@ -1,29 +1,31 @@
 import { apiClient } from "../api-client";
 import { ROOM_URL } from "../endpoint";
-import {
+import type {
+  ChangeRoomJoinStatusRequest,
+  ChangeRoomJoinStatusResponse,
+  CloseRoomRecruitingRequest,
+  CloseRoomRecruitingResponse,
+  CreateRoomRequest,
+  CreateRoomResponse,
+  GetDailyGreetingRequest,
   GetDailyGreetingResponse,
-  type ChangeRoomJoinStatusRequest,
-  type ChangeRoomJoinStatusResponse,
-  type CloseRoomRecruitingRequest,
-  type CloseRoomRecruitingResponse,
-  type CreateRoomRequest,
-  type CreateRoomResponse,
-  type GetDailyGreetingRequest,
-  type GetHomeMyRoomResponse,
-  type GetHomeRecruitingRoomRequest,
-  type GetHomeRecruitingRoomResponse,
-  type GetMyRoomListRequest,
-  type GetMyRoomListResponse,
-  type GetReadingMateResponse,
-  type GetRecruitingRoomDetailResponse,
-  type GetRoomBookPageInfoResponse,
-  type GetRoomDetailRequest,
-  type GetRoomDetailResponse,
-  type GetSearchRoomRequest,
-  type GetSearchRoomResponse,
-  type LeaveRoomRequest,
-  type VerifyPrivateRoomPasswordRequest,
-  type VerifyPrivateRoomPasswordResponse,
+  GetHomeMyRoomResponse,
+  GetHomeRecruitingRoomRequest,
+  GetHomeRecruitingRoomResponse,
+  GetMyRoomListRequest,
+  GetMyRoomListResponse,
+  GetReadingMateResponse,
+  GetRecruitingRoomDetailResponse,
+  GetRoomBookPageInfoResponse,
+  GetRoomDetailRequest,
+  GetRoomDetailResponse,
+  GetSearchRoomRequest,
+  GetSearchRoomResponse,
+  LeaveRoomRequest,
+  VerifyPrivateRoomPasswordRequest,
+  VerifyPrivateRoomPasswordResponse,
+  WriteDailyGreetingRequest,
+  WriteDailyGreetingResponse,
 } from "./room.types";
 
 export const getSearchRoomApi = async (params: GetSearchRoomRequest) => {
@@ -165,6 +167,20 @@ export const getDailyGreetingApi = async ({
     ROOM_URL.DAILY_GREETING(roomId),
     {
       params: cursor == null ? undefined : { cursor },
+    },
+  );
+
+  return response.data;
+};
+
+export const writeDailyGreetingApi = async ({
+  roomId,
+  content,
+}: WriteDailyGreetingRequest) => {
+  const response = await apiClient.post<WriteDailyGreetingResponse>(
+    ROOM_URL.DAILY_GREETING(roomId),
+    {
+      content,
     },
   );
 
