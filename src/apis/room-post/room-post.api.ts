@@ -11,6 +11,8 @@ import type {
   DeleteRoomRecordResponse,
   DeleteRoomVoteRequest,
   DeleteRoomVoteResponse,
+  DoRoomVoteRequest,
+  DoRoomVoteResponse,
   EditRoomRecordRequest,
   EditRoomRecordResponse,
   EditRoomVoteRequest,
@@ -18,8 +20,8 @@ import type {
   GetBookInfoForPinRequest,
   GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
+  GetRoomPostListRequest,
   GetRoomPostListResponse,
-  GetRoomPostListResquest,
 } from "./room-post.types";
 
 export const changeRoomPostLikeStatusApi = async ({
@@ -55,7 +57,7 @@ export const getRoomPostListApi = async ({
   isOverview,
   isPageFilter,
   cursor,
-}: GetRoomPostListResquest) => {
+}: GetRoomPostListRequest) => {
   const response = await apiClient.get<GetRoomPostListResponse>(
     ROOM_POST_URL.LIST(roomId),
     {
@@ -173,6 +175,23 @@ export const deleteRoomVoteApi = async ({
 }: DeleteRoomVoteRequest) => {
   const response = await apiClient.delete<DeleteRoomVoteResponse>(
     ROOM_POST_URL.DELETE_VOTE(roomId, voteId),
+  );
+
+  return response.data;
+};
+
+export const doRoomVoteApi = async ({
+  roomId,
+  voteId,
+  voteItemId,
+  type,
+}: DoRoomVoteRequest) => {
+  const response = await apiClient.post<DoRoomVoteResponse>(
+    ROOM_POST_URL.DO_VOTE(roomId, voteId),
+    {
+      voteItemId,
+      type,
+    },
   );
 
   return response.data;

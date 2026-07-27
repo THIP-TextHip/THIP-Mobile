@@ -49,8 +49,14 @@ export default function RecordBookScreen() {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [postIdForComment, setPostIdForComment] = useState<number | null>(null);
 
-  const { bookPageInfo, isPendingBookPageInfo } =
-    useGetRoomBookPageQuery(roomId);
+  const {
+    bookPageInfo,
+    isPendingBookPageInfo,
+    isErrorBookPageInfo,
+    bookPageInfoError,
+    refetchBookPageInfo,
+    isRefetchingBookPageInfo,
+  } = useGetRoomBookPageQuery(roomId);
 
   const {
     roomPostList,
@@ -76,6 +82,11 @@ export default function RecordBookScreen() {
     if (!hasNextPage || isFetchingNextPage) return;
 
     fetchNextPage();
+  };
+
+  const handleRefetch = () => {
+    refetchBookPageInfo();
+    refetchRoomPostList();
   };
 
   const handleGroupRecord = () => {
@@ -170,6 +181,16 @@ export default function RecordBookScreen() {
       });
       router.back();
     }
+
+    return;
+  }
+
+  if (isErrorBookPageInfo || !bookPageInfo) {
+    Toast.show({
+      type: "error",
+      text1: bookPageInfoError?.message,
+    });
+    router.back();
 
     return;
   }
@@ -278,8 +299,10 @@ export default function RecordBookScreen() {
             onEndReachedThreshold={0.5}
             refreshControl={
               <RefreshControl
-                refreshing={isRefetchingRoomPostList}
-                onRefresh={refetchRoomPostList}
+                refreshing={
+                  isRefetchingRoomPostList || isRefetchingBookPageInfo
+                }
+                onRefresh={handleRefetch}
                 tintColor={colors.white}
                 colors={[colors.white]}
               />

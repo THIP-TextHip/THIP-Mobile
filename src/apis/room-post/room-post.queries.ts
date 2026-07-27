@@ -16,6 +16,7 @@ import {
   createRoomVoteApi,
   deleteRoomRecordApi,
   deleteRoomVoteApi,
+  doRoomVoteApi,
   editRoomRecordApi,
   editRoomVoteApi,
   getBookInfoForPinApi,
@@ -34,15 +35,17 @@ import type {
   DeleteRoomRecordResponse,
   DeleteRoomVoteRequest,
   DeleteRoomVoteResponse,
+  DoRoomVoteRequest,
+  DoRoomVoteResponse,
   EditRoomRecordRequest,
   EditRoomRecordResponse,
   EditRoomVoteRequest,
   EditRoomVoteResponse,
-  GetBookInfoForPinRequest,
+  GetBookInfoForPinQueryRequest,
   GetBookInfoForPinResponse,
   GetRoomBookPageInfoResponse,
+  GetRoomPostListRequest,
   GetRoomPostListResponse,
-  GetRoomPostListResquest,
 } from "./room-post.types";
 
 const ROOM_BOOK_PAGE_QUERY_CACHE_TIME = {
@@ -97,6 +100,8 @@ export const useGetRoomBookPageQuery = (roomId?: number | string) => {
     isPending: isPendingBookPageInfo,
     isError: isErrorBookPageInfo,
     error: bookPageInfoError,
+    refetch: refetchBookPageInfo,
+    isRefetching: isRefetchingBookPageInfo,
   } = useQuery<GetRoomBookPageInfoResponse, ApiErrorResponse>({
     queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(roomId),
     queryFn: () => {
@@ -116,6 +121,8 @@ export const useGetRoomBookPageQuery = (roomId?: number | string) => {
     isPendingBookPageInfo,
     isErrorBookPageInfo,
     bookPageInfoError,
+    refetchBookPageInfo,
+    isRefetchingBookPageInfo,
   };
 };
 
@@ -127,7 +134,7 @@ export const useGetRoomPostListQuery = ({
   pageEnd,
   isOverview,
   isPageFilter,
-}: GetRoomPostListResquest) => {
+}: GetRoomPostListRequest) => {
   const {
     data,
     fetchNextPage,
@@ -288,7 +295,9 @@ export const useCreateRoomVoteMutation = () => {
 export const useGetBookInfoForPinQuery = ({
   roomId,
   recordId,
-}: GetBookInfoForPinRequest) => {
+  isRecord,
+  isModalOpen,
+}: GetBookInfoForPinQueryRequest) => {
   const {
     data: bookInfoForPin,
     isPending: isPendingBookInfoForPin,
@@ -297,7 +306,7 @@ export const useGetBookInfoForPinQuery = ({
   } = useQuery<GetBookInfoForPinResponse, ApiErrorResponse>({
     queryKey: ROOM_POST_QUERY_KEY.BOOK_INFO_FOR_PIN(roomId, recordId),
     queryFn: () => getBookInfoForPinApi({ roomId, recordId }),
-    enabled: hasRoomId(roomId),
+    enabled: hasRoomId(roomId) && isRecord && isModalOpen,
     staleTime: ROOM_BOOK_INFO_FOR_PIN_QUERY_CACHE_TIME.STALE,
     gcTime: ROOM_BOOK_INFO_FOR_PIN_QUERY_CACHE_TIME.GC,
   });
@@ -323,12 +332,6 @@ export const useEditRoomRecordMutation = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries({
           queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_QUERY_KEY.ALL,
         });
         Toast.show({
           type: "default",
@@ -366,12 +369,6 @@ export const useEditRoomVoteMutation = () => {
       onSuccess: (data) => {
         queryClient.invalidateQueries({
           queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_QUERY_KEY.ALL,
         });
         Toast.show({
           type: "default",
@@ -414,12 +411,6 @@ export const useDeleteRoomPostMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
         });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_QUERY_KEY.ALL,
-        });
         Toast.show({
           type: "default",
           text1: "기록이 삭제되었어요.",
@@ -444,12 +435,6 @@ export const useDeleteRoomPostMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
         });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_POST_QUERY_KEY.BOOK_PAGE(data.roomId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: ROOM_QUERY_KEY.ALL,
-        });
         Toast.show({
           type: "default",
           text1: "투표가 삭제되었어요.",
@@ -469,4 +454,16 @@ export const useDeleteRoomPostMutation = () => {
     isPendingDeleteRoomRecord,
     isPendingDeleteRoomVote,
   };
+};
+
+export const useDoRoomVoteMutation = () => {
+  const { mutate: doVote, isPending: isPendingDoVote } = useMutation<
+    DoRoomVoteResponse,
+    ApiErrorResponse,
+    DoRoomVoteRequest
+  >({
+    mutationFn: doRoomVoteApi,
+    onSuccess: () => {},
+    onError: () => {},
+  });
 };

@@ -42,7 +42,12 @@ export default function RecordBookPostItem({
     isPendingBookInfoForPin,
     isErrorBookInfoForPin,
     bookInfoForPinError,
-  } = useGetBookInfoForPinQuery({ roomId, recordId: post.postId });
+  } = useGetBookInfoForPinQuery({
+    roomId,
+    recordId: post.postId,
+    isRecord: post.postType === "RECORD",
+    isModalOpen: isModalOpen,
+  });
   const {
     deleteRoomRecord,
     deleteRoomVote,

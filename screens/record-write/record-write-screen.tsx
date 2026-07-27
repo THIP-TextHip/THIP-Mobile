@@ -54,9 +54,9 @@ export default function RecordWriteScreen() {
   }, [clearPrevRecord, navigation]);
 
   useEffect(() => {
-    if (bookPageInfo?.recentBookPage)
+    if (prevRecord === null && bookPageInfo?.recentBookPage)
       setRecordPage(bookPageInfo?.recentBookPage);
-  }, [bookPageInfo]);
+  }, [prevRecord, bookPageInfo]);
 
   const handleChangeOverview = () => {
     setIsOverview((prev) => !prev);
@@ -103,6 +103,14 @@ export default function RecordWriteScreen() {
     return;
   }
 
+  if (isPendingBookPageInfo) {
+    return (
+      <View style={styles.status}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
   if (isErrorBookPageInfo || !bookPageInfo) {
     Toast.show({
       type: "error",
@@ -111,14 +119,6 @@ export default function RecordWriteScreen() {
     router.back();
 
     return;
-  }
-
-  if (isPendingBookPageInfo) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
   }
 
   return (

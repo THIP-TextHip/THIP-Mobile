@@ -20,7 +20,7 @@ export interface GetRoomBookPageInfoResponse {
 
 export type RoomPostSortType = "latest" | "like" | "comment";
 
-export interface GetRoomPostListResquest {
+export interface GetRoomPostListRequest {
   roomId: number | string;
   type: "group" | "mine";
   sort?: RoomPostSortType | null;
@@ -95,6 +95,11 @@ export interface GetBookInfoForPinRequest {
   recordId: number;
 }
 
+export interface GetBookInfoForPinQueryRequest extends GetBookInfoForPinRequest {
+  isRecord: boolean;
+  isModalOpen: boolean;
+}
+
 export interface GetBookInfoForPinResponse {
   bookTitle: string;
   authorName: string;
@@ -138,4 +143,17 @@ export interface DeleteRoomVoteRequest {
 
 export interface DeleteRoomVoteResponse {
   roomId: number;
+}
+
+export interface DoRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+  voteItemId: number;
+  type: boolean;
+}
+
+export interface DoRoomVoteResponse {
+  postId: number;
+  roomId: number;
+  voteItems: RoomPostVote[];
 }
