@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { type RoomPostType } from "@apis/room";
 import {
   IcComment,
   IcHeartLeft,
@@ -13,6 +14,7 @@ interface RecordPostActionsProps {
   postId: number;
   isLiked: boolean;
   isWriter: boolean;
+  postType: RoomPostType;
   likeCount: number;
   commentCount: number;
   handlePressLike: () => void;
@@ -24,6 +26,7 @@ export default function RecordPostActions({
   postId,
   isLiked,
   isWriter,
+  postType,
   likeCount,
   commentCount,
   handlePressLike,
@@ -52,7 +55,7 @@ export default function RecordPostActions({
           {commentCount}
         </AppText>
       </Pressable>
-      {isWriter && (
+      {isWriter && postType === "RECORD" && (
         <Pressable onPress={handleOpenPinModal} hitSlop={5}>
           <IcPin />
         </Pressable>

@@ -1,8 +1,53 @@
-export { changeRoomPostLikeStatusApi } from "./room-post.api";
+export {
+  changeRoomPostLikeStatusApi,
+  createRoomRecordApi,
+  createRoomVoteApi,
+  deleteRoomRecordApi,
+  deleteRoomVoteApi,
+  doRoomVoteApi,
+  editRoomRecordApi,
+  editRoomVoteApi,
+  getBookInfoForPinApi,
+  getRoomBookPageInfoApi,
+  getRoomPostListApi,
+} from "./room-post.api";
 
-export { useChangeRoomPostLikeStatusMutation } from "./room-post.queries";
+export {
+  useChangeRoomPostLikeStatusMutation,
+  useCreateRoomRecordMutation,
+  useCreateRoomVoteMutation,
+  useDeleteRoomPostMutation,
+  useEditRoomRecordMutation,
+  useEditRoomVoteMutation,
+  useGetBookInfoForPinQuery,
+  useGetRoomBookPageQuery,
+  useGetRoomPostListQuery,
+} from "./room-post.queries";
 
 export type {
   ChangeRoomPostLikeStatusRequest,
   ChangeRoomPostLikeStatusResponse,
+  CreateRoomRecordRequest,
+  CreateRoomRecordResponse,
+  CreateRoomVoteRequest,
+  CreateRoomVoteResponse,
+  DeleteRoomRecordRequest,
+  DeleteRoomRecordResponse,
+  DeleteRoomVoteRequest,
+  DeleteRoomVoteResponse,
+  DoRoomVoteRequest,
+  DoRoomVoteResponse,
+  EditRoomRecordRequest,
+  EditRoomRecordResponse,
+  EditRoomVoteRequest,
+  EditRoomVoteResponse,
+  GetBookInfoForPinQueryRequest,
+  GetBookInfoForPinRequest,
+  GetBookInfoForPinResponse,
+  GetRoomBookPageInfoResponse,
+  GetRoomPostListRequest,
+  GetRoomPostListResponse,
+  RoomPostContent,
+  RoomPostSortType,
+  RoomPostVote,
 } from "./room-post.types";

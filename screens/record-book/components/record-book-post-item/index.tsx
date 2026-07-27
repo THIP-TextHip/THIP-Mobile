@@ -1,13 +1,18 @@
+import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
+import {
+  useDeleteRoomPostMutation,
+  useGetBookInfoForPinQuery,
+  type RoomPostContent,
+} from "@apis/room-post";
 import { AppText } from "@shared/ui";
 import { usePrevRecordStore, useRecordBookPinStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
-import { DUMMY_RECORD_PIN_BOOK_INFO } from "../../constants";
-import { RecordBookPostType } from "../../types";
 import RecordModal from "../record-modal";
 import RecordOptionBottomSheet from "../record-option-bottom-sheet";
 import RecordPostActions from "./record-post-actions";
@@ -15,7 +20,7 @@ import RecordVoteList from "./record-vote-list";
 
 interface RecordBookPostItemProps {
   roomId: number;
-  post: RecordBookPostType;
+  post: RoomPostContent;
   handleOpenComment: (postId: number) => void;
 }
 
@@ -31,6 +36,24 @@ export default function RecordBookPostItem({
   const [isOptionOpen, setIsOptionOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"delete" | "pin" | null>(null);
+
+  const {
+    bookInfoForPin,
+    isPendingBookInfoForPin,
+    isErrorBookInfoForPin,
+    bookInfoForPinError,
+  } = useGetBookInfoForPinQuery({
+    roomId,
+    recordId: post.postId,
+    isRecord: post.postType === "RECORD",
+    isModalOpen: isModalOpen,
+  });
+  const {
+    deleteRoomRecord,
+    deleteRoomVote,
+    isPendingDeleteRoomRecord,
+    isPendingDeleteRoomVote,
+  } = useDeleteRoomPostMutation();
 
   const handleToProfile = () => {
     router.push({
@@ -82,13 +105,30 @@ export default function RecordBookPostItem({
   };
 
   const handleDelete = () => {
-    console.log(post.postId, "번 기록 삭제");
-    setIsModalOpen(false);
+    if (isPendingDeleteRoomRecord || isPendingDeleteRoomVote) return;
+    if (post.postType === "RECORD") {
+      deleteRoomRecord(
+        { roomId, recordId: post.postId },
+        { onSettled: () => setIsModalOpen(false) },
+      );
+    } else {
+      deleteRoomVote(
+        { roomId, voteId: post.postId },
+        { onSettled: () => setIsModalOpen(false) },
+      );
+    }
   };
 
-  // TODO: 추후 서버 api를 통해 핀을 위한 책 정보 조회
   const handleToPin = () => {
-    setPinInfo({ bookInfo: DUMMY_RECORD_PIN_BOOK_INFO, content: post.content });
+    if (!bookInfoForPin || isPendingBookInfoForPin || isErrorBookInfoForPin) {
+      Toast.show({
+        type: "error",
+        text1: `핀을 위한 책 조회에 실패했어요. (${bookInfoForPinError?.code})`,
+      });
+      return;
+    }
+
+    setPinInfo({ bookInfo: bookInfoForPin, content: post.content });
     router.push("/feed-write");
     setIsModalOpen(false);
   };
@@ -111,7 +151,11 @@ export default function RecordBookPostItem({
 
   return (
     <>
-      <Pressable style={styles.container} onLongPress={handleOpenOption}>
+      <Pressable
+        style={styles.container}
+        onLongPress={handleOpenOption}
+        disabled={post.isLocked}
+      >
         <View style={styles.header}>
           <Pressable style={styles.profile} onPress={handleToProfile}>
             <Image
@@ -144,12 +188,16 @@ export default function RecordBookPostItem({
           postId={post.postId}
           isLiked={post.isLiked}
           isWriter={post.isWriter}
+          postType={post.postType}
           likeCount={post.likeCount}
           commentCount={post.commentCount}
           handlePressLike={handlePressLike}
           handleOpenComment={handleOpenComment}
           handleOpenPinModal={handleOpenPinModal}
         />
+        {post.isLocked && (
+          <BlurView intensity={15} tint="dark" style={styles.blur} />
+        )}
       </Pressable>
       <RecordOptionBottomSheet
         isWriter={post.isWriter}
@@ -162,6 +210,11 @@ export default function RecordBookPostItem({
       <RecordModal
         modalType={modalType}
         isVisible={isModalOpen}
+        isPending={
+          isPendingBookInfoForPin ||
+          isPendingDeleteRoomRecord ||
+          isPendingDeleteRoomVote
+        }
         handleCloseModal={handleCloseModal}
         handleDelete={handleDelete}
         handleToPin={handleToPin}
@@ -173,6 +226,8 @@ export default function RecordBookPostItem({
 const styles = StyleSheet.create({
   container: {
     gap: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   header: {
     flexDirection: "row",
@@ -193,5 +248,9 @@ const styles = StyleSheet.create({
   },
   profileText: {
     gap: 4,
+  },
+  blur: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 10,
   },
 });

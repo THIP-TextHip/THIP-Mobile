@@ -6,6 +6,7 @@ import { colors } from "@theme/token";
 interface RecordModalProps {
   modalType: "pin" | "delete" | null;
   isVisible: boolean;
+  isPending: boolean;
   handleCloseModal: () => void;
   handleDelete: () => void;
   handleToPin: () => void;
@@ -14,6 +15,7 @@ interface RecordModalProps {
 export default function RecordModal({
   modalType,
   isVisible,
+  isPending,
   handleCloseModal,
   handleDelete,
   handleToPin,
@@ -49,6 +51,7 @@ export default function RecordModal({
           <CustomButton
             size="fill"
             handlePress={modalType === "delete" ? handleDelete : handleToPin}
+            disabled={isPending}
           >
             <AppText
               weight="semibold"

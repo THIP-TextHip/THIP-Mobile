@@ -10,3 +10,150 @@ export interface ChangeRoomPostLikeStatusResponse {
   postId: number;
   isLiked: boolean;
 }
+
+export interface GetRoomBookPageInfoResponse {
+  totalBookPage: number;
+  recentBookPage: number;
+  isOverviewPossible: boolean;
+  roomId: number;
+}
+
+export type RoomPostSortType = "latest" | "like" | "comment";
+
+export interface GetRoomPostListRequest {
+  roomId: number | string;
+  type: "group" | "mine";
+  sort?: RoomPostSortType | null;
+  pageStart?: number | null;
+  pageEnd?: number | null;
+  isOverview?: boolean | null;
+  isPageFilter?: boolean | null;
+  cursor?: string | null;
+}
+
+export interface RoomPostVote {
+  voteItemId: number;
+  itemName: string;
+  count: number;
+  isVoted: boolean;
+}
+
+export interface RoomPostContent {
+  postId: number;
+  postDate: string;
+  postType: RoomPostType;
+  page: number;
+  userId: number;
+  nickName: string;
+  profileImageUrl: string;
+  content: string;
+  likeCount: number;
+  commentCount: number;
+  isOverview: boolean;
+  isLiked: boolean;
+  isWriter: boolean;
+  isLocked: boolean;
+  voteItems: RoomPostVote[];
+}
+
+export interface GetRoomPostListResponse {
+  postList: RoomPostContent[];
+  roomId: number;
+  isbn: string;
+  isOverviewEnabled: boolean;
+  nextCursor: string;
+  isLast: boolean;
+}
+
+export interface CreateRoomRecordRequest {
+  roomId: number | string;
+  page: number;
+  isOverview: boolean;
+  content: string;
+}
+
+export interface CreateRoomRecordResponse {
+  recordId: number;
+  roomId: number;
+}
+
+export interface CreateRoomVoteRequest {
+  roomId: number | string;
+  page: number;
+  isOverview: boolean;
+  content: string;
+  voteItemList: { itemName: string }[];
+}
+
+export interface CreateRoomVoteResponse {
+  voteId: number;
+  roomId: number;
+}
+
+export interface GetBookInfoForPinRequest {
+  roomId: number;
+  recordId: number;
+}
+
+export interface GetBookInfoForPinQueryRequest extends GetBookInfoForPinRequest {
+  isRecord: boolean;
+  isModalOpen: boolean;
+}
+
+export interface GetBookInfoForPinResponse {
+  bookTitle: string;
+  authorName: string;
+  bookImageUrl: string;
+  isbn: string;
+}
+
+export interface EditRoomRecordRequest {
+  roomId: number | string;
+  recordId: number;
+  content: string;
+}
+
+export interface EditRoomRecordResponse {
+  roomId: number;
+}
+
+export interface EditRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+  content: string;
+}
+
+export interface EditRoomVoteResponse {
+  roomId: number;
+}
+
+export interface DeleteRoomRecordRequest {
+  roomId: number | string;
+  recordId: number;
+}
+
+export interface DeleteRoomRecordResponse {
+  roomId: number;
+}
+
+export interface DeleteRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+}
+
+export interface DeleteRoomVoteResponse {
+  roomId: number;
+}
+
+export interface DoRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+  voteItemId: number;
+  type: boolean;
+}
+
+export interface DoRoomVoteResponse {
+  postId: number;
+  roomId: number;
+  voteItems: RoomPostVote[];
+}

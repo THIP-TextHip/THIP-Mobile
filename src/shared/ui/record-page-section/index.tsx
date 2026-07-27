@@ -85,7 +85,11 @@ export default function RecordPageSection({
           <>
             <View style={styles.inputWrapper}>
               <TextInput
-                style={[styles.input, { width: inputWidth }]}
+                style={[
+                  styles.input,
+                  { width: inputWidth },
+                  !editable && { color: colors.grey[300] },
+                ]}
                 keyboardType="number-pad"
                 value={String(recordPage)}
                 onChangeText={(text) => {

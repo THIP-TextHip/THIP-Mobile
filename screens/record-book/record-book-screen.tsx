@@ -1,10 +1,21 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
+import {
+  useGetRoomBookPageQuery,
+  useGetRoomPostListQuery,
+} from "@apis/room-post";
 import { IcAlertGrey } from "@images/icons";
-import { AppText, FilterType } from "@shared/ui";
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
@@ -15,7 +26,8 @@ import {
   RecordBookTopTabBar,
   RecordCommentBottomSheet,
 } from "./components";
-import { DUMMY_RECORD_BOOK_RESPONSE, GROUP_RECORD_SORT } from "./constants";
+import { GROUP_RECORD_SORT } from "./constants";
+import { RoomPostSortTypeWithLabel } from "./types";
 
 export default function RecordBookScreen() {
   const { bottom } = useSafeAreaInsets();
@@ -30,10 +42,52 @@ export default function RecordBookScreen() {
     end: number | null;
   }>({ start: null, end: null });
 
-  const [sortType, setSortType] = useState<FilterType>(GROUP_RECORD_SORT[0]);
+  const [sortType, setSortType] = useState<RoomPostSortTypeWithLabel>(
+    GROUP_RECORD_SORT[0],
+  );
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [postIdForComment, setPostIdForComment] = useState<number | null>(null);
+
+  const {
+    bookPageInfo,
+    isPendingBookPageInfo,
+    isErrorBookPageInfo,
+    bookPageInfoError,
+    refetchBookPageInfo,
+    isRefetchingBookPageInfo,
+  } = useGetRoomBookPageQuery(roomId);
+
+  const {
+    roomPostList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingRoomPostList,
+    isErrorRoomPostList,
+    roomPostListError,
+    refetchRoomPostList,
+    isRefetchingRoomPostList,
+  } = useGetRoomPostListQuery({
+    roomId,
+    type: isMyRecord ? "mine" : "group",
+    sort: isMyRecord ? null : sortType.type,
+    pageStart: isMyRecord ? null : selectedPages.start,
+    pageEnd: isMyRecord ? null : selectedPages.end,
+    isOverview: isMyRecord ? null : selectedChip === "overview",
+    isPageFilter: isMyRecord ? null : selectedChip === "page",
+  });
+
+  const handleLoadMore = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
+  const handleRefetch = () => {
+    refetchBookPageInfo();
+    refetchRoomPostList();
+  };
 
   const handleGroupRecord = () => {
     setIsMyRecord(false);
@@ -60,6 +114,26 @@ export default function RecordBookScreen() {
   };
 
   const handleApplyPage = (start: number | null, end: number | null) => {
+    if (start && end && start > end) {
+      Toast.show({
+        type: "error",
+        text1: "설정하신 값이 책의 총 페이지보다 작아야 합니다.",
+      });
+
+      return;
+    }
+    if (
+      (start && bookPageInfo && start > bookPageInfo.totalBookPage) ||
+      (end && bookPageInfo && end > bookPageInfo.totalBookPage)
+    ) {
+      Toast.show({
+        type: "error",
+        text1: "설정하신 값이 책의 총 페이지보다 작아야 합니다.",
+      });
+
+      return;
+    }
+
     setPageSettingMode(false);
     setSelectedPages({ start, end });
     if (start === null && end === null) {
@@ -70,6 +144,13 @@ export default function RecordBookScreen() {
   };
 
   const handlePressOverviewChip = () => {
+    if (!bookPageInfo?.isOverviewPossible) {
+      Toast.show({
+        type: "error",
+        text1: "독서 진행도 80% 이상부터 총평을 볼 수 있어요.",
+      });
+      return;
+    }
     setSelectedChip((prev) => (prev === "overview" ? null : "overview"));
   };
 
@@ -77,7 +158,7 @@ export default function RecordBookScreen() {
     setIsDropdownVisible(!isDropdownVisible);
   };
 
-  const handleSelectType = (type: FilterType) => {
+  const handleSelectType = (type: RoomPostSortTypeWithLabel) => {
     setSortType(type);
     setIsDropdownVisible(false);
   };
@@ -92,15 +173,27 @@ export default function RecordBookScreen() {
     setIsCommentOpen(false);
   };
 
-  // TODO: 추후 에러 화면 표시
-  if (!roomId || Array.isArray(roomId)) {
-    return null;
+  if (!roomId) {
+    if (!roomId) {
+      Toast.show({
+        type: "error",
+        text1: "잘못된 접근이에요. 다시 시도해 주세요.",
+      });
+      router.back();
+    }
+
+    return;
   }
 
-  // TODO: 추후 서버에서 받아온 리스트로 사용할 예정
-  const recordBookPostList = isMyRecord
-    ? DUMMY_RECORD_BOOK_RESPONSE.postList.filter((post) => post.isWriter)
-    : DUMMY_RECORD_BOOK_RESPONSE.postList;
+  if (isErrorBookPageInfo || !bookPageInfo) {
+    Toast.show({
+      type: "error",
+      text1: bookPageInfoError?.message,
+    });
+    router.back();
+
+    return;
+  }
 
   const RecordListHeader = () => {
     if (isMyRecord) return null;
@@ -114,6 +207,47 @@ export default function RecordBookScreen() {
               ? "총평 보기는 스포일러가 포함 될 수도 있습니다."
               : "내 진행도에 따라 일부 댓글은 블러처리됩니다."}
         </AppText>
+      </View>
+    );
+  };
+
+  const StatusView = () => {
+    if (isPendingRoomPostList || isPendingBookPageInfo)
+      return (
+        <View style={styles.status}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </View>
+      );
+    return (
+      <View style={styles.status}>
+        {isErrorRoomPostList ? (
+          <AppText
+            weight="semibold"
+            size="lg"
+            color={colors.white}
+            lineHeight={24}
+          >
+            데이터를 불러오지 못했어요 ({roomPostListError?.message})
+          </AppText>
+        ) : (
+          <>
+            <AppText
+              weight="semibold"
+              size="lg"
+              color={colors.white}
+              lineHeight={24}
+            >
+              아직 기록이 없어요
+            </AppText>
+            <AppText weight="regular" size="sm" color={colors.grey[100]}>
+              {isMyRecord
+                ? "나의 첫번째 기록을 남겨보세요"
+                : selectedPages.start !== null &&
+                  selectedPages.end !== null &&
+                  "우리 모임의 첫번째 기록을 남겨보세요"}
+            </AppText>
+          </>
+        )}
       </View>
     );
   };
@@ -140,26 +274,50 @@ export default function RecordBookScreen() {
           handleSelectType={handleSelectType}
         />
       )}
-      <FlatList
-        contentContainerStyle={[styles.list, { paddingBottom: bottom + 80 }]}
-        data={recordBookPostList}
-        keyExtractor={(item) => String(item.postId)}
-        renderItem={({ item }) => (
-          <RecordBookPostItem
-            roomId={Number(roomId)}
-            post={item}
-            handleOpenComment={handleOpenComment}
+      {roomPostList.length === 0 ? (
+        <StatusView />
+      ) : (
+        <>
+          <FlatList
+            contentContainerStyle={{ paddingBottom: bottom + 80 }}
+            data={roomPostList}
+            keyExtractor={(item) => String(item.postId)}
+            renderItem={({ item }) => (
+              <RecordBookPostItem
+                roomId={Number(roomId)}
+                post={item}
+                handleOpenComment={handleOpenComment}
+              />
+            )}
+            ListHeaderComponent={RecordListHeader}
+            ListFooterComponent={
+              isFetchingNextPage ? (
+                <ActivityIndicator style={styles.footer} color={colors.white} />
+              ) : null
+            }
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.5}
+            refreshControl={
+              <RefreshControl
+                refreshing={
+                  isRefetchingRoomPostList || isRefetchingBookPageInfo
+                }
+                onRefresh={handleRefetch}
+                tintColor={colors.white}
+                colors={[colors.white]}
+              />
+            }
           />
-        )}
-        ListHeaderComponent={RecordListHeader}
-      />
-      {postIdForComment !== null && (
-        <RecordCommentBottomSheet
-          postId={postIdForComment}
-          isVisible={isCommentOpen}
-          handleClose={handleCloseComment}
-        />
+          {postIdForComment !== null && (
+            <RecordCommentBottomSheet
+              postId={postIdForComment}
+              isVisible={isCommentOpen}
+              handleClose={handleCloseComment}
+            />
+          )}
+        </>
       )}
+
       <RecordBookFloating roomId={roomId} />
     </View>
   );
@@ -169,13 +327,22 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
   },
-  list: {
-    paddingHorizontal: 20,
-    gap: 32,
-  },
+
   listHeader: {
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 16,
     gap: 4,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 100,
+  },
+  footer: {
+    marginTop: 40,
   },
 });

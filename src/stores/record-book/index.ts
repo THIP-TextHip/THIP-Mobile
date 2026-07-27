@@ -1,13 +1,16 @@
 import { create } from "zustand";
 
-import { type RecordBookVoteItemType } from "@screens/record-book";
+import {
+  type GetBookInfoForPinResponse,
+  type RoomPostVote,
+} from "@apis/room-post";
 
 interface PrevRecord {
   postId: number;
   page: number;
   isOverview: boolean;
   content: string;
-  voteItems: RecordBookVoteItemType[];
+  voteItems: RoomPostVote[];
 }
 
 interface PrevRecordStore {
@@ -23,12 +26,7 @@ export const usePrevRecordStore = create<PrevRecordStore>((set) => ({
 }));
 
 interface RecordBookPinInfo {
-  bookInfo: {
-    bookTitle: string;
-    authorName: string;
-    bookImageUrl: string;
-    isbn: string;
-  };
+  bookInfo: GetBookInfoForPinResponse;
   content: string;
 }
 

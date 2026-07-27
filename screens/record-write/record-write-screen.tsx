@@ -1,6 +1,8 @@
+import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -8,22 +10,27 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
+import {
+  useCreateRoomRecordMutation,
+  useEditRoomRecordMutation,
+  useGetRoomBookPageQuery,
+} from "@apis/room-post";
 import { RecordPageSection } from "@shared/ui";
 import { usePrevRecordStore } from "@stores/record-book";
+import { colors } from "@theme/token";
 
 import { RecordWriteContentSection, RecordWriteHeader } from "./components";
-// TODO: 서버에서 받아온 값으로 변경
-import { DUMMY_RECORD_BOOK_STATE } from "./constants";
 
 export default function RecordWriteScreen() {
-  const { roomId } = useLocalSearchParams();
+  const { roomId } = useLocalSearchParams<{ roomId: string }>();
   const { bottom } = useSafeAreaInsets();
   const navigation = useNavigation();
   const { prevRecord, clearPrevRecord } = usePrevRecordStore();
 
   const [recordPage, setRecordPage] = useState(
-    prevRecord ? prevRecord.page : DUMMY_RECORD_BOOK_STATE.recentBookPage,
+    prevRecord ? prevRecord.page : 0,
   );
   const [isOverview, setIsOverview] = useState(
     prevRecord ? prevRecord.isOverview : false,
@@ -31,9 +38,25 @@ export default function RecordWriteScreen() {
   const [isImpossiblePage, setIsImpossiblePage] = useState(false);
   const [content, setContent] = useState(prevRecord ? prevRecord.content : "");
 
+  const {
+    bookPageInfo,
+    isPendingBookPageInfo,
+    isErrorBookPageInfo,
+    bookPageInfoError,
+  } = useGetRoomBookPageQuery(roomId);
+  const { createRoomRecord, isPendingCreateRoomRecord } =
+    useCreateRoomRecordMutation();
+  const { editRoomRecord, isPendingEditRoomRecord } =
+    useEditRoomRecordMutation();
+
   useEffect(() => {
     return navigation.addListener("beforeRemove", clearPrevRecord);
   }, [clearPrevRecord, navigation]);
+
+  useEffect(() => {
+    if (prevRecord === null && bookPageInfo?.recentBookPage)
+      setRecordPage(bookPageInfo?.recentBookPage);
+  }, [prevRecord, bookPageInfo]);
 
   const handleChangeOverview = () => {
     setIsOverview((prev) => !prev);
@@ -44,22 +67,59 @@ export default function RecordWriteScreen() {
     router.back();
   }, [clearPrevRecord]);
 
-  // TODO: 서버에 api 요청. 성공 시 기록장 페이지 내 기록 탭으로 이동
   const handleCompleteWrite = () => {
+    if (isPendingCreateRoomRecord || isPendingEditRoomRecord) return;
+
     if (prevRecord === null) {
-      console.log("기록 작성", roomId, recordPage, isOverview, content);
-      router.back();
+      createRoomRecord({
+        roomId,
+        page: recordPage,
+        isOverview,
+        content,
+      });
     } else {
-      console.log("기록 수정", roomId, prevRecord.postId, content);
-      clearPrevRecord();
-      router.back();
+      editRoomRecord(
+        { roomId, recordId: prevRecord.postId, content },
+        { onSuccess: () => clearPrevRecord() },
+      );
     }
   };
 
   const disabled =
     isImpossiblePage ||
     content.trim().length === 0 ||
-    (prevRecord !== null && prevRecord.content.trim() === content.trim());
+    (prevRecord !== null && prevRecord.content.trim() === content.trim()) ||
+    isPendingBookPageInfo ||
+    isPendingCreateRoomRecord ||
+    isPendingEditRoomRecord;
+
+  if (!roomId) {
+    Toast.show({
+      type: "error",
+      text1: "잘못된 접근이에요. 다시 시도해 주세요.",
+    });
+    router.back();
+
+    return;
+  }
+
+  if (isPendingBookPageInfo) {
+    return (
+      <View style={styles.status}>
+        <ActivityIndicator size="large" color={colors.white} />
+      </View>
+    );
+  }
+
+  if (isErrorBookPageInfo || !bookPageInfo) {
+    Toast.show({
+      type: "error",
+      text1: bookPageInfoError?.message,
+    });
+    router.back();
+
+    return;
+  }
 
   return (
     <View style={styles.page}>
@@ -83,8 +143,8 @@ export default function RecordWriteScreen() {
         >
           <RecordPageSection
             editable={prevRecord === null}
-            totalPage={DUMMY_RECORD_BOOK_STATE.totalBookPage}
-            isOverviewPossible={DUMMY_RECORD_BOOK_STATE.isOverviewPossible}
+            totalPage={bookPageInfo?.totalBookPage}
+            isOverviewPossible={bookPageInfo?.isOverviewPossible}
             recordPage={recordPage}
             isOverview={isOverview}
             handleChangeRecordPage={setRecordPage}
@@ -97,6 +157,11 @@ export default function RecordWriteScreen() {
           />
         </ScrollView>
       </KeyboardAvoidingView>
+      {(isPendingCreateRoomRecord || isPendingEditRoomRecord) && (
+        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
+          <ActivityIndicator size="large" color={colors.white} />
+        </BlurView>
+      )}
     </View>
   );
 }
@@ -112,5 +177,15 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     paddingHorizontal: 20,
     gap: 32,
+  },
+  status: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  linearBlur: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
