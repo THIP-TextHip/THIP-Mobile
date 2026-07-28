@@ -4,8 +4,11 @@ import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { type RoomPostType } from "@apis/room";
 import {
+  useChangeRoomPostLikeStatusMutation,
   useDeleteRoomPostMutation,
+  useDoRoomVoteMutation,
   useGetBookInfoForPinQuery,
   type RoomPostContent,
 } from "@apis/room-post";
@@ -21,10 +24,9 @@ import RecordVoteList from "./record-vote-list";
 interface RecordBookPostItemProps {
   roomId: number;
   post: RoomPostContent;
-  handleOpenComment: (postId: number) => void;
+  handleOpenComment: (postId: number, postType: RoomPostType) => void;
 }
 
-// TODO: 서버 연결하면서 이벤트 핸들러 구현
 export default function RecordBookPostItem({
   roomId,
   post,
@@ -54,6 +56,9 @@ export default function RecordBookPostItem({
     isPendingDeleteRoomRecord,
     isPendingDeleteRoomVote,
   } = useDeleteRoomPostMutation();
+  const { doVote, isPendingDoVote } = useDoRoomVoteMutation();
+  const { changeRoomPostLikeStatus, isPendingChangeRoomPostLikeStatus } =
+    useChangeRoomPostLikeStatusMutation(roomId);
 
   const handleToProfile = () => {
     router.push({
@@ -62,12 +67,19 @@ export default function RecordBookPostItem({
     });
   };
 
-  const handleVote = (voteItemId: number) => {
-    console.log(roomId, "번 방 ", voteItemId, "번 투표");
+  const handleVote = (voteItemId: number, isVoted: boolean) => {
+    if (isPendingDoVote) return;
+    doVote({ roomId, voteId: post.postId, voteItemId, type: !isVoted });
   };
 
-  const handlePressLike = () => {
-    console.log(post.postId, "번 기록 좋아요 클릭");
+  const handlePressLike = (isLiked: boolean) => {
+    if (isPendingChangeRoomPostLikeStatus) return;
+
+    changeRoomPostLikeStatus({
+      postId: post.postId,
+      type: !isLiked,
+      roomPostType: post.postType,
+    });
   };
 
   const handleOpenOption = () => {

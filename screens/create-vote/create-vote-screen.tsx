@@ -101,15 +101,27 @@ export default function CreateVoteScreen() {
     isPendingCreateRoomVote ||
     isPendingEditRoomVote;
 
-  if (!roomId) {
-    Toast.show({
-      type: "error",
-      text1: "잘못된 접근이에요. 다시 시도해 주세요.",
-    });
-    router.back();
+  useEffect(() => {
+    if (!roomId) {
+      Toast.show({
+        type: "error",
+        text1: "잘못된 접근이에요. 다시 시도해 주세요.",
+      });
 
-    return;
-  }
+      router.back();
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    if (isErrorBookPageInfo) {
+      Toast.show({
+        type: "error",
+        text1: bookPageInfoError?.message,
+      });
+
+      router.back();
+    }
+  }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
   if (isPendingBookPageInfo) {
     return (
@@ -119,15 +131,7 @@ export default function CreateVoteScreen() {
     );
   }
 
-  if (isErrorBookPageInfo || !bookPageInfo) {
-    Toast.show({
-      type: "error",
-      text1: bookPageInfoError?.message,
-    });
-    router.back();
-
-    return;
-  }
+  if (!roomId || isErrorBookPageInfo || !bookPageInfo) return null;
 
   return (
     <View style={styles.page}>

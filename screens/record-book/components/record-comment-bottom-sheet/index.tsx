@@ -2,28 +2,36 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
+import { useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import { useEffect, useRef, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { type CommentType } from "@apis/comment";
+import {
+  useGetCommentListQuery,
+  useWriteCommentMutation,
+  type CommentType,
+} from "@apis/comment";
+import { type RoomPostType } from "@apis/room";
+import { ROOM_POST_QUERY_KEY } from "@apis/room-post";
 import { useKeyboardHeight } from "@shared/hooks";
 import { AppText, ChatInputBar, CommentRoot } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { DUMMY_RECORD_COMMENT_LIST } from "../../constants";
-
 interface RecordCommentBottomSheetProps {
+  roomId: number | string;
   postId: number;
+  postType: RoomPostType;
   isVisible: boolean;
   handleClose: () => void;
 }
 
 export default function RecordCommentBottomSheet({
-  // TODO: 서버 api 연동 시 postId로 댓글 목록 조회/전송
+  roomId,
   postId,
+  postType,
   isVisible,
   handleClose,
 }: RecordCommentBottomSheetProps) {
@@ -36,24 +44,49 @@ export default function RecordCommentBottomSheet({
   const [isInputFocus, setIsInputFocus] = useState(false);
   const keyboardHeight = useKeyboardHeight();
 
+  const queryClient = useQueryClient();
+  const {
+    commentList,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingCommentList,
+    isErrorCommentList,
+    commentListError,
+  } = useGetCommentListQuery(postId, postType);
+  const { writeComment, isPendingWriteComment } = useWriteCommentMutation();
+
+  const handleLoadMoreComments = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  };
+
   const listPaddingBottom =
     (replyNickname !== "" ? 30 : 0) +
     (isInputFocus ? keyboardHeight + bottom : bottom);
 
   const handleSendText = () => {
-    if (replyCommentId !== null) {
-      console.log(
-        replyNickname,
-        "에게 ",
-        replyCommentId,
-        "번에 대한 답글 ",
-        comment.trim(),
-        " 전송",
-      );
-    } else {
-      console.log(comment.trim(), " 전송");
-    }
-    setComment("");
+    const content = comment.trim();
+
+    writeComment(
+      {
+        postId,
+        content,
+        isReplyRequest: replyCommentId !== null,
+        parentId: replyCommentId,
+        postType,
+      },
+      {
+        onSuccess: () => {
+          setComment("");
+          handleResetReply();
+          queryClient.invalidateQueries({
+            queryKey: ROOM_POST_QUERY_KEY.ALL_POST(roomId),
+          });
+        },
+      },
+    );
   };
 
   const handlePressReply = (commentId: number, replyNickname: string) => {
@@ -120,7 +153,7 @@ export default function RecordCommentBottomSheet({
                   listPaddingBottom + (Platform.OS === "ios" ? 80 : 90),
               },
             ]}
-            data={DUMMY_RECORD_COMMENT_LIST}
+            data={commentList}
             keyExtractor={(item: CommentType) => String(item.commentId)}
             renderItem={({ item }: { item: CommentType }) => (
               <CommentRoot
@@ -130,16 +163,30 @@ export default function RecordCommentBottomSheet({
                 handlePressReply={handlePressReply}
               />
             )}
-            ListEmptyComponent={() => (
-              <View style={styles.empty}>
-                <AppText weight="semibold" size="lg" color={colors.white}>
-                  아직 댓글이 없어요
-                </AppText>
-                <AppText weight="regular" size="sm" color={colors.grey[100]}>
-                  첫번째 댓글을 남겨보세요
-                </AppText>
-              </View>
-            )}
+            ListEmptyComponent={() =>
+              isPendingCommentList ? (
+                <View style={styles.status}>
+                  <ActivityIndicator size="large" color={colors.white} />
+                </View>
+              ) : isErrorCommentList ? (
+                <View style={styles.status}>
+                  <AppText weight="semibold" size="lg" color={colors.white}>
+                    댓글을 불러오지 못했어요. ({commentListError?.message})
+                  </AppText>
+                </View>
+              ) : (
+                <View style={styles.status}>
+                  <AppText weight="semibold" size="lg" color={colors.white}>
+                    아직 댓글이 없어요
+                  </AppText>
+                  <AppText weight="regular" size="sm" color={colors.grey[100]}>
+                    첫번째 댓글을 남겨보세요
+                  </AppText>
+                </View>
+              )
+            }
+            onEndReached={handleLoadMoreComments}
+            onEndReachedThreshold={0.5}
           />
         </BottomSheet>
         <ChatInputBar
@@ -151,8 +198,7 @@ export default function RecordCommentBottomSheet({
           handleResetReply={handleResetReply}
           isFocus={isInputFocus}
           handleIsFocus={setIsInputFocus}
-          // TODO: 추후 반영
-          isPendingSend={false}
+          isPendingSend={isPendingCommentList || isPendingWriteComment}
         />
       </GestureHandlerRootView>
     )
@@ -176,13 +222,14 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(18, 18, 18, 0.30)",
   },
   list: {
+    minHeight: 300,
     gap: 12,
   },
   title: {
     paddingHorizontal: 20,
     marginBottom: 15,
   },
-  empty: {
+  status: {
     flex: 1,
     gap: 8,
     minHeight: 300,

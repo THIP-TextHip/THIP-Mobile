@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -10,6 +10,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { type RoomPostType } from "@apis/room";
 import {
   useGetRoomBookPageQuery,
   useGetRoomPostListQuery,
@@ -48,6 +49,8 @@ export default function RecordBookScreen() {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [postIdForComment, setPostIdForComment] = useState<number | null>(null);
+  const [postTypeForComment, setPostTypeForComment] =
+    useState<RoomPostType | null>(null);
 
   const {
     bookPageInfo,
@@ -163,37 +166,41 @@ export default function RecordBookScreen() {
     setIsDropdownVisible(false);
   };
 
-  const handleOpenComment = (postId: number) => {
+  const handleOpenComment = (postId: number, postType: RoomPostType) => {
     setPostIdForComment(postId);
+    setPostTypeForComment(postType);
     setIsCommentOpen(true);
   };
 
   const handleCloseComment = () => {
     setPostIdForComment(null);
+    setPostTypeForComment(null);
     setIsCommentOpen(false);
   };
 
-  if (!roomId) {
+  useEffect(() => {
     if (!roomId) {
       Toast.show({
         type: "error",
         text1: "잘못된 접근이에요. 다시 시도해 주세요.",
       });
+
       router.back();
     }
+  }, [roomId]);
 
-    return;
-  }
+  useEffect(() => {
+    if (isErrorBookPageInfo) {
+      Toast.show({
+        type: "error",
+        text1: bookPageInfoError?.message,
+      });
 
-  if (isErrorBookPageInfo || !bookPageInfo) {
-    Toast.show({
-      type: "error",
-      text1: bookPageInfoError?.message,
-    });
-    router.back();
+      router.back();
+    }
+  }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
-    return;
-  }
+  if (!roomId || isErrorBookPageInfo) return null;
 
   const RecordListHeader = () => {
     if (isMyRecord) return null;
@@ -308,9 +315,11 @@ export default function RecordBookScreen() {
               />
             }
           />
-          {postIdForComment !== null && (
+          {postIdForComment && postTypeForComment && (
             <RecordCommentBottomSheet
+              roomId={roomId}
               postId={postIdForComment}
+              postType={postTypeForComment}
               isVisible={isCommentOpen}
               handleClose={handleCloseComment}
             />

@@ -68,32 +68,6 @@ type RoomPostCursor = string | null;
 const hasRoomId = (roomId?: number | string): roomId is number | string =>
   roomId != null && roomId !== "";
 
-export const useChangeRoomPostLikeStatusMutation = () => {
-  const {
-    mutate: changeRoomPostLikeStatus,
-    isPending: isPendingChangeRoomPostLikeStatus,
-  } = useMutation<
-    ChangeRoomPostLikeStatusResponse,
-    Error,
-    ChangeRoomPostLikeStatusRequest
-  >({
-    mutationFn: changeRoomPostLikeStatusApi,
-    // TODO: roomId 정보를 얻을 수가 없어서 추후 사용하는 곳에서 onSuccess를 정의하는 것으로 해결한다. room-post의 캐시 초기화
-    onSuccess: () => {},
-    onError: (error) => {
-      Toast.show({
-        type: "error",
-        text1: `${error.message}`,
-      });
-    },
-  });
-
-  return {
-    changeRoomPostLikeStatus,
-    isPendingChangeRoomPostLikeStatus,
-  };
-};
-
 export const useGetRoomBookPageQuery = (roomId?: number | string) => {
   const {
     data: bookPageInfo,
@@ -457,13 +431,60 @@ export const useDeleteRoomPostMutation = () => {
 };
 
 export const useDoRoomVoteMutation = () => {
+  const queryClient = useQueryClient();
+
   const { mutate: doVote, isPending: isPendingDoVote } = useMutation<
     DoRoomVoteResponse,
     ApiErrorResponse,
     DoRoomVoteRequest
   >({
     mutationFn: doRoomVoteApi,
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
   });
+
+  return {
+    doVote,
+    isPendingDoVote,
+  };
+};
+
+export const useChangeRoomPostLikeStatusMutation = (roomId: number) => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: changeRoomPostLikeStatus,
+    isPending: isPendingChangeRoomPostLikeStatus,
+  } = useMutation<
+    ChangeRoomPostLikeStatusResponse,
+    Error,
+    ChangeRoomPostLikeStatusRequest
+  >({
+    mutationFn: changeRoomPostLikeStatusApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ROOM_POST_QUERY_KEY.ALL_POST(roomId),
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    changeRoomPostLikeStatus,
+    isPendingChangeRoomPostLikeStatus,
+  };
 };

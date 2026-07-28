@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -49,15 +49,18 @@ export default function DailyGreetingScreen() {
     fetchNextPage();
   };
 
-  if (!roomId) {
-    Toast.show({
-      type: "error",
-      text1: "잘못된 접근이에요. 다시 시도해 주세요.",
-    });
-    router.back();
+  useEffect(() => {
+    if (!roomId) {
+      Toast.show({
+        type: "error",
+        text1: "잘못된 접근이에요. 다시 시도해 주세요.",
+      });
 
-    return;
-  }
+      router.back();
+    }
+  }, [roomId]);
+
+  if (!roomId) return null;
 
   const StatusView = () => {
     if (isPendingDailyGreeting)

@@ -43,6 +43,7 @@ export default function FeedDetailScreen() {
     isFetchingNextPage,
     isPendingCommentList,
     isErrorCommentList,
+    commentListError,
     refetchCommentList,
     isRefetchingCommentList,
   } = useGetCommentListQuery(feedId, "FEED");
@@ -160,7 +161,7 @@ export default function FeedDetailScreen() {
       return (
         <View style={styles.empty}>
           <AppText weight="medium" size="sm" color={colors.grey[200]}>
-            댓글을 불러오지 못했어요.
+            댓글을 불러오지 못했어요. ({commentListError?.message})
           </AppText>
         </View>
       );
