@@ -53,8 +53,6 @@ export default function RecordCommentBottomSheet({
     isPendingCommentList,
     isErrorCommentList,
     commentListError,
-    refetchCommentList,
-    isRefetchingCommentList,
   } = useGetCommentListQuery(postId, postType);
   const { writeComment, isPendingWriteComment } = useWriteCommentMutation();
 
@@ -107,10 +105,6 @@ export default function RecordCommentBottomSheet({
       sheetRef.current?.snapToIndex(1);
     }
   }, [isInputFocus]);
-
-  useEffect(() => {
-    refetchCommentList();
-  }, [refetchCommentList]);
 
   return (
     isVisible && (
@@ -170,7 +164,7 @@ export default function RecordCommentBottomSheet({
               />
             )}
             ListEmptyComponent={() =>
-              isPendingCommentList || isRefetchingCommentList ? (
+              isPendingCommentList ? (
                 <View style={styles.status}>
                   <ActivityIndicator size="large" color={colors.white} />
                 </View>
@@ -204,11 +198,7 @@ export default function RecordCommentBottomSheet({
           handleResetReply={handleResetReply}
           isFocus={isInputFocus}
           handleIsFocus={setIsInputFocus}
-          isPendingSend={
-            isPendingCommentList ||
-            isRefetchingCommentList ||
-            isPendingWriteComment
-          }
+          isPendingSend={isPendingCommentList || isPendingWriteComment}
         />
       </GestureHandlerRootView>
     )

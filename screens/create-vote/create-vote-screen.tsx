@@ -123,8 +123,6 @@ export default function CreateVoteScreen() {
     }
   }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
-  if (!roomId || isErrorBookPageInfo || !bookPageInfo) return null;
-
   if (isPendingBookPageInfo) {
     return (
       <View style={styles.status}>
@@ -132,6 +130,8 @@ export default function CreateVoteScreen() {
       </View>
     );
   }
+
+  if (!roomId || isErrorBookPageInfo || !bookPageInfo) return null;
 
   return (
     <View style={styles.page}>

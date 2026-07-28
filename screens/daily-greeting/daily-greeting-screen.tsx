@@ -60,6 +60,8 @@ export default function DailyGreetingScreen() {
     }
   }, [roomId]);
 
+  if (!roomId) return null;
+
   const StatusView = () => {
     if (isPendingDailyGreeting)
       return (

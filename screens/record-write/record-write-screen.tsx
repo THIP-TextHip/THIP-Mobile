@@ -117,8 +117,6 @@ export default function RecordWriteScreen() {
     }
   }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
-  if (!roomId || !bookPageInfo) return null;
-
   if (isPendingBookPageInfo) {
     return (
       <View style={styles.status}>
@@ -126,6 +124,8 @@ export default function RecordWriteScreen() {
       </View>
     );
   }
+
+  if (!roomId || !bookPageInfo) return null;
 
   return (
     <View style={styles.page}>
