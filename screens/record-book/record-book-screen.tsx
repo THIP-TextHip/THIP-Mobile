@@ -10,6 +10,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
+import { type RoomPostType } from "@apis/room";
 import {
   useGetRoomBookPageQuery,
   useGetRoomPostListQuery,
@@ -48,6 +49,8 @@ export default function RecordBookScreen() {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [postIdForComment, setPostIdForComment] = useState<number | null>(null);
+  const [postTypeForComment, setPostTypeForComment] =
+    useState<RoomPostType | null>(null);
 
   const {
     bookPageInfo,
@@ -163,13 +166,15 @@ export default function RecordBookScreen() {
     setIsDropdownVisible(false);
   };
 
-  const handleOpenComment = (postId: number) => {
+  const handleOpenComment = (postId: number, postType: RoomPostType) => {
     setPostIdForComment(postId);
+    setPostTypeForComment(postType);
     setIsCommentOpen(true);
   };
 
   const handleCloseComment = () => {
     setPostIdForComment(null);
+    setPostTypeForComment(null);
     setIsCommentOpen(false);
   };
 
@@ -310,9 +315,11 @@ export default function RecordBookScreen() {
               />
             }
           />
-          {postIdForComment !== null && (
+          {postIdForComment && postTypeForComment && (
             <RecordCommentBottomSheet
+              roomId={roomId}
               postId={postIdForComment}
+              postType={postTypeForComment}
               isVisible={isCommentOpen}
               handleClose={handleCloseComment}
             />

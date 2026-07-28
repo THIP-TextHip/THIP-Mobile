@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
+import { type RoomPostType } from "@apis/room";
 import {
   useChangeRoomPostLikeStatusMutation,
   useDeleteRoomPostMutation,
@@ -23,10 +24,9 @@ import RecordVoteList from "./record-vote-list";
 interface RecordBookPostItemProps {
   roomId: number;
   post: RoomPostContent;
-  handleOpenComment: (postId: number) => void;
+  handleOpenComment: (postId: number, postType: RoomPostType) => void;
 }
 
-// TODO: 서버 연결하면서 이벤트 핸들러 구현
 export default function RecordBookPostItem({
   roomId,
   post,

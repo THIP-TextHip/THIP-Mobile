@@ -52,3 +52,5 @@ export type {
   RoomPostSortType,
   RoomPostVote,
 } from "./room-post.types";
+
+export { ROOM_POST_QUERY_KEY } from "./room-post.query-key";

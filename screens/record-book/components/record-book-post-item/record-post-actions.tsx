@@ -18,7 +18,7 @@ interface RecordPostActionsProps {
   likeCount: number;
   commentCount: number;
   handlePressLike: (isLiked: boolean) => void;
-  handleOpenComment: (postId: number) => void;
+  handleOpenComment: (postId: number, postType: RoomPostType) => void;
   handleOpenPinModal: () => void;
 }
 
@@ -47,7 +47,7 @@ export default function RecordPostActions({
       </Pressable>
       <Pressable
         style={styles.likeComment}
-        onPress={() => handleOpenComment(postId)}
+        onPress={() => handleOpenComment(postId, postType)}
         hitSlop={5}
       >
         <IcComment />
