@@ -17,6 +17,7 @@ export {
   useCreateRoomRecordMutation,
   useCreateRoomVoteMutation,
   useDeleteRoomPostMutation,
+  useDoRoomVoteMutation,
   useEditRoomRecordMutation,
   useEditRoomVoteMutation,
   useGetBookInfoForPinQuery,

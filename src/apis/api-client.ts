@@ -60,7 +60,7 @@ if (!baseURL) {
 
 const axiosInstance = create({
   baseURL,
-  timeout: 10000,
+  timeout: 15000,
 });
 
 axiosInstance.interceptors.request.use(async (config) => {

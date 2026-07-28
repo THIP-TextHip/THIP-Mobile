@@ -6,6 +6,7 @@ import Toast from "react-native-toast-message";
 
 import {
   useDeleteRoomPostMutation,
+  useDoRoomVoteMutation,
   useGetBookInfoForPinQuery,
   type RoomPostContent,
 } from "@apis/room-post";
@@ -54,6 +55,7 @@ export default function RecordBookPostItem({
     isPendingDeleteRoomRecord,
     isPendingDeleteRoomVote,
   } = useDeleteRoomPostMutation();
+  const { doVote, isPendingDoVote } = useDoRoomVoteMutation();
 
   const handleToProfile = () => {
     router.push({
@@ -62,8 +64,9 @@ export default function RecordBookPostItem({
     });
   };
 
-  const handleVote = (voteItemId: number) => {
-    console.log(roomId, "번 방 ", voteItemId, "번 투표");
+  const handleVote = (voteItemId: number, isVoted: boolean) => {
+    if (isPendingDoVote) return;
+    doVote({ roomId, voteId: post.postId, voteItemId, type: !isVoted });
   };
 
   const handlePressLike = () => {

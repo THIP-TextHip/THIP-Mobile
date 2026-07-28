@@ -8,7 +8,7 @@ import { calculateVoteFillPercent } from "../../utils";
 
 interface RecordVoteListProps {
   voteItems: RoomPostVote[];
-  handleVote: (voteItemId: number) => void;
+  handleVote: (voteItemId: number, isVoted: boolean) => void;
 }
 
 export default function RecordVoteList({
@@ -33,7 +33,7 @@ export default function RecordVoteList({
           <Pressable
             key={item.voteItemId}
             style={[styles.voteItem, item.isVoted && styles.isVotedItem]}
-            onPress={() => handleVote(item.voteItemId)}
+            onPress={() => handleVote(item.voteItemId, item.isVoted)}
           >
             <AppText
               style={styles.voteContent}

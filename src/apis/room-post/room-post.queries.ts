@@ -457,13 +457,29 @@ export const useDeleteRoomPostMutation = () => {
 };
 
 export const useDoRoomVoteMutation = () => {
+  const queryClient = useQueryClient();
+
   const { mutate: doVote, isPending: isPendingDoVote } = useMutation<
     DoRoomVoteResponse,
     ApiErrorResponse,
     DoRoomVoteRequest
   >({
     mutationFn: doRoomVoteApi,
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.roomId),
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
   });
+
+  return {
+    doVote,
+    isPendingDoVote,
+  };
 };
