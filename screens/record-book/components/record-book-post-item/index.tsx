@@ -5,6 +5,7 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 import {
+  useChangeRoomPostLikeStatusMutation,
   useDeleteRoomPostMutation,
   useDoRoomVoteMutation,
   useGetBookInfoForPinQuery,
@@ -56,6 +57,8 @@ export default function RecordBookPostItem({
     isPendingDeleteRoomVote,
   } = useDeleteRoomPostMutation();
   const { doVote, isPendingDoVote } = useDoRoomVoteMutation();
+  const { changeRoomPostLikeStatus, isPendingChangeRoomPostLikeStatus } =
+    useChangeRoomPostLikeStatusMutation(roomId);
 
   const handleToProfile = () => {
     router.push({
@@ -69,8 +72,14 @@ export default function RecordBookPostItem({
     doVote({ roomId, voteId: post.postId, voteItemId, type: !isVoted });
   };
 
-  const handlePressLike = () => {
-    console.log(post.postId, "번 기록 좋아요 클릭");
+  const handlePressLike = (isLiked: boolean) => {
+    if (isPendingChangeRoomPostLikeStatus) return;
+
+    changeRoomPostLikeStatus({
+      postId: post.postId,
+      type: !isLiked,
+      roomPostType: post.postType,
+    });
   };
 
   const handleOpenOption = () => {
