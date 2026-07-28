@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -173,27 +173,29 @@ export default function RecordBookScreen() {
     setIsCommentOpen(false);
   };
 
-  if (!roomId) {
+  useEffect(() => {
     if (!roomId) {
       Toast.show({
         type: "error",
         text1: "잘못된 접근이에요. 다시 시도해 주세요.",
       });
+
       router.back();
     }
+  }, [roomId]);
 
-    return;
-  }
+  useEffect(() => {
+    if (isErrorBookPageInfo) {
+      Toast.show({
+        type: "error",
+        text1: bookPageInfoError?.message,
+      });
 
-  if (isErrorBookPageInfo || !bookPageInfo) {
-    Toast.show({
-      type: "error",
-      text1: bookPageInfoError?.message,
-    });
-    router.back();
+      router.back();
+    }
+  }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
-    return;
-  }
+  if (!roomId || isErrorBookPageInfo) return null;
 
   const RecordListHeader = () => {
     if (isMyRecord) return null;

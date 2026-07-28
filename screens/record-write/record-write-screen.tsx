@@ -93,15 +93,31 @@ export default function RecordWriteScreen() {
     isPendingCreateRoomRecord ||
     isPendingEditRoomRecord;
 
-  if (!roomId) {
-    Toast.show({
-      type: "error",
-      text1: "잘못된 접근이에요. 다시 시도해 주세요.",
-    });
-    router.back();
+  useEffect(() => {
+    if (!roomId) {
+      Toast.show({
+        type: "error",
+        text1: "잘못된 접근이에요. 다시 시도해 주세요.",
+      });
+      router.back();
 
-    return;
-  }
+      return;
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    if (isErrorBookPageInfo) {
+      Toast.show({
+        type: "error",
+        text1: bookPageInfoError?.message,
+      });
+      router.back();
+
+      return;
+    }
+  }, [isErrorBookPageInfo, bookPageInfoError?.message]);
+
+  if (!roomId || !bookPageInfo) return null;
 
   if (isPendingBookPageInfo) {
     return (
@@ -109,16 +125,6 @@ export default function RecordWriteScreen() {
         <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
-  }
-
-  if (isErrorBookPageInfo || !bookPageInfo) {
-    Toast.show({
-      type: "error",
-      text1: bookPageInfoError?.message,
-    });
-    router.back();
-
-    return;
   }
 
   return (
