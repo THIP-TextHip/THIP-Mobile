@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   RefreshControl,
@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message";
 
 import { useGetRoomDetailQuery, useLeaveRoomMutation } from "@apis/room";
 import { AppText, GroupInfo } from "@shared/ui";
+import { getCurrentDate, parseStringToDate } from "@shared/utils";
 import { colors } from "@theme/token";
 
 import {
@@ -121,6 +122,27 @@ export default function GroupDetailScreen() {
 
   const disabledHeaderOption =
     !roomDetailData || isPendingRoomDetail || isErrorRoomDetail;
+
+  useEffect(() => {
+    const progressEndDate = roomDetailData?.progressEndDate;
+
+    if (!progressEndDate) return;
+
+    const endDate = parseStringToDate(progressEndDate);
+
+    if (!endDate) return;
+
+    const { currentYear, currentMonth, currentDay } = getCurrentDate();
+
+    const today = new Date(currentYear, currentMonth - 1, currentDay);
+
+    if (endDate < today) {
+      Toast.show({
+        type: "default",
+        text1: "완료된 모임방에서는 기존 기록에 대한 조회만 가능해요.",
+      });
+    }
+  }, [roomDetailData?.progressEndDate]);
 
   return (
     <View style={styles.page}>

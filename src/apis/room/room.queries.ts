@@ -245,7 +245,7 @@ export const useCreateRoomMutation = () => {
         text1: "모임방 생성이 완료되었습니다.",
       });
       router.replace({
-        pathname: "/group-detail/[roomId]",
+        pathname: "/join-group/[roomId]",
         params: { roomId: data.roomId },
       });
     },

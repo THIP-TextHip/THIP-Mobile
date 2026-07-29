@@ -71,9 +71,10 @@ export default function RecordWriteScreen() {
     if (isPendingCreateRoomRecord || isPendingEditRoomRecord) return;
 
     if (prevRecord === null) {
+      if (!bookPageInfo) return;
       createRoomRecord({
         roomId,
-        page: recordPage,
+        page: isOverview ? bookPageInfo.totalBookPage : recordPage,
         isOverview,
         content,
       });

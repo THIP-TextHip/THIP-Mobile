@@ -9,6 +9,7 @@ import Carousel, {
 } from "react-native-reanimated-carousel";
 
 import { AppText } from "@shared/ui";
+import { useRoomDetailVoteStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
 import { CurrentVoteType } from "../../types";
@@ -42,6 +43,7 @@ const getVotesCarouselHeight = (currentVotes: CurrentVoteType[]) => {
 };
 
 const VotesCarouselItem = ({ roomId, vote }: VotesCarouselItemProps) => {
+  const { setRoomDetailVote } = useRoomDetailVoteStore();
   const pressStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const handlePressIn = useCallback((event: GestureResponderEvent) => {
@@ -67,13 +69,13 @@ const VotesCarouselItem = ({ roomId, vote }: VotesCarouselItemProps) => {
         return;
       }
 
-      // TODO: 추후 특정 페이지로 이동하도록 수정 필요.
+      setRoomDetailVote(vote);
       router.push({
         pathname: "/record-book/[roomId]",
         params: { roomId: String(roomId) },
       });
     },
-    [roomId],
+    [roomId, setRoomDetailVote, vote],
   );
 
   return (

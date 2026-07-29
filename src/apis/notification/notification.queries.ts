@@ -11,10 +11,13 @@ import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
 import { getFormattedCurrentDateTime } from "@shared/utils";
+import { useRecordBookAlarmStore } from "@stores/record-book";
 
 import { ApiErrorResponse } from "../api-client";
 import { COMMENT_QUERY_KEY } from "../comment";
 import { FEED_QUERY_KEY } from "../feed";
+import { ROOM_QUERY_KEY } from "../room";
+import { ROOM_POST_QUERY_KEY } from "../room-post";
 import {
   changePushNotificationStateApi,
   checkNotificationApi,
@@ -160,6 +163,8 @@ const shouldRetryNotificationCheck = (failureCount: number, error: Error) =>
 
 export const useCheckNotification = () => {
   const queryClient = useQueryClient();
+  const { setRecordBookAlarmInfo } = useRecordBookAlarmStore();
+
   const {
     mutate: checkNotification,
     isPending: isPendingCheckNotification,
@@ -173,37 +178,63 @@ export const useCheckNotification = () => {
       queryClient.invalidateQueries({
         queryKey: NOTIFICATION_QUERY_KEY.ALL,
       });
-      if (data.route === NOTIFICATION_ROUTE.FEED_USER) {
-        router.push({
-          pathname: "/user-profile/[userId]",
-          params: { userId: data.params.userId },
-        });
-      } else if (data.route === NOTIFICATION_ROUTE.FEED_DETAIL) {
-        router.push({
-          pathname: "/feed-detail/[feedId]",
-          params: { feedId: data.params.feedId },
-        });
-        queryClient.invalidateQueries({
-          queryKey: FEED_QUERY_KEY.DETAIL(data.params.feedId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: COMMENT_QUERY_KEY.LIST(data.params.feedId, "FEED"),
-        });
-      } else if (
-        data.route === NOTIFICATION_ROUTE.ROOM_MAIN ||
-        data.route === NOTIFICATION_ROUTE.ROOM_DETAIL
-      ) {
-        // TODO: 추후 모임방 관련 시 쿼리 캐시 초기화 추가
-        router.push({
-          pathname: "/group-detail/[roomId]",
-          params: { roomId: data.params.roomId },
-        });
-      } else if (data.route === NOTIFICATION_ROUTE.ROOM_POST_DETAIL) {
-        // TODO: 이 경우에는 받은 params를 이용하여 해당 기록 위치를 보여주고, openComments 여부에 따라 댓글 바텀시트도 조작한다. 쿼리 캐시도 초기화
-        router.push({
-          pathname: "/group-detail/[roomId]",
-          params: { roomId: data.params.roomId },
-        });
+      switch (data.route) {
+        case NOTIFICATION_ROUTE.FEED_USER:
+          router.push({
+            pathname: "/user-profile/[userId]",
+            params: { userId: data.params.userId },
+          });
+          break;
+        case NOTIFICATION_ROUTE.FEED_DETAIL:
+          router.push({
+            pathname: "/feed-detail/[feedId]",
+            params: { feedId: data.params.feedId },
+          });
+          queryClient.invalidateQueries({
+            queryKey: FEED_QUERY_KEY.DETAIL(data.params.feedId),
+          });
+          queryClient.invalidateQueries({
+            queryKey: COMMENT_QUERY_KEY.LIST(data.params.feedId, "FEED"),
+          });
+          break;
+        case NOTIFICATION_ROUTE.ROOM_MAIN:
+          router.push({
+            pathname: "/group-detail/[roomId]",
+            params: { roomId: data.params.roomId },
+          });
+          queryClient.invalidateQueries({
+            queryKey: ROOM_QUERY_KEY.ALL,
+          });
+          break;
+        case NOTIFICATION_ROUTE.ROOM_DETAIL:
+          router.push({
+            pathname: "/join-group/[roomId]",
+            params: { roomId: data.params.roomId },
+          });
+          queryClient.invalidateQueries({
+            queryKey: ROOM_QUERY_KEY.ALL,
+          });
+          break;
+        case NOTIFICATION_ROUTE.ROOM_POST_DETAIL:
+          setRecordBookAlarmInfo(data.params);
+          router.push({
+            pathname: "/record-book/[roomId]",
+            params: { roomId: data.params.roomId },
+          });
+          queryClient.invalidateQueries({
+            queryKey: ROOM_POST_QUERY_KEY.ALL_POST(data.params.roomId),
+          });
+          if (data.params.openComments) {
+            queryClient.invalidateQueries({
+              queryKey: COMMENT_QUERY_KEY.LIST(
+                data.params.postId,
+                data.params.postType,
+              ),
+            });
+          }
+          break;
+        default:
+          router.push("/alarm");
       }
     },
   });

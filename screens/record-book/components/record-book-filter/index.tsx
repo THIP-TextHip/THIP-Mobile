@@ -14,6 +14,10 @@ interface RecordBookFilterProps {
   pageSettingMode: boolean;
   isDropdownVisible: boolean;
   sortType: RoomPostSortTypeWithLabel;
+  selectedPages: {
+    start: number | null;
+    end: number | null;
+  };
   handlePressPageChip: () => void;
   handleResetPage: () => void;
   handleApplyPage: (start: number | null, end: number | null) => void;
@@ -24,6 +28,7 @@ interface RecordBookFilterProps {
 
 export default function RecordBookFilter({
   selectedChip,
+  selectedPages,
   pageSettingMode,
   isDropdownVisible,
   sortType,
@@ -34,8 +39,12 @@ export default function RecordBookFilter({
   handlePressDropdown,
   handleSelectType,
 }: RecordBookFilterProps) {
-  const [startPage, setStartPage] = useState("");
-  const [endPage, setEndPage] = useState("");
+  const [startPage, setStartPage] = useState(
+    selectedPages.start ? String(selectedPages.start) : "",
+  );
+  const [endPage, setEndPage] = useState(
+    selectedPages.end ? String(selectedPages.end) : "",
+  );
 
   const handleReset = () => {
     setStartPage("");
