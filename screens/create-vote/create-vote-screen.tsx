@@ -73,9 +73,10 @@ export default function CreateVoteScreen() {
     if (isPendingCreateRoomVote || isPendingEditRoomVote) return;
 
     if (prevRecord === null) {
+      if (!bookPageInfo) return;
       createRoomVote({
         roomId,
-        page: recordPage,
+        page: isOverview ? bookPageInfo.totalBookPage : recordPage,
         isOverview,
         content,
         voteItemList: cleanedVoteItemList,

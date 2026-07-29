@@ -29,6 +29,7 @@ export default function RecordBookFloating({
       pathname: "/record-write/[roomId]",
       params: { roomId },
     });
+    setIsOptionOpen(false);
   };
 
   const handleToCreateVote = () => {
@@ -36,6 +37,7 @@ export default function RecordBookFloating({
       pathname: "/create-vote/[roomId]",
       params: { roomId },
     });
+    setIsOptionOpen(false);
   };
 
   return (

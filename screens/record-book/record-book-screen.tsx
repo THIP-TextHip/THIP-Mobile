@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -17,6 +17,10 @@ import {
 } from "@apis/room-post";
 import { IcAlertGrey } from "@images/icons";
 import { AppText } from "@shared/ui";
+import {
+  useRecordBookAlarmStore,
+  useRoomDetailVoteStore,
+} from "@stores/record-book";
 import { colors } from "@theme/token";
 
 import {
@@ -32,25 +36,52 @@ import { RoomPostSortTypeWithLabel } from "./types";
 
 export default function RecordBookScreen() {
   const { bottom } = useSafeAreaInsets();
+  const navigation = useNavigation();
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
+  const { recordBookAlarmInfo, clearRecordBookAlarmInfo } =
+    useRecordBookAlarmStore();
+  const { roomDetailVote, clearRoomDetailVote } = useRoomDetailVoteStore();
   const [isMyRecord, setIsMyRecord] = useState(false);
   const [selectedChip, setSelectedChip] = useState<"page" | "overview" | null>(
-    null,
+    recordBookAlarmInfo
+      ? "page"
+      : roomDetailVote
+        ? roomDetailVote.isOverview
+          ? "overview"
+          : "page"
+        : null,
   );
   const [pageSettingMode, setPageSettingMode] = useState(false);
   const [selectedPages, setSelectedPages] = useState<{
     start: number | null;
     end: number | null;
-  }>({ start: null, end: null });
+  }>({
+    start: recordBookAlarmInfo
+      ? recordBookAlarmInfo.page
+      : roomDetailVote && !roomDetailVote.isOverview
+        ? roomDetailVote.page
+        : null,
+    end: recordBookAlarmInfo
+      ? recordBookAlarmInfo.page
+      : roomDetailVote && !roomDetailVote.isOverview
+        ? roomDetailVote.page
+        : null,
+  });
 
   const [sortType, setSortType] = useState<RoomPostSortTypeWithLabel>(
     GROUP_RECORD_SORT[0],
   );
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [isCommentOpen, setIsCommentOpen] = useState(false);
-  const [postIdForComment, setPostIdForComment] = useState<number | null>(null);
+  const [isCommentOpen, setIsCommentOpen] = useState(
+    recordBookAlarmInfo ? recordBookAlarmInfo.openComments : false,
+  );
+  const [postIdForComment, setPostIdForComment] = useState<number | null>(
+    recordBookAlarmInfo ? recordBookAlarmInfo.postId : null,
+  );
   const [postTypeForComment, setPostTypeForComment] =
-    useState<RoomPostType | null>(null);
+    useState<RoomPostType | null>(
+      recordBookAlarmInfo ? recordBookAlarmInfo.postType : null,
+    );
 
   const {
     bookPageInfo,
@@ -200,6 +231,13 @@ export default function RecordBookScreen() {
     }
   }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
+  useEffect(() => {
+    return navigation.addListener("beforeRemove", () => {
+      clearRecordBookAlarmInfo();
+      clearRoomDetailVote();
+    });
+  }, [clearRecordBookAlarmInfo, clearRoomDetailVote, navigation]);
+
   if (!roomId || isErrorBookPageInfo) return null;
 
   const RecordListHeader = () => {
@@ -270,6 +308,7 @@ export default function RecordBookScreen() {
       {!isMyRecord && (
         <RecordBookFilter
           selectedChip={selectedChip}
+          selectedPages={selectedPages}
           pageSettingMode={pageSettingMode}
           isDropdownVisible={isDropdownVisible}
           sortType={sortType}
