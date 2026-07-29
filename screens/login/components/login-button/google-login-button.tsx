@@ -10,6 +10,8 @@ import { IcGoogle } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
+import LoginLoading from "../login-loading";
+
 export default function GoogleLoginButton() {
   const { login, isPendingLogin } = useLoginMutation();
 
@@ -40,6 +42,11 @@ export default function GoogleLoginButton() {
       });
     }
   };
+
+  if (isPendingLogin) {
+    return <LoginLoading />;
+  }
+
   return (
     <Pressable
       style={styles.loginButtonContainer}

@@ -10,6 +10,8 @@ import { IcKakaotalk } from "@images/icons";
 import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
+import LoginLoading from "../login-loading";
+
 export default function KakaoLoginButton() {
   const { login, isPendingLogin } = useLoginMutation();
 
@@ -34,6 +36,10 @@ export default function KakaoLoginButton() {
       });
     }
   };
+
+  if (isPendingLogin) {
+    return <LoginLoading />;
+  }
 
   return (
     <Pressable
