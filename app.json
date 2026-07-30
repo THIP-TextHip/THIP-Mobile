@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "THIP",
-    "slug": "THIP",
+    "name": "Thip",
+    "slug": "Thip-Mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/thip/thip-app-icon-lg.png",
-    "scheme": "thip",
+    "scheme": "thipmobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -46,7 +46,6 @@
       "expo-font",
       "expo-secure-store",
       [
-        // TODO: 안드로이드용 푸시알림 아이콘 제작
         "expo-notifications",
         {
           "icon": "./assets/images/thip/thip-app-icon-sm.png",
