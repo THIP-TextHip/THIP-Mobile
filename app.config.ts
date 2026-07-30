@@ -14,12 +14,12 @@ const plugins: ExpoConfig["plugins"] = [
   [
     "expo-splash-screen",
     {
-      image: "./assets/images/splash-icon.png",
-      imageWidth: 200,
+      image: "./assets/images/thip/thip-splash.png",
+      imageWidth: 250,
       resizeMode: "contain",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#121212",
       dark: {
-        backgroundColor: "#000000",
+        backgroundColor: "#121212",
       },
     },
   ],
@@ -37,6 +37,7 @@ const plugins: ExpoConfig["plugins"] = [
     "expo-notifications",
     {
       defaultChannel: "default",
+      icon: "./assets/images/thip/thip-app-icon-sm.png",
     },
   ],
   [
