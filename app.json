@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Thip-Mobile",
-    "slug": "Thip-Mobile",
+    "name": "THIP",
+    "slug": "THIP",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/thip/thip-app-icon-lg.png",
-    "scheme": "thipmobile",
+    "scheme": "thip",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
