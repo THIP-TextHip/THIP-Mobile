@@ -72,6 +72,8 @@ export default function LoginLoading() {
       <View style={styles.container}>
         <Animated.Image
           source={ThipLogo}
+          accessibilityRole="progressbar"
+          accessibilityLabel="로그인 처리 중"
           style={[{ width: splashWidth, height: splashHeight }, animatedStyle]}
         />
       </View>

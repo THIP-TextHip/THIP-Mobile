@@ -46,6 +46,7 @@
       "expo-font",
       "expo-secure-store",
       [
+        // TODO: 안드로이드용 푸시알림 아이콘 제작
         "expo-notifications",
         {
           "icon": "./assets/images/thip/thip-app-icon-sm.png",
