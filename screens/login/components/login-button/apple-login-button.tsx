@@ -4,6 +4,8 @@ import Toast from "react-native-toast-message";
 
 import { useAppleLoginMutation } from "@apis/auth";
 
+import LoginLoading from "../login-loading";
+
 export default function AppleLoginButton() {
   const { appleLogin, isPendingAppleLogin } = useAppleLoginMutation();
   const handleLogin = async () => {
@@ -39,6 +41,10 @@ export default function AppleLoginButton() {
       });
     }
   };
+
+  if (isPendingAppleLogin) {
+    return <LoginLoading />;
+  }
 
   return (
     <AppleAuthentication.AppleAuthenticationButton
