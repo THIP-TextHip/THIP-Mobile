@@ -36,8 +36,8 @@ const plugins: ExpoConfig["plugins"] = [
   [
     "expo-notifications",
     {
-      defaultChannel: "default",
       icon: "./assets/images/thip/thip-app-icon-sm.png",
+      defaultChannel: "default",
     },
   ],
   [
