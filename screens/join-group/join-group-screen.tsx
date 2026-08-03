@@ -7,7 +7,6 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   BackHandler,
   Platform,
   RefreshControl,
@@ -23,7 +22,7 @@ import {
   useCloseRoomRecruitingMutation,
   useGetRecruitingRoomDetailQuery,
 } from "@apis/room";
-import { AppText, GroupInfo } from "@shared/ui";
+import { AppText, GroupInfo, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
@@ -184,9 +183,7 @@ export default function JoinGroupScreen() {
           </AppText>
         </View>
       ) : isPendingRecruitingRoomDetail ? (
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="page" />
       ) : !recruitingRoomDetailData || isErrorRecruitingRoomDetail ? (
         <View style={styles.status}>
           <AppText weight="semibold" size="lg" color={colors.white}>

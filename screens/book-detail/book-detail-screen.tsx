@@ -1,12 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -15,7 +9,12 @@ import {
   useGetFeedRelatedBookQuery,
   type FeedRelatedBookSort,
 } from "@apis/feed";
-import { AppText, FeedPostPreview, type FilterType } from "@shared/ui";
+import {
+  AppText,
+  FeedPostPreview,
+  LoadingIndicator,
+  type FilterType,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
@@ -107,18 +106,17 @@ export default function BookDetailScreen() {
 
   if (isPendingBookDetail) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
+      <LoadingIndicator
+        variant="page"
+        containerStyle={styles.loadingContainer}
+      />
     );
   }
 
   const renderEmpty = () => {
     if (isPendingFeedRelatedBookList) {
       return (
-        <View style={styles.status}>
-          <ActivityIndicator color={colors.white} />
-        </View>
+        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
       );
     }
 
@@ -184,9 +182,7 @@ export default function BookDetailScreen() {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={renderEmpty}
         ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator style={styles.footer} color={colors.white} />
-          ) : null
+          isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
@@ -236,8 +232,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-  },
-  footer: {
-    marginTop: 40,
   },
 });

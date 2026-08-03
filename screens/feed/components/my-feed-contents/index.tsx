@@ -1,11 +1,5 @@
 import { type RefObject } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 
 import {
   useGetFeedMyProfileQuery,
@@ -17,6 +11,7 @@ import {
   AppText,
   FeedPostPreview,
   ListTotalCountHeader,
+  LoadingIndicator,
   ThipPreview,
   UserProfileBar,
 } from "@shared/ui";
@@ -30,7 +25,7 @@ const MyFeedTopContents = () => {
   if (isPendingMyId || isPendingMyProfileTopInfo) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
+        <LoadingIndicator variant="list-empty" />
       </View>
     );
   }
@@ -92,9 +87,7 @@ export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
   const renderEmpty = () => {
     if (isPendingFeedMyProfile) {
       return (
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
       );
     }
 
@@ -146,6 +139,11 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginBottom: 20,
   },
+  loadingContainer: {
+    minHeight: 200,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   profile: {
     gap: 16,
     paddingHorizontal: 20,
@@ -158,11 +156,6 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   status: {
     flex: 1,

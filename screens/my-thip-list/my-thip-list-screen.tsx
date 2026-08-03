@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -12,7 +11,7 @@ import {
   useChangeFollowingStateMutation,
   useGetMyFollowingsQuery,
 } from "@apis/user";
-import { AppText, ListTotalCountHeader } from "@shared/ui";
+import { AppText, ListTotalCountHeader, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { MyThipItem } from "./components";
@@ -70,11 +69,7 @@ export default function MyThipListScreen() {
   };
 
   if (isPendingMyFollowings) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
   }
 
   return (

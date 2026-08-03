@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -10,7 +9,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { type MyRoomType, useGetMyRoomListQuery } from "@apis/room";
-import { AppText, MyGroupCard } from "@shared/ui";
+import { AppText, LoadingIndicator, MyGroupCard } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { MyGroupTopFilter } from "./components";
@@ -92,9 +91,7 @@ export default function MyGroupListScreen() {
         handleSelectType={handleSelectType}
       />
       {isPendingMyRoomList ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="page" />
       ) : (
         <FlatList
           contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
@@ -103,9 +100,7 @@ export default function MyGroupListScreen() {
           renderItem={({ item }) => <MyGroupCard {...item} />}
           ListEmptyComponent={MyGroupEmpty}
           ListFooterComponent={
-            isFetchingNextPage ? (
-              <ActivityIndicator style={styles.footer} color={colors.white} />
-            ) : null
+            isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
           }
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0.5}
@@ -135,13 +130,5 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footer: {
-    marginTop: 40,
   },
 });

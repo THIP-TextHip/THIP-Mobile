@@ -1,6 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   RefreshControl,
@@ -10,7 +9,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useBookDetailQuery, useBookRecruitingRoomsQuery } from "@apis/book";
-import { AppText, ListTotalCountHeader, MyGroupCard } from "@shared/ui";
+import {
+  AppText,
+  ListTotalCountHeader,
+  LoadingIndicator,
+  MyGroupCard,
+} from "@shared/ui";
 import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
@@ -53,11 +57,7 @@ export default function BookRecruitingGroupScreen() {
   }
 
   if (isPendingBookRecruitingRooms || isPendingBookDetail) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
   }
 
   const renderEmpty = () => {
@@ -125,9 +125,7 @@ export default function BookRecruitingGroupScreen() {
           />
         )}
         ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator style={styles.footer} color={colors.white} />
-          ) : null
+          isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
@@ -181,9 +179,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-  },
-  footer: {
-    marginTop: 40,
   },
   bottomButton: {
     width: "100%",

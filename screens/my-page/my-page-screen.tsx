@@ -1,15 +1,9 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { useGetMyInfoQuery } from "@apis/user";
-import { AppText, UserProfileBar } from "@shared/ui";
+import { AppText, LoadingIndicator, UserProfileBar } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { LogoutModal, SettingsListItem } from "./components";
@@ -37,9 +31,10 @@ export default function MyPageScreen() {
   return (
     <ScrollView contentContainerStyle={styles.page}>
       {isPendingMyInfo ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator color={colors.white} />
-        </View>
+        <LoadingIndicator
+          variant="page"
+          containerStyle={styles.loadingContainer}
+        />
       ) : (
         <UserProfileBar
           type="edit-profile"

@@ -1,8 +1,6 @@
-import { BlurView } from "expo-blur";
 import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -17,6 +15,7 @@ import {
   BookSearchBottomSheet,
   BookSelectSection,
   type BottomSheetBookItemType,
+  LoadingOverlay,
   VisibilitySection,
 } from "@shared/ui";
 import { useSelectedBookStore } from "@stores/selected-book";
@@ -183,11 +182,7 @@ export default function CreateGroupScreen() {
         handleClose={handleCloseBottomSheet}
       />
 
-      {isPendingCreateRoom && (
-        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </BlurView>
-      )}
+      <LoadingOverlay visible={isPendingCreateRoom} />
     </View>
   );
 }
@@ -207,10 +202,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     height: 1,
     backgroundColor: colors.darkgrey.dark,
-  },
-  linearBlur: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

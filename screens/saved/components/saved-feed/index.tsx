@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -9,7 +8,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useSavedFeedQuery } from "@apis/feed";
-import { AppText, FeedPostPreview } from "@shared/ui";
+import { AppText, FeedPostPreview, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function SavedFeed() {
@@ -35,11 +34,7 @@ export default function SavedFeed() {
   };
 
   if (isPendingSavedFeed) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   if (isErrorSavedFeed && savedFeedList.length === 0) {
@@ -93,9 +88,7 @@ export default function SavedFeed() {
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListEmptyComponent={SavedFeedEmpty}
       ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={colors.white} />
-        ) : null
+        isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
@@ -125,13 +118,5 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footer: {
-    marginTop: 40,
   },
 });

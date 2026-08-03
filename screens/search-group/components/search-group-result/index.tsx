@@ -1,11 +1,16 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
 import { type SearchRoomCategory, useSearchRoomQuery } from "@apis/room";
-import { AppText, ListTotalCountHeader, SelectChip } from "@shared/ui";
+import {
+  AppText,
+  ListTotalCountHeader,
+  LoadingIndicator,
+  SelectChip,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { SEARCH_GROUP_CATEGORY } from "../../constants";
@@ -92,9 +97,7 @@ export default function SearchGroupResult({
   const renderEmpty = () => {
     if (isPendingSearchRoom) {
       return (
-        <View style={styles.empty}>
-          <ActivityIndicator color={colors.white} />
-        </View>
+        <LoadingIndicator variant="list-empty" containerStyle={styles.empty} />
       );
     }
 
@@ -137,7 +140,7 @@ export default function SearchGroupResult({
         ListEmptyComponent={renderEmpty}
         ListFooterComponent={
           isFetchingNextPage ? (
-            <ActivityIndicator style={styles.footer} color={colors.white} />
+            <LoadingIndicator variant="footer" containerStyle={styles.footer} />
           ) : null
         }
         onEndReached={handleLoadMore}

@@ -1,17 +1,11 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import {
   type NotificationType,
   useGetNotificationListQuery,
 } from "@apis/notification";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import AlarmItem from "../alarm-item";
@@ -42,11 +36,7 @@ export default function AlarmList({ filter }: AlarmListProps) {
   };
 
   if (isPendingNotificationList) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
   }
 
   if (isErrorNotificationList) {
@@ -66,9 +56,7 @@ export default function AlarmList({ filter }: AlarmListProps) {
       keyExtractor={(item) => String(item.notificationId)}
       renderItem={({ item }) => <AlarmItem alarm={item} />}
       ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={colors.white} />
-        ) : null
+        isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
@@ -101,8 +89,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 80,
-  },
-  footer: {
-    marginTop: 40,
   },
 });

@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -14,7 +13,7 @@ import {
   useGetFeedUserProfileQuery,
   useGetUserProfileTopInfoQuery,
 } from "@apis/feed";
-import { AppText, FeedPostPreview } from "@shared/ui";
+import { AppText, FeedPostPreview, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { UserProfileTopContents } from "./components";
@@ -49,9 +48,7 @@ export default function UserProfileScreen() {
   const renderEmpty = () => {
     if (isPendingFeedUserProfile) {
       return (
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
       );
     }
 
@@ -89,11 +86,7 @@ export default function UserProfileScreen() {
   }, [userId]);
 
   if (isPendingUserProfileTopInfo) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   return (
@@ -124,11 +117,6 @@ const styles = StyleSheet.create({
     marginVertical: 40,
     height: 6,
     backgroundColor: colors.darkgrey.divider,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   status: {
     flex: 1,

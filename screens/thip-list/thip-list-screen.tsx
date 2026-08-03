@@ -1,7 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useCallback } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -10,7 +9,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FollowerType, useGetUserFollowersQuery } from "@apis/user";
-import { AppText, ListTotalCountHeader, UserListItem } from "@shared/ui";
+import {
+  AppText,
+  ListTotalCountHeader,
+  LoadingIndicator,
+  UserListItem,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function ThipListScreen() {
@@ -51,11 +55,7 @@ export default function ThipListScreen() {
   };
 
   if (isPendingUserFollowers) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
   }
 
   return (

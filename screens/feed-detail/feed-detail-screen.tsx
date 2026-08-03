@@ -1,19 +1,19 @@
-import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { useGetCommentListQuery, useWriteCommentMutation } from "@apis/comment";
 import { useDeleteFeedMutation, useGetFeedDetailQuery } from "@apis/feed";
-import { AppText, ChatInputBar, CommentRoot, FeedPostDetail } from "@shared/ui";
+import {
+  AppText,
+  ChatInputBar,
+  CommentRoot,
+  FeedPostDetail,
+  LoadingIndicator,
+  LoadingOverlay,
+} from "@shared/ui";
 import { usePrevFeedStore } from "@stores/feed-edit";
 import { colors } from "@theme/token";
 
@@ -151,9 +151,7 @@ export default function FeedDetailScreen() {
   const renderCommentEmpty = () => {
     if (isPendingCommentList) {
       return (
-        <View style={styles.empty}>
-          <ActivityIndicator color={colors.white} />
-        </View>
+        <LoadingIndicator variant="list-empty" containerStyle={styles.empty} />
       );
     }
 
@@ -199,9 +197,7 @@ export default function FeedDetailScreen() {
     return (
       <View style={[styles.page, { paddingBottom: bottom }]}>
         <FeedDetailHeader handlePressMore={handlePressMore} />
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="page" />
       </View>
     );
   }
@@ -240,9 +236,9 @@ export default function FeedDetailScreen() {
         ListEmptyComponent={renderCommentEmpty}
         ListFooterComponent={
           isFetchingNextPage ? (
-            <ActivityIndicator
-              style={styles.commentFooter}
-              color={colors.white}
+            <LoadingIndicator
+              variant="footer"
+              containerStyle={styles.commentFooter}
             />
           ) : null
         }
@@ -286,11 +282,7 @@ export default function FeedDetailScreen() {
         handleCloseModal={handleCloseModal}
         handleFeedDelete={handleFeedDelete}
       />
-      {isPendingDeleteFeed && (
-        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </BlurView>
-      )}
+      <LoadingOverlay visible={isPendingDeleteFeed} />
     </View>
   );
 }
@@ -315,11 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   commentFooter: {
-    marginVertical: 24,
-  },
-  linearBlur: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
+    marginTop: 24,
+    marginBottom: 24,
   },
 });

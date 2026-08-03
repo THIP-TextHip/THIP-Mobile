@@ -1,8 +1,6 @@
-import { BlurView } from "expo-blur";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -17,9 +15,12 @@ import {
   useEditRoomRecordMutation,
   useGetRoomBookPageQuery,
 } from "@apis/room-post";
-import { RecordPageSection } from "@shared/ui";
+import {
+  LoadingIndicator,
+  LoadingOverlay,
+  RecordPageSection,
+} from "@shared/ui";
 import { usePrevRecordStore } from "@stores/record-book";
-import { colors } from "@theme/token";
 
 import { RecordWriteContentSection, RecordWriteHeader } from "./components";
 
@@ -119,11 +120,7 @@ export default function RecordWriteScreen() {
   }, [isErrorBookPageInfo, bookPageInfoError?.message]);
 
   if (isPendingBookPageInfo) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   if (!roomId || !bookPageInfo) return null;
@@ -164,11 +161,9 @@ export default function RecordWriteScreen() {
           />
         </ScrollView>
       </KeyboardAvoidingView>
-      {(isPendingCreateRoomRecord || isPendingEditRoomRecord) && (
-        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </BlurView>
-      )}
+      <LoadingOverlay
+        visible={isPendingCreateRoomRecord || isPendingEditRoomRecord}
+      />
     </View>
   );
 }
@@ -184,15 +179,5 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
     paddingHorizontal: 20,
     gap: 32,
-  },
-  status: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  linearBlur: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

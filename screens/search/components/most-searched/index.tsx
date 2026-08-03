@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { useMostSearchedBookQuery } from "@apis/book";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import MostSearchedBookItem from "../most-searched-book-item";
@@ -34,9 +34,10 @@ export default function MostSearched() {
         </AppText>
       </View>
       {isPendingMostSearchedBook ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator
+          variant="page"
+          containerStyle={styles.loadingContainer}
+        />
       ) : isErrorMostSearchedBook ? (
         <View style={styles.emptyContainer}>
           <AppText weight="semibold" size="lg" color={colors.white}>

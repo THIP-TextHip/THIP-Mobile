@@ -1,11 +1,12 @@
 import { router } from "expo-router";
 import { useCallback } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { type BookSelectableListType } from "@apis/book";
 import { colors } from "@theme/token";
 
 import AppText from "../../../app-text";
+import { LoadingIndicator } from "../../../loading";
 import { CustomButton } from "../../../button";
 
 interface BookSearchEmptyProps {
@@ -31,7 +32,7 @@ export default function BookSearchEmpty({
   return (
     <View style={styles.emptyContainer}>
       {isPending ? (
-        <ActivityIndicator size="large" color={colors.white} />
+        <LoadingIndicator variant="list-empty" />
       ) : (
         <>
           <AppText

@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -10,7 +9,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useGetMyRoomListQuery } from "@apis/room";
 import { useGetMyInfoQuery } from "@apis/user";
-import { AppText, MyGroupCard } from "@shared/ui";
+import { AppText, LoadingIndicator, MyGroupCard } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function ExpiredGroupListScreen() {
@@ -37,11 +36,7 @@ export default function ExpiredGroupListScreen() {
   };
 
   if (isPendingMyRoomList) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   const ListHeader = () => {
@@ -97,9 +92,7 @@ export default function ExpiredGroupListScreen() {
       renderItem={({ item }) => <MyGroupCard {...item} />}
       ListEmptyComponent={ExpiredGroupEmpty}
       ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={colors.white} />
-        ) : null
+        isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
@@ -124,13 +117,5 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  footer: {
-    marginTop: 40,
   },
 });

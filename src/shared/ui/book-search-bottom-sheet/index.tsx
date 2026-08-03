@@ -4,7 +4,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
 import React, { useCallback, useRef, useState } from "react";
-import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -16,6 +16,7 @@ import {
 } from "@apis/book";
 import { colors } from "@theme/token";
 
+import { LoadingIndicator } from "../loading";
 import SearchBar from "../search-bar";
 import {
   BookSearchEmpty,
@@ -188,9 +189,7 @@ export default function BookSearchBottomSheet({
               />
             )}
             ListFooterComponent={
-              isFetchingBookList ? (
-                <ActivityIndicator style={styles.footer} color={colors.white} />
-              ) : null
+              isFetchingBookList ? <LoadingIndicator variant="footer" /> : null
             }
             onEndReached={handleLoadMoreBookList}
             onEndReachedThreshold={0.5}
@@ -221,8 +220,5 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "#525252",
     marginTop: 12,
-  },
-  footer: {
-    marginTop: 40,
   },
 });
