@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -13,7 +13,7 @@ import {
   useGetHomeRecruitingRoomListQuery,
   type RoomCategory,
 } from "@apis/room";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { GRID_WIDTH } from "../../constants";
@@ -83,9 +83,7 @@ export default function RecruitingGroupCarouselItem({
   const renderRoomListContent = () => {
     if (isPendingHomeRecruitingRoomData) {
       return (
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
       );
     }
 

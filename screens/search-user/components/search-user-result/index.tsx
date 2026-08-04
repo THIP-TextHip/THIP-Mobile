@@ -1,11 +1,16 @@
 import { useCallback, useEffect } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import { useQueryClient } from "@tanstack/react-query";
 
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
 import { useSearchUserQuery, type UserType } from "@apis/user";
-import { AppText, ListTotalCountHeader, UserListItem } from "@shared/ui";
+import {
+  AppText,
+  ListTotalCountHeader,
+  LoadingIndicator,
+  UserListItem,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface SearchUserResultProps {
@@ -54,11 +59,7 @@ export default function SearchUserResult({
   const Separator = () => <View style={styles.separator} />;
 
   if (isPendingSearchUser) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   return (
@@ -94,11 +95,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.darkgrey.dark,
   },
   empty: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

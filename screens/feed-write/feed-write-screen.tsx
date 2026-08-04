@@ -1,8 +1,6 @@
-import { BlurView } from "expo-blur";
 import { router, useNavigation } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,6 +14,7 @@ import {
   BookSearchBottomSheet,
   BookSelectSection,
   type BottomSheetBookItemType,
+  LoadingOverlay,
   VisibilitySection,
 } from "@shared/ui";
 import { usePrevFeedStore } from "@stores/feed-edit";
@@ -213,11 +212,7 @@ export default function FeedWriteScreen() {
         handleClose={handleCloseBottomSheet}
       />
 
-      {(isPendingWriteFeed || isPendingEditFeed) && (
-        <BlurView intensity={12} tint="dark" style={styles.linearBlur}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </BlurView>
-      )}
+      <LoadingOverlay visible={isPendingWriteFeed || isPendingEditFeed} />
     </View>
   );
 }
@@ -237,10 +232,5 @@ const styles = StyleSheet.create({
     height: 1,
     marginHorizontal: 20,
     backgroundColor: colors.darkgrey.dark,
-  },
-  linearBlur: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });

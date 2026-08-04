@@ -1,3 +1,4 @@
+export { useDelayedLoading } from "./use-delayed-loading";
 export { useKeyboardHeight } from "./use-keyboard-height";
 export { useLoadFonts } from "./use-load-fonts";
 export { useNotificationHandler } from "./use-notification-handler";

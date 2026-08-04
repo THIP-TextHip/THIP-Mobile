@@ -1,10 +1,15 @@
 import { router } from "expo-router";
 import { useCallback, useEffect } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import { useSearchBookQuery, type BookType } from "@apis/book";
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
-import { AppText, CustomButton, ListTotalCountHeader } from "@shared/ui";
+import {
+  AppText,
+  CustomButton,
+  ListTotalCountHeader,
+  LoadingIndicator,
+} from "@shared/ui";
 import { useQueryClient } from "@tanstack/react-query";
 import { colors } from "@theme/token";
 
@@ -67,11 +72,7 @@ export default function SearchResult({
   };
 
   if (isPendingSearchBook) {
-    return (
-      <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   return (
@@ -112,7 +113,10 @@ export default function SearchResult({
           ItemSeparatorComponent={Separator}
           ListFooterComponent={
             isFetchingNextPage ? (
-              <ActivityIndicator style={styles.footer} color={colors.white} />
+              <LoadingIndicator
+                variant="footer"
+                containerStyle={styles.footer}
+              />
             ) : null
           }
           onEndReached={handleLoadMore}
@@ -151,11 +155,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     gap: 8,
-    alignItems: "center",
-  },
-  loading: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
   },
   footer: {

@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -16,7 +15,7 @@ import {
   useGetRoomPostListQuery,
 } from "@apis/room-post";
 import { IcAlertGrey } from "@images/icons";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingIndicator } from "@shared/ui";
 import {
   useRecordBookAlarmStore,
   useRoomDetailVoteStore,
@@ -259,9 +258,7 @@ export default function RecordBookScreen() {
   const StatusView = () => {
     if (isPendingRoomPostList || isPendingBookPageInfo)
       return (
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="page" containerStyle={styles.status} />
       );
     return (
       <View style={styles.status}>
@@ -337,9 +334,7 @@ export default function RecordBookScreen() {
             )}
             ListHeaderComponent={RecordListHeader}
             ListFooterComponent={
-              isFetchingNextPage ? (
-                <ActivityIndicator style={styles.footer} color={colors.white} />
-              ) : null
+              isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
             }
             onEndReached={handleLoadMore}
             onEndReachedThreshold={0.5}
@@ -389,8 +384,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     marginBottom: 100,
-  },
-  footer: {
-    marginTop: 40,
   },
 });

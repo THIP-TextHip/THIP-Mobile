@@ -1,7 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useCallback } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -10,7 +9,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { type ReadingMateType, useGetReadingMateQuery } from "@apis/room";
-import { AppText, UserListItem } from "@shared/ui";
+import { AppText, LoadingIndicator, UserListItem } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function ReadingMateScreen() {
@@ -36,9 +35,7 @@ export default function ReadingMateScreen() {
   const Separator = () => <View style={styles.separator} />;
 
   return isPendingReadingMateList ? (
-    <View style={styles.status}>
-      <ActivityIndicator size="large" color={colors.white} />
-    </View>
+    <LoadingIndicator variant="page" />
   ) : isErrorReadingMateList ? (
     <View style={styles.status}>
       <AppText weight="semibold" size="lg" color={colors.white}>

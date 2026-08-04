@@ -1,6 +1,5 @@
 import { router } from "expo-router";
 import {
-  ActivityIndicator,
   Pressable,
   StyleSheet,
   useWindowDimensions,
@@ -10,7 +9,7 @@ import Carousel from "react-native-reanimated-carousel";
 
 import { useGetHomeMyRoomQuery } from "@apis/room";
 import { IcRightRight } from "@images/icons";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import MyGroupCarouselStatus from "./my-group-carousel-empty";
@@ -60,9 +59,10 @@ export default function MyGroupCarousel() {
         </Pressable>
       </View>
       {isPendingHomeMyRoom ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator
+          variant="page"
+          containerStyle={styles.loadingContainer}
+        />
       ) : homeMyRoomData.length === 0 ? (
         <MyGroupCarouselStatus
           isError={isErrorHomeMyRoom}

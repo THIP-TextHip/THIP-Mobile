@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -9,7 +8,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useSavedFeedQuery } from "@apis/feed";
-import { AppText, FeedPostPreview } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  FeedPostPreview,
+  FeedPostPreviewSkeleton,
+  LoadingIndicator,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function SavedFeed() {
@@ -28,6 +33,8 @@ export default function SavedFeed() {
     isRefetchingSavedFeed,
   } = useSavedFeedQuery();
 
+  const isSkeletonVisible = useDelayedLoading(isPendingSavedFeed);
+
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
@@ -35,11 +42,11 @@ export default function SavedFeed() {
   };
 
   if (isPendingSavedFeed) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
+    return isSkeletonVisible ? (
+      <View style={styles.skeleton}>
+        <FeedPostPreviewSkeleton />
       </View>
-    );
+    ) : null;
   }
 
   if (isErrorSavedFeed && savedFeedList.length === 0) {
@@ -93,9 +100,7 @@ export default function SavedFeed() {
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListEmptyComponent={SavedFeedEmpty}
       ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={colors.white} />
-        ) : null
+        isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
@@ -116,6 +121,9 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     gap: 40,
   },
+  skeleton: {
+    paddingTop: 32,
+  },
   separator: {
     marginTop: 40,
     height: 6,
@@ -125,13 +133,5 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footer: {
-    marginTop: 40,
   },
 });

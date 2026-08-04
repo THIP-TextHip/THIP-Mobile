@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import { useRef } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
@@ -18,7 +17,7 @@ import {
   useSavedBookQuery,
 } from "@apis/book";
 import { IcSave, IcSaveFilled } from "@images/icons";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function SavedBook() {
@@ -65,11 +64,7 @@ export default function SavedBook() {
   };
 
   if (isPendingSavedBook) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.white} />
-      </View>
-    );
+    return <LoadingIndicator variant="page" />;
   }
 
   if (isErrorSavedBook && savedBookList.length === 0) {
@@ -179,9 +174,7 @@ export default function SavedBook() {
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListEmptyComponent={SavedBookEmpty}
       ListFooterComponent={
-        isFetchingNextPage ? (
-          <ActivityIndicator style={styles.footer} color={colors.white} />
-        ) : null
+        isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
       }
       onEndReached={handleLoadMore}
       onEndReachedThreshold={0.5}
@@ -250,13 +243,5 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  footer: {
-    marginTop: 40,
   },
 });

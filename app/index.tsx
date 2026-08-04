@@ -1,8 +1,9 @@
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { getAuthToken } from "@apis/token-storage";
+import { LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 type InitialRoute = "/(tabs)/feed" | "/login";
@@ -38,9 +39,10 @@ export default function Index() {
 
   if (!initialRoute) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator color={colors.white} />
-      </View>
+      <LoadingIndicator
+        variant="page"
+        containerStyle={styles.loadingContainer}
+      />
     );
   }
 

@@ -1,7 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -11,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { useGetRoomDetailQuery, useLeaveRoomMutation } from "@apis/room";
-import { AppText, GroupInfo } from "@shared/ui";
+import { AppText, GroupInfo, LoadingIndicator } from "@shared/ui";
 import { getCurrentDate, parseStringToDate } from "@shared/utils";
 import { colors } from "@theme/token";
 
@@ -157,9 +156,7 @@ export default function GroupDetailScreen() {
           </AppText>
         </View>
       ) : isPendingRoomDetail ? (
-        <View style={styles.status}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator variant="page" />
       ) : !roomDetailData || isErrorRoomDetail ? (
         <View style={styles.status}>
           <AppText weight="semibold" size="lg" color={colors.white}>

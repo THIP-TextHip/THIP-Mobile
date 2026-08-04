@@ -1,6 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   RefreshControl,
@@ -10,7 +9,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useBookDetailQuery, useBookRecruitingRoomsQuery } from "@apis/book";
-import { AppText, ListTotalCountHeader, MyGroupCard } from "@shared/ui";
+import {
+  AppText,
+  ListTotalCountHeader,
+  LoadingIndicator,
+  MyGroupCard,
+} from "@shared/ui";
 import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
 
@@ -37,6 +41,12 @@ export default function BookRecruitingGroupScreen() {
   } = useBookDetailQuery(isbn);
   const { setSelectedBookInfo } = useSelectedBookStore();
 
+  // 첫 렌더에는 bookDetailData가 undefined이므로 로딩 분기가 먼저 와야 한다.
+  // 순서가 반대면 로딩 중에 에러 문구가 뜨고 인디케이터는 도달하지 못한다.
+  if (isPendingBookRecruitingRooms || isPendingBookDetail) {
+    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
+  }
+
   if (isErrorBookRecruitingRooms || !bookDetailData) {
     return (
       <View style={styles.status}>
@@ -48,14 +58,6 @@ export default function BookRecruitingGroupScreen() {
         >
           데이터를 불러오지 못했어요 ({bookRecruitingRoomsError?.code})
         </AppText>
-      </View>
-    );
-  }
-
-  if (isPendingBookRecruitingRooms || isPendingBookDetail) {
-    return (
-      <View style={styles.status}>
-        <ActivityIndicator size="large" color={colors.white} />
       </View>
     );
   }
@@ -125,9 +127,7 @@ export default function BookRecruitingGroupScreen() {
           />
         )}
         ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator style={styles.footer} color={colors.white} />
-          ) : null
+          isFetchingNextPage ? <LoadingIndicator variant="footer" /> : null
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
@@ -181,9 +181,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-  },
-  footer: {
-    marginTop: 40,
   },
   bottomButton: {
     width: "100%",

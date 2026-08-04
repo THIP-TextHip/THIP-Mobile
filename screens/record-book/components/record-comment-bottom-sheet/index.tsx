@@ -5,7 +5,7 @@ import BottomSheet, {
 import { useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -17,7 +17,12 @@ import {
 import { type RoomPostType } from "@apis/room";
 import { ROOM_POST_QUERY_KEY } from "@apis/room-post";
 import { useKeyboardHeight } from "@shared/hooks";
-import { AppText, ChatInputBar, CommentRoot } from "@shared/ui";
+import {
+  AppText,
+  ChatInputBar,
+  CommentRoot,
+  LoadingIndicator,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 interface RecordCommentBottomSheetProps {
@@ -165,9 +170,10 @@ export default function RecordCommentBottomSheet({
             )}
             ListEmptyComponent={() =>
               isPendingCommentList ? (
-                <View style={styles.status}>
-                  <ActivityIndicator size="large" color={colors.white} />
-                </View>
+                <LoadingIndicator
+                  variant="list-empty"
+                  containerStyle={styles.status}
+                />
               ) : isErrorCommentList ? (
                 <View style={styles.status}>
                   <AppText weight="semibold" size="lg" color={colors.white}>

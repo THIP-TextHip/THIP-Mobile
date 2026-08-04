@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -8,7 +8,7 @@ import {
   useGetDailyGreetingQuery,
   useWriteDailyGreetingMutation,
 } from "@apis/room";
-import { AppText, ChatInputBar } from "@shared/ui";
+import { AppText, ChatInputBar, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DailyGreetingHeader, GreetingListItem } from "./components";
@@ -65,9 +65,10 @@ export default function DailyGreetingScreen() {
   const StatusView = () => {
     if (isPendingDailyGreeting)
       return (
-        <View style={[styles.status, { marginBottom: inputBarHeight }]}>
-          <ActivityIndicator size="large" color={colors.white} />
-        </View>
+        <LoadingIndicator
+          variant="page"
+          containerStyle={[styles.status, { marginBottom: inputBarHeight }]}
+        />
       );
     return (
       <View style={[styles.status, { marginBottom: inputBarHeight }]}>
@@ -130,7 +131,10 @@ export default function DailyGreetingScreen() {
           }}
           ListFooterComponent={
             isFetchingNextPage ? (
-              <ActivityIndicator style={styles.footer} color={colors.white} />
+              <LoadingIndicator
+                variant="footer"
+                containerStyle={styles.footer}
+              />
             ) : null
           }
           onEndReached={handleLoadMore}
@@ -164,7 +168,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
+  // 역방향(inverted) 리스트라 푸터 여백을 아래쪽에 준다
   footer: {
+    marginTop: 0,
     marginBottom: 40,
   },
 });
