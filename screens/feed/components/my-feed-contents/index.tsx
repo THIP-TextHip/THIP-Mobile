@@ -7,9 +7,11 @@ import {
 } from "@apis/feed";
 import { useGetUncheckedNotificationExistsQuery } from "@apis/notification";
 import { useGetMyIdQuery } from "@apis/user";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   FeedPostPreview,
+  FeedPostPreviewSkeleton,
   ListTotalCountHeader,
   LoadingIndicator,
   ThipPreview,
@@ -72,6 +74,7 @@ export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
   } = useGetFeedMyProfileQuery();
   const { refetchUncheckedNotificationExists } =
     useGetUncheckedNotificationExistsQuery();
+  const isSkeletonVisible = useDelayedLoading(isPendingFeedMyProfile);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -86,9 +89,7 @@ export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
 
   const renderEmpty = () => {
     if (isPendingFeedMyProfile) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
-      );
+      return isSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
     }
 
     if (isErrorFeedMyProfile) {

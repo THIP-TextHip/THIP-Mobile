@@ -8,7 +8,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useSavedFeedQuery } from "@apis/feed";
-import { AppText, FeedPostPreview, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  FeedPostPreview,
+  FeedPostPreviewSkeleton,
+  LoadingIndicator,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function SavedFeed() {
@@ -27,6 +33,8 @@ export default function SavedFeed() {
     isRefetchingSavedFeed,
   } = useSavedFeedQuery();
 
+  const isSkeletonVisible = useDelayedLoading(isPendingSavedFeed);
+
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
@@ -34,7 +42,11 @@ export default function SavedFeed() {
   };
 
   if (isPendingSavedFeed) {
-    return <LoadingIndicator variant="page" />;
+    return isSkeletonVisible ? (
+      <View style={styles.skeleton}>
+        <FeedPostPreviewSkeleton />
+      </View>
+    ) : null;
   }
 
   if (isErrorSavedFeed && savedFeedList.length === 0) {
@@ -108,6 +120,9 @@ const styles = StyleSheet.create({
   list: {
     paddingTop: 32,
     gap: 40,
+  },
+  skeleton: {
+    paddingTop: 32,
   },
   separator: {
     marginTop: 40,

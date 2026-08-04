@@ -3,7 +3,13 @@ import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 
 import { useGetAllFeedListQuery } from "@apis/feed";
 import { useGetUncheckedNotificationExistsQuery } from "@apis/notification";
-import { AppText, FeedPostPreview, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  FeedPostPreview,
+  FeedPostPreviewSkeleton,
+  LoadingIndicator,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import MyThipPreview from "../my-thip-preview";
@@ -12,7 +18,6 @@ interface FeedContentsProps {
   listRef: RefObject<FlatList | null>;
 }
 
-// TODO: 추후 로딩 처리 스켈레톤으로 하기
 export default function FeedContents({ listRef }: FeedContentsProps) {
   const {
     feedList,
@@ -26,6 +31,7 @@ export default function FeedContents({ listRef }: FeedContentsProps) {
   } = useGetAllFeedListQuery();
   const { refetchUncheckedNotificationExists } =
     useGetUncheckedNotificationExistsQuery();
+  const isSkeletonVisible = useDelayedLoading(isPendingFeedList);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -40,9 +46,7 @@ export default function FeedContents({ listRef }: FeedContentsProps) {
 
   const renderEmpty = () => {
     if (isPendingFeedList) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
-      );
+      return isSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
     }
 
     // TODO: 에러 발생 시 보여줄 처리 필요. ex) 토스트 메시지 띄우기

@@ -26,6 +26,7 @@ export {
   FeedPostDetail,
   FeedPostDetailType,
   FeedPostPreview,
+  FeedPostPreviewSkeleton,
   FeedPostPreviewType,
 } from "./feed-post";
 export { default as GenreCardGroup } from "./genre-card-group";
@@ -36,6 +37,10 @@ export {
   LoadingIndicator,
   type LoadingIndicatorVariant,
   LoadingOverlay,
+  SkeletonBox,
+  SkeletonCircle,
+  SkeletonProvider,
+  SkeletonText,
 } from "./loading";
 export { default as MyGroupCard } from "./my-group-card";
 export { default as NumberPicker } from "./number-picker";
