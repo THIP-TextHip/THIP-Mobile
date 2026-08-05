@@ -17,8 +17,11 @@ import {
   useSavedBookQuery,
 } from "@apis/book";
 import { IcSave, IcSaveFilled } from "@images/icons";
+import { useDelayedLoading } from "@shared/hooks";
 import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
+
+import SavedBookItemSkeleton from "./skeleton";
 
 export default function SavedBook() {
   const { height } = useWindowDimensions();
@@ -38,6 +41,8 @@ export default function SavedBook() {
   } = useSavedBookQuery();
   const { changeBookSaveStatus, isPendingChangeBookSaveStatus } =
     useChangeBookSaveStatusMutation();
+
+  const isSkeletonVisible = useDelayedLoading(isPendingSavedBook);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -63,8 +68,12 @@ export default function SavedBook() {
     );
   };
 
+  if (isSkeletonVisible) {
+    return <SavedBookItemSkeleton />;
+  }
+
   if (isPendingSavedBook) {
-    return <LoadingIndicator variant="page" />;
+    return null;
   }
 
   if (isErrorSavedBook && savedBookList.length === 0) {

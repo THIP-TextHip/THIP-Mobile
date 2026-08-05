@@ -11,7 +11,12 @@ import {
   useChangeFollowingStateMutation,
   useGetMyFollowingsQuery,
 } from "@apis/user";
-import { AppText, ListTotalCountHeader, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  ListTotalCountHeader,
+  UserListItemSkeleton,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { MyThipItem } from "./components";
@@ -30,6 +35,7 @@ export default function MyThipListScreen() {
   } = useGetMyFollowingsQuery();
   const { changeFollowingState, isPendingChangeFollowingState } =
     useChangeFollowingStateMutation();
+  const isSkeletonVisible = useDelayedLoading(isPendingMyFollowings);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -68,8 +74,12 @@ export default function MyThipListScreen() {
     );
   };
 
+  if (isSkeletonVisible) {
+    return <UserListItemSkeleton />;
+  }
+
   if (isPendingMyFollowings) {
-    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
+    return null;
   }
 
   return (

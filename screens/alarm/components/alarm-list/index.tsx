@@ -5,10 +5,12 @@ import {
   type NotificationType,
   useGetNotificationListQuery,
 } from "@apis/notification";
+import { useDelayedLoading } from "@shared/hooks";
 import { AppText, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import AlarmItem from "../alarm-item";
+import AlarmItemSkeleton from "../alarm-item/skeleton";
 
 interface AlarmListProps {
   filter: NotificationType | null;
@@ -29,14 +31,20 @@ export default function AlarmList({ filter }: AlarmListProps) {
     isRefetchingNotificationList,
   } = useGetNotificationListQuery(filter);
 
+  const isSkeletonVisible = useDelayedLoading(isPendingNotificationList);
+
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
     fetchNextPage();
   };
 
+  if (isSkeletonVisible) {
+    return <AlarmItemSkeleton />;
+  }
+
   if (isPendingNotificationList) {
-    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
+    return null;
   }
 
   if (isErrorNotificationList) {

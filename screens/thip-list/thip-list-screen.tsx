@@ -9,11 +9,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FollowerType, useGetUserFollowersQuery } from "@apis/user";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   ListTotalCountHeader,
-  LoadingIndicator,
   UserListItem,
+  UserListItemSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -30,6 +31,8 @@ export default function ThipListScreen() {
     refetchUserFollowers,
     isRefetchingUserFollowers,
   } = useGetUserFollowersQuery(Number(userId));
+
+  const isSkeletonVisible = useDelayedLoading(isPendingUserFollowers);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -54,8 +57,12 @@ export default function ThipListScreen() {
     );
   };
 
+  if (isSkeletonVisible) {
+    return <UserListItemSkeleton containerStyle={styles.list} />;
+  }
+
   if (isPendingUserFollowers) {
-    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
+    return null;
   }
 
   return (

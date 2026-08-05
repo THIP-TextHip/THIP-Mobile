@@ -9,11 +9,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useBookDetailQuery, useBookRecruitingRoomsQuery } from "@apis/book";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   ListTotalCountHeader,
   LoadingIndicator,
   MyGroupCard,
+  MyGroupCardSkeleton,
 } from "@shared/ui";
 import { useSelectedBookStore } from "@stores/selected-book";
 import { colors } from "@theme/token";
@@ -40,11 +42,18 @@ export default function BookRecruitingGroupScreen() {
     isRefetchingBookDetail,
   } = useBookDetailQuery(isbn);
   const { setSelectedBookInfo } = useSelectedBookStore();
+  const isSkeletonVisible = useDelayedLoading(
+    isPendingBookRecruitingRooms || isPendingBookDetail,
+  );
 
   // 첫 렌더에는 bookDetailData가 undefined이므로 로딩 분기가 먼저 와야 한다.
   // 순서가 반대면 로딩 중에 에러 문구가 뜨고 인디케이터는 도달하지 못한다.
+  if (isSkeletonVisible) {
+    return <MyGroupCardSkeleton containerStyle={styles.skeleton} />;
+  }
+
   if (isPendingBookRecruitingRooms || isPendingBookDetail) {
-    return <LoadingIndicator variant="page" containerStyle={styles.status} />;
+    return null;
   }
 
   if (isErrorBookRecruitingRooms || !bookDetailData) {
@@ -181,6 +190,10 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
+  },
+  skeleton: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   bottomButton: {
     width: "100%",

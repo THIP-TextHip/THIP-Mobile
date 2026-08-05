@@ -9,7 +9,8 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { type ReadingMateType, useGetReadingMateQuery } from "@apis/room";
-import { AppText, LoadingIndicator, UserListItem } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import { AppText, UserListItem, UserListItemSkeleton } from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function ReadingMateScreen() {
@@ -32,11 +33,13 @@ export default function ReadingMateScreen() {
     [],
   );
 
+  const isSkeletonVisible = useDelayedLoading(isPendingReadingMateList);
+
   const Separator = () => <View style={styles.separator} />;
 
-  return isPendingReadingMateList ? (
-    <LoadingIndicator variant="page" />
-  ) : isErrorReadingMateList ? (
+  return isSkeletonVisible ? (
+    <UserListItemSkeleton containerStyle={styles.list} />
+  ) : isPendingReadingMateList ? null : isErrorReadingMateList ? (
     <View style={styles.status}>
       <AppText weight="semibold" size="lg" color={colors.white}>
         데이터를 불러오지 못했어요.{" "}

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
 import { type SearchRoomCategory, useSearchRoomQuery } from "@apis/room";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   ListTotalCountHeader,
@@ -15,6 +16,7 @@ import { colors } from "@theme/token";
 
 import { SEARCH_GROUP_CATEGORY } from "../../constants";
 import SearchedGroupItem from "../searched-group-item";
+import SearchedGroupItemSkeleton from "../searched-group-item/skeleton";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -94,11 +96,15 @@ export default function SearchGroupResult({
     fetchNextPage();
   };
 
+  const isSkeletonVisible = useDelayedLoading(isPendingSearchRoom);
+
   const renderEmpty = () => {
+    if (isSkeletonVisible) {
+      return <SearchedGroupItemSkeleton />;
+    }
+
     if (isPendingSearchRoom) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.empty} />
-      );
+      return null;
     }
 
     return <EmptyView />;

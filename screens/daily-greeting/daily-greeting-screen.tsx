@@ -8,10 +8,12 @@ import {
   useGetDailyGreetingQuery,
   useWriteDailyGreetingMutation,
 } from "@apis/room";
+import { useDelayedLoading } from "@shared/hooks";
 import { AppText, ChatInputBar, LoadingIndicator } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DailyGreetingHeader, GreetingListItem } from "./components";
+import GreetingListItemSkeleton from "./components/greeting-list-item/skeleton";
 
 // TODO: 반드시 역방향 무한스크롤 잘 되는지 테스트해보기
 export default function DailyGreetingScreen() {
@@ -43,6 +45,8 @@ export default function DailyGreetingScreen() {
     );
   };
 
+  const isSkeletonVisible = useDelayedLoading(isPendingDailyGreeting);
+
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
@@ -63,13 +67,14 @@ export default function DailyGreetingScreen() {
   if (!roomId) return null;
 
   const StatusView = () => {
-    if (isPendingDailyGreeting)
+    if (isSkeletonVisible)
       return (
-        <LoadingIndicator
-          variant="page"
-          containerStyle={[styles.status, { marginBottom: inputBarHeight }]}
+        <GreetingListItemSkeleton
+          containerStyle={{ marginBottom: inputBarHeight }}
         />
       );
+
+    if (isPendingDailyGreeting) return null;
     return (
       <View style={[styles.status, { marginBottom: inputBarHeight }]}>
         {isErrorDailyGreeting ? (

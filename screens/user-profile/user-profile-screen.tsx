@@ -13,7 +13,13 @@ import {
   useGetFeedUserProfileQuery,
   useGetUserProfileTopInfoQuery,
 } from "@apis/feed";
-import { AppText, FeedPostPreview, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  FeedPostPreview,
+  FeedPostPreviewSkeleton,
+  ProfileTopSkeleton,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { UserProfileTopContents } from "./components";
@@ -40,16 +46,36 @@ export default function UserProfileScreen() {
     fetchNextPage();
   };
 
-  const renderHeader = useCallback(
-    () => <UserProfileTopContents userProfileTopInfo={userProfileTopInfo} />,
-    [userProfileTopInfo],
+  const isProfileSkeletonVisible = useDelayedLoading(
+    isPendingUserProfileTopInfo,
   );
+  const isFeedSkeletonVisible = useDelayedLoading(isPendingFeedUserProfile);
+
+  // 상단 정보와 피드 목록은 별도 쿼리라, 상단 로딩이 화면 전체를 막지 않도록
+  // 헤더 안에서만 스켈레톤을 보여준다.
+  const renderHeader = useCallback(() => {
+    if (isProfileSkeletonVisible) {
+      return <ProfileTopSkeleton />;
+    }
+
+    if (isPendingUserProfileTopInfo) {
+      return null;
+    }
+
+    return <UserProfileTopContents userProfileTopInfo={userProfileTopInfo} />;
+  }, [
+    isPendingUserProfileTopInfo,
+    isProfileSkeletonVisible,
+    userProfileTopInfo,
+  ]);
 
   const renderEmpty = () => {
+    if (isFeedSkeletonVisible) {
+      return <FeedPostPreviewSkeleton withHeader={false} />;
+    }
+
     if (isPendingFeedUserProfile) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
-      );
+      return null;
     }
 
     if (isErrorFeedUserProfile) {
@@ -84,10 +110,6 @@ export default function UserProfileScreen() {
       }
     }
   }, [userId]);
-
-  if (isPendingUserProfileTopInfo) {
-    return <LoadingIndicator variant="page" />;
-  }
 
   return (
     <FlatList

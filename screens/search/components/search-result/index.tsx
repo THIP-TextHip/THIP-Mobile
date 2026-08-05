@@ -4,6 +4,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 
 import { useSearchBookQuery, type BookType } from "@apis/book";
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   CustomButton,
@@ -14,6 +15,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { colors } from "@theme/token";
 
 import SearchedBookItem from "../../components/searched-book-item";
+import SearchedBookItemSkeleton from "../../components/searched-book-item/skeleton";
 
 interface SearchResultProps {
   searchText: string;
@@ -63,6 +65,8 @@ export default function SearchResult({
     [],
   );
 
+  const isSkeletonVisible = useDelayedLoading(isPendingSearchBook);
+
   const Separator = () => <View style={styles.separator} />;
 
   const handleLoadMore = () => {
@@ -71,8 +75,12 @@ export default function SearchResult({
     fetchNextPage();
   };
 
+  if (isSkeletonVisible) {
+    return <SearchedBookItemSkeleton containerStyle={styles.skeleton} />;
+  }
+
   if (isPendingSearchBook) {
-    return <LoadingIndicator variant="page" />;
+    return null;
   }
 
   return (
@@ -136,6 +144,10 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.darkgrey.dark,
+  },
+  skeleton: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   booksWrapper: {
     gap: 12,

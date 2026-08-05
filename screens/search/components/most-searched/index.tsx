@@ -2,10 +2,12 @@ import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { useMostSearchedBookQuery } from "@apis/book";
-import { AppText, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import MostSearchedBookItem from "../most-searched-book-item";
+import MostSearchedBookItemSkeleton from "../most-searched-book-item/skeleton";
 
 export default function MostSearched() {
   const {
@@ -23,6 +25,8 @@ export default function MostSearched() {
     return `${month}.${date}.`;
   }, []);
 
+  const isSkeletonVisible = useDelayedLoading(isPendingMostSearchedBook);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleWrapper}>
@@ -33,12 +37,9 @@ export default function MostSearched() {
           {dateString} 기준
         </AppText>
       </View>
-      {isPendingMostSearchedBook ? (
-        <LoadingIndicator
-          variant="page"
-          containerStyle={styles.loadingContainer}
-        />
-      ) : isErrorMostSearchedBook ? (
+      {isSkeletonVisible ? (
+        <MostSearchedBookItemSkeleton />
+      ) : isPendingMostSearchedBook ? null : isErrorMostSearchedBook ? (
         <View style={styles.emptyContainer}>
           <AppText weight="semibold" size="lg" color={colors.white}>
             데이터를 불러오지 못했어요 ({mostSearchedBookError?.code})
@@ -84,11 +85,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 8,
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.black.main,
   },
 });

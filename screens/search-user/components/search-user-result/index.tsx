@@ -5,11 +5,12 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { RECENT_SEARCH_QUERY_KEY } from "@apis/recent-search";
 import { useSearchUserQuery, type UserType } from "@apis/user";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   ListTotalCountHeader,
-  LoadingIndicator,
   UserListItem,
+  UserListItemSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -56,10 +57,16 @@ export default function SearchUserResult({
     [],
   );
 
+  const isSkeletonVisible = useDelayedLoading(isPendingSearchUser);
+
   const Separator = () => <View style={styles.separator} />;
 
+  if (isSkeletonVisible) {
+    return <UserListItemSkeleton />;
+  }
+
   if (isPendingSearchUser) {
-    return <LoadingIndicator variant="page" />;
+    return null;
   }
 
   return (

@@ -41,12 +41,16 @@ export default function SavedFeed() {
     fetchNextPage();
   };
 
-  if (isPendingSavedFeed) {
-    return isSkeletonVisible ? (
+  if (isSkeletonVisible) {
+    return (
       <View style={styles.skeleton}>
         <FeedPostPreviewSkeleton />
       </View>
-    ) : null;
+    );
+  }
+
+  if (isPendingSavedFeed) {
+    return null;
   }
 
   if (isErrorSavedFeed && savedFeedList.length === 0) {

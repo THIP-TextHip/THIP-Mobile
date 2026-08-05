@@ -15,7 +15,9 @@ import {
   useGetRoomPostListQuery,
 } from "@apis/room-post";
 import { IcAlertGrey } from "@images/icons";
+import { useDelayedLoading } from "@shared/hooks";
 import { AppText, LoadingIndicator } from "@shared/ui";
+import RecordBookPostItemSkeleton from "./components/record-book-post-item/skeleton";
 import {
   useRecordBookAlarmStore,
   useRoomDetailVoteStore,
@@ -237,6 +239,10 @@ export default function RecordBookScreen() {
     });
   }, [clearRecordBookAlarmInfo, clearRoomDetailVote, navigation]);
 
+  const isSkeletonVisible = useDelayedLoading(
+    isPendingRoomPostList || isPendingBookPageInfo,
+  );
+
   if (!roomId || isErrorBookPageInfo) return null;
 
   const RecordListHeader = () => {
@@ -256,10 +262,9 @@ export default function RecordBookScreen() {
   };
 
   const StatusView = () => {
-    if (isPendingRoomPostList || isPendingBookPageInfo)
-      return (
-        <LoadingIndicator variant="page" containerStyle={styles.status} />
-      );
+    if (isSkeletonVisible) return <RecordBookPostItemSkeleton />;
+
+    if (isPendingRoomPostList || isPendingBookPageInfo) return null;
     return (
       <View style={styles.status}>
         {isErrorRoomPostList ? (

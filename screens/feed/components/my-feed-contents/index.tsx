@@ -13,7 +13,7 @@ import {
   FeedPostPreview,
   FeedPostPreviewSkeleton,
   ListTotalCountHeader,
-  LoadingIndicator,
+  ProfileTopSkeleton,
   ThipPreview,
   UserProfileBar,
 } from "@shared/ui";
@@ -23,13 +23,16 @@ const MyFeedTopContents = () => {
   const { myId, isPendingMyId } = useGetMyIdQuery();
   const { myProfileTopInfo, isPendingMyProfileTopInfo } =
     useGetMyProfileTopInfoQuery();
+  const isSkeletonVisible = useDelayedLoading(
+    isPendingMyId || isPendingMyProfileTopInfo,
+  );
+
+  if (isSkeletonVisible) {
+    return <ProfileTopSkeleton />;
+  }
 
   if (isPendingMyId || isPendingMyProfileTopInfo) {
-    return (
-      <View style={styles.loadingContainer}>
-        <LoadingIndicator variant="list-empty" />
-      </View>
-    );
+    return null;
   }
 
   if (!myId || !myProfileTopInfo) {
@@ -88,8 +91,12 @@ export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
   };
 
   const renderEmpty = () => {
+    if (isSkeletonVisible) {
+      return <FeedPostPreviewSkeleton withHeader={false} />;
+    }
+
     if (isPendingFeedMyProfile) {
-      return isSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
+      return null;
     }
 
     if (isErrorFeedMyProfile) {
@@ -139,11 +146,6 @@ const styles = StyleSheet.create({
   topContents: {
     marginTop: 32,
     marginBottom: 20,
-  },
-  loadingContainer: {
-    minHeight: 200,
-    justifyContent: "center",
-    alignItems: "center",
   },
   profile: {
     gap: 16,

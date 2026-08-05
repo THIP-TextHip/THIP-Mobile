@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 /** 이 시간 안에 로딩이 끝나면 아무것도 보여주지 않는다. */
 const DEFAULT_DELAY = 200;
 /** 한 번 보여줬으면 최소 이만큼은 유지한다. */
-const DEFAULT_MIN_DURATION = 500;
+const DEFAULT_MIN_DURATION = 400;
 
 interface UseDelayedLoadingOptions {
   delay?: number;
