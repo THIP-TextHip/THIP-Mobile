@@ -41,9 +41,9 @@ export default function AlarmItemSkeleton({
 }
 
 const styles = StyleSheet.create({
+  // 실제 목록(alarm-list의 content)에는 상단 여백이 없다.
   list: {
     paddingHorizontal: 20,
-    paddingTop: 20,
     gap: 20,
   },
   container: {
