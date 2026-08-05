@@ -10,7 +10,7 @@ import {
   AppText,
   ProfileImage,
   SkeletonCircle,
-  SkeletonProvider,
+  SkeletonList,
   SkeletonText,
 } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -57,18 +57,18 @@ export default function MyThipPreview() {
     }
 
     return (
-      <SkeletonProvider>
-        <View style={styles.content}>
-          <View style={styles.itemWrapper}>
-            {Array.from({ length: SKELETON_ITEM_COUNT }, (_, index) => (
-              <View key={index} style={styles.item}>
-                <SkeletonCircle size={36} />
-                <SkeletonText width={32} size="2xs" />
-              </View>
-            ))}
-          </View>
-        </View>
-      </SkeletonProvider>
+      <View style={styles.content}>
+        <SkeletonList
+          count={SKELETON_ITEM_COUNT}
+          containerStyle={styles.itemWrapper}
+          renderItem={() => (
+            <View style={styles.item}>
+              <SkeletonCircle size={36} />
+              <SkeletonText width={32} size="2xs" />
+            </View>
+          )}
+        />
+      </View>
     );
   };
 

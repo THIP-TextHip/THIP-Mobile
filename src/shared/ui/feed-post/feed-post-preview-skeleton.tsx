@@ -1,10 +1,13 @@
-import { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { colors } from "@theme/token";
 
-import { SkeletonBox, SkeletonCircle, SkeletonText } from "../loading";
-import { SkeletonProvider } from "../loading/skeleton/skeleton-provider";
+import {
+  SkeletonBox,
+  SkeletonCircle,
+  SkeletonList,
+  SkeletonText,
+} from "../loading";
 
 /**
  * FeedPostPreview는 이미지 유무·본문 길이에 따라 높이가 크게 달라져서
@@ -29,42 +32,39 @@ export default function FeedPostPreviewSkeleton({
   withHeader = true,
 }: FeedPostPreviewSkeletonProps) {
   return (
-    <SkeletonProvider>
-      <View>
-        {Array.from({ length: count }, (_, index) => (
-          <Fragment key={index}>
-            {index > 0 && <View style={styles.separator} />}
-            <View style={styles.container}>
-              {withHeader && (
-                <View style={styles.header}>
-                  <View style={styles.profile}>
-                    <SkeletonCircle size={36} />
-                    <View style={styles.creatorInfo}>
-                      <SkeletonText width={72} size="sm" />
-                      <SkeletonText width={48} size="xs" />
-                    </View>
-                  </View>
-                  <SkeletonText width={56} size="2xs" />
+    <SkeletonList
+      count={count}
+      separator={<View style={styles.separator} />}
+      renderItem={() => (
+        <View style={styles.container}>
+          {withHeader && (
+            <View style={styles.header}>
+              <View style={styles.profile}>
+                <SkeletonCircle size={36} />
+                <View style={styles.creatorInfo}>
+                  <SkeletonText width={72} size="sm" />
+                  <SkeletonText width={48} size="xs" />
                 </View>
-              )}
-
-              <SkeletonBox height={BOOK_INFO_BAR_HEIGHT} borderRadius={12} />
-
-              <View style={styles.body}>
-                <SkeletonText size="sm" />
-                <SkeletonText size="sm" />
-                <SkeletonText width="60%" size="sm" />
               </View>
-
-              <View style={styles.footer}>
-                <SkeletonText width={96} size="xs" />
-                <SkeletonText width={40} size="xs" />
-              </View>
+              <SkeletonText width={56} size="2xs" />
             </View>
-          </Fragment>
-        ))}
-      </View>
-    </SkeletonProvider>
+          )}
+
+          <SkeletonBox height={BOOK_INFO_BAR_HEIGHT} borderRadius={12} />
+
+          <View style={styles.body}>
+            <SkeletonText size="sm" />
+            <SkeletonText size="sm" />
+            <SkeletonText width="60%" size="sm" />
+          </View>
+
+          <View style={styles.footer}>
+            <SkeletonText width={96} size="xs" />
+            <SkeletonText width={40} size="xs" />
+          </View>
+        </View>
+      )}
+    />
   );
 }
 
