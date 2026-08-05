@@ -12,7 +12,7 @@ import {
   useGetBookInfoForPinQuery,
   type RoomPostContent,
 } from "@apis/room-post";
-import { AppText } from "@shared/ui";
+import { AppText, LoadingOverlay } from "@shared/ui";
 import { usePrevRecordStore, useRecordBookPinStore } from "@stores/record-book";
 import { colors } from "@theme/token";
 
@@ -118,16 +118,13 @@ export default function RecordBookPostItem({
 
   const handleDelete = () => {
     if (isPendingDeleteRoomRecord || isPendingDeleteRoomVote) return;
+
+    // RN Modal은 두 개를 동시에 띄울 수 없어 확인 모달을 먼저 닫는다.
+    setIsModalOpen(false);
     if (post.postType === "RECORD") {
-      deleteRoomRecord(
-        { roomId, recordId: post.postId },
-        { onSettled: () => setIsModalOpen(false) },
-      );
+      deleteRoomRecord({ roomId, recordId: post.postId });
     } else {
-      deleteRoomVote(
-        { roomId, voteId: post.postId },
-        { onSettled: () => setIsModalOpen(false) },
-      );
+      deleteRoomVote({ roomId, voteId: post.postId });
     }
   };
 
@@ -230,6 +227,10 @@ export default function RecordBookPostItem({
         handleCloseModal={handleCloseModal}
         handleDelete={handleDelete}
         handleToPin={handleToPin}
+      />
+      <LoadingOverlay
+        visible={isPendingDeleteRoomRecord || isPendingDeleteRoomVote}
+        label="삭제하는 중이에요"
       />
     </>
   );

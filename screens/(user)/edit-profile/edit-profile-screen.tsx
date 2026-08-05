@@ -2,7 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
 import { useEditUserProfileMutation, useGetMyInfoQuery } from "@apis/user";
-import { AppText, GenreCardGroup, InputNickname } from "@shared/ui";
+import {
+  AppText,
+  GenreCardGroup,
+  InputNickname,
+  LoadingOverlay,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { EditProfileHeader } from "./components";
@@ -84,6 +89,10 @@ export default function EditProfileScreen() {
           />
         </View>
       </View>
+      <LoadingOverlay
+        visible={isPendingEditUserProfile}
+        label="프로필을 저장하는 중이에요"
+      />
     </Pressable>
   );
 }

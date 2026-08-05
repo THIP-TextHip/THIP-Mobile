@@ -10,7 +10,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { useGetRoomDetailQuery, useLeaveRoomMutation } from "@apis/room";
-import { AppText, GroupInfo, LoadingIndicator } from "@shared/ui";
+import {
+  AppText,
+  GroupInfo,
+  LoadingIndicator,
+  LoadingOverlay,
+} from "@shared/ui";
 import { getCurrentDate, parseStringToDate } from "@shared/utils";
 import { colors } from "@theme/token";
 
@@ -224,6 +229,10 @@ export default function GroupDetailScreen() {
             isVisible={isModalVisible}
             handleCloseModal={handleCloseModal}
             handleAccept={handleModalAccept}
+          />
+          <LoadingOverlay
+            visible={isPendingLeaveRoom}
+            label="모임방에서 나가는 중이에요"
           />
         </>
       )}

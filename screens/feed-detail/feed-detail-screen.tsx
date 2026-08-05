@@ -135,6 +135,10 @@ export default function FeedDetailScreen() {
 
   const handleFeedDelete = () => {
     if (isPendingDeleteFeed || !feedDetail) return null;
+
+    // 확인 모달을 먼저 닫는다. RN Modal은 두 개를 동시에 띄울 수 없어서
+    // 열려 있으면 LoadingOverlay가 표시되지 않는다.
+    setIsModalVisible(false);
     deleteFeed(feedDetail?.feedId);
   };
 
@@ -282,7 +286,10 @@ export default function FeedDetailScreen() {
         handleCloseModal={handleCloseModal}
         handleFeedDelete={handleFeedDelete}
       />
-      <LoadingOverlay visible={isPendingDeleteFeed} />
+      <LoadingOverlay
+        visible={isPendingDeleteFeed}
+        label="피드를 삭제하는 중이에요"
+      />
     </View>
   );
 }

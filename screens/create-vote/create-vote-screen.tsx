@@ -172,6 +172,7 @@ export default function CreateVoteScreen() {
       </KeyboardAvoidingView>
       <LoadingOverlay
         visible={isPendingCreateRoomVote || isPendingEditRoomVote}
+        label="투표를 저장하는 중이에요"
       />
     </View>
   );
