@@ -182,7 +182,10 @@ export default function CreateGroupScreen() {
         handleClose={handleCloseBottomSheet}
       />
 
-      <LoadingOverlay visible={isPendingCreateRoom} />
+      <LoadingOverlay
+        visible={isPendingCreateRoom}
+        label="모임방을 만드는 중이에요"
+      />
     </View>
   );
 }

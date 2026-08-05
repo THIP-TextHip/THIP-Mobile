@@ -212,7 +212,10 @@ export default function FeedWriteScreen() {
         handleClose={handleCloseBottomSheet}
       />
 
-      <LoadingOverlay visible={isPendingWriteFeed || isPendingEditFeed} />
+      <LoadingOverlay
+        visible={isPendingWriteFeed || isPendingEditFeed}
+        label="피드를 저장하는 중이에요"
+      />
     </View>
   );
 }

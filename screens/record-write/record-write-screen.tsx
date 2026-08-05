@@ -163,6 +163,7 @@ export default function RecordWriteScreen() {
       </KeyboardAvoidingView>
       <LoadingOverlay
         visible={isPendingCreateRoomRecord || isPendingEditRoomRecord}
+        label="기록을 저장하는 중이에요"
       />
     </View>
   );
