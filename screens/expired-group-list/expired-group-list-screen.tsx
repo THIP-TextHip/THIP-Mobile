@@ -9,7 +9,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useGetMyRoomListQuery } from "@apis/room";
 import { useGetMyInfoQuery } from "@apis/user";
-import { AppText, LoadingIndicator, MyGroupCard } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  LoadingIndicator,
+  MyGroupCard,
+  MyGroupCardSkeleton,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 export default function ExpiredGroupListScreen() {
@@ -29,6 +35,8 @@ export default function ExpiredGroupListScreen() {
     isRefetchingMyRoomList,
   } = useGetMyRoomListQuery("expired");
 
+  const isSkeletonVisible = useDelayedLoading(isPendingMyRoomList);
+
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
 
@@ -36,7 +44,9 @@ export default function ExpiredGroupListScreen() {
   };
 
   if (isPendingMyRoomList) {
-    return <LoadingIndicator variant="page" />;
+    return isSkeletonVisible ? (
+      <MyGroupCardSkeleton containerStyle={styles.skeleton} />
+    ) : null;
   }
 
   const ListHeader = () => {
@@ -112,6 +122,9 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     gap: 20,
+  },
+  skeleton: {
+    padding: 20,
   },
   empty: {
     gap: 8,

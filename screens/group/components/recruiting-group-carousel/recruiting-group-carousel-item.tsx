@@ -13,12 +13,14 @@ import {
   useGetHomeRecruitingRoomListQuery,
   type RoomCategory,
 } from "@apis/room";
-import { AppText, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { GRID_WIDTH } from "../../constants";
 import type { RecruitingGroupCarouselType } from "../../types";
 import RecruitingGroupCard from "./recruiting-group-card";
+import RecruitingGroupCardSkeleton from "./skeleton";
 import RecruitingGroupCarouselHeader from "./recruiting-group-carousel-header";
 
 interface RecruitingGroupCarouselItemProps {
@@ -80,11 +82,11 @@ export default function RecruitingGroupCarouselItem({
   const cardHeight = isGrid ? 430 : 730;
   const label = CAROUSEL_LABELS[carouselType];
 
+  const isSkeletonVisible = useDelayedLoading(isPendingHomeRecruitingRoomData);
+
   const renderRoomListContent = () => {
     if (isPendingHomeRecruitingRoomData) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
-      );
+      return isSkeletonVisible ? <RecruitingGroupCardSkeleton /> : null;
     }
 
     if (isErrorHomeRecruitingRoomData || !roomList) {

@@ -9,9 +9,11 @@ import {
   useGetFeedRelatedBookQuery,
   type FeedRelatedBookSort,
 } from "@apis/feed";
+import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   FeedPostPreview,
+  FeedPostPreviewSkeleton,
   LoadingIndicator,
   type FilterType,
 } from "@shared/ui";
@@ -51,6 +53,8 @@ export default function BookDetailScreen() {
     refetchFeedRelatedBookList,
     isRefetchingFeedRelatedBookList,
   } = useGetFeedRelatedBookQuery(isbn, sortType.type);
+
+  const isFeedSkeletonVisible = useDelayedLoading(isPendingFeedRelatedBookList);
 
   const refetchPage = () => {
     refetchBookDetail();
@@ -115,9 +119,7 @@ export default function BookDetailScreen() {
 
   const renderEmpty = () => {
     if (isPendingFeedRelatedBookList) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
-      );
+      return isFeedSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
     }
 
     if (isErrorFeedRelatedBookList) {

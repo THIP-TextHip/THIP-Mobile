@@ -13,7 +13,13 @@ import {
   useGetFeedUserProfileQuery,
   useGetUserProfileTopInfoQuery,
 } from "@apis/feed";
-import { AppText, FeedPostPreview, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  FeedPostPreview,
+  FeedPostPreviewSkeleton,
+  UserProfileBarSkeleton,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { UserProfileTopContents } from "./components";
@@ -45,11 +51,14 @@ export default function UserProfileScreen() {
     [userProfileTopInfo],
   );
 
+  const isProfileSkeletonVisible = useDelayedLoading(
+    isPendingUserProfileTopInfo,
+  );
+  const isFeedSkeletonVisible = useDelayedLoading(isPendingFeedUserProfile);
+
   const renderEmpty = () => {
     if (isPendingFeedUserProfile) {
-      return (
-        <LoadingIndicator variant="list-empty" containerStyle={styles.status} />
-      );
+      return isFeedSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
     }
 
     if (isErrorFeedUserProfile) {
@@ -86,7 +95,9 @@ export default function UserProfileScreen() {
   }, [userId]);
 
   if (isPendingUserProfileTopInfo) {
-    return <LoadingIndicator variant="page" />;
+    return isProfileSkeletonVisible ? (
+      <UserProfileBarSkeleton containerStyle={styles.profileSkeleton} />
+    ) : null;
   }
 
   return (
@@ -123,5 +134,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 100,
+  },
+  profileSkeleton: {
+    paddingHorizontal: 20,
+    paddingTop: 32,
   },
 });

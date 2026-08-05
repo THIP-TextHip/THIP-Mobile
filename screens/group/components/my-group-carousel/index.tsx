@@ -9,9 +9,11 @@ import Carousel from "react-native-reanimated-carousel";
 
 import { useGetHomeMyRoomQuery } from "@apis/room";
 import { IcRightRight } from "@images/icons";
-import { AppText, LoadingIndicator } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import { AppText } from "@shared/ui";
 import { colors } from "@theme/token";
 
+import MyGroupCarouselSkeleton from "./skeleton";
 import MyGroupCarouselStatus from "./my-group-carousel-empty";
 import MyGroupCarouselItem from "./my-group-carousel-item";
 
@@ -37,6 +39,8 @@ export default function MyGroupCarousel() {
     fetchNextPage();
   };
 
+  const isSkeletonVisible = useDelayedLoading(isPendingHomeMyRoom);
+
   const handleSnapToItem = (index: number) => {
     const DEFAULT_PRELOAD_THRESHOLD = 2;
     const shouldLoadNextCarouselPage =
@@ -59,10 +63,11 @@ export default function MyGroupCarousel() {
         </Pressable>
       </View>
       {isPendingHomeMyRoom ? (
-        <LoadingIndicator
-          variant="page"
-          containerStyle={styles.loadingContainer}
-        />
+        isSkeletonVisible ? (
+          <MyGroupCarouselSkeleton />
+        ) : (
+          <View style={styles.loadingContainer} />
+        )
       ) : homeMyRoomData.length === 0 ? (
         <MyGroupCarouselStatus
           isError={isErrorHomeMyRoom}

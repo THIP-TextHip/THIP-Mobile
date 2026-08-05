@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { useGetMyInfoQuery } from "@apis/user";
-import { AppText, LoadingIndicator, UserProfileBar } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import { AppText, UserProfileBar, UserProfileBarSkeleton } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { LogoutModal, SettingsListItem } from "./components";
@@ -11,6 +12,7 @@ import { SETTINGS_MY_ACTIVITY, SETTINGS_OTHER } from "./constants";
 
 export default function MyPageScreen() {
   const { myInfo, isPendingMyInfo } = useGetMyInfoQuery();
+  const isSkeletonVisible = useDelayedLoading(isPendingMyInfo);
   const [isLogoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const handleToEdit = () => {
@@ -31,10 +33,9 @@ export default function MyPageScreen() {
   return (
     <ScrollView contentContainerStyle={styles.page}>
       {isPendingMyInfo ? (
-        <LoadingIndicator
-          variant="page"
-          containerStyle={styles.loadingContainer}
-        />
+        isSkeletonVisible ? (
+          <UserProfileBarSkeleton />
+        ) : null
       ) : (
         <UserProfileBar
           type="edit-profile"
@@ -114,11 +115,5 @@ const styles = StyleSheet.create({
     // paddingTop: 144,
     paddingTop: 100,
     paddingBottom: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.black.main,
   },
 });

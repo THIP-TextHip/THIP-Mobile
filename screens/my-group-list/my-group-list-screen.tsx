@@ -9,7 +9,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { type MyRoomType, useGetMyRoomListQuery } from "@apis/room";
-import { AppText, LoadingIndicator, MyGroupCard } from "@shared/ui";
+import { useDelayedLoading } from "@shared/hooks";
+import {
+  AppText,
+  LoadingIndicator,
+  MyGroupCard,
+  MyGroupCardSkeleton,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { MyGroupTopFilter } from "./components";
@@ -41,6 +47,8 @@ export default function MyGroupListScreen() {
     }
     setMyGroupType(type);
   };
+
+  const isSkeletonVisible = useDelayedLoading(isPendingMyRoomList);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -91,7 +99,9 @@ export default function MyGroupListScreen() {
         handleSelectType={handleSelectType}
       />
       {isPendingMyRoomList ? (
-        <LoadingIndicator variant="page" />
+        isSkeletonVisible ? (
+          <MyGroupCardSkeleton containerStyle={styles.skeleton} />
+        ) : null
       ) : (
         <FlatList
           contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
@@ -125,6 +135,10 @@ const styles = StyleSheet.create({
   list: {
     paddingHorizontal: 20,
     gap: 20,
+  },
+  skeleton: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   status: {
     gap: 8,
