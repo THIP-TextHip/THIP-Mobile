@@ -13,9 +13,9 @@ import {
   FeedPostPreview,
   FeedPostPreviewSkeleton,
   ListTotalCountHeader,
-  LoadingIndicator,
   ThipPreview,
   UserProfileBar,
+  UserProfileBarSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -23,11 +23,17 @@ const MyFeedTopContents = () => {
   const { myId, isPendingMyId } = useGetMyIdQuery();
   const { myProfileTopInfo, isPendingMyProfileTopInfo } =
     useGetMyProfileTopInfoQuery();
+  const isSkeletonVisible = useDelayedLoading(
+    isPendingMyId || isPendingMyProfileTopInfo,
+  );
 
+  // 지연 표시 구간에도 자리를 비워두지 않도록 컨테이너는 항상 렌더한다.
   if (isPendingMyId || isPendingMyProfileTopInfo) {
     return (
       <View style={styles.loadingContainer}>
-        <LoadingIndicator variant="list-empty" />
+        {isSkeletonVisible ? (
+          <UserProfileBarSkeleton containerStyle={styles.profileSkeleton} />
+        ) : null}
       </View>
     );
   }
@@ -143,7 +149,9 @@ const styles = StyleSheet.create({
   loadingContainer: {
     minHeight: 200,
     justifyContent: "center",
-    alignItems: "center",
+  },
+  profileSkeleton: {
+    paddingHorizontal: 20,
   },
   profile: {
     gap: 16,
