@@ -22,7 +22,12 @@ import {
   useCloseRoomRecruitingMutation,
   useGetRecruitingRoomDetailQuery,
 } from "@apis/room";
-import { AppText, GroupInfo, LoadingIndicator } from "@shared/ui";
+import {
+  AppText,
+  GroupInfo,
+  LoadingIndicator,
+  LoadingOverlay,
+} from "@shared/ui";
 import { colors } from "@theme/token";
 
 import {
@@ -127,6 +132,9 @@ export default function JoinGroupScreen() {
 
   const handleCancelJoin = useCallback(() => {
     if (!recruitingRoomDetailData || isPendingChangeRoomJoinStatus) return;
+
+    // RN Modal은 두 개를 동시에 띄울 수 없어 확인 모달을 먼저 닫는다.
+    setIsCancelModalOpen(false);
     changeRoomJoinStatus(
       {
         roomId: recruitingRoomDetailData.roomId,
@@ -134,7 +142,6 @@ export default function JoinGroupScreen() {
       },
       {
         onSuccess: () => {
-          setIsCancelModalOpen(false);
           if (router.canGoBack()) {
             router.back();
           } else {
@@ -155,14 +162,10 @@ export default function JoinGroupScreen() {
 
   const handleFinishRecruiting = useCallback(() => {
     if (!recruitingRoomDetailData || isPendingCloseRoomRecruiting) return;
-    closeRoomRecruiting(
-      { roomId: recruitingRoomDetailData.roomId },
-      {
-        onSettled: () => {
-          setIsFinishModalOpen(false);
-        },
-      },
-    );
+
+    // RN Modal은 두 개를 동시에 띄울 수 없어 확인 모달을 먼저 닫는다.
+    setIsFinishModalOpen(false);
+    closeRoomRecruiting({ roomId: recruitingRoomDetailData.roomId });
   }, [
     closeRoomRecruiting,
     recruitingRoomDetailData,
@@ -260,6 +263,16 @@ export default function JoinGroupScreen() {
             isOpen={isPasswordOpen}
             handleClose={handleClosePassword}
             changeRoomJoinStatus={changeRoomJoinStatus}
+          />
+          <LoadingOverlay
+            visible={
+              isPendingChangeRoomJoinStatus || isPendingCloseRoomRecruiting
+            }
+            label={
+              isPendingCloseRoomRecruiting
+                ? "모집을 마감하는 중이에요"
+                : "모임방 참여 상태를 변경하는 중이에요"
+            }
           />
         </>
       )}
