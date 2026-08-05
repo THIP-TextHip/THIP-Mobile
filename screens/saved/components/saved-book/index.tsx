@@ -68,8 +68,12 @@ export default function SavedBook() {
     );
   };
 
+  if (isSkeletonVisible) {
+    return <SavedBookItemSkeleton />;
+  }
+
   if (isPendingSavedBook) {
-    return isSkeletonVisible ? <SavedBookItemSkeleton /> : null;
+    return null;
   }
 
   if (isErrorSavedBook && savedBookList.length === 0) {

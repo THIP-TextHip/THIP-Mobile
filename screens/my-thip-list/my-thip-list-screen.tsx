@@ -74,8 +74,12 @@ export default function MyThipListScreen() {
     );
   };
 
+  if (isSkeletonVisible) {
+    return <UserListItemSkeleton />;
+  }
+
   if (isPendingMyFollowings) {
-    return isSkeletonVisible ? <UserListItemSkeleton /> : null;
+    return null;
   }
 
   return (

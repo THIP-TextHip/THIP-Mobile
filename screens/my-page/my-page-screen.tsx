@@ -32,11 +32,9 @@ export default function MyPageScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.page}>
-      {isPendingMyInfo ? (
-        isSkeletonVisible ? (
-          <UserProfileBarSkeleton />
-        ) : null
-      ) : (
+      {isSkeletonVisible ? (
+        <UserProfileBarSkeleton />
+      ) : isPendingMyInfo ? null : (
         <UserProfileBar
           type="edit-profile"
           userProfile={{

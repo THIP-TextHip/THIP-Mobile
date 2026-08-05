@@ -98,11 +98,9 @@ export default function MyGroupListScreen() {
         myGroupType={myGroupType}
         handleSelectType={handleSelectType}
       />
-      {isPendingMyRoomList ? (
-        isSkeletonVisible ? (
-          <MyGroupCardSkeleton containerStyle={styles.skeleton} />
-        ) : null
-      ) : (
+      {isSkeletonVisible ? (
+        <MyGroupCardSkeleton containerStyle={styles.skeleton} />
+      ) : isPendingMyRoomList ? null : (
         <FlatList
           contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
           data={myRoomList}

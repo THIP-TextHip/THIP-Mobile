@@ -61,8 +61,12 @@ export default function SearchUserResult({
 
   const Separator = () => <View style={styles.separator} />;
 
+  if (isSkeletonVisible) {
+    return <UserListItemSkeleton />;
+  }
+
   if (isPendingSearchUser) {
-    return isSkeletonVisible ? <UserListItemSkeleton /> : null;
+    return null;
   }
 
   return (

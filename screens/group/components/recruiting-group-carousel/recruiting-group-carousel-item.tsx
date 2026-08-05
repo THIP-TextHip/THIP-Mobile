@@ -85,8 +85,12 @@ export default function RecruitingGroupCarouselItem({
   const isSkeletonVisible = useDelayedLoading(isPendingHomeRecruitingRoomData);
 
   const renderRoomListContent = () => {
+    if (isSkeletonVisible) {
+      return <RecruitingGroupCardSkeleton />;
+    }
+
     if (isPendingHomeRecruitingRoomData) {
-      return isSkeletonVisible ? <RecruitingGroupCardSkeleton /> : null;
+      return null;
     }
 
     if (isErrorHomeRecruitingRoomData || !roomList) {

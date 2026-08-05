@@ -50,12 +50,7 @@ export default function MyThipPreview() {
     router.push("/search-user");
   };
 
-  // 지연 표시 구간에도 자리가 접히지 않도록 빈 컨테이너를 렌더한다.
   const renderSkeleton = () => {
-    if (!isSkeletonVisible) {
-      return <View style={styles.content} />;
-    }
-
     return (
       <View style={styles.content}>
         <SkeletonList
@@ -80,8 +75,11 @@ export default function MyThipPreview() {
           내띱
         </AppText>
       </View>
-      {isPendingMyFollowingsPreview ? (
+      {isSkeletonVisible ? (
         renderSkeleton()
+      ) : isPendingMyFollowingsPreview ? (
+        // 지연 표시 구간에도 자리가 접히지 않도록 빈 컨테이너를 렌더한다.
+        <View style={styles.content} />
       ) : myFollowingListPreview?.myFollowingUsers.length === 0 ? (
         <Pressable style={styles.empty} onPress={handleToSearchUser}>
           <AppText

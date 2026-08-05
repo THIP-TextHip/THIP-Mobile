@@ -99,8 +99,12 @@ export default function SearchGroupResult({
   const isSkeletonVisible = useDelayedLoading(isPendingSearchRoom);
 
   const renderEmpty = () => {
+    if (isSkeletonVisible) {
+      return <SearchedGroupItemSkeleton />;
+    }
+
     if (isPendingSearchRoom) {
-      return isSkeletonVisible ? <SearchedGroupItemSkeleton /> : null;
+      return null;
     }
 
     return <EmptyView />;

@@ -48,10 +48,12 @@ export default function BookRecruitingGroupScreen() {
 
   // 첫 렌더에는 bookDetailData가 undefined이므로 로딩 분기가 먼저 와야 한다.
   // 순서가 반대면 로딩 중에 에러 문구가 뜨고 인디케이터는 도달하지 못한다.
+  if (isSkeletonVisible) {
+    return <MyGroupCardSkeleton containerStyle={styles.skeleton} />;
+  }
+
   if (isPendingBookRecruitingRooms || isPendingBookDetail) {
-    return isSkeletonVisible ? (
-      <MyGroupCardSkeleton containerStyle={styles.skeleton} />
-    ) : null;
+    return null;
   }
 
   if (isErrorBookRecruitingRooms || !bookDetailData) {

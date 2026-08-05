@@ -45,8 +45,12 @@ export default function FeedContents({ listRef }: FeedContentsProps) {
   };
 
   const renderEmpty = () => {
+    if (isSkeletonVisible) {
+      return <FeedPostPreviewSkeleton />;
+    }
+
     if (isPendingFeedList) {
-      return isSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
+      return null;
     }
 
     // TODO: 에러 발생 시 보여줄 처리 필요. ex) 토스트 메시지 띄우기

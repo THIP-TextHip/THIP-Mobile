@@ -67,12 +67,14 @@ export default function DailyGreetingScreen() {
   if (!roomId) return null;
 
   const StatusView = () => {
-    if (isPendingDailyGreeting)
-      return isSkeletonVisible ? (
+    if (isSkeletonVisible)
+      return (
         <GreetingListItemSkeleton
           containerStyle={{ marginBottom: inputBarHeight }}
         />
-      ) : null;
+      );
+
+    if (isPendingDailyGreeting) return null;
     return (
       <View style={[styles.status, { marginBottom: inputBarHeight }]}>
         {isErrorDailyGreeting ? (

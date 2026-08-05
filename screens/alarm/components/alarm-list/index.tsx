@@ -39,8 +39,12 @@ export default function AlarmList({ filter }: AlarmListProps) {
     fetchNextPage();
   };
 
+  if (isSkeletonVisible) {
+    return <AlarmItemSkeleton />;
+  }
+
   if (isPendingNotificationList) {
-    return isSkeletonVisible ? <AlarmItemSkeleton /> : null;
+    return null;
   }
 
   if (isErrorNotificationList) {

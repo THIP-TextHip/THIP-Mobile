@@ -37,11 +37,9 @@ export default function ReadingMateScreen() {
 
   const Separator = () => <View style={styles.separator} />;
 
-  return isPendingReadingMateList ? (
-    isSkeletonVisible ? (
-      <UserListItemSkeleton containerStyle={styles.list} />
-    ) : null
-  ) : isErrorReadingMateList ? (
+  return isSkeletonVisible ? (
+    <UserListItemSkeleton containerStyle={styles.list} />
+  ) : isPendingReadingMateList ? null : isErrorReadingMateList ? (
     <View style={styles.status}>
       <AppText weight="semibold" size="lg" color={colors.white}>
         데이터를 불러오지 못했어요.{" "}

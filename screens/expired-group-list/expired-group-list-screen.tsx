@@ -43,10 +43,12 @@ export default function ExpiredGroupListScreen() {
     fetchNextPage();
   };
 
+  if (isSkeletonVisible) {
+    return <MyGroupCardSkeleton containerStyle={styles.skeleton} />;
+  }
+
   if (isPendingMyRoomList) {
-    return isSkeletonVisible ? (
-      <MyGroupCardSkeleton containerStyle={styles.skeleton} />
-    ) : null;
+    return null;
   }
 
   const ListHeader = () => {

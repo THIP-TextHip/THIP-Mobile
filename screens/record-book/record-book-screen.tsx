@@ -262,8 +262,9 @@ export default function RecordBookScreen() {
   };
 
   const StatusView = () => {
-    if (isPendingRoomPostList || isPendingBookPageInfo)
-      return isSkeletonVisible ? <RecordBookPostItemSkeleton /> : null;
+    if (isSkeletonVisible) return <RecordBookPostItemSkeleton />;
+
+    if (isPendingRoomPostList || isPendingBookPageInfo) return null;
     return (
       <View style={styles.status}>
         {isErrorRoomPostList ? (

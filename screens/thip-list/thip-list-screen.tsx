@@ -57,10 +57,12 @@ export default function ThipListScreen() {
     );
   };
 
+  if (isSkeletonVisible) {
+    return <UserListItemSkeleton containerStyle={styles.list} />;
+  }
+
   if (isPendingUserFollowers) {
-    return isSkeletonVisible ? (
-      <UserListItemSkeleton containerStyle={styles.list} />
-    ) : null;
+    return null;
   }
 
   return (

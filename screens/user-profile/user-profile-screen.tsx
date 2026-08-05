@@ -54,8 +54,12 @@ export default function UserProfileScreen() {
   // 상단 정보와 피드 목록은 별도 쿼리라, 상단 로딩이 화면 전체를 막지 않도록
   // 헤더 안에서만 스켈레톤을 보여준다.
   const renderHeader = useCallback(() => {
+    if (isProfileSkeletonVisible) {
+      return <ProfileTopSkeleton />;
+    }
+
     if (isPendingUserProfileTopInfo) {
-      return isProfileSkeletonVisible ? <ProfileTopSkeleton /> : null;
+      return null;
     }
 
     return <UserProfileTopContents userProfileTopInfo={userProfileTopInfo} />;
@@ -66,10 +70,12 @@ export default function UserProfileScreen() {
   ]);
 
   const renderEmpty = () => {
+    if (isFeedSkeletonVisible) {
+      return <FeedPostPreviewSkeleton withHeader={false} />;
+    }
+
     if (isPendingFeedUserProfile) {
-      return isFeedSkeletonVisible ? (
-        <FeedPostPreviewSkeleton withHeader={false} />
-      ) : null;
+      return null;
     }
 
     if (isErrorFeedUserProfile) {

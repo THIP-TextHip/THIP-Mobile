@@ -62,12 +62,10 @@ export default function MyGroupCarousel() {
           <IcRightRight />
         </Pressable>
       </View>
-      {isPendingHomeMyRoom ? (
-        isSkeletonVisible ? (
-          <MyGroupCarouselSkeleton />
-        ) : (
-          <View style={styles.loadingContainer} />
-        )
+      {isSkeletonVisible ? (
+        <MyGroupCarouselSkeleton />
+      ) : isPendingHomeMyRoom ? (
+        <View style={styles.loadingContainer} />
       ) : homeMyRoomData.length === 0 ? (
         <MyGroupCarouselStatus
           isError={isErrorHomeMyRoom}

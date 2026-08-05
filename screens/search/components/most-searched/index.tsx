@@ -37,11 +37,9 @@ export default function MostSearched() {
           {dateString} 기준
         </AppText>
       </View>
-      {isPendingMostSearchedBook ? (
-        isSkeletonVisible ? (
-          <MostSearchedBookItemSkeleton />
-        ) : null
-      ) : isErrorMostSearchedBook ? (
+      {isSkeletonVisible ? (
+        <MostSearchedBookItemSkeleton />
+      ) : isPendingMostSearchedBook ? null : isErrorMostSearchedBook ? (
         <View style={styles.emptyContainer}>
           <AppText weight="semibold" size="lg" color={colors.white}>
             데이터를 불러오지 못했어요 ({mostSearchedBookError?.code})

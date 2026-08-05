@@ -27,8 +27,12 @@ const MyFeedTopContents = () => {
     isPendingMyId || isPendingMyProfileTopInfo,
   );
 
+  if (isSkeletonVisible) {
+    return <ProfileTopSkeleton />;
+  }
+
   if (isPendingMyId || isPendingMyProfileTopInfo) {
-    return isSkeletonVisible ? <ProfileTopSkeleton /> : null;
+    return null;
   }
 
   if (!myId || !myProfileTopInfo) {
@@ -87,10 +91,12 @@ export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
   };
 
   const renderEmpty = () => {
+    if (isSkeletonVisible) {
+      return <FeedPostPreviewSkeleton withHeader={false} />;
+    }
+
     if (isPendingFeedMyProfile) {
-      return isSkeletonVisible ? (
-        <FeedPostPreviewSkeleton withHeader={false} />
-      ) : null;
+      return null;
     }
 
     if (isErrorFeedMyProfile) {

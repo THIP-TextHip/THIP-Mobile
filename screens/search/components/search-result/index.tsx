@@ -75,10 +75,12 @@ export default function SearchResult({
     fetchNextPage();
   };
 
+  if (isSkeletonVisible) {
+    return <SearchedBookItemSkeleton containerStyle={styles.skeleton} />;
+  }
+
   if (isPendingSearchBook) {
-    return isSkeletonVisible ? (
-      <SearchedBookItemSkeleton containerStyle={styles.skeleton} />
-    ) : null;
+    return null;
   }
 
   return (

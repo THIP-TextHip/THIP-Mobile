@@ -118,8 +118,12 @@ export default function BookDetailScreen() {
   }
 
   const renderEmpty = () => {
+    if (isFeedSkeletonVisible) {
+      return <FeedPostPreviewSkeleton />;
+    }
+
     if (isPendingFeedRelatedBookList) {
-      return isFeedSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
+      return null;
     }
 
     if (isErrorFeedRelatedBookList) {
