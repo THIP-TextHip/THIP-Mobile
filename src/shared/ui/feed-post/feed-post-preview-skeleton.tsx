@@ -17,10 +17,16 @@ const BOOK_INFO_BAR_HEIGHT = 44;
 
 interface FeedPostPreviewSkeletonProps {
   count?: number;
+  /**
+   * 작성자 영역 표시 여부. 내 피드·유저 프로필처럼 한 사람의 글만 모인 목록은
+   * 실제 FeedPostPreview도 헤더를 그리지 않으므로 false로 넘긴다.
+   */
+  withHeader?: boolean;
 }
 
 export default function FeedPostPreviewSkeleton({
   count = DEFAULT_COUNT,
+  withHeader = true,
 }: FeedPostPreviewSkeletonProps) {
   return (
     <SkeletonProvider>
@@ -29,16 +35,18 @@ export default function FeedPostPreviewSkeleton({
           <Fragment key={index}>
             {index > 0 && <View style={styles.separator} />}
             <View style={styles.container}>
-              <View style={styles.header}>
-                <View style={styles.profile}>
-                  <SkeletonCircle size={36} />
-                  <View style={styles.creatorInfo}>
-                    <SkeletonText width={72} size="sm" />
-                    <SkeletonText width={48} size="xs" />
+              {withHeader && (
+                <View style={styles.header}>
+                  <View style={styles.profile}>
+                    <SkeletonCircle size={36} />
+                    <View style={styles.creatorInfo}>
+                      <SkeletonText width={72} size="sm" />
+                      <SkeletonText width={48} size="xs" />
+                    </View>
                   </View>
+                  <SkeletonText width={56} size="2xs" />
                 </View>
-                <SkeletonText width={56} size="2xs" />
-              </View>
+              )}
 
               <SkeletonBox height={BOOK_INFO_BAR_HEIGHT} borderRadius={12} />
 

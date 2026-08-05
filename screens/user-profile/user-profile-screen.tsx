@@ -18,7 +18,7 @@ import {
   AppText,
   FeedPostPreview,
   FeedPostPreviewSkeleton,
-  UserProfileBarSkeleton,
+  ProfileTopSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -55,9 +55,7 @@ export default function UserProfileScreen() {
   // 헤더 안에서만 스켈레톤을 보여준다.
   const renderHeader = useCallback(() => {
     if (isPendingUserProfileTopInfo) {
-      return isProfileSkeletonVisible ? (
-        <UserProfileBarSkeleton containerStyle={styles.profileSkeleton} />
-      ) : null;
+      return isProfileSkeletonVisible ? <ProfileTopSkeleton /> : null;
     }
 
     return <UserProfileTopContents userProfileTopInfo={userProfileTopInfo} />;
@@ -69,7 +67,9 @@ export default function UserProfileScreen() {
 
   const renderEmpty = () => {
     if (isPendingFeedUserProfile) {
-      return isFeedSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
+      return isFeedSkeletonVisible ? (
+        <FeedPostPreviewSkeleton withHeader={false} />
+      ) : null;
     }
 
     if (isErrorFeedUserProfile) {
@@ -139,9 +139,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 100,
-  },
-  profileSkeleton: {
-    paddingHorizontal: 20,
-    paddingTop: 32,
   },
 });

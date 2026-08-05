@@ -13,9 +13,9 @@ import {
   FeedPostPreview,
   FeedPostPreviewSkeleton,
   ListTotalCountHeader,
+  ProfileTopSkeleton,
   ThipPreview,
   UserProfileBar,
-  UserProfileBarSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
@@ -27,15 +27,8 @@ const MyFeedTopContents = () => {
     isPendingMyId || isPendingMyProfileTopInfo,
   );
 
-  // 지연 표시 구간에도 자리를 비워두지 않도록 컨테이너는 항상 렌더한다.
   if (isPendingMyId || isPendingMyProfileTopInfo) {
-    return (
-      <View style={styles.loadingContainer}>
-        {isSkeletonVisible ? (
-          <UserProfileBarSkeleton containerStyle={styles.profileSkeleton} />
-        ) : null}
-      </View>
-    );
+    return isSkeletonVisible ? <ProfileTopSkeleton /> : null;
   }
 
   if (!myId || !myProfileTopInfo) {
@@ -95,7 +88,9 @@ export default function MyFeedContents({ listRef }: MyFeedContentsProps) {
 
   const renderEmpty = () => {
     if (isPendingFeedMyProfile) {
-      return isSkeletonVisible ? <FeedPostPreviewSkeleton /> : null;
+      return isSkeletonVisible ? (
+        <FeedPostPreviewSkeleton withHeader={false} />
+      ) : null;
     }
 
     if (isErrorFeedMyProfile) {
@@ -145,13 +140,6 @@ const styles = StyleSheet.create({
   topContents: {
     marginTop: 32,
     marginBottom: 20,
-  },
-  loadingContainer: {
-    minHeight: 200,
-    justifyContent: "center",
-  },
-  profileSkeleton: {
-    paddingHorizontal: 20,
   },
   profile: {
     gap: 16,
