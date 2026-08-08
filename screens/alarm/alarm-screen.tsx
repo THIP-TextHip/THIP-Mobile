@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { NotificationType } from "@apis/notification";
+import {
+  type NotificationType,
+  useGetUncheckedNotificationExistsQuery,
+} from "@apis/notification";
 
 import { AlarmList, AlarmTopFilter } from "./components";
 
 export default function AlarmScreen() {
   const [alarmType, setAlarmType] = useState<NotificationType | null>(null);
+  const { hasUncheckedNotification, refetchUncheckedNotificationExists } =
+    useGetUncheckedNotificationExistsQuery();
 
   const handleSelectType = (type: NotificationType) => {
     if (type === alarmType) {
@@ -19,10 +24,14 @@ export default function AlarmScreen() {
   return (
     <View style={styles.page}>
       <AlarmTopFilter
+        hasUncheckedNotification={hasUncheckedNotification}
         alarmType={alarmType}
         handleSelectType={handleSelectType}
       />
-      <AlarmList filter={alarmType} />
+      <AlarmList
+        filter={alarmType}
+        refetchUncheckedNotificationExists={refetchUncheckedNotificationExists}
+      />
     </View>
   );
 }

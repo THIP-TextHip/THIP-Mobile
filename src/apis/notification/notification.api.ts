@@ -101,3 +101,9 @@ export const getPushNotificationStateApi = async () => {
 
   return response.data;
 };
+
+export const checkAllNotificationApi = async () => {
+  const response = await apiClient.post(NOTIFICATION_URL.CHECK_ALL);
+
+  return response.data;
+};

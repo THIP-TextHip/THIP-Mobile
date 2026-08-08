@@ -1,11 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -217,7 +212,8 @@ export default function GroupDetailScreen() {
             </View>
           </ScrollView>
           <GroupDetailBottomSheet
-            isHost={roomDetailData.isHost}
+            // 우선 방장도 방 삭제 대신 방나가기로 뜨도록. 시도 시 에러 메시지
+            isHost={false}
             isVisible={isBottomSheetVisible}
             handleClose={handleCloseBottomSheet}
             handleDelete={handleDeleteGroup}

@@ -20,6 +20,7 @@ import { ROOM_QUERY_KEY } from "../room";
 import { ROOM_POST_QUERY_KEY } from "../room-post";
 import {
   changePushNotificationStateApi,
+  checkAllNotificationApi,
   checkNotificationApi,
   deleteNotificationTokenApi,
   getNotificationListApi,
@@ -331,5 +332,39 @@ export const useChangePushNotificationState = () => {
   return {
     changePushNotification,
     isPendingChangePushNotification,
+  };
+};
+
+export const useCheckAllNotification = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: checkAllNotification,
+    isPending: isPendingCheckAllNotification,
+    isError,
+    error,
+  } = useMutation({
+    mutationFn: checkAllNotificationApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: NOTIFICATION_QUERY_KEY.ALL });
+      Toast.show({
+        type: "default",
+        text1: "알림이 모두 읽음 처리되었어요",
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!isError || !error) return;
+
+    Toast.show({
+      type: "error",
+      text1: error.message,
+    });
+  }, [isError, error]);
+
+  return {
+    checkAllNotification,
+    isPendingCheckAllNotification,
   };
 };
