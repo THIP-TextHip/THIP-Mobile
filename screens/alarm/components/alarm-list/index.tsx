@@ -14,9 +14,13 @@ import AlarmItemSkeleton from "../alarm-item/skeleton";
 
 interface AlarmListProps {
   filter: NotificationType | null;
+  refetchUncheckedNotificationExists: () => void;
 }
 
-export default function AlarmList({ filter }: AlarmListProps) {
+export default function AlarmList({
+  filter,
+  refetchUncheckedNotificationExists,
+}: AlarmListProps) {
   const { bottom } = useSafeAreaInsets();
 
   const {
@@ -37,6 +41,11 @@ export default function AlarmList({ filter }: AlarmListProps) {
     if (!hasNextPage || isFetchingNextPage) return;
 
     fetchNextPage();
+  };
+
+  const handleRefetch = () => {
+    refetchUncheckedNotificationExists();
+    refetchNotificationList();
   };
 
   if (isSkeletonVisible) {
@@ -71,7 +80,7 @@ export default function AlarmList({ filter }: AlarmListProps) {
       refreshControl={
         <RefreshControl
           refreshing={isRefetchingNotificationList}
-          onRefresh={refetchNotificationList}
+          onRefresh={handleRefetch}
           tintColor={colors.white}
           colors={[colors.white]}
         />

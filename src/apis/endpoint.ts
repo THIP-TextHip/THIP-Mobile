@@ -118,5 +118,6 @@ export const NOTIFICATION_URL = {
   UNCHECKED: "/notifications/exists-unchecked",
   TOKEN: "/notifications/fcm-tokens",
   CHECK: "/notifications/check",
+  CHECK_ALL: "/notifications/check-all",
   CHANGE_STATE: "/notifications/enable-state",
 } as const;
