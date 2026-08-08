@@ -44,16 +44,14 @@ export default function AlarmTopFilter({
         ))}
       </View>
       {hasUncheckedNotification && (
-        <Pressable hitSlop={5}>
-          <AppText
-            weight="regular"
-            size="sm"
-            color={colors.grey[300]}
-            onPress={handleCheckAllNotification}
-            disabled={
-              isPendingCheckAllNotification || !hasUncheckedNotification
-            }
-          >
+        <Pressable
+          onPress={handleCheckAllNotification}
+          disabled={isPendingCheckAllNotification || !hasUncheckedNotification}
+          accessibilityRole="button"
+          accessibilityLabel="모든 알림 읽음 처리"
+          hitSlop={5}
+        >
+          <AppText weight="regular" size="sm" color={colors.grey[300]}>
             모두읽기
           </AppText>
         </Pressable>
