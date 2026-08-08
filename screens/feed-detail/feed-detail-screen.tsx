@@ -5,7 +5,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
 import { useGetCommentListQuery, useWriteCommentMutation } from "@apis/comment";
-import { useDeleteFeedMutation, useGetFeedDetailQuery } from "@apis/feed";
+import {
+  useDeleteFeedMutation,
+  useGetFeedDetailQuery,
+  useReportFeedMutation,
+} from "@apis/feed";
 import {
   AppText,
   ChatInputBar,
@@ -48,6 +52,7 @@ export default function FeedDetailScreen() {
     isRefetchingCommentList,
   } = useGetCommentListQuery(feedId, "FEED");
   const { deleteFeed, isPendingDeleteFeed } = useDeleteFeedMutation();
+  const { reportFeed, isPendingReportFeed } = useReportFeedMutation();
   const { writeComment, isPendingWriteComment } = useWriteCommentMutation();
   const { setPrevFeed } = usePrevFeedStore();
 
@@ -107,7 +112,11 @@ export default function FeedDetailScreen() {
   };
 
   const handleReport = () => {
-    console.log("피드 신고하기");
+    if (isPendingReportFeed || !feedDetail) return;
+
+    // 바텀시트를 먼저 닫아야 LoadingOverlay가 가려지지 않는다.
+    setIsBottomSheetVisible(false);
+    reportFeed(feedDetail.feedId);
   };
 
   const handleToEdit = () => {
@@ -287,8 +296,12 @@ export default function FeedDetailScreen() {
         handleFeedDelete={handleFeedDelete}
       />
       <LoadingOverlay
-        visible={isPendingDeleteFeed}
-        label="피드를 삭제하는 중이에요"
+        visible={isPendingDeleteFeed || isPendingReportFeed}
+        label={
+          isPendingDeleteFeed
+            ? "피드를 삭제하는 중이에요"
+            : "피드를 신고하는 중이에요"
+        }
       />
     </View>
   );

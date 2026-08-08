@@ -13,6 +13,7 @@ export {
   getSavedFeedApi,
   getUserProfileTopInfoApi,
   issuePresignedUrlApi,
+  reportFeedApi,
   uploadFeedImagesApi,
   writeFeedApi,
 } from "./feed.api";
@@ -30,6 +31,7 @@ export {
   useGetFeedUserProfileQuery,
   useGetMyProfileTopInfoQuery,
   useGetUserProfileTopInfoQuery,
+  useReportFeedMutation,
   useSavedFeedQuery,
   useWriteFeedMutation,
 } from "./feed.queries";
@@ -56,6 +58,7 @@ export type {
   GetUserProfileTopInfoResponse,
   IssuePresignedUrlRequest,
   IssuePresignedUrlResponse,
+  ReportFeedResponse,
   WriteFeedMutationRequest,
   WriteFeedRequest,
   WriteFeedResponse,

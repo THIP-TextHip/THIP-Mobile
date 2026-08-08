@@ -10,6 +10,8 @@ export {
   getBookInfoForPinApi,
   getRoomBookPageInfoApi,
   getRoomPostListApi,
+  reportRoomRecordApi,
+  reportRoomVoteApi,
 } from "./room-post.api";
 
 export {
@@ -23,6 +25,7 @@ export {
   useGetBookInfoForPinQuery,
   useGetRoomBookPageQuery,
   useGetRoomPostListQuery,
+  useReportRoomPostMutation,
 } from "./room-post.queries";
 
 export type {
@@ -48,6 +51,10 @@ export type {
   GetRoomBookPageInfoResponse,
   GetRoomPostListRequest,
   GetRoomPostListResponse,
+  ReportRoomRecordRequest,
+  ReportRoomRecordResponse,
+  ReportRoomVoteRequest,
+  ReportRoomVoteResponse,
   RoomPostContent,
   RoomPostSortType,
   RoomPostVote,

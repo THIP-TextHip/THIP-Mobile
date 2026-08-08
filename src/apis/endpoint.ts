@@ -35,6 +35,8 @@ export const FEED_URL = {
   SAVE_STATUS: (feedId: number) => `/feeds/${encodeURIComponent(feedId)}/saved`,
   LIKE_STATUS: (feedId: number) => `/feeds/${encodeURIComponent(feedId)}/likes`,
   PRESIGNED_URL: "/feeds/images/presigned-url",
+  REPORT: (feedId: number | string) =>
+    `/feeds/${encodeURIComponent(String(feedId))}/report`,
 } as const;
 
 export const COMMENT_URL = {
@@ -43,6 +45,8 @@ export const COMMENT_URL = {
   LIKE_STATUS: (commentId: number) =>
     `/comments/${encodeURIComponent(commentId)}/likes`,
   DELETE: (commentId: number) => `/comments/${encodeURIComponent(commentId)}`,
+  REPORT: (commentId: number) =>
+    `/comments/${encodeURIComponent(commentId)}/report`,
 } as const;
 
 export const RECENT_SEARCH_URL = {
@@ -85,6 +89,10 @@ export const ROOM_URL = {
     `/rooms/${encodeURIComponent(String(roomId))}/daily-greeting`,
   DELETE_DAILY_GREETING: (roomId: number | string, attendanceCheckId: number) =>
     `/rooms/${encodeURIComponent(String(roomId))}/daily-greeting/${encodeURIComponent(String(attendanceCheckId))}`,
+  REPORT: (roomId: number | string) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/report`,
+  REPORT_DAILY_GREETING: (roomId: number | string, attendanceCheckId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/daily-greeting/${encodeURIComponent(String(attendanceCheckId))}/report`,
 } as const;
 
 export const ROOM_POST_URL = {
@@ -110,6 +118,10 @@ export const ROOM_POST_URL = {
     `/rooms/${encodeURIComponent(String(roomId))}/vote/${encodeURIComponent(String(voteId))}`,
   DO_VOTE: (roomId: number | string, voteId: number) =>
     `/rooms/${encodeURIComponent(String(roomId))}/vote/${encodeURIComponent(String(voteId))}`,
+  REPORT_RECORD: (roomId: number | string, recordId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/record/${encodeURIComponent(String(recordId))}/report`,
+  REPORT_VOTE: (roomId: number | string, voteId: number) =>
+    `/rooms/${encodeURIComponent(String(roomId))}/vote/${encodeURIComponent(String(voteId))}/report`,
 };
 
 export const NOTIFICATION_URL = {

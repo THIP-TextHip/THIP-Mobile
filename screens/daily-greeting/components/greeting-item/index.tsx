@@ -1,11 +1,13 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
-import Toast from "react-native-toast-message";
 
-import { useDeleteDailyGreetingMutation } from "@apis/room";
+import {
+  useDeleteDailyGreetingMutation,
+  useReportDailyGreetingMutation,
+} from "@apis/room";
 import { IcMore } from "@images/icons";
-import { AppText, CustomBottomSheet } from "@shared/ui";
+import { AppText, CustomBottomSheet, LoadingOverlay } from "@shared/ui";
 import { colors } from "@theme/token";
 
 import { DailyGreetingCommentType } from "../../types";
@@ -25,6 +27,8 @@ export default function GreetingItem({
 
   const { deleteDailyGreeting, isPendingDeleteDailyGreeting } =
     useDeleteDailyGreetingMutation();
+  const { reportDailyGreeting, isPendingReportDailyGreeting } =
+    useReportDailyGreetingMutation();
 
   const handleOpenBottomSheet = () => {
     setIsBottomSheetVisible(true);
@@ -42,7 +46,7 @@ export default function GreetingItem({
   };
 
   const handlePressBottomSheetButton = () => {
-    if (isPendingDeleteDailyGreeting) return;
+    if (isPendingDeleteDailyGreeting || isPendingReportDailyGreeting) return;
 
     if (greetingItem.isWriter) {
       deleteDailyGreeting(
@@ -53,9 +57,11 @@ export default function GreetingItem({
         { onSettled: () => setIsBottomSheetVisible(false) },
       );
     } else {
-      Toast.show({
-        type: "default",
-        text1: "성공적으로 신고했어요.",
+      // 바텀시트를 먼저 닫아야 LoadingOverlay가 가려지지 않는다.
+      setIsBottomSheetVisible(false);
+      reportDailyGreeting({
+        roomId: roomId,
+        attendanceCheckId: greetingItem.attendanceCheckId,
       });
     }
   };
@@ -118,6 +124,10 @@ export default function GreetingItem({
           </AppText>
         </Pressable>
       </CustomBottomSheet>
+      <LoadingOverlay
+        visible={isPendingReportDailyGreeting}
+        label="오늘의 한마디를 신고하는 중이에요"
+      />
     </>
   );
 }

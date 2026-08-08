@@ -23,6 +23,10 @@ import type {
   GetSearchRoomRequest,
   GetSearchRoomResponse,
   LeaveRoomRequest,
+  ReportDailyGreetingRequest,
+  ReportDailyGreetingResponse,
+  ReportRoomRequest,
+  ReportRoomResponse,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
   WriteDailyGreetingRequest,
@@ -186,6 +190,25 @@ export const deleteDailyGreetingApi = async ({
 }: DeleteDailyGreetingRequest) => {
   const response = await apiClient.delete<DeleteDailyGreetingResponse>(
     ROOM_URL.DELETE_DAILY_GREETING(roomId, attendanceCheckId),
+  );
+
+  return response.data;
+};
+
+export const reportRoomApi = async ({ roomId }: ReportRoomRequest) => {
+  const response = await apiClient.post<ReportRoomResponse>(
+    ROOM_URL.REPORT(roomId),
+  );
+
+  return response.data;
+};
+
+export const reportDailyGreetingApi = async ({
+  roomId,
+  attendanceCheckId,
+}: ReportDailyGreetingRequest) => {
+  const response = await apiClient.post<ReportDailyGreetingResponse>(
+    ROOM_URL.REPORT_DAILY_GREETING(roomId, attendanceCheckId),
   );
 
   return response.data;

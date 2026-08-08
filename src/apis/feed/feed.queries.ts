@@ -24,6 +24,7 @@ import {
   getMyProfileTopInfoApi,
   getSavedFeedApi,
   getUserProfileTopInfoApi,
+  reportFeedApi,
   uploadFeedImagesApi,
   writeFeedApi,
 } from "./feed.api";
@@ -41,6 +42,7 @@ import type {
   GetFeedTagListResponse,
   GetFeedUserProfileResponse,
   GetUserProfileTopInfoResponse,
+  ReportFeedResponse,
   WriteFeedMutationRequest,
   WriteFeedResponse,
 } from "./feed.types";
@@ -582,5 +584,33 @@ export const useEditFeedMutation = () => {
   return {
     editFeed,
     isPendingEditFeed,
+  };
+};
+
+export const useReportFeedMutation = () => {
+  // 신고는 신고 횟수만 증가시키고 조회 결과를 바꾸지 않아 무효화할 캐시가 없다.
+  const { mutate: reportFeed, isPending: isPendingReportFeed } = useMutation<
+    ReportFeedResponse,
+    Error,
+    number
+  >({
+    mutationFn: reportFeedApi,
+    onSuccess: () => {
+      Toast.show({
+        type: "default",
+        text1: "피드 신고를 완료했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    reportFeed,
+    isPendingReportFeed,
   };
 };

@@ -8,6 +8,8 @@ import type {
   DeleteCommentResponse,
   GetCommentListRequest,
   GetCommentListResponse,
+  ReportCommentRequest,
+  ReportCommentResponse,
   WriteCommentRequest,
 } from "./comment.types";
 
@@ -58,6 +60,14 @@ export const changeCommentLikeStatusApi = async ({
 export const deleteCommentApi = async ({ commentId }: DeleteCommentRequest) => {
   const response = await apiClient.delete<DeleteCommentResponse>(
     COMMENT_URL.DELETE(commentId),
+  );
+
+  return response.data;
+};
+
+export const reportCommentApi = async ({ commentId }: ReportCommentRequest) => {
+  const response = await apiClient.post<ReportCommentResponse>(
+    COMMENT_URL.REPORT(commentId),
   );
 
   return response.data;

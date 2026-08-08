@@ -22,6 +22,10 @@ import type {
   GetRoomBookPageInfoResponse,
   GetRoomPostListRequest,
   GetRoomPostListResponse,
+  ReportRoomRecordRequest,
+  ReportRoomRecordResponse,
+  ReportRoomVoteRequest,
+  ReportRoomVoteResponse,
 } from "./room-post.types";
 
 export const changeRoomPostLikeStatusApi = async ({
@@ -192,6 +196,28 @@ export const doRoomVoteApi = async ({
       voteItemId,
       type,
     },
+  );
+
+  return response.data;
+};
+
+export const reportRoomRecordApi = async ({
+  roomId,
+  recordId,
+}: ReportRoomRecordRequest) => {
+  const response = await apiClient.post<ReportRoomRecordResponse>(
+    ROOM_POST_URL.REPORT_RECORD(roomId, recordId),
+  );
+
+  return response.data;
+};
+
+export const reportRoomVoteApi = async ({
+  roomId,
+  voteId,
+}: ReportRoomVoteRequest) => {
+  const response = await apiClient.post<ReportRoomVoteResponse>(
+    ROOM_POST_URL.REPORT_VOTE(roomId, voteId),
   );
 
   return response.data;

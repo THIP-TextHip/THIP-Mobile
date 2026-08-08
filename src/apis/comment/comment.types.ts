@@ -75,3 +75,12 @@ export type DeleteCommentMutationRequest = DeleteCommentRequest &
 export interface DeleteCommentResponse {
   postId: number;
 }
+
+export interface ReportCommentRequest {
+  commentId: number;
+}
+
+export interface ReportCommentResponse {
+  commentId: number;
+  reportCount: number;
+}

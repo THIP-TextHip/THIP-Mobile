@@ -24,6 +24,8 @@ import {
   getRoomDetailApi,
   getSearchRoomApi,
   leaveRoomApi,
+  reportDailyGreetingApi,
+  reportRoomApi,
   verifyPrivateRoomPasswordApi,
   writeDailyGreetingApi,
 } from "./room.api";
@@ -48,6 +50,10 @@ import type {
   GetSearchRoomResponse,
   LeaveRoomRequest,
   MyRoomType,
+  ReportDailyGreetingRequest,
+  ReportDailyGreetingResponse,
+  ReportRoomRequest,
+  ReportRoomResponse,
   SearchRoomQueryParams,
   VerifyPrivateRoomPasswordRequest,
   VerifyPrivateRoomPasswordResponse,
@@ -593,5 +599,63 @@ export const useDeleteDailyGreetingMutation = () => {
   return {
     deleteDailyGreeting,
     isPendingDeleteDailyGreeting,
+  };
+};
+
+export const useReportRoomMutation = () => {
+  // 신고는 신고 횟수만 증가시키고 조회 결과를 바꾸지 않아 무효화할 캐시가 없다.
+  const { mutate: reportRoom, isPending: isPendingReportRoom } = useMutation<
+    ReportRoomResponse,
+    Error,
+    ReportRoomRequest
+  >({
+    mutationFn: reportRoomApi,
+    onSuccess: () => {
+      Toast.show({
+        type: "default",
+        text1: "모임방 신고를 완료했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    reportRoom,
+    isPendingReportRoom,
+  };
+};
+
+export const useReportDailyGreetingMutation = () => {
+  const {
+    mutate: reportDailyGreeting,
+    isPending: isPendingReportDailyGreeting,
+  } = useMutation<
+    ReportDailyGreetingResponse,
+    Error,
+    ReportDailyGreetingRequest
+  >({
+    mutationFn: reportDailyGreetingApi,
+    onSuccess: () => {
+      Toast.show({
+        type: "default",
+        text1: "오늘의 한마디 신고를 완료했어요.",
+      });
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return {
+    reportDailyGreeting,
+    isPendingReportDailyGreeting,
   };
 };
