@@ -1,8 +1,13 @@
+export const TERMS_URL = {
+  SERVICE: "https://slashpage.com/thip/943zqpmqrqvre2wnvy87",
+  PRIVACY: "https://slashpage.com/thip/7916x82r8y74n24kpyg3",
+} as const;
+
 export const MYPAGE_URL = {
   CUSTOMER_CENTER_URL:
     "https://slashpage.com/thip/dk58wg2e6yy3zmnqevxz?scrollPos=bottom",
   NOTICE_URL: "https://slashpage.com/thip/7vgjr4m1nynpy2dwpy86",
   GUIDE_URL: "https://slashpage.com/thip/ywk9j72989p6rmgpqvnd",
-  POLICY_URL: "https://slashpage.com/thip/7916x82r8y74n24kpyg3",
+  POLICY_URL: TERMS_URL.PRIVACY,
   VERSION_URL: "https://slashpage.com/thip/1q3vdn2p9w93pmxy49pr",
 };
