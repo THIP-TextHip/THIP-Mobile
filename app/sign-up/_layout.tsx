@@ -9,6 +9,7 @@ export default function SignUpLayout() {
         contentStyle: { backgroundColor: colors.black.main },
       }}
     >
+      <Stack.Screen name="terms" options={{ headerShown: false }} />
       <Stack.Screen name="(profile)" options={{ headerShown: false }} />
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="welcome" options={{ headerShown: false }} />

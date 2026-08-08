@@ -1,13 +1,15 @@
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 
 import {
   NicknameGenreContext,
   SignUpHeader,
   useSignUpProfile,
 } from "@screens/sign-up";
+import { useSignUpAgreementStore } from "@stores/sign-up-agreement";
 import { colors } from "@theme/token";
 
 export default function NicknameGenreLayout() {
+  const { hasAgreedToTerms } = useSignUpAgreementStore();
   const {
     nickname,
     setNickname,
@@ -20,6 +22,11 @@ export default function NicknameGenreLayout() {
     isPendingCheckNickname,
     isPendingSignup,
   } = useSignUpProfile();
+
+  // 딥링크로 닉네임·장르 화면에 바로 들어오는 것을 막는다.
+  if (!hasAgreedToTerms) {
+    return <Redirect href="/sign-up/terms" />;
+  }
 
   return (
     <NicknameGenreContext.Provider
