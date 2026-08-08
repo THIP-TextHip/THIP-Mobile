@@ -11,6 +11,7 @@ import {
   changeCommentLikeStatusApi,
   deleteCommentApi,
   getCommentListApi,
+  reportCommentApi,
   writeCommentApi,
 } from "./comment.api";
 import { COMMENT_QUERY_KEY } from "./comment.query-key";
@@ -22,6 +23,8 @@ import type {
   DeleteCommentMutationRequest,
   DeleteCommentResponse,
   GetCommentListResponse,
+  ReportCommentRequest,
+  ReportCommentResponse,
   WriteCommentRequest,
 } from "./comment.types";
 
@@ -169,4 +172,26 @@ export const useDeleteCommentMutation = () => {
     });
 
   return { deleteComment, isPendingDeleteComment };
+};
+
+export const useReportCommentMutation = () => {
+  // 신고는 신고 횟수만 증가시키고 조회 결과를 바꾸지 않아 무효화할 캐시가 없다.
+  const { mutate: reportComment, isPending: isPendingReportComment } =
+    useMutation<ReportCommentResponse, Error, ReportCommentRequest>({
+      mutationFn: reportCommentApi,
+      onSuccess: () => {
+        Toast.show({
+          type: "default",
+          text1: "댓글 신고를 완료했어요.",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return { reportComment, isPendingReportComment };
 };

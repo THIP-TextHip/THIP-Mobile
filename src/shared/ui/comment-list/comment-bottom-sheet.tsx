@@ -1,10 +1,15 @@
 import { Pressable, StyleSheet } from "react-native";
 
-import { type CommentPostType, useDeleteCommentMutation } from "@apis/comment";
+import {
+  type CommentPostType,
+  useDeleteCommentMutation,
+  useReportCommentMutation,
+} from "@apis/comment";
 import { colors } from "@theme/token";
 
 import AppText from "../app-text";
 import CustomBottomSheet from "../custom-bottom-sheet";
+import { LoadingOverlay } from "../loading";
 
 interface CommentBottomSheetProps {
   postId: number | string;
@@ -24,6 +29,7 @@ export default function CommentBottomSheet({
   handleCloseBottomSheet,
 }: CommentBottomSheetProps) {
   const { deleteComment, isPendingDeleteComment } = useDeleteCommentMutation();
+  const { reportComment, isPendingReportComment } = useReportCommentMutation();
 
   const handlePressButton = () => {
     if (isWriter) {
@@ -33,26 +39,35 @@ export default function CommentBottomSheet({
         { onSettled: () => handleCloseBottomSheet() },
       );
     } else {
-      console.log(commentId, "번 댓글 신고");
+      if (isPendingReportComment) return null;
+
+      // 바텀시트를 먼저 닫아야 LoadingOverlay가 가려지지 않는다.
       handleCloseBottomSheet();
+      reportComment({ commentId });
     }
   };
 
   return (
-    <CustomBottomSheet
-      isVisible={isVisible}
-      handleClose={handleCloseBottomSheet}
-    >
-      <Pressable style={styles.bottomSheetButton} onPress={handlePressButton}>
-        <AppText
-          weight="medium"
-          size="base"
-          color={isWriter ? colors.white : colors.red}
-        >
-          {isWriter ? "댓글 삭제하기" : "댓글 신고하기"}
-        </AppText>
-      </Pressable>
-    </CustomBottomSheet>
+    <>
+      <CustomBottomSheet
+        isVisible={isVisible}
+        handleClose={handleCloseBottomSheet}
+      >
+        <Pressable style={styles.bottomSheetButton} onPress={handlePressButton}>
+          <AppText
+            weight="medium"
+            size="base"
+            color={isWriter ? colors.white : colors.red}
+          >
+            {isWriter ? "댓글 삭제하기" : "댓글 신고하기"}
+          </AppText>
+        </Pressable>
+      </CustomBottomSheet>
+      <LoadingOverlay
+        visible={isPendingReportComment}
+        label="댓글을 신고하는 중이에요"
+      />
+    </>
   );
 }
 

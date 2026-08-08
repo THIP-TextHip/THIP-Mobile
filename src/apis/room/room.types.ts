@@ -275,3 +275,22 @@ export interface DeleteDailyGreetingRequest {
 export interface DeleteDailyGreetingResponse {
   roomId: number;
 }
+
+export interface ReportRoomRequest {
+  roomId: number | string;
+}
+
+export interface ReportRoomResponse {
+  roomId: number;
+  reportCount: number;
+}
+
+export interface ReportDailyGreetingRequest {
+  roomId: number | string;
+  attendanceCheckId: number;
+}
+
+export interface ReportDailyGreetingResponse {
+  attendanceCheckId: number;
+  reportCount: number;
+}

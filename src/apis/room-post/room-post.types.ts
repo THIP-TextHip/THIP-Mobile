@@ -157,3 +157,23 @@ export interface DoRoomVoteResponse {
   roomId: number;
   voteItems: RoomPostVote[];
 }
+
+export interface ReportRoomRecordRequest {
+  roomId: number | string;
+  recordId: number;
+}
+
+export interface ReportRoomRecordResponse {
+  recordId: number;
+  reportCount: number;
+}
+
+export interface ReportRoomVoteRequest {
+  roomId: number | string;
+  voteId: number;
+}
+
+export interface ReportRoomVoteResponse {
+  voteId: number;
+  reportCount: number;
+}

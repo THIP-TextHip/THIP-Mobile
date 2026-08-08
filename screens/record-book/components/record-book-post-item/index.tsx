@@ -10,6 +10,7 @@ import {
   useDeleteRoomPostMutation,
   useDoRoomVoteMutation,
   useGetBookInfoForPinQuery,
+  useReportRoomPostMutation,
   type RoomPostContent,
 } from "@apis/room-post";
 import { AppText, LoadingOverlay } from "@shared/ui";
@@ -57,6 +58,12 @@ export default function RecordBookPostItem({
     isPendingDeleteRoomVote,
   } = useDeleteRoomPostMutation();
   const { doVote, isPendingDoVote } = useDoRoomVoteMutation();
+  const {
+    reportRoomRecord,
+    reportRoomVote,
+    isPendingReportRoomRecord,
+    isPendingReportRoomVote,
+  } = useReportRoomPostMutation();
   const { changeRoomPostLikeStatus, isPendingChangeRoomPostLikeStatus } =
     useChangeRoomPostLikeStatusMutation(roomId);
 
@@ -90,8 +97,15 @@ export default function RecordBookPostItem({
   };
 
   const handleReport = () => {
-    console.log(post.postId, "번 기록 신고");
+    if (isPendingReportRoomRecord || isPendingReportRoomVote) return;
+
+    // 바텀시트를 먼저 닫아야 LoadingOverlay가 가려지지 않는다.
     setIsOptionOpen(false);
+    if (post.postType === "RECORD") {
+      reportRoomRecord({ roomId, recordId: post.postId });
+    } else {
+      reportRoomVote({ roomId, voteId: post.postId });
+    }
   };
 
   const handleToEdit = () => {
@@ -229,8 +243,17 @@ export default function RecordBookPostItem({
         handleToPin={handleToPin}
       />
       <LoadingOverlay
-        visible={isPendingDeleteRoomRecord || isPendingDeleteRoomVote}
-        label="삭제하는 중이에요"
+        visible={
+          isPendingDeleteRoomRecord ||
+          isPendingDeleteRoomVote ||
+          isPendingReportRoomRecord ||
+          isPendingReportRoomVote
+        }
+        label={
+          isPendingReportRoomRecord || isPendingReportRoomVote
+            ? "신고하는 중이에요"
+            : "삭제하는 중이에요"
+        }
       />
     </>
   );

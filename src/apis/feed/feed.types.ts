@@ -149,3 +149,8 @@ export interface EditFeedRequest {
 export interface EditFeedResponse {
   feedId: number;
 }
+
+export interface ReportFeedResponse {
+  feedId: number;
+  reportCount: number;
+}

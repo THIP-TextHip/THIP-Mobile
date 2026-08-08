@@ -22,6 +22,8 @@ import {
   getBookInfoForPinApi,
   getRoomBookPageInfoApi,
   getRoomPostListApi,
+  reportRoomRecordApi,
+  reportRoomVoteApi,
 } from "./room-post.api";
 import { ROOM_POST_QUERY_KEY } from "./room-post.query-key";
 import type {
@@ -46,6 +48,10 @@ import type {
   GetRoomBookPageInfoResponse,
   GetRoomPostListRequest,
   GetRoomPostListResponse,
+  ReportRoomRecordRequest,
+  ReportRoomRecordResponse,
+  ReportRoomVoteRequest,
+  ReportRoomVoteResponse,
 } from "./room-post.types";
 
 const ROOM_BOOK_PAGE_QUERY_CACHE_TIME = {
@@ -427,6 +433,58 @@ export const useDeleteRoomPostMutation = () => {
     deleteRoomVote,
     isPendingDeleteRoomRecord,
     isPendingDeleteRoomVote,
+  };
+};
+
+export const useReportRoomPostMutation = () => {
+  // 신고는 신고 횟수만 증가시키고 조회 결과를 바꾸지 않아 무효화할 캐시가 없다.
+  const { mutate: reportRoomRecord, isPending: isPendingReportRoomRecord } =
+    useMutation<
+      ReportRoomRecordResponse,
+      ApiErrorResponse,
+      ReportRoomRecordRequest
+    >({
+      mutationFn: reportRoomRecordApi,
+      onSuccess: () => {
+        Toast.show({
+          type: "default",
+          text1: "기록 신고를 완료했어요.",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  const { mutate: reportRoomVote, isPending: isPendingReportRoomVote } =
+    useMutation<
+      ReportRoomVoteResponse,
+      ApiErrorResponse,
+      ReportRoomVoteRequest
+    >({
+      mutationFn: reportRoomVoteApi,
+      onSuccess: () => {
+        Toast.show({
+          type: "default",
+          text1: "투표 신고를 완료했어요.",
+        });
+      },
+      onError: (error) => {
+        Toast.show({
+          type: "error",
+          text1: `${error.message}`,
+        });
+      },
+    });
+
+  return {
+    reportRoomRecord,
+    reportRoomVote,
+    isPendingReportRoomRecord,
+    isPendingReportRoomVote,
   };
 };
 

@@ -4,7 +4,11 @@ import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { useGetRoomDetailQuery, useLeaveRoomMutation } from "@apis/room";
+import {
+  useGetRoomDetailQuery,
+  useLeaveRoomMutation,
+  useReportRoomMutation,
+} from "@apis/room";
 import {
   AppText,
   GroupInfo,
@@ -40,6 +44,7 @@ export default function GroupDetailScreen() {
     isRefetchingRoomDetail,
   } = useGetRoomDetailQuery(roomId);
   const { leaveRoom, isPendingLeaveRoom } = useLeaveRoomMutation();
+  const { reportRoom, isPendingReportRoom } = useReportRoomMutation();
 
   const handleToReadingMateList = () => {
     router.push({
@@ -67,18 +72,23 @@ export default function GroupDetailScreen() {
     setIsBottomSheetVisible(false);
   };
 
-  // TODO: 서버에 신고 요청
   const handleReportGroup = () => {
+    if (isPendingReportRoom || !roomDetailData) return;
+
+    // 바텀시트를 먼저 닫아야 LoadingOverlay가 가려지지 않는다.
     setIsBottomSheetVisible(false);
-    Toast.show({
-      type: "default",
-      text1: "모임방 신고를 완료했어요.",
-    });
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.push("/group");
-    }
+    reportRoom(
+      { roomId: roomDetailData.roomId },
+      {
+        onSuccess: () => {
+          if (router.canGoBack()) {
+            router.back();
+          } else {
+            router.push("/group");
+          }
+        },
+      },
+    );
   };
 
   const handleCloseModal = () => {
@@ -227,8 +237,12 @@ export default function GroupDetailScreen() {
             handleAccept={handleModalAccept}
           />
           <LoadingOverlay
-            visible={isPendingLeaveRoom}
-            label="모임방에서 나가는 중이에요"
+            visible={isPendingLeaveRoom || isPendingReportRoom}
+            label={
+              isPendingLeaveRoom
+                ? "모임방에서 나가는 중이에요"
+                : "모임방을 신고하는 중이에요"
+            }
           />
         </>
       )}

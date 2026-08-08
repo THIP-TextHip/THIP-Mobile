@@ -3,7 +3,6 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { AppText, CustomBottomSheet } from "@shared/ui";
 import { colors } from "@theme/token";
 
-// TODO: 추후 api 연동 시 수정
 interface FeedDetailBottomSheetProps {
   isWriter: boolean;
   isVisible: boolean;

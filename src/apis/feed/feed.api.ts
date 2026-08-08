@@ -16,6 +16,7 @@ import type {
   GetUserProfileTopInfoResponse,
   IssuePresignedUrlRequest,
   IssuePresignedUrlResponse,
+  ReportFeedResponse,
   WriteFeedRequest,
   WriteFeedResponse,
 } from "./feed.types";
@@ -212,6 +213,14 @@ export const editFeedApi = async ({ feedId, ...body }: EditFeedRequest) => {
     EditFeedResponse,
     Omit<EditFeedRequest, "feedId">
   >(FEED_URL.DETAIL(feedId), body);
+
+  return response.data;
+};
+
+export const reportFeedApi = async (feedId: number) => {
+  const response = await apiClient.post<ReportFeedResponse>(
+    FEED_URL.REPORT(feedId),
+  );
 
   return response.data;
 };
