@@ -1,8 +1,9 @@
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { AppText, ButtonHeader, CustomHeader } from "@shared/ui";
+import { useSignUpAgreementStore } from "@stores/sign-up-agreement";
 import { colors } from "@theme/token";
 
 import { TermsAgreementRow, TermsNotice } from "./components";
@@ -14,11 +15,17 @@ import {
 } from "./constants";
 
 export default function SignUpTermsScreen() {
+  const { agreeToTerms, resetAgreement } = useSignUpAgreementStore();
   const [agreements, setAgreements] = useState<TermsAgreements>(
     INITIAL_TERMS_AGREEMENTS,
   );
 
   const isAllAgreed = TERMS_AGREEMENT_LIST.every((item) => agreements[item.id]);
+
+  // 새 가입 시도는 항상 미동의 상태에서 시작한다.
+  useEffect(() => {
+    resetAgreement();
+  }, [resetAgreement]);
 
   const toggleAgreement = (id: TermsAgreementId) => {
     setAgreements((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -37,6 +44,8 @@ export default function SignUpTermsScreen() {
 
   const handleClickNext = () => {
     if (!isAllAgreed) return;
+
+    agreeToTerms();
     router.push("/sign-up/nickname");
   };
 
