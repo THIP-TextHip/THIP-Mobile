@@ -109,9 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 24,
-    // TODO: 너무 밑에 있다고 느껴지면 줄이기
-    // paddingTop: 144,
-    paddingTop: 100,
+    paddingTop: 20,
     paddingBottom: 20,
   },
 });
