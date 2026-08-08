@@ -78,7 +78,7 @@ export default function MyPageScreen() {
           <AppText
             weight="regular"
             size="sm"
-            color={colors.grey[300]}
+            color={colors.grey[200]}
             lineHeight={20}
           >
             회원탈퇴
