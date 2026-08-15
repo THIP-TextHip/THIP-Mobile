@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 
-import { UserProfileHeader } from "@screens/user-profile";
 import { colors } from "@theme/token";
 
 export default function UserProfileLayout() {
@@ -10,10 +9,7 @@ export default function UserProfileLayout() {
         contentStyle: { backgroundColor: colors.black.main },
       }}
     >
-      <Stack.Screen
-        name="[userId]"
-        options={{ header: () => <UserProfileHeader /> }}
-      />
+      <Stack.Screen name="[userId]" options={{ headerShown: false }} />
     </Stack>
   );
 }

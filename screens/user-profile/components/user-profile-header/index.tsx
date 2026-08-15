@@ -2,13 +2,20 @@ import { router } from "expo-router";
 import { useCallback } from "react";
 import { Pressable } from "react-native";
 
-import { IcArrowLeft } from "@images/icons";
+import { IcArrowLeft, IcMore } from "@images/icons";
 import { CustomHeader } from "@shared/ui";
 
-export default function UserProfileHeader() {
+interface UserProfileHeaderProps {
+  handlePressMore: () => void;
+}
+
+export default function UserProfileHeader({
+  handlePressMore,
+}: UserProfileHeaderProps) {
   const handleGoBack = useCallback(() => {
     router.back();
   }, []);
+
   return (
     <CustomHeader
       left={
@@ -19,6 +26,16 @@ export default function UserProfileHeader() {
           hitSlop={10}
         >
           <IcArrowLeft />
+        </Pressable>
+      }
+      right={
+        <Pressable
+          onPress={handlePressMore}
+          accessibilityRole="button"
+          accessibilityLabel="바텀시트 열기"
+          hitSlop={10}
+        >
+          <IcMore />
         </Pressable>
       }
     />
