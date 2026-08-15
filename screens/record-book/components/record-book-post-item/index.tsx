@@ -68,10 +68,19 @@ export default function RecordBookPostItem({
     useChangeRoomPostLikeStatusMutation(roomId);
 
   const handleToProfile = () => {
-    router.push({
-      pathname: "/user-profile/[userId]",
-      params: { userId: String(post.userId) },
-    });
+    if (post.isWriter) {
+      router.push({
+        pathname: "/feed",
+        params: {
+          tab: "my-feed",
+        },
+      });
+    } else {
+      router.push({
+        pathname: "/user-profile/[userId]",
+        params: { userId: String(post.userId) },
+      });
+    }
   };
 
   const handleVote = (voteItemId: number, isVoted: boolean) => {

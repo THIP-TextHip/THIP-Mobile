@@ -19,13 +19,23 @@ export default function FeedPostHeader({ feed }: FeedPostHeaderProps) {
     aliasName,
     aliasColor,
     postDate,
+    isWriter,
   } = feed;
 
   const handleToUserProfile = () => {
-    router.push({
-      pathname: "/user-profile/[userId]",
-      params: { userId: String(creatorId) },
-    });
+    if (isWriter) {
+      router.push({
+        pathname: "/feed",
+        params: {
+          tab: "my-feed",
+        },
+      });
+    } else {
+      router.push({
+        pathname: "/user-profile/[userId]",
+        params: { userId: String(creatorId) },
+      });
+    }
   };
 
   return (

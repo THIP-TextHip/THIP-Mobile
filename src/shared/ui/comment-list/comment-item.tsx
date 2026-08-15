@@ -36,10 +36,19 @@ export default function CommentItem({
     useChangeCommentLikeStatusMutation();
 
   const handleToUserProfile = () => {
-    router.push({
-      pathname: "/user-profile/[userId]",
-      params: { userId: String(comment.creatorId) },
-    });
+    if (comment.isWriter) {
+      router.push({
+        pathname: "/feed",
+        params: {
+          tab: "my-feed",
+        },
+      });
+    } else {
+      router.push({
+        pathname: "/user-profile/[userId]",
+        params: { userId: String(comment.creatorId) },
+      });
+    }
   };
   const handlePressReplyButton = () => {
     handlePressReply(comment.commentId, comment.creatorNickname);

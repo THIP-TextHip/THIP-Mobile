@@ -39,10 +39,19 @@ export default function GreetingItem({
   };
 
   const handleToUserProfile = () => {
-    router.push({
-      pathname: "/user-profile/[userId]",
-      params: { userId: String(greetingItem.creatorId) },
-    });
+    if (greetingItem.isWriter) {
+      router.push({
+        pathname: "/feed",
+        params: {
+          tab: "my-feed",
+        },
+      });
+    } else {
+      router.push({
+        pathname: "/user-profile/[userId]",
+        params: { userId: String(greetingItem.creatorId) },
+      });
+    }
   };
 
   const handlePressBottomSheetButton = () => {

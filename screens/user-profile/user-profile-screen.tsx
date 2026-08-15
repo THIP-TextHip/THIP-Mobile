@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
   FlatList,
   RefreshControl,
   StyleSheet,
@@ -22,11 +23,16 @@ import {
 } from "@shared/ui";
 import { colors } from "@theme/token";
 
-import { UserProfileTopContents } from "./components";
+import { UserProfileHeader, UserProfileTopContents } from "./components";
+import UserBlockBottomSheet from "./components/user-block-bottom-sheet";
+import UserBlockModal from "./components/user-block-modal";
 
 export default function UserProfileScreen() {
   const { bottom } = useSafeAreaInsets();
   const { userId } = useLocalSearchParams<{ userId: string }>();
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const {
     feedUserProfileList,
     fetchNextPage,
@@ -50,6 +56,31 @@ export default function UserProfileScreen() {
     isPendingUserProfileTopInfo,
   );
   const isFeedSkeletonVisible = useDelayedLoading(isPendingFeedUserProfile);
+
+  const handlePressMore = () => {
+    if (!userId) return;
+
+    setIsBottomSheetVisible(true);
+  };
+
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetVisible(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsBottomSheetVisible(false);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleBlockUser = () => {
+    // TODO: 추후 서버 유저 신고 api 연동
+    Alert.alert(`${userId}번 유저 신고 완료`);
+    setIsModalVisible(false);
+  };
 
   // 상단 정보와 피드 목록은 별도 쿼리라, 상단 로딩이 화면 전체를 막지 않도록
   // 헤더 안에서만 스켈레톤을 보여준다.
@@ -112,25 +143,38 @@ export default function UserProfileScreen() {
   }, [userId]);
 
   return (
-    <FlatList
-      contentContainerStyle={{ paddingBottom: bottom + 60 }}
-      ListHeaderComponent={renderHeader}
-      data={feedUserProfileList}
-      keyExtractor={(item) => String(item.feedId)}
-      renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-      ListEmptyComponent={renderEmpty}
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.5}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefetchingFeedUserProfile}
-          onRefresh={refetchFeedUserProfile}
-          tintColor={colors.white}
-          colors={[colors.white]}
-        />
-      }
-    />
+    <>
+      <UserProfileHeader handlePressMore={handlePressMore} />
+      <FlatList
+        contentContainerStyle={{ paddingBottom: bottom + 60 }}
+        ListHeaderComponent={renderHeader}
+        data={feedUserProfileList}
+        keyExtractor={(item) => String(item.feedId)}
+        renderItem={({ item }) => <FeedPostPreview feedPreview={item} />}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListEmptyComponent={renderEmpty}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.5}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingFeedUserProfile}
+            onRefresh={refetchFeedUserProfile}
+            tintColor={colors.white}
+            colors={[colors.white]}
+          />
+        }
+      />
+      <UserBlockBottomSheet
+        isVisible={isBottomSheetVisible}
+        handleCloseBottomSheet={handleCloseBottomSheet}
+        handleOpenModal={handleOpenModal}
+      />
+      <UserBlockModal
+        isVisible={isModalVisible}
+        handleCloseModal={handleCloseModal}
+        handleBlock={handleBlockUser}
+      />
+    </>
   );
 }
 
