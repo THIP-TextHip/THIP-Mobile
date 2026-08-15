@@ -58,7 +58,7 @@ export default function UserProfileScreen() {
   const isFeedSkeletonVisible = useDelayedLoading(isPendingFeedUserProfile);
 
   const handlePressMore = () => {
-    if (!feedUserProfileList) return;
+    if (!userId) return;
 
     setIsBottomSheetVisible(true);
   };
