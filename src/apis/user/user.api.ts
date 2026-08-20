@@ -4,10 +4,14 @@ import { USER_URL } from "@apis/endpoint";
 import type {
   ChangeFollowingStateRequest,
   ChangeFollowingStateResponse,
+  ChangeUserBlockStatusRequest,
+  ChangeUserBlockStatusResponse,
   CheckNicknameRequest,
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetBlockedUsersRequest,
+  GetBlockedUsersResponse,
   GetMyFollowingsPreviewResponse,
   GetMyFollowingsRequest,
   GetMyFollowingsResponse,
@@ -126,6 +130,37 @@ export const changeFollowingStateApi = async ({
 }: ChangeFollowingStateRequest) => {
   const response = await apiClient.post<ChangeFollowingStateResponse>(
     USER_URL.CHANGE_FOLLOWING_STATE(followingUserId),
+    {
+      type,
+    },
+  );
+
+  return response.data;
+};
+
+export const getBlockedUsersApi = async ({
+  cursor,
+  size,
+}: GetBlockedUsersRequest) => {
+  const response = await apiClient.get<GetBlockedUsersResponse>(
+    USER_URL.BLOCKED_USERS,
+    {
+      params: {
+        ...(cursor == null ? {} : { cursor }),
+        ...(size == null ? {} : { size }),
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const changeUserBlockStatusApi = async ({
+  targetUserId,
+  type,
+}: ChangeUserBlockStatusRequest) => {
+  const response = await apiClient.post<ChangeUserBlockStatusResponse>(
+    USER_URL.BLOCK_USER(targetUserId),
     {
       type,
     },

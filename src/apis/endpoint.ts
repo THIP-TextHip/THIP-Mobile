@@ -16,6 +16,9 @@ export const USER_URL = {
   MY_FOLLOWINGS_PREVIEW: "/users/my-followings/recent-feeds",
   CHANGE_FOLLOWING_STATE: (followingUserId: number | string) =>
     `/users/following/${encodeURIComponent(String(followingUserId))}`,
+  BLOCKED_USERS: "/users/blocks",
+  BLOCK_USER: (targetUserId: number | string) =>
+    `/users/block/${encodeURIComponent(String(targetUserId))}`,
 } as const;
 
 export const FEED_URL = {

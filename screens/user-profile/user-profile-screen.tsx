@@ -1,12 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Alert,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
@@ -14,11 +8,13 @@ import {
   useGetFeedUserProfileQuery,
   useGetUserProfileTopInfoQuery,
 } from "@apis/feed";
+import { useChangeUserBlockStatusMutation } from "@apis/user";
 import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   FeedPostPreview,
   FeedPostPreviewSkeleton,
+  LoadingOverlay,
   ProfileTopSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -45,6 +41,8 @@ export default function UserProfileScreen() {
   } = useGetFeedUserProfileQuery(Number(userId));
   const { userProfileTopInfo, isPendingUserProfileTopInfo } =
     useGetUserProfileTopInfoQuery(Number(userId));
+  const { changeUserBlockStatus, isPendingChangeUserBlockStatus } =
+    useChangeUserBlockStatusMutation();
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -77,13 +75,13 @@ export default function UserProfileScreen() {
   };
 
   const handleBlockUser = () => {
-    // TODO: 추후 서버 유저 신고 api 연동
-    Alert.alert(`${userId}번 유저 신고 완료`);
-    setIsModalVisible(false);
+    if (isPendingChangeUserBlockStatus) return;
+    changeUserBlockStatus(
+      { targetUserId: userId, type: true },
+      { onSettled: () => setIsModalVisible(false) },
+    );
   };
 
-  // 상단 정보와 피드 목록은 별도 쿼리라, 상단 로딩이 화면 전체를 막지 않도록
-  // 헤더 안에서만 스켈레톤을 보여준다.
   const renderHeader = useCallback(() => {
     if (isProfileSkeletonVisible) {
       return <ProfileTopSkeleton />;
@@ -173,6 +171,10 @@ export default function UserProfileScreen() {
         isVisible={isModalVisible}
         handleCloseModal={handleCloseModal}
         handleBlock={handleBlockUser}
+      />
+      <LoadingOverlay
+        visible={isPendingChangeUserBlockStatus}
+        label="유저를 차단하는 중이에요"
       />
     </>
   );

@@ -23,6 +23,9 @@ export default function SettingsListItem({ item }: SettingsListItemProps) {
       case SETTINGS_ID.alarm:
         router.push("/alarm-settings");
         break;
+      case SETTINGS_ID.blocked:
+        router.push("/blocked-user-list");
+        break;
       case SETTINGS_ID.support:
         try {
           await WebBrowser.openBrowserAsync(MYPAGE_URL.CUSTOMER_CENTER_URL);
@@ -79,7 +82,7 @@ export default function SettingsListItem({ item }: SettingsListItemProps) {
   return (
     <Pressable style={styles.container} onPress={handlePress}>
       <View style={styles.content}>
-        <item.icon />
+        <item.icon {...item.iconProps} />
         <AppText weight="semibold" size="base" color={colors.white}>
           {item.label}
         </AppText>

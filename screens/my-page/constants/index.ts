@@ -2,6 +2,7 @@ import { ComponentType } from "react";
 
 import {
   IcDocument,
+  IcGroupWhite,
   IcGuide,
   IcHeadset,
   IcNoAlarm,
@@ -14,11 +15,16 @@ export interface SettingsItem {
   id: SettingsId;
   label: string;
   icon: ComponentType<{ width?: number; height?: number }>;
+  iconProps?: {
+    width?: number;
+    height?: number;
+  };
 }
 
 export const SETTINGS_ID = {
   save: "save",
   alarm: "alarm",
+  blocked: "blocked",
   support: "support",
   notice: "notice",
   policy: "policy",
@@ -36,6 +42,12 @@ export const SETTINGS_MY_ACTIVITY: SettingsItem = {
 
 export const SETTINGS_OTHER: SettingsItem[] = [
   { id: SETTINGS_ID.alarm, label: "알림설정", icon: IcNoAlarm },
+  {
+    id: SETTINGS_ID.blocked,
+    label: "차단 목록",
+    icon: IcGroupWhite,
+    iconProps: { width: 24, height: 24 },
+  },
   { id: SETTINGS_ID.support, label: "고객센터", icon: IcHeadset },
   { id: SETTINGS_ID.notice, label: "공지사항", icon: IcVoice },
   {

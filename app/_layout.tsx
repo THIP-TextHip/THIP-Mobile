@@ -66,6 +66,10 @@ export default function RootLayout() {
                 name="my-thip-list"
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="blocked-user-list"
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="(user)" options={{ headerShown: false }} />
               <Stack.Screen
                 name="feed-detail"

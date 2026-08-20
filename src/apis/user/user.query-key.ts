@@ -1,4 +1,5 @@
 export const USER_QUERY_KEY = {
+  ALL: ["users"],
   ALIAS_LIST: ["users", "alias-list"],
   MY_INFO: ["users", "user-info"],
   MY_ID: ["users", "my-id"],
@@ -22,5 +23,6 @@ export const USER_QUERY_KEY = {
   ],
   MY_FOLLOWINGS_ROOT: ["users", "my-followings"],
   MY_FOLLOWINGS: (size: number) => ["users", "my-followings", size],
-  MY_FOLLOWINGS_PREVIEW: ["/users", "my-followings", "preview"],
+  MY_FOLLOWINGS_PREVIEW: ["users", "my-followings", "preview"],
+  BLOCKED_USER: (size: number) => ["users", "blocked", size],
 } as const;

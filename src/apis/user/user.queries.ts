@@ -9,14 +9,17 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { ApiErrorResponse } from "../api-client";
 import { FEED_QUERY_KEY } from "../feed";
 import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
   changeFollowingStateApi,
+  changeUserBlockStatusApi,
   checkNicknameApi,
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getBlockedUsersApi,
   getMyFollowingsApi,
   getMyFollowingsPreviewApi,
   getMyIdApi,
@@ -26,20 +29,23 @@ import {
   signupApi,
 } from "./user.api";
 import { USER_QUERY_KEY } from "./user.query-key";
-import {
+import type {
   ChangeFollowingStateRequest,
   ChangeFollowingStateResponse,
+  ChangeUserBlockStatusRequest,
+  ChangeUserBlockStatusResponse,
+  CheckNicknameRequest,
+  CheckNicknameResponse,
+  EditUserProfileRequest,
+  GetAliasListResponse,
+  GetBlockedUsersResponse,
   GetMyFollowingsPreviewResponse,
-  type CheckNicknameRequest,
-  type CheckNicknameResponse,
-  type EditUserProfileRequest,
-  type GetAliasListResponse,
-  type GetMyFollowingsResponse,
-  type GetSearchUserResponse,
-  type GetUserFollowersResponse,
-  type GetUserInfoResponse,
-  type SignupRequest,
-  type SignupResponse,
+  GetMyFollowingsResponse,
+  GetSearchUserResponse,
+  GetUserFollowersResponse,
+  GetUserInfoResponse,
+  SignupRequest,
+  SignupResponse,
 } from "./user.types";
 
 type Cursor = string | null;
@@ -60,6 +66,10 @@ const USER_QUERY_CACHE_TIME = {
   MY_FOLLOWINGS: {
     STALE: 1000 * 60 * 10,
     GC: 1000 * 60 * 15,
+  },
+  BLOCKED_USERS: {
+    STALE: 1000 * 60 * 60,
+    GC: 1000 * 60 * 90,
   },
 } as const;
 
@@ -472,4 +482,100 @@ export const useChangeFollowingStateMutation = () => {
   });
 
   return { changeFollowingState, isPendingChangeFollowingState };
+};
+
+export const useGetBlockedUserQuery = (size = 10) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPending: isPendingBlockedUsers,
+    isError: isErrorBlockedUsers,
+    error: blockedUsersError,
+    refetch: refetchBlockedUsers,
+    isRefetching: isRefetchingBlockedUsers,
+  } = useInfiniteQuery<
+    GetBlockedUsersResponse,
+    ApiErrorResponse,
+    InfiniteData<GetBlockedUsersResponse, Cursor>,
+    ReturnType<typeof USER_QUERY_KEY.BLOCKED_USER>,
+    Cursor
+  >({
+    queryKey: USER_QUERY_KEY.BLOCKED_USER(size),
+    queryFn: ({ pageParam }) =>
+      getBlockedUsersApi({
+        cursor: pageParam,
+        size,
+      }),
+    initialPageParam: null,
+    getNextPageParam: (lastPage) =>
+      lastPage.isLast ? undefined : lastPage.nextCursor || undefined,
+    staleTime: USER_QUERY_CACHE_TIME.BLOCKED_USERS.STALE,
+    gcTime: USER_QUERY_CACHE_TIME.BLOCKED_USERS.GC,
+  });
+
+  const blockedUsersPages = data?.pages ?? [];
+  const firstPage = blockedUsersPages[0];
+
+  useEffect(() => {
+    if (isErrorBlockedUsers && blockedUsersError) {
+      Toast.show({
+        type: "error",
+        text1: blockedUsersError.message,
+      });
+    }
+  }, [isErrorBlockedUsers, blockedUsersError]);
+
+  return {
+    blockedUserList: blockedUsersPages.flatMap((page) => page.blockedUsers),
+    totalBlockedUserCount: firstPage?.totalBlockedUserCount ?? 0,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isPendingBlockedUsers,
+    isErrorBlockedUsers,
+    blockedUsersError,
+    refetchBlockedUsers,
+    isRefetchingBlockedUsers,
+  };
+};
+
+export const useChangeUserBlockStatusMutation = () => {
+  const queryClient = useQueryClient();
+  const {
+    mutate: changeUserBlockStatus,
+    isPending: isPendingChangeUserBlockStatus,
+  } = useMutation<
+    ChangeUserBlockStatusResponse,
+    Error,
+    ChangeUserBlockStatusRequest
+  >({
+    mutationFn: changeUserBlockStatusApi,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEY.ALL,
+      });
+      if (data.isBlocked) {
+        Toast.show({
+          type: "default",
+          text1: "차단이 성공적으로 완료되었습니다.",
+        });
+        router.replace("/feed");
+      } else {
+        Toast.show({
+          type: "default",
+          text1: "차단이 해제되었습니다.",
+        });
+      }
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeUserBlockStatus, isPendingChangeUserBlockStatus };
 };
