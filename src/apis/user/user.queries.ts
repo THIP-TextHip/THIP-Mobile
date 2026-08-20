@@ -556,6 +556,9 @@ export const useChangeUserBlockStatusMutation = () => {
       queryClient.invalidateQueries({
         queryKey: USER_QUERY_KEY.ALL,
       });
+      queryClient.invalidateQueries({
+        queryKey: FEED_QUERY_KEY.ALL,
+      });
       if (data.isBlocked) {
         Toast.show({
           type: "default",
