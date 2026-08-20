@@ -8,6 +8,8 @@ import type {
   CheckNicknameResponse,
   EditUserProfileRequest,
   GetAliasListResponse,
+  GetBlockedUsersRequest,
+  GetBlockedUsersResponse,
   GetMyFollowingsPreviewResponse,
   GetMyFollowingsRequest,
   GetMyFollowingsResponse,
@@ -128,6 +130,23 @@ export const changeFollowingStateApi = async ({
     USER_URL.CHANGE_FOLLOWING_STATE(followingUserId),
     {
       type,
+    },
+  );
+
+  return response.data;
+};
+
+export const getBlockedUsersApi = async ({
+  cursor,
+  size,
+}: GetBlockedUsersRequest) => {
+  const response = await apiClient.get<GetBlockedUsersResponse>(
+    USER_URL.BLOCKED_USERS,
+    {
+      params: {
+        ...(cursor == null ? {} : { cursor }),
+        ...(size == null ? {} : { size }),
+      },
     },
   );
 

@@ -4,6 +4,7 @@ export {
   deleteUserAccountApi,
   editUserProfileApi,
   getAliasListApi,
+  getBlockedUsersApi,
   getMyFollowingsApi,
   getMyFollowingsPreviewApi,
   getMyIdApi,
@@ -19,6 +20,7 @@ export {
   useDeleteUserAccountMutation,
   useEditUserProfileMutation,
   useGetAliasListQuery,
+  useGetBlockedUserQuery,
   useGetMyFollowingsPreviewQuery,
   useGetMyFollowingsQuery,
   useGetMyIdQuery,
@@ -30,6 +32,7 @@ export {
 
 export type {
   AliasChoiceType,
+  BlockedUserType,
   ChangeFollowingStateRequest,
   ChangeFollowingStateResponse,
   CheckNicknameRequest,
@@ -38,6 +41,8 @@ export type {
   FollowerType,
   FollowingType,
   GetAliasListResponse,
+  GetBlockedUsersRequest,
+  GetBlockedUsersResponse,
   GetMyFollowingsPreviewResponse,
   GetMyFollowingsRequest,
   GetMyFollowingsResponse,

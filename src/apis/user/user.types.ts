@@ -118,3 +118,23 @@ export interface ChangeFollowingStateRequest {
 export interface ChangeFollowingStateResponse {
   isFollowing: boolean;
 }
+
+export interface GetBlockedUsersRequest {
+  cursor?: string | null;
+  size?: number;
+}
+
+export interface BlockedUserType {
+  userId: number;
+  nickname: string;
+  profileImageUrl: string;
+  aliasName: string;
+  aliasColor: string;
+}
+
+export interface GetBlockedUsersResponse {
+  blockedUsers: BlockedUserType[];
+  totalBlockedUserCount: number;
+  nextCursor: string;
+  isLast: boolean;
+}

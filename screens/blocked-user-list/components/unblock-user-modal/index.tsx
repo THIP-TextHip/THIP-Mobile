@@ -21,7 +21,7 @@ export default function UnblockUserModal({
           차단을 해제하시겠어요?
         </AppText>
         <AppText weight="regular" size="sm" color={colors.white}>
-          앞으로 해당 유저와 관련된 콘텐츠들이 표시됩니다.
+          해당 유저와 관련된 콘텐츠들이 표시됩니다.
         </AppText>
         <View style={styles.buttonWrapper}>
           <CustomButton

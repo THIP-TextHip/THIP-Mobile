@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useGetMyFollowingsQuery } from "@apis/user";
+import { useGetBlockedUserQuery } from "@apis/user";
 import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
@@ -18,16 +18,16 @@ export default function BlockedUserListScreen() {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {
-    myFollowingList,
-    totalFollowingCount,
+    blockedUserList,
+    totalBlockedUserCount,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isPendingMyFollowings,
-    refetchMyFollowings,
-    isRefetchingMyFollowings,
-  } = useGetMyFollowingsQuery();
-  const isSkeletonVisible = useDelayedLoading(isPendingMyFollowings);
+    isPendingBlockedUsers,
+    refetchBlockedUsers,
+    isRefetchingBlockedUsers,
+  } = useGetBlockedUserQuery();
+  const isSkeletonVisible = useDelayedLoading(isPendingBlockedUsers);
 
   const handleLoadMore = () => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -57,16 +57,16 @@ export default function BlockedUserListScreen() {
     return <UserListItemSkeleton />;
   }
 
-  if (isPendingMyFollowings) {
+  if (isPendingBlockedUsers) {
     return null;
   }
 
   return (
     <View style={styles.page}>
-      <ListTotalCountHeader length={totalFollowingCount} />
+      <ListTotalCountHeader length={totalBlockedUserCount} />
       <FlatList
         contentContainerStyle={[styles.list, { paddingBottom: bottom + 20 }]}
-        data={myFollowingList}
+        data={blockedUserList}
         keyExtractor={(item) => String(item.userId)}
         renderItem={({ item }) => {
           return (
@@ -86,8 +86,8 @@ export default function BlockedUserListScreen() {
         onEndReachedThreshold={0.5}
         refreshControl={
           <RefreshControl
-            refreshing={isRefetchingMyFollowings}
-            onRefresh={refetchMyFollowings}
+            refreshing={isRefetchingBlockedUsers}
+            onRefresh={refetchBlockedUsers}
             tintColor={colors.white}
             colors={[colors.white]}
           />
