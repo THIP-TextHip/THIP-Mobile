@@ -29,6 +29,8 @@ export default function BlockedUserListScreen() {
     hasNextPage,
     isFetchingNextPage,
     isPendingBlockedUsers,
+    isErrorBlockedUsers,
+    blockedUsersError,
     refetchBlockedUsers,
     isRefetchingBlockedUsers,
   } = useGetBlockedUserQuery();
@@ -66,10 +68,20 @@ export default function BlockedUserListScreen() {
     );
   };
 
+  if (isErrorBlockedUsers) {
+    return (
+      <View style={styles.status}>
+        <AppText weight="semibold" size="lg" color={colors.grey[200]}>
+          데이터를 불러오지 못했어요 ({blockedUsersError?.code})
+        </AppText>
+      </View>
+    );
+  }
+
   const renderEmpty = () => {
     return (
       <View style={styles.status}>
-        <AppText weight="medium" size="sm" color={colors.grey[200]}>
+        <AppText weight="semibold" size="lg" color={colors.grey[200]}>
           차단한 사용자가 없어요.
         </AppText>
       </View>
@@ -123,7 +135,7 @@ export default function BlockedUserListScreen() {
       />
       <LoadingOverlay
         visible={isPendingChangeUserBlockStatus}
-        label="유저를 차단하는 중이에요"
+        label="유저 차단을 해제하는 중이에요"
       />
     </View>
   );

@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 
+import { ApiErrorResponse } from "../api-client";
 import { FEED_QUERY_KEY } from "../feed";
 import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
@@ -490,13 +491,13 @@ export const useGetBlockedUserQuery = (size = 10) => {
     hasNextPage,
     isFetchingNextPage,
     isPending: isPendingBlockedUsers,
-    isError,
-    error,
+    isError: isErrorBlockedUsers,
+    error: blockedUsersError,
     refetch: refetchBlockedUsers,
     isRefetching: isRefetchingBlockedUsers,
   } = useInfiniteQuery<
     GetBlockedUsersResponse,
-    Error,
+    ApiErrorResponse,
     InfiniteData<GetBlockedUsersResponse, Cursor>,
     ReturnType<typeof USER_QUERY_KEY.BLOCKED_USER>,
     Cursor
@@ -518,16 +519,13 @@ export const useGetBlockedUserQuery = (size = 10) => {
   const firstPage = blockedUsersPages[0];
 
   useEffect(() => {
-    if (isError && error) {
+    if (isErrorBlockedUsers && blockedUsersError) {
       Toast.show({
         type: "error",
-        text1: error.message,
+        text1: blockedUsersError.message,
       });
-      if (router.canGoBack()) {
-        router.back();
-      }
     }
-  }, [isError, error]);
+  }, [isErrorBlockedUsers, blockedUsersError]);
 
   return {
     blockedUserList: blockedUsersPages.flatMap((page) => page.blockedUsers),
@@ -536,6 +534,8 @@ export const useGetBlockedUserQuery = (size = 10) => {
     hasNextPage,
     isFetchingNextPage,
     isPendingBlockedUsers,
+    isErrorBlockedUsers,
+    blockedUsersError,
     refetchBlockedUsers,
     isRefetchingBlockedUsers,
   };
