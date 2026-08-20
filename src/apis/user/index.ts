@@ -1,5 +1,6 @@
 export {
   changeFollowingStateApi,
+  changeUserBlockStatusApi,
   checkNicknameApi,
   deleteUserAccountApi,
   editUserProfileApi,
@@ -16,6 +17,7 @@ export {
 
 export {
   useChangeFollowingStateMutation,
+  useChangeUserBlockStatusMutation,
   useCheckNicknameMutation,
   useDeleteUserAccountMutation,
   useEditUserProfileMutation,
@@ -35,6 +37,8 @@ export type {
   BlockedUserType,
   ChangeFollowingStateRequest,
   ChangeFollowingStateResponse,
+  ChangeUserBlockStatusRequest,
+  ChangeUserBlockStatusResponse,
   CheckNicknameRequest,
   CheckNicknameResponse,
   EditUserProfileRequest,

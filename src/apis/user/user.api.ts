@@ -4,6 +4,8 @@ import { USER_URL } from "@apis/endpoint";
 import type {
   ChangeFollowingStateRequest,
   ChangeFollowingStateResponse,
+  ChangeUserBlockStatusRequest,
+  ChangeUserBlockStatusResponse,
   CheckNicknameRequest,
   CheckNicknameResponse,
   EditUserProfileRequest,
@@ -147,6 +149,20 @@ export const getBlockedUsersApi = async ({
         ...(cursor == null ? {} : { cursor }),
         ...(size == null ? {} : { size }),
       },
+    },
+  );
+
+  return response.data;
+};
+
+export const changeUserBlockStatusApi = async ({
+  targetUserId,
+  type,
+}: ChangeUserBlockStatusRequest) => {
+  const response = await apiClient.post<ChangeUserBlockStatusResponse>(
+    USER_URL.BLOCK_USER(targetUserId),
+    {
+      type,
     },
   );
 

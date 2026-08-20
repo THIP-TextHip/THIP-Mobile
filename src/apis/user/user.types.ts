@@ -138,3 +138,12 @@ export interface GetBlockedUsersResponse {
   nextCursor: string;
   isLast: boolean;
 }
+
+export interface ChangeUserBlockStatusRequest {
+  targetUserId: number | string;
+  type: boolean;
+}
+
+export interface ChangeUserBlockStatusResponse {
+  isBlocked: boolean;
+}

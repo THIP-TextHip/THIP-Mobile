@@ -1,4 +1,5 @@
 export const USER_QUERY_KEY = {
+  ALL: ["users"],
   ALIAS_LIST: ["users", "alias-list"],
   MY_INFO: ["users", "user-info"],
   MY_ID: ["users", "my-id"],

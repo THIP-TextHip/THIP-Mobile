@@ -2,11 +2,15 @@ import { useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useGetBlockedUserQuery } from "@apis/user";
+import {
+  useChangeUserBlockStatusMutation,
+  useGetBlockedUserQuery,
+} from "@apis/user";
 import { useDelayedLoading } from "@shared/hooks";
 import {
   AppText,
   ListTotalCountHeader,
+  LoadingOverlay,
   UserListItemSkeleton,
 } from "@shared/ui";
 import { colors } from "@theme/token";
@@ -15,6 +19,7 @@ import { BlockedUserItem, UnblockUserModal } from "./components";
 
 export default function BlockedUserListScreen() {
   const { bottom } = useSafeAreaInsets();
+  const [targetUserId, setTargetUserId] = useState<number | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const {
@@ -27,6 +32,8 @@ export default function BlockedUserListScreen() {
     refetchBlockedUsers,
     isRefetchingBlockedUsers,
   } = useGetBlockedUserQuery();
+  const { changeUserBlockStatus, isPendingChangeUserBlockStatus } =
+    useChangeUserBlockStatusMutation();
   const isSkeletonVisible = useDelayedLoading(isPendingBlockedUsers);
 
   const handleLoadMore = () => {
@@ -35,12 +42,28 @@ export default function BlockedUserListScreen() {
     fetchNextPage();
   };
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (userId: number) => {
+    setTargetUserId(userId);
     setIsModalVisible(true);
   };
 
   const handleCloseModal = () => {
+    setTargetUserId(null);
     setIsModalVisible(false);
+  };
+
+  const handleUnlockUser = () => {
+    if (!targetUserId || isPendingChangeUserBlockStatus) return;
+
+    changeUserBlockStatus(
+      { targetUserId, type: false },
+      {
+        onSettled: () => {
+          setTargetUserId(null);
+          setIsModalVisible(false);
+        },
+      },
+    );
   };
 
   const renderEmpty = () => {
@@ -76,7 +99,7 @@ export default function BlockedUserListScreen() {
               nickname={item.nickname}
               aliasName={item.aliasName}
               aliasColor={item.aliasColor}
-              handleOpenModal={handleOpenModal}
+              handleOpenModal={() => handleOpenModal(item.userId)}
             />
           );
         }}
@@ -96,7 +119,11 @@ export default function BlockedUserListScreen() {
       <UnblockUserModal
         isVisible={isModalVisible}
         handleCloseModal={handleCloseModal}
-        handleUnblock={handleCloseModal}
+        handleUnblock={() => handleUnlockUser()}
+      />
+      <LoadingOverlay
+        visible={isPendingChangeUserBlockStatus}
+        label="유저를 차단하는 중이에요"
       />
     </View>
   );

@@ -13,6 +13,7 @@ import { FEED_QUERY_KEY } from "../feed";
 import { deleteAuthToken, setAuthToken } from "../token-storage";
 import {
   changeFollowingStateApi,
+  changeUserBlockStatusApi,
   checkNicknameApi,
   deleteUserAccountApi,
   editUserProfileApi,
@@ -30,6 +31,8 @@ import { USER_QUERY_KEY } from "./user.query-key";
 import type {
   ChangeFollowingStateRequest,
   ChangeFollowingStateResponse,
+  ChangeUserBlockStatusRequest,
+  ChangeUserBlockStatusResponse,
   CheckNicknameRequest,
   CheckNicknameResponse,
   EditUserProfileRequest,
@@ -536,4 +539,43 @@ export const useGetBlockedUserQuery = (size = 10) => {
     refetchBlockedUsers,
     isRefetchingBlockedUsers,
   };
+};
+
+export const useChangeUserBlockStatusMutation = () => {
+  const queryClient = useQueryClient();
+  const {
+    mutate: changeUserBlockStatus,
+    isPending: isPendingChangeUserBlockStatus,
+  } = useMutation<
+    ChangeUserBlockStatusResponse,
+    Error,
+    ChangeUserBlockStatusRequest
+  >({
+    mutationFn: changeUserBlockStatusApi,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: USER_QUERY_KEY.ALL,
+      });
+      if (data.isBlocked) {
+        Toast.show({
+          type: "default",
+          text1: "차단이 성공적으로 완료되었습니다.",
+        });
+        router.replace("/feed");
+      } else {
+        Toast.show({
+          type: "default",
+          text1: "차단이 해제되었습니다.",
+        });
+      }
+    },
+    onError: (error) => {
+      Toast.show({
+        type: "error",
+        text1: `${error.message}`,
+      });
+    },
+  });
+
+  return { changeUserBlockStatus, isPendingChangeUserBlockStatus };
 };
