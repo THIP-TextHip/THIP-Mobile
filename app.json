@@ -2,10 +2,16 @@
   "expo": {
     "name": "Thip",
     "slug": "Thip-Mobile",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/thip/thip-app-icon-lg.png",
     "scheme": "thipmobile",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/06f8778b-7e14-4124-a370-15bd3cf79d0e"
+    },
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
