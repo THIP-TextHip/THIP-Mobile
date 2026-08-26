@@ -38,7 +38,7 @@ export default function RecruitingGroupCard({
             <AppText weight="semibold" size="xs" color={colors.white}>
               {roomInfo.memberCount}
             </AppText>{" "}
-            / 30명
+            / {roomInfo.recruitCount}명
           </AppText>
         </View>
         <AppText weight="semibold" size="xs" color={colors.red} lineHeight={20}>
